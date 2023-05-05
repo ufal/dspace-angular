@@ -1,12 +1,12 @@
 import { APP_BASE_HREF, CommonModule, DOCUMENT } from '@angular/common';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import {APP_INITIALIZER, NgModule} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { EffectsModule } from '@ngrx/effects';
 import { RouterStateSerializer, StoreRouterConnectingModule } from '@ngrx/router-store';
-import { MetaReducer, StoreModule, USER_PROVIDED_META_REDUCERS } from '@ngrx/store';
+import {MetaReducer, Store, StoreModule, USER_PROVIDED_META_REDUCERS} from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
 import { DYNAMIC_MATCHER_PROVIDERS } from '@ng-dynamic-forms/core';
@@ -29,7 +29,6 @@ import { LogInterceptor } from './core/log/log.interceptor';
 import { EagerThemesModule } from '../themes/eager-themes.module';
 import { RootComponent } from './root/root.component';
 import { ThemedRootComponent } from './root/themed-root.component';
-import { ThemedEntryComponentModule } from '../themes/themed-entry-component.module';
 import { ThemedPageNotFoundComponent } from './pagenotfound/themed-pagenotfound.component';
 import { ThemedForbiddenComponent } from './forbidden/themed-forbidden.component';
 import { ThemedHeaderComponent } from './header/themed-header.component';
@@ -46,6 +45,7 @@ import { StoreDevModules } from '../config/store/devtools';
 import { RootModule } from './root.module';
 import { ClarinNavbarTopComponent } from './clarin-navbar-top/clarin-navbar-top.component';
 import { ScriptLoaderService } from './clarin-navbar-top/script-loader-service';
+import {CheckAuthenticationTokenAction} from "./core/auth/auth.actions";
 
 
 export function getConfig() {

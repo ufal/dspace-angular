@@ -20,7 +20,6 @@ import { createPaginatedList } from '../../shared/testing/utils.test';
 import { AuthorizationDataService } from '../../core/data/feature-authorization/authorization-data.service';
 import { createRelationshipsObservable } from '../simple/item-types/shared/item.component.spec';
 import { RemoteData } from '../../core/data/remote-data';
-import { AuthorizationDataService } from '../../core/data/feature-authorization/authorization-data.service';
 
 const mockItem: Item = Object.assign(new Item(), {
   bundles: createSuccessfulRemoteDataObject$(createPaginatedList([])),

@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
-import { dataService } from '../cache/builders/build-decorators';
 import { ResourceType } from '../shared/resource-type';
 import { RequestService } from './request.service';
 import { RemoteDataBuildService } from '../cache/builders/remote-data-build.service';
 import { Store } from '@ngrx/store';
-import { CoreState } from '../core.reducers';
 import { ObjectCacheService } from '../cache/object-cache.service';
 import { HALEndpointService } from '../shared/hal-endpoint.service';
 import { NotificationsService } from '../../shared/notifications/notifications.service';
@@ -13,14 +11,16 @@ import { Observable } from 'rxjs';
 import { getFirstSucceededRemoteDataPayload } from '../shared/operators';
 import { map } from 'rxjs/operators';
 import { PaginatedList } from './paginated-list.model';
-import { DataService } from './data.service';
-import { FindListOptions } from './request.models';
 import { RequestParam } from '../cache/models/request-param.model';
 import { DefaultChangeAnalyzer } from './default-change-analyzer.service';
 import { MetadataValue } from '../metadata/metadata-value.model';
 import { VocabularyEntry } from '../submission/vocabularies/models/vocabulary-entry.model';
 import { isNotEmpty } from '../../shared/empty.util';
 import { EMPTY } from 'rxjs';
+import { BaseDataService } from './base/base-data.service';
+import { dataService } from './base/data-service.decorator';
+import { CoreState } from '../core-state.model';
+import { FindListOptions } from './find-list-options.model';
 
 export const linkName = 'metadatavalues';
 export const AUTOCOMPLETE = new ResourceType(linkName);
@@ -30,7 +30,7 @@ export const AUTOCOMPLETE = new ResourceType(linkName);
  */
 @Injectable()
 @dataService(MetadataValue.type)
-export class MetadataValueDataService extends DataService<MetadataValue> {
+export class MetadataValueDataService extends BaseDataService<MetadataValue> {
   protected linkPath = linkName;
 
   constructor(
@@ -42,8 +42,9 @@ export class MetadataValueDataService extends DataService<MetadataValue> {
     protected comparator: DefaultChangeAnalyzer<MetadataValue>,
     protected http: HttpClient,
     protected notificationsService: NotificationsService,
+    protected responseMsToLive?: number,
   ) {
-    super();
+    super(linkName, requestService, rdbService, objectCache, halService, responseMsToLive);
   }
 
   /**

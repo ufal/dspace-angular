@@ -2,14 +2,13 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Bitstream } from '../../core/shared/bitstream.model';
 import { BehaviorSubject, Observable, of as observableOf } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
-import { hasFailed } from '../../core/data/request.reducer';
 import { followLink } from '../../shared/utils/follow-link-config.model';
 import { ClarinUserRegistration } from '../../core/shared/clarin/clarin-user-registration.model';
 import { ClarinUserMetadata } from '../../core/shared/clarin/clarin-user-metadata.model';
 import { getFirstCompletedRemoteData, getFirstSucceededRemoteListPayload } from '../../core/shared/operators';
 import { RequestParam } from '../../core/cache/models/request-param.model';
 import { hasValue, isEmpty, isNotEmpty } from '../../shared/empty.util';
-import { FindListOptions, PostRequest } from '../../core/data/request.models';
+import { PostRequest } from '../../core/data/request.models';
 import { EPerson } from '../../core/eperson/models/eperson.model';
 import { AuthService } from '../../core/auth/auth.service';
 import { buildPaginatedList, PaginatedList } from '../../core/data/paginated-list.model';
@@ -38,6 +37,8 @@ import { HttpOptions } from '../../core/dspace-rest/dspace-rest.service';
 import { Router } from '@angular/router';
 import { getItemPageRoute } from '../../item-page/item-page-routing-paths';
 import { getBitstreamDownloadRoute } from '../../app-routing-paths';
+import { hasFailed } from 'src/app/core/data/request-entry-state.model';
+import { FindListOptions } from "../../core/data/find-list-options.model";
 
 /**
  * The component shows the user's filled in user metadata and the user can fill in other required user metadata.

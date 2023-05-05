@@ -18,8 +18,8 @@ import { NotificationsService } from '../../shared/notifications/notifications.s
 import { NotificationsServiceStub } from '../../shared/testing/notifications-service.stub';
 import {Store} from '@ngrx/store';
 import {cold} from 'jasmine-marbles';
-import {RequestEntry} from '../../core/data/request.reducer';
 import {RestResponse} from '../../core/cache/response.models';
+import { RequestEntry } from 'src/app/core/data/request-entry.model';
 
 /**
  * The test class for the EditHandlePageComponent which edit the Handle.

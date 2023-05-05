@@ -14,7 +14,6 @@ import { BitstreamBreadcrumbResolver } from '../core/breadcrumbs/bitstream-bread
 import { BitstreamBreadcrumbsService } from '../core/breadcrumbs/bitstream-breadcrumbs.service';
 import { I18nBreadcrumbResolver } from '../core/breadcrumbs/i18n-breadcrumb.resolver';
 import { ClarinBitstreamDownloadPageComponent } from './clarin-bitstream-download-page/clarin-bitstream-download-page.component';
-import { I18nBreadcrumbResolver } from '../core/breadcrumbs/i18n-breadcrumb.resolver';
 
 const EDIT_BITSTREAM_PATH = ':id/edit';
 const EDIT_BITSTREAM_AUTHORIZATIONS_PATH = ':id/authorizations';

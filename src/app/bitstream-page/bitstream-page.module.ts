@@ -29,9 +29,8 @@ import { BitstreamDownloadPageComponent } from './bitstream-download-page/bitstr
     EditBitstreamPageComponent,
     ClarinBitstreamDownloadPageComponent,
     ClarinLicenseAgreementPageComponent,
-    ClarinBitstreamTokenExpiredComponent
-    EditBitstreamPageComponent,
-    BitstreamDownloadPageComponent,
+    ClarinBitstreamTokenExpiredComponent,
+    BitstreamDownloadPageComponent
   ]
 })
 export class BitstreamPageModule {

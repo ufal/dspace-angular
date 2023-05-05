@@ -17,10 +17,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { NgbCarouselModule } from '@ng-bootstrap/ng-bootstrap';
 import { ItemPageModule } from '../item-page/item-page.module';
-import { UsageReportService } from '../core/statistics/usage-report-data.service';
 import { RecentItemListComponent } from './recent-item-list/recent-item-list.component';
 import { JournalEntitiesModule } from '../entity-groups/journal-entities/journal-entities.module';
 import { ResearchEntitiesModule } from '../entity-groups/research-entities/research-entities.module';
+import { UsageReportDataService } from '../core/statistics/usage-report-data.service';
 
 const DECLARATIONS = [
   HomePageComponent,
@@ -28,7 +28,7 @@ const DECLARATIONS = [
   TopLevelCommunityListComponent,
   ThemedHomeNewsComponent,
   HomeNewsComponent,
-  RecentItemListComponent
+  RecentItemListComponent,
   DevTableComponent
 ];
 
@@ -55,7 +55,7 @@ const DECLARATIONS = [
     ...DECLARATIONS,
   ],
   providers: [
-    UsageReportService,
+    UsageReportDataService,
   ],
 })
 export class HomePageModule {

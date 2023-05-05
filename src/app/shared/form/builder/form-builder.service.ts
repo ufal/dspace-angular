@@ -45,8 +45,6 @@ import { CONCAT_GROUP_SUFFIX, DynamicConcatModel } from './ds-dynamic-form-ui/mo
 import { VIRTUAL_METADATA_PREFIX } from '../../../core/shared/metadata.models';
 import { ConfigurationDataService } from '../../../core/data/configuration-data.service';
 import { getFirstCompletedRemoteData } from '../../../core/shared/operators';
-import { ConfigurationDataService } from '../../../core/data/configuration-data.service';
-import { getFirstCompletedRemoteData } from '../../../core/shared/operators';
 import {
   COMPLEX_GROUP_SUFFIX,
   DynamicComplexModel

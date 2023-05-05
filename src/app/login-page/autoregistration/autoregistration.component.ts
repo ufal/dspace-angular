@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FindListOptions, GetRequest, PostRequest } from '../../core/data/request.models';
+import { GetRequest, PostRequest } from '../../core/data/request.models';
 import { getFirstCompletedRemoteData,getFirstSucceededRemoteListPayload } from '../../core/shared/operators';
-import { hasSucceeded } from '../../core/data/request.reducer';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RequestService } from '../../core/data/request.service';
 import { NotificationsService } from '../../shared/notifications/notifications.service';
@@ -10,7 +9,6 @@ import { RemoteDataBuildService } from '../../core/cache/builders/remote-data-bu
 import { TranslateService } from '@ngx-translate/core';
 import { AuthenticatedAction } from '../../core/auth/auth.actions';
 import { Store } from '@ngrx/store';
-import { CoreState } from '../../core/core.reducers';
 import { BehaviorSubject } from 'rxjs';
 import { ConfigurationDataService } from '../../core/data/configuration-data.service';
 import { ClarinVerificationTokenDataService } from '../../core/data/clarin/clarin-verification-token-data.service';
@@ -20,6 +18,9 @@ import { HttpOptions } from '../../core/dspace-rest/dspace-rest.service';
 import { HttpHeaders } from '@angular/common/http';
 import { AuthTokenInfo } from '../../core/auth/models/auth-token-info.model';
 import { isEmpty } from '../../shared/empty.util';
+import { CoreState } from 'src/app/core/core-state.model';
+import { hasSucceeded } from 'src/app/core/data/request-entry-state.model';
+import {FindListOptions} from "../../core/data/find-list-options.model";
 
 /**
  * This component is showed up when the user has clicked on the `verification token`.

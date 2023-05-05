@@ -143,11 +143,8 @@ const DECLARATIONS = [
     ...DECLARATIONS,
 
   ],
-    exports: [
-        ...DECLARATIONS
-    ]
   exports: [
-    ...DECLARATIONS,
+    ...DECLARATIONS
   ]
 })
 export class ItemPageModule {

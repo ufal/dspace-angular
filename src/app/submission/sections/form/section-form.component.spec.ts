@@ -44,8 +44,6 @@ import { createSuccessfulRemoteDataObject$ } from '../../../shared/remote-data.u
 import { cold } from 'jasmine-marbles';
 import { WorkflowItem } from '../../../core/submission/models/workflowitem.model';
 import { SubmissionSectionError } from '../../objects/submission-section-error.model';
-import { mockItemWithMetadataFieldAndValue } from '../../../item-page/simple/field-components/specific-field/item-page-field.component.spec';
-import wait from 'fork-ts-checker-webpack-plugin/lib/utils/async/wait';
 
 function getMockSubmissionFormsConfigService(): SubmissionFormsConfigDataService {
   return jasmine.createSpyObj('FormOperationsService', {
@@ -612,7 +610,7 @@ describe('SubmissionSectionFormComponent test suite', () => {
       formBuilderService = TestBed.inject(FormBuilderService);
       formOperationsService = TestBed.inject(SectionFormOperationsService);
       translateService = TestBed.inject(TranslateService);
-      formConfigService = TestBed.inject(SubmissionFormsConfigService as any);
+      formConfigService = TestBed.inject(SubmissionFormsConfigDataService as any);
 
       compAsAny.pathCombiner = new JsonPatchOperationPathCombiner('sections', sectionObject.id);
     });
@@ -665,3 +663,7 @@ describe('SubmissionSectionFormComponent test suite', () => {
 class TestComponent {
 
 }
+function mockItemWithMetadataFieldAndValue(arg0: string, EU_SPONSOR: string): any {
+    throw new Error('Function not implemented.');
+}
+

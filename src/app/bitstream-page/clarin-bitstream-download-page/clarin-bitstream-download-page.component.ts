@@ -5,11 +5,10 @@ import { RemoteData } from '../../core/data/remote-data';
 import { AuthService } from '../../core/auth/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { filter, map, switchMap, take } from 'rxjs/operators';
-import { getRemoteDataPayload, redirectOn4xx } from '../../core/shared/operators';
+import { getRemoteDataPayload } from '../../core/shared/operators';
 import { HardRedirectService } from '../../core/services/hard-redirect.service';
 import { GetRequest } from '../../core/data/request.models';
 import { RequestService } from '../../core/data/request.service';
-import { hasFailed, RequestEntryState } from '../../core/data/request.reducer';
 import {
   DOWNLOAD_TOKEN_EXPIRED_EXCEPTION,
   HTTP_STATUS_UNAUTHORIZED,
@@ -24,6 +23,8 @@ import { FeatureID } from '../../core/data/feature-authorization/feature-id';
 import { AuthorizationDataService } from '../../core/data/feature-authorization/authorization-data.service';
 import { FileService } from '../../core/shared/file.service';
 import { getForbiddenRoute } from '../../app-routing-paths';
+import { redirectOn4xx } from 'src/app/core/shared/authorized.operators';
+import { hasFailed, RequestEntryState } from 'src/app/core/data/request-entry-state.model';
 
 /**
  * `/<BITSTREAM_UUID>/download` page

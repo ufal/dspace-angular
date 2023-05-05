@@ -233,7 +233,6 @@ import { SearchNavbarComponent } from '../search-navbar/search-navbar.component'
 import { ThemedSearchNavbarComponent } from '../search-navbar/themed-search-navbar.component';
 import { ScopeSelectorModalComponent } from './search-form/scope-selector-modal/scope-selector-modal.component';
 import { DsSelectComponent } from './ds-select/ds-select.component';
-import { LogInOidcComponent } from './log-in/methods/oidc/log-in-oidc.component';
 import { ClarinExtendedLicensePipe } from './utils/clarin-extended-license.pipe';
 import { ClarinLicenseCheckedPipe } from './utils/clarin-license-checked.pipe';
 import { ClarinLicenseLabelRadioValuePipe } from './utils/clarin-license-label-radio-value.pipe';
@@ -313,7 +312,7 @@ const PIPES = [
   ObjNgFor,
   BrowserOnlyPipe,
   MarkdownPipe,
-  ShortNumberPipe
+  ShortNumberPipe,
   ObjNgFor,
   ClarinExtendedLicensePipe,
   ClarinLicenseCheckedPipe,
@@ -385,7 +384,7 @@ const COMPONENTS = [
   ContextHelpWrapperComponent,
   EpersonGroupListComponent,
   EpersonSearchBoxComponent,
-  GroupSearchBoxComponent
+  GroupSearchBoxComponent,
   ScopeSelectorModalComponent,
   ClarinItemBoxViewComponent,
   ClarinItemAuthorPreviewComponent

@@ -1,17 +1,17 @@
 import { ResourceType } from '../../shared/resource-type';
 import { Injectable } from '@angular/core';
-import { dataService } from '../../cache/builders/build-decorators';
-import { DataService } from '../data.service';
 import { RequestService } from '../request.service';
 import { RemoteDataBuildService } from '../../cache/builders/remote-data-build.service';
 import { Store } from '@ngrx/store';
-import { CoreState } from '../../core.reducers';
 import { HALEndpointService } from '../../shared/hal-endpoint.service';
 import { ObjectCacheService } from '../../cache/object-cache.service';
 import { DefaultChangeAnalyzer } from '../default-change-analyzer.service';
 import { HttpClient } from '@angular/common/http';
 import { NotificationsService } from '../../../shared/notifications/notifications.service';
 import { ClarinLicenseLabel } from '../../shared/clarin/clarin-license-label.model';
+import { BaseDataService } from '../base/base-data.service';
+import { dataService } from '../base/data-service.decorator';
+import { CoreState } from "../../core-state.model";
 
 export const linkName = 'clarinlicenselabels';
 export const AUTOCOMPLETE = new ResourceType(linkName);
@@ -21,7 +21,7 @@ export const AUTOCOMPLETE = new ResourceType(linkName);
  */
 @Injectable()
 @dataService(ClarinLicenseLabel.type)
-export class ClarinLicenseLabelDataService extends DataService<ClarinLicenseLabel> {
+export class ClarinLicenseLabelDataService extends BaseDataService<ClarinLicenseLabel> {
   protected linkPath = linkName;
 
   constructor(
@@ -33,7 +33,8 @@ export class ClarinLicenseLabelDataService extends DataService<ClarinLicenseLabe
     protected comparator: DefaultChangeAnalyzer<ClarinLicenseLabel>,
     protected http: HttpClient,
     protected notificationsService: NotificationsService,
+    protected responseMsToLive?: number,
   ) {
-    super();
+    super(linkName, requestService, rdbService, objectCache, halService, responseMsToLive);
   }
 }

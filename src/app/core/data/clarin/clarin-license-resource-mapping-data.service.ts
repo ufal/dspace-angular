@@ -1,17 +1,17 @@
 import { ResourceType } from '../../shared/resource-type';
 import { Injectable } from '@angular/core';
-import { dataService } from '../../cache/builders/build-decorators';
-import { DataService } from '../data.service';
 import { RequestService } from '../request.service';
 import { RemoteDataBuildService } from '../../cache/builders/remote-data-build.service';
 import { Store } from '@ngrx/store';
-import { CoreState } from '../../core.reducers';
 import { HALEndpointService } from '../../shared/hal-endpoint.service';
 import { ObjectCacheService } from '../../cache/object-cache.service';
 import { DefaultChangeAnalyzer } from '../default-change-analyzer.service';
 import { HttpClient } from '@angular/common/http';
 import { NotificationsService } from '../../../shared/notifications/notifications.service';
 import { ClarinLicenseResourceMapping } from '../../shared/clarin/clarin-license-resource-mapping.model';
+import { BaseDataService } from '../base/base-data.service';
+import { dataService } from '../base/data-service.decorator';
+import { CoreState } from '../../core-state.model';
 
 export const linkName = 'clarinlicenseresourcemappings';
 export const AUTOCOMPLETE = new ResourceType(linkName);
@@ -22,7 +22,7 @@ export const AUTOCOMPLETE = new ResourceType(linkName);
  */
 @Injectable()
 @dataService(ClarinLicenseResourceMapping.type)
-export class ClarinLicenseResourceMappingService extends DataService<ClarinLicenseResourceMapping> {
+export class ClarinLicenseResourceMappingService extends BaseDataService<ClarinLicenseResourceMapping> {
   protected linkPath = linkName;
 
   constructor(
@@ -34,7 +34,8 @@ export class ClarinLicenseResourceMappingService extends DataService<ClarinLicen
     protected comparator: DefaultChangeAnalyzer<ClarinLicenseResourceMapping>,
     protected http: HttpClient,
     protected notificationsService: NotificationsService,
+    protected responseMsToLive?: number,
   ) {
-    super();
+    super(linkName, requestService, rdbService, objectCache, halService, responseMsToLive);
   }
 }

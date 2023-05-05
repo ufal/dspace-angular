@@ -22,7 +22,6 @@ import { SubmissionUploadFilesComponent } from './form/submission-upload-files/s
 import { SubmissionSectionLicenseComponent } from './sections/license/section-license.component';
 import { SubmissionUploadsConfigDataService } from '../core/config/submission-uploads-config-data.service';
 import { SubmissionSectionClarinLicenseComponent } from './sections/clarin-license-resource/section-license.component';
-import { SubmissionUploadsConfigService } from '../core/config/submission-uploads-config.service';
 import { SubmissionEditComponent } from './edit/submission-edit.component';
 import { SubmissionSectionUploadFileComponent } from './sections/upload/file/section-upload-file.component';
 import {
@@ -82,7 +81,7 @@ const ENTRY_COMPONENTS = [
   SubmissionSectionAccessesComponent,
   SubmissionSectionUploadFileEditComponent,
   SubmissionSectionClarinLicenseDistributionComponent,
-  SubmissionSectionClarinNoticeComponent
+  SubmissionSectionClarinNoticeComponent,
   SubmissionSectionSherpaPoliciesComponent,
 ];
 

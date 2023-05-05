@@ -275,7 +275,6 @@ const PROVIDERS = [
   PoolTaskDataService,
   BitstreamDataService,
   DsDynamicTypeBindRelationService,
-  EntityTypeService,
   EntityTypeDataService,
   ContentSourceResponseParsingService,
   ItemTemplateDataService,
@@ -319,7 +318,7 @@ const PROVIDERS = [
   OrcidAuthService,
   OrcidQueueDataService,
   OrcidHistoryDataService,
-  SupervisionOrderDataService
+  SupervisionOrderDataService,
   HandleDataService
 ];
 

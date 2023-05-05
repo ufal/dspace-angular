@@ -15,7 +15,6 @@ import { FacetValue } from '../shared/search/models/facet-value.model';
 import { ConfigurationDataService } from '../core/data/configuration-data.service';
 import { ConfigurationProperty } from '../core/shared/configuration-property.model';
 import { Item } from '../core/shared/item.model';
-import { UsageReportService } from '../core/statistics/usage-report-data.service';
 import { SiteDataService } from '../core/data/site-data.service';
 import { UsageReport } from '../core/statistics/models/usage-report.model';
 import { ItemDataService } from '../core/data/item-data.service';
@@ -28,6 +27,7 @@ import { SearchObjects } from '../shared/search/models/search-objects.model';
  * The home page component customized for the CLARIN-DSpace.
  */
 import { environment } from '../../environments/environment';
+import { UsageReportDataService } from '../core/statistics/usage-report-data.service';
 @Component({
   selector: 'ds-home-page',
   styleUrls: ['./home-page.component.scss'],
@@ -61,7 +61,7 @@ export class HomePageComponent implements OnInit {
     protected searchService: SearchService,
     protected halService: HALEndpointService,
     protected configurationService: ConfigurationDataService,
-    protected usageReportService: UsageReportService,
+    protected usageReportService: UsageReportDataService,
     protected siteService: SiteDataService,
     protected itemService: ItemDataService,
     protected router: Router
