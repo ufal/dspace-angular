@@ -6,7 +6,10 @@
   "pluginsFile": "cypress/plugins/index.ts",
   "fixturesFolder": "cypress/fixtures",
   "baseUrl": "http://localhost:4000",
-  "retries": 2,
+  "retries":  {
+    "runMode": 2,
+    "openMode": 0
+  },
   "env": {
     "DSPACE_TEST_ADMIN_USER": "dspacedemo+admin@gmail.com",
     "DSPACE_TEST_ADMIN_PASSWORD": "dspace",

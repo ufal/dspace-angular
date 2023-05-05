@@ -27,6 +27,7 @@ import { SearchObjects } from '../shared/search/models/search-objects.model';
 /**
  * The home page component customized for the CLARIN-DSpace.
  */
+import { environment } from '../../environments/environment';
 @Component({
   selector: 'ds-home-page',
   styleUrls: ['./home-page.component.scss'],
@@ -42,6 +43,7 @@ export class HomePageComponent implements OnInit {
   ];
 
   site$: Observable<Site>;
+  recentSubmissionspageSize: number;
 
   authors$: BehaviorSubject<FastSearchLink[]> = new BehaviorSubject<FastSearchLink[]>([]);
   subjects$: BehaviorSubject<FastSearchLink[]> = new BehaviorSubject<FastSearchLink[]>([]);
@@ -64,6 +66,7 @@ export class HomePageComponent implements OnInit {
     protected itemService: ItemDataService,
     protected router: Router
   ) {
+    this.recentSubmissionspageSize = environment.homePage.recentSubmissions.pageSize;
     config.interval = 5000;
     config.keyboard = false;
     config.showNavigationArrows = false;
