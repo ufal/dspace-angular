@@ -11,6 +11,14 @@ import { ClarinVerificationToken } from '../../shared/clarin/clarin-verification
 import { BaseDataService } from '../base/base-data.service';
 import { CoreState } from '../../core-state.model';
 import { dataService } from '../base/data-service.decorator';
+import {DeleteData} from '../base/delete-data';
+import {SearchData} from '../base/search-data';
+import {Observable} from 'rxjs';
+import {RemoteData} from '../remote-data';
+import {NoContent} from '../../shared/NoContent.model';
+import {FindListOptions} from '../find-list-options.model';
+import {FollowLinkConfig} from '../../../shared/utils/follow-link-config.model';
+import {PaginatedList} from '../paginated-list.model';
 
 export const linkName = 'clarinverificationtokens';
 /**
@@ -18,8 +26,10 @@ export const linkName = 'clarinverificationtokens';
  */
 @Injectable()
 @dataService(ClarinVerificationToken.type)
-export class ClarinVerificationTokenDataService extends BaseDataService<ClarinVerificationToken> {
+export class ClarinVerificationTokenDataService extends BaseDataService<ClarinVerificationToken> implements SearchData<ClarinVerificationToken>, DeleteData<ClarinVerificationToken> {
   protected linkPath = linkName;
+  private deleteData: DeleteData<ClarinVerificationToken>;
+  private searchData: SearchData<ClarinVerificationToken>;
 
   constructor(
     protected requestService: RequestService,
@@ -34,4 +44,17 @@ export class ClarinVerificationTokenDataService extends BaseDataService<ClarinVe
   ) {
     super(linkName, requestService, rdbService, objectCache, halService, responseMsToLive);
   }
+
+  delete(objectId: string, copyVirtualMetadata?: string[]): Observable<RemoteData<NoContent>> {
+    return this.deleteData.delete(objectId, copyVirtualMetadata);
+  }
+
+  deleteByHref(href: string, copyVirtualMetadata?: string[]): Observable<RemoteData<NoContent>> {
+    return this.deleteData.deleteByHref(href, copyVirtualMetadata);
+  }
+
+  searchBy(searchMethod: string, options?: FindListOptions, useCachedVersionIfAvailable?: boolean, reRequestOnStale?: boolean, ...linksToFollow: FollowLinkConfig<ClarinVerificationToken>[]): Observable<RemoteData<PaginatedList<ClarinVerificationToken>>> {
+    return this.searchData.searchBy(searchMethod, options, useCachedVersionIfAvailable, reRequestOnStale, ...linksToFollow);
+  }
+
 }

@@ -21,6 +21,9 @@ import { BaseDataService } from './base/base-data.service';
 import { dataService } from './base/data-service.decorator';
 import { CoreState } from '../core-state.model';
 import { FindListOptions } from './find-list-options.model';
+import {SearchData} from './base/search-data';
+import { FollowLinkConfig } from 'src/app/shared/utils/follow-link-config.model';
+import { RemoteData } from './remote-data';
 
 export const linkName = 'metadatavalues';
 export const AUTOCOMPLETE = new ResourceType(linkName);
@@ -30,8 +33,9 @@ export const AUTOCOMPLETE = new ResourceType(linkName);
  */
 @Injectable()
 @dataService(MetadataValue.type)
-export class MetadataValueDataService extends BaseDataService<MetadataValue> {
+export class MetadataValueDataService extends BaseDataService<MetadataValue> implements SearchData<MetadataValue> {
   protected linkPath = linkName;
+  private searchData: SearchData<MetadataValue>;
 
   constructor(
     protected requestService: RequestService,
@@ -45,6 +49,10 @@ export class MetadataValueDataService extends BaseDataService<MetadataValue> {
     protected responseMsToLive?: number,
   ) {
     super(linkName, requestService, rdbService, objectCache, halService, responseMsToLive);
+  }
+
+  searchBy(searchMethod: string, options?: FindListOptions, useCachedVersionIfAvailable?: boolean, reRequestOnStale?: boolean, ...linksToFollow: FollowLinkConfig<MetadataValue>[]): Observable<RemoteData<PaginatedList<MetadataValue>>> {
+    return this.searchData.searchBy(searchMethod, options, useCachedVersionIfAvailable, reRequestOnStale, ...linksToFollow);
   }
 
   /**

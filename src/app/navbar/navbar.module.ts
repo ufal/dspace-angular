@@ -45,7 +45,8 @@ const ENTRY_COMPONENTS = [
   exports: [
     ThemedNavbarComponent,
     NavbarSectionComponent,
-    ThemedExpandableNavbarSectionComponent
+    ThemedExpandableNavbarSectionComponent,
+    ClarinNavbarTopComponent
   ]
 })
 

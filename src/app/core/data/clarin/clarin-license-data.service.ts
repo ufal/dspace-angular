@@ -24,6 +24,7 @@ import {SearchData} from '../base/search-data';
 import {FindListOptions} from '../find-list-options.model';
 import {FollowLinkConfig} from '../../../shared/utils/follow-link-config.model';
 import {PaginatedList} from '../paginated-list.model';
+import {FindAllData, FindAllDataImpl} from '../base/find-all-data';
 
 export const linkName = 'clarinlicenses';
 export const AUTOCOMPLETE = new ResourceType(linkName);
@@ -33,12 +34,13 @@ export const AUTOCOMPLETE = new ResourceType(linkName);
  */
 @Injectable()
 @dataService(ClarinLicense.type)
-export class ClarinLicenseDataService extends BaseDataService<ClarinLicense> implements CreateData<ClarinLicense>, PutData<ClarinLicense>, DeleteData<ClarinLicense>, SearchData<ClarinLicense> {
+export class ClarinLicenseDataService extends BaseDataService<ClarinLicense> implements CreateData<ClarinLicense>, PutData<ClarinLicense>, DeleteData<ClarinLicense>, SearchData<ClarinLicense>, FindAllData<ClarinLicense> {
   protected linkPath = linkName;
   private createData: CreateData<ClarinLicense>;
   private putData: PutData<ClarinLicense>;
   private deleteData: DeleteData<ClarinLicense>;
   private searchData: SearchData<ClarinLicense>;
+  private findAllData: FindAllData<ClarinLicense>;
 
   constructor(
     protected requestService: RequestService,
@@ -57,6 +59,7 @@ export class ClarinLicenseDataService extends BaseDataService<ClarinLicense> imp
     this.createData = new CreateDataImpl(this.linkPath, requestService, rdbService, objectCache, halService, notificationsService, this.responseMsToLive);
     this.putData = new PutDataImpl(this.linkPath, requestService, rdbService, objectCache, halService, this.responseMsToLive);
     this.deleteData = new DeleteDataImpl(this.linkPath, requestService, rdbService, objectCache, halService, notificationsService, this.responseMsToLive, this.constructIdEndpoint);
+    this.findAllData = new FindAllDataImpl(this.linkPath, requestService, rdbService, objectCache, halService, this.responseMsToLive);
   }
 
   put(object: ClarinLicense): Observable<RemoteData<ClarinLicense>> {
@@ -77,6 +80,10 @@ export class ClarinLicenseDataService extends BaseDataService<ClarinLicense> imp
 
   searchBy(searchMethod: string, options?: FindListOptions, useCachedVersionIfAvailable?: boolean, reRequestOnStale?: boolean, ...linksToFollow: FollowLinkConfig<ClarinLicense>[]): Observable<RemoteData<PaginatedList<ClarinLicense>>> {
     return this.searchData.searchBy(searchMethod, options, useCachedVersionIfAvailable, reRequestOnStale, ...linksToFollow);
+  }
+
+  findAll(options?: FindListOptions, useCachedVersionIfAvailable?: boolean, reRequestOnStale?: boolean, ...linksToFollow: FollowLinkConfig<ClarinLicense>[]): Observable<RemoteData<PaginatedList<ClarinLicense>>> {
+    return this.findAllData.findAll(options, useCachedVersionIfAvailable, reRequestOnStale, ...linksToFollow);
   }
 
 }
