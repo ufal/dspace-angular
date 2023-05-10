@@ -18,7 +18,6 @@ import {FollowLinkConfig} from '../../../shared/utils/follow-link-config.model';
 import {Observable} from 'rxjs';
 import {RemoteData} from '../remote-data';
 import {PaginatedList} from '../paginated-list.model';
-import {ClarinLicenseResourceMapping} from '../../shared/clarin/clarin-license-resource-mapping.model';
 
 export const linkName = 'clarinuserregistrations';
 export const AUTOCOMPLETE = new ResourceType(linkName);
@@ -41,9 +40,8 @@ export class ClarinUserRegistrationDataService extends BaseDataService<ClarinUse
     protected comparator: DefaultChangeAnalyzer<ClarinUserRegistration>,
     protected http: HttpClient,
     protected notificationsService: NotificationsService,
-    protected responseMsToLive?: number,
   ) {
-    super(linkName, requestService, rdbService, objectCache, halService, responseMsToLive);
+    super(linkName, requestService, rdbService, objectCache, halService, undefined);
   }
 
   searchBy(searchMethod: string, options?: FindListOptions, useCachedVersionIfAvailable?: boolean, reRequestOnStale?: boolean, ...linksToFollow: FollowLinkConfig<ClarinUserRegistration>[]): Observable<RemoteData<PaginatedList<ClarinUserRegistration>>> {

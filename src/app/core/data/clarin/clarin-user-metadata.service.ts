@@ -32,9 +32,8 @@ export class ClarinUserMetadataDataService extends BaseDataService<ClarinUserMet
     protected objectCache: ObjectCacheService,
     protected comparator: DefaultChangeAnalyzer<ClarinUserMetadata>,
     protected http: HttpClient,
-    protected notificationsService: NotificationsService,
-    protected responseMsToLive?: number,
+    protected notificationsService: NotificationsService
   ) {
-    super(linkName, requestService, rdbService, objectCache, halService, responseMsToLive);
+    super(linkName, requestService, rdbService, objectCache, halService, undefined);
   }
 }

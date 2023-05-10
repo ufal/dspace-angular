@@ -45,10 +45,9 @@ export class MetadataValueDataService extends BaseDataService<MetadataValue> imp
     protected objectCache: ObjectCacheService,
     protected comparator: DefaultChangeAnalyzer<MetadataValue>,
     protected http: HttpClient,
-    protected notificationsService: NotificationsService,
-    protected responseMsToLive?: number,
+    protected notificationsService: NotificationsService
   ) {
-    super(linkName, requestService, rdbService, objectCache, halService, responseMsToLive);
+    super(linkName, requestService, rdbService, objectCache, halService, undefined);
   }
 
   searchBy(searchMethod: string, options?: FindListOptions, useCachedVersionIfAvailable?: boolean, reRequestOnStale?: boolean, ...linksToFollow: FollowLinkConfig<MetadataValue>[]): Observable<RemoteData<PaginatedList<MetadataValue>>> {

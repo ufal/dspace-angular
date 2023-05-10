@@ -40,9 +40,8 @@ export class HandleDataService extends BaseDataService<Handle> implements Create
     protected objectCache: ObjectCacheService,
     protected comparator: DefaultChangeAnalyzer<Handle>,
     protected http: HttpClient,
-    protected notificationsService: NotificationsService,
-    protected responseMsToLive?: number,) {
-    super(linkName, requestService, rdbService, objectCache, halService, responseMsToLive);
+    protected notificationsService: NotificationsService) {
+    super(linkName, requestService, rdbService, objectCache, halService, undefined);
 
     this.createData = new CreateDataImpl(this.linkPath, requestService, rdbService, objectCache, halService, notificationsService, this.responseMsToLive);
     this.findAllData = new FindAllDataImpl(this.linkPath, requestService, rdbService, objectCache, halService, this.responseMsToLive);

@@ -14,11 +14,10 @@ import {RequestParam} from '../../cache/models/request-param.model';
 import {Observable} from 'rxjs';
 import {RemoteData} from '../remote-data';
 import {CoreState} from '../../core-state.model';
-import {BaseDataService} from '../base/base-data.service';
 import {dataService} from '../base/data-service.decorator';
 import {PutData, PutDataImpl} from '../base/put-data';
 import {DeleteData, DeleteDataImpl} from '../base/delete-data';
-import {ConstructIdEndpoint} from '../base/identifiable-data.service';
+import {IdentifiableDataService} from '../base/identifiable-data.service';
 import {NoContent} from '../../shared/NoContent.model';
 import {SearchData} from '../base/search-data';
 import {FindListOptions} from '../find-list-options.model';
@@ -34,7 +33,7 @@ export const AUTOCOMPLETE = new ResourceType(linkName);
  */
 @Injectable()
 @dataService(ClarinLicense.type)
-export class ClarinLicenseDataService extends BaseDataService<ClarinLicense> implements CreateData<ClarinLicense>, PutData<ClarinLicense>, DeleteData<ClarinLicense>, SearchData<ClarinLicense>, FindAllData<ClarinLicense> {
+export class ClarinLicenseDataService extends IdentifiableDataService<ClarinLicense> implements CreateData<ClarinLicense>, PutData<ClarinLicense>, DeleteData<ClarinLicense>, SearchData<ClarinLicense>, FindAllData<ClarinLicense> {
   protected linkPath = linkName;
   private createData: CreateData<ClarinLicense>;
   private putData: PutData<ClarinLicense>;
@@ -50,11 +49,9 @@ export class ClarinLicenseDataService extends BaseDataService<ClarinLicense> imp
     protected objectCache: ObjectCacheService,
     protected comparator: DefaultChangeAnalyzer<ClarinLicense>,
     protected http: HttpClient,
-    protected notificationsService: NotificationsService,
-    protected responseMsToLive?: number,
-    protected constructIdEndpoint: ConstructIdEndpoint = (endpoint, resourceID) => `${endpoint}/${resourceID}`,
+    protected notificationsService: NotificationsService
   ) {
-    super(linkName, requestService, rdbService, objectCache, halService, responseMsToLive);
+    super(linkName, requestService, rdbService, objectCache, halService, undefined);
 
     this.createData = new CreateDataImpl(this.linkPath, requestService, rdbService, objectCache, halService, notificationsService, this.responseMsToLive);
     this.putData = new PutDataImpl(this.linkPath, requestService, rdbService, objectCache, halService, this.responseMsToLive);

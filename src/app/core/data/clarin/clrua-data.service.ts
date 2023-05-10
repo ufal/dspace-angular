@@ -33,8 +33,7 @@ export class ClruaDataService extends BaseDataService<ClruaModel> {
     protected comparator: DefaultChangeAnalyzer<ClruaModel>,
     protected http: HttpClient,
     protected notificationsService: NotificationsService,
-    protected responseMsToLive?: number,
   ) {
-    super(linkName, requestService, rdbService, objectCache, halService, responseMsToLive);
+    super(linkName, requestService, rdbService, objectCache, halService, undefined);
   }
 }

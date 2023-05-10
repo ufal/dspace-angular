@@ -41,10 +41,9 @@ export class ClarinLicenseResourceMappingService extends BaseDataService<ClarinL
     protected objectCache: ObjectCacheService,
     protected comparator: DefaultChangeAnalyzer<ClarinLicenseResourceMapping>,
     protected http: HttpClient,
-    protected notificationsService: NotificationsService,
-    protected responseMsToLive?: number
+    protected notificationsService: NotificationsService
   ) {
-    super(linkName, requestService, rdbService, objectCache, halService, responseMsToLive);
+    super(linkName, requestService, rdbService, objectCache, halService, undefined);
   }
 
   searchBy(searchMethod: string, options?: FindListOptions, useCachedVersionIfAvailable?: boolean, reRequestOnStale?: boolean, ...linksToFollow: FollowLinkConfig<ClarinLicenseResourceMapping>[]): Observable<RemoteData<PaginatedList<ClarinLicenseResourceMapping>>> {

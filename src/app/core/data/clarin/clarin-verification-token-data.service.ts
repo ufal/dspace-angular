@@ -8,10 +8,9 @@ import { DefaultChangeAnalyzer } from '../default-change-analyzer.service';
 import { HttpClient } from '@angular/common/http';
 import { NotificationsService } from '../../../shared/notifications/notifications.service';
 import { ClarinVerificationToken } from '../../shared/clarin/clarin-verification-token.model';
-import { BaseDataService } from '../base/base-data.service';
 import { CoreState } from '../../core-state.model';
 import { dataService } from '../base/data-service.decorator';
-import {DeleteData} from '../base/delete-data';
+import {DeleteData, DeleteDataImpl} from '../base/delete-data';
 import {SearchData} from '../base/search-data';
 import {Observable} from 'rxjs';
 import {RemoteData} from '../remote-data';
@@ -19,6 +18,7 @@ import {NoContent} from '../../shared/NoContent.model';
 import {FindListOptions} from '../find-list-options.model';
 import {FollowLinkConfig} from '../../../shared/utils/follow-link-config.model';
 import {PaginatedList} from '../paginated-list.model';
+import {IdentifiableDataService} from '../base/identifiable-data.service';
 
 export const linkName = 'clarinverificationtokens';
 /**
@@ -26,7 +26,7 @@ export const linkName = 'clarinverificationtokens';
  */
 @Injectable()
 @dataService(ClarinVerificationToken.type)
-export class ClarinVerificationTokenDataService extends BaseDataService<ClarinVerificationToken> implements SearchData<ClarinVerificationToken>, DeleteData<ClarinVerificationToken> {
+export class ClarinVerificationTokenDataService extends IdentifiableDataService<ClarinVerificationToken> implements SearchData<ClarinVerificationToken>, DeleteData<ClarinVerificationToken> {
   protected linkPath = linkName;
   private deleteData: DeleteData<ClarinVerificationToken>;
   private searchData: SearchData<ClarinVerificationToken>;
@@ -40,9 +40,9 @@ export class ClarinVerificationTokenDataService extends BaseDataService<ClarinVe
     protected comparator: DefaultChangeAnalyzer<ClarinVerificationToken>,
     protected http: HttpClient,
     protected notificationsService: NotificationsService,
-    protected responseMsToLive?: number,
   ) {
-    super(linkName, requestService, rdbService, objectCache, halService, responseMsToLive);
+    super(linkName, requestService, rdbService, objectCache, halService, undefined);
+    this.deleteData = new DeleteDataImpl(this.linkPath, requestService, rdbService, objectCache, halService, notificationsService, this.responseMsToLive, this.constructIdEndpoint);
   }
 
   delete(objectId: string, copyVirtualMetadata?: string[]): Observable<RemoteData<NoContent>> {

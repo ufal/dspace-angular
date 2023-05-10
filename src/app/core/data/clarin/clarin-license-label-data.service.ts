@@ -42,10 +42,9 @@ export class ClarinLicenseLabelDataService extends BaseDataService<ClarinLicense
     protected objectCache: ObjectCacheService,
     protected comparator: DefaultChangeAnalyzer<ClarinLicenseLabel>,
     protected http: HttpClient,
-    protected notificationsService: NotificationsService,
-    protected responseMsToLive?: number,
+    protected notificationsService: NotificationsService
   ) {
-    super(linkName, requestService, rdbService, objectCache, halService, responseMsToLive);
+    super(linkName, requestService, rdbService, objectCache, halService, undefined);
 
     this.findAllData = new FindAllDataImpl(this.linkPath, requestService, rdbService, objectCache, halService, this.responseMsToLive);
     this.createData = new CreateDataImpl(this.linkPath, requestService, rdbService, objectCache, halService, notificationsService, this.responseMsToLive);
