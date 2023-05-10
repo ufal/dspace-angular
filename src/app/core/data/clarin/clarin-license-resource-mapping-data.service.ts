@@ -12,6 +12,13 @@ import { ClarinLicenseResourceMapping } from '../../shared/clarin/clarin-license
 import { BaseDataService } from '../base/base-data.service';
 import { dataService } from '../base/data-service.decorator';
 import { CoreState } from '../../core-state.model';
+import {SearchData} from '../base/search-data';
+import {MetadataField} from '../../metadata/metadata-field.model';
+import {FindListOptions} from '../find-list-options.model';
+import {FollowLinkConfig} from '../../../shared/utils/follow-link-config.model';
+import {Observable} from 'rxjs';
+import {RemoteData} from '../remote-data';
+import {PaginatedList} from '../paginated-list.model';
 
 export const linkName = 'clarinlicenseresourcemappings';
 export const AUTOCOMPLETE = new ResourceType(linkName);
@@ -22,8 +29,9 @@ export const AUTOCOMPLETE = new ResourceType(linkName);
  */
 @Injectable()
 @dataService(ClarinLicenseResourceMapping.type)
-export class ClarinLicenseResourceMappingService extends BaseDataService<ClarinLicenseResourceMapping> {
+export class ClarinLicenseResourceMappingService extends BaseDataService<ClarinLicenseResourceMapping> implements SearchData<ClarinLicenseResourceMapping> {
   protected linkPath = linkName;
+  private searchData: SearchData<ClarinLicenseResourceMapping>;
 
   constructor(
     protected requestService: RequestService,
@@ -34,8 +42,13 @@ export class ClarinLicenseResourceMappingService extends BaseDataService<ClarinL
     protected comparator: DefaultChangeAnalyzer<ClarinLicenseResourceMapping>,
     protected http: HttpClient,
     protected notificationsService: NotificationsService,
-    protected responseMsToLive?: number,
+    protected responseMsToLive?: number
   ) {
     super(linkName, requestService, rdbService, objectCache, halService, responseMsToLive);
   }
+
+  searchBy(searchMethod: string, options?: FindListOptions, useCachedVersionIfAvailable?: boolean, reRequestOnStale?: boolean, ...linksToFollow: FollowLinkConfig<ClarinLicenseResourceMapping>[]): Observable<RemoteData<PaginatedList<ClarinLicenseResourceMapping>>> {
+    return this.searchData.searchBy(searchMethod, options, useCachedVersionIfAvailable, reRequestOnStale, ...linksToFollow);
+  }
+
 }

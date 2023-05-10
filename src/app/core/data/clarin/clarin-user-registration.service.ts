@@ -12,6 +12,13 @@ import { ClarinUserRegistration } from '../../shared/clarin/clarin-user-registra
 import { BaseDataService } from '../base/base-data.service';
 import { dataService } from '../base/data-service.decorator';
 import { CoreState } from '../../core-state.model';
+import {SearchData} from '../base/search-data';
+import {FindListOptions} from '../find-list-options.model';
+import {FollowLinkConfig} from '../../../shared/utils/follow-link-config.model';
+import {Observable} from 'rxjs';
+import {RemoteData} from '../remote-data';
+import {PaginatedList} from '../paginated-list.model';
+import {ClarinLicenseResourceMapping} from '../../shared/clarin/clarin-license-resource-mapping.model';
 
 export const linkName = 'clarinuserregistrations';
 export const AUTOCOMPLETE = new ResourceType(linkName);
@@ -21,8 +28,9 @@ export const AUTOCOMPLETE = new ResourceType(linkName);
  */
 @Injectable()
 @dataService(ClarinUserRegistration.type)
-export class ClarinUserRegistrationDataService extends BaseDataService<ClarinUserRegistration> {
+export class ClarinUserRegistrationDataService extends BaseDataService<ClarinUserRegistration> implements SearchData<ClarinUserRegistration> {
   protected linkPath = linkName;
+  private searchData: SearchData<ClarinUserRegistration>;
 
   constructor(
     protected requestService: RequestService,
@@ -36,5 +44,9 @@ export class ClarinUserRegistrationDataService extends BaseDataService<ClarinUse
     protected responseMsToLive?: number,
   ) {
     super(linkName, requestService, rdbService, objectCache, halService, responseMsToLive);
+  }
+
+  searchBy(searchMethod: string, options?: FindListOptions, useCachedVersionIfAvailable?: boolean, reRequestOnStale?: boolean, ...linksToFollow: FollowLinkConfig<ClarinUserRegistration>[]): Observable<RemoteData<PaginatedList<ClarinUserRegistration>>> {
+    return this.searchData.searchBy(searchMethod, options, useCachedVersionIfAvailable, reRequestOnStale, ...linksToFollow);
   }
 }

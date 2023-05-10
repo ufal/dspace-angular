@@ -11,7 +11,15 @@ import { NotificationsService } from '../../../shared/notifications/notification
 import { ClarinLicenseLabel } from '../../shared/clarin/clarin-license-label.model';
 import { BaseDataService } from '../base/base-data.service';
 import { dataService } from '../base/data-service.decorator';
-import { CoreState } from "../../core-state.model";
+import {CreateData, CreateDataImpl} from '../base/create-data';
+import {RequestParam} from '../../cache/models/request-param.model';
+import {Observable} from 'rxjs';
+import {RemoteData} from '../remote-data';
+import {CoreState} from '../../core-state.model';
+import {FindAllData, FindAllDataImpl} from '../base/find-all-data';
+import { FollowLinkConfig } from 'src/app/shared/utils/follow-link-config.model';
+import { FindListOptions } from '../find-list-options.model';
+import { PaginatedList } from '../paginated-list.model';
 
 export const linkName = 'clarinlicenselabels';
 export const AUTOCOMPLETE = new ResourceType(linkName);
@@ -21,8 +29,10 @@ export const AUTOCOMPLETE = new ResourceType(linkName);
  */
 @Injectable()
 @dataService(ClarinLicenseLabel.type)
-export class ClarinLicenseLabelDataService extends BaseDataService<ClarinLicenseLabel> {
+export class ClarinLicenseLabelDataService extends BaseDataService<ClarinLicenseLabel> implements CreateData<ClarinLicenseLabel>, FindAllData<ClarinLicenseLabel> {
   protected linkPath = linkName;
+  private createData: CreateData<ClarinLicenseLabel>;
+  private findAllData: FindAllData<ClarinLicenseLabel>;
 
   constructor(
     protected requestService: RequestService,
@@ -36,5 +46,16 @@ export class ClarinLicenseLabelDataService extends BaseDataService<ClarinLicense
     protected responseMsToLive?: number,
   ) {
     super(linkName, requestService, rdbService, objectCache, halService, responseMsToLive);
+
+    this.findAllData = new FindAllDataImpl(this.linkPath, requestService, rdbService, objectCache, halService, this.responseMsToLive);
+    this.createData = new CreateDataImpl(this.linkPath, requestService, rdbService, objectCache, halService, notificationsService, this.responseMsToLive);
+  }
+
+  findAll(options?: FindListOptions, useCachedVersionIfAvailable?: boolean, reRequestOnStale?: boolean, ...linksToFollow: FollowLinkConfig<ClarinLicenseLabel>[]): Observable<RemoteData<PaginatedList<ClarinLicenseLabel>>> {
+    return this.findAllData.findAll(options, useCachedVersionIfAvailable, reRequestOnStale, ...linksToFollow);
+  }
+
+  create(object: ClarinLicenseLabel, ...params: RequestParam[]): Observable<RemoteData<ClarinLicenseLabel>> {
+    return this.createData.create(object, ...params);
   }
 }

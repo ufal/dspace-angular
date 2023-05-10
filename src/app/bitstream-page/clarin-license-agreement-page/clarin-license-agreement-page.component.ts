@@ -23,7 +23,6 @@ import { ConfigurationProperty } from '../../core/shared/configuration-property.
 import { BundleDataService } from '../../core/data/bundle-data.service';
 import { HttpClient } from '@angular/common/http';
 import { ClarinLicenseRequiredInfo } from '../../core/shared/clarin/clarin-license.resource-type';
-import { cloneDeep, isEqual } from 'lodash';
 import { NotificationsService } from '../../shared/notifications/notifications.service';
 import { TranslateService } from '@ngx-translate/core';
 import { ItemDataService } from '../../core/data/item-data.service';
@@ -38,7 +37,9 @@ import { Router } from '@angular/router';
 import { getItemPageRoute } from '../../item-page/item-page-routing-paths';
 import { getBitstreamDownloadRoute } from '../../app-routing-paths';
 import { hasFailed } from 'src/app/core/data/request-entry-state.model';
-import { FindListOptions } from "../../core/data/find-list-options.model";
+import {FindListOptions} from '../../core/data/find-list-options.model';
+import isEqual from 'lodash/isEqual';
+import cloneDeep from 'lodash/cloneDeep';
 
 /**
  * The component shows the user's filled in user metadata and the user can fill in other required user metadata.

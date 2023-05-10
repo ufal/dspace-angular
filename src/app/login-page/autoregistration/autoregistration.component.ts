@@ -20,7 +20,7 @@ import { AuthTokenInfo } from '../../core/auth/models/auth-token-info.model';
 import { isEmpty } from '../../shared/empty.util';
 import { CoreState } from 'src/app/core/core-state.model';
 import { hasSucceeded } from 'src/app/core/data/request-entry-state.model';
-import {FindListOptions} from "../../core/data/find-list-options.model";
+import {FindListOptions} from '../../core/data/find-list-options.model';
 
 /**
  * This component is showed up when the user has clicked on the `verification token`.

@@ -33,12 +33,6 @@ module.exports = Object.assign({}, commonExports, {
   devServer: {
     setupMiddlewares(middlewares, server) {
       buildAppConfig(join(process.cwd(), 'src/assets/config.json'));
-
-      app.use('/', function (req, res,next) {
-        console.log(`from ${req.ip} - ${req.method} - ${req.originalUrl}`);
-        next();
-      });
-
       return middlewares;
     }
   }
