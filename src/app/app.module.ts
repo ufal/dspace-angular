@@ -27,25 +27,11 @@ import { LocaleInterceptor } from './core/locale/locale.interceptor';
 import { XsrfInterceptor } from './core/xsrf/xsrf.interceptor';
 import { LogInterceptor } from './core/log/log.interceptor';
 import { EagerThemesModule } from '../themes/eager-themes.module';
-import { RootComponent } from './root/root.component';
-import { ThemedRootComponent } from './root/themed-root.component';
-import { ThemedPageNotFoundComponent } from './pagenotfound/themed-pagenotfound.component';
-import { ThemedForbiddenComponent } from './forbidden/themed-forbidden.component';
-import { ThemedHeaderComponent } from './header/themed-header.component';
-import { ThemedFooterComponent } from './footer/themed-footer.component';
-import { ThemedBreadcrumbsComponent } from './breadcrumbs/themed-breadcrumbs.component';
-import { ThemedHeaderNavbarWrapperComponent } from './header-nav-wrapper/themed-header-navbar-wrapper.component';
-import { IdleModalComponent } from './shared/idle-modal/idle-modal.component';
-import { ThemedPageInternalServerErrorComponent } from './page-internal-server-error/themed-page-internal-server-error.component';
-import { PageInternalServerErrorComponent } from './page-internal-server-error/page-internal-server-error.component';
-import { DtqTestExampleComponent } from './dtq-test-example/dtq-test-example.component';
 
 import { APP_CONFIG, AppConfig } from '../config/app-config.interface';
 import { StoreDevModules } from '../config/store/devtools';
 import { RootModule } from './root.module';
-import { ClarinNavbarTopComponent } from './clarin-navbar-top/clarin-navbar-top.component';
 import { ScriptLoaderService } from './clarin-navbar-top/script-loader-service';
-import {CheckAuthenticationTokenAction} from "./core/auth/auth.actions";
 
 
 export function getConfig() {
@@ -97,15 +83,6 @@ const PROVIDERS = [
   },
   ClientCookieService,
   ScriptLoaderService,
-  // Check the authentication token when the app initializes
-  {
-    provide: APP_INITIALIZER,
-    useFactory: (store: Store<AppState>,) => {
-      return () => store.dispatch(new CheckAuthenticationTokenAction());
-    },
-    deps: [Store],
-    multi: true
-  },
   // register AuthInterceptor as HttpInterceptor
   {
     provide: HTTP_INTERCEPTORS,
