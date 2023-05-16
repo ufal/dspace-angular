@@ -13,6 +13,7 @@ import { RecentItemListComponent } from './recent-item-list/recent-item-list.com
 import { JournalEntitiesModule } from '../entity-groups/journal-entities/journal-entities.module';
 import { ResearchEntitiesModule } from '../entity-groups/research-entities/research-entities.module';
 import { NgbCarouselModule } from '@ng-bootstrap/ng-bootstrap';
+import { UsageReportDataService } from '../core/statistics/usage-report-data.service';
 
 const DECLARATIONS = [
   HomePageComponent,
@@ -38,6 +39,9 @@ const DECLARATIONS = [
   ],
   exports: [
     ...DECLARATIONS,
+  ],
+  providers: [
+    UsageReportDataService,
   ],
 })
 export class HomePageModule {

@@ -44,6 +44,9 @@ import { createSuccessfulRemoteDataObject$ } from '../../../shared/remote-data.u
 import { cold } from 'jasmine-marbles';
 import { WorkflowItem } from '../../../core/submission/models/workflowitem.model';
 import { SubmissionSectionError } from '../../objects/submission-section-error.model';
+import {
+  mockItemWithMetadataFieldsAndValue
+} from '../../../item-page/simple/field-components/specific-field/item-page-field.component.spec';
 
 function getMockSubmissionFormsConfigService(): SubmissionFormsConfigDataService {
   return jasmine.createSpyObj('FormOperationsService', {
@@ -636,7 +639,7 @@ describe('SubmissionSectionFormComponent test suite', () => {
       spyOn(comp, 'subscriptions');
 
       const wi = new WorkspaceItem();
-      wi.item = createSuccessfulRemoteDataObject$(mockItemWithMetadataFieldAndValue('local.sponsor', EU_SPONSOR));
+      wi.item = createSuccessfulRemoteDataObject$(mockItemWithMetadataFieldsAndValue(['local.sponsor'], EU_SPONSOR));
 
       submissionObjectDataService.findById.and.returnValue(createSuccessfulRemoteDataObject$(wi));
 
@@ -662,8 +665,5 @@ describe('SubmissionSectionFormComponent test suite', () => {
 })
 class TestComponent {
 
-}
-function mockItemWithMetadataFieldAndValue(arg0: string, EU_SPONSOR: string): any {
-    throw new Error('Function not implemented.');
 }
 

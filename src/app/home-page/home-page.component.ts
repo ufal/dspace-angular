@@ -1,3 +1,4 @@
+// eslint-disable-next-line max-classes-per-file
 import { Component, OnInit } from '@angular/core';
 import { map, take } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -131,7 +132,7 @@ export class HomePageComponent implements OnInit {
       .then((usageReports: UsageReport[]) => {
         const usageReport = usageReports?.[0];
         for (let i = 0; i < maxTopItemsCount; i++) {
-          top3ItemsId.push(usageReport.points?.[i].id);
+          top3ItemsId.push(usageReport.points?.[i]?.id);
         }
       });
 
