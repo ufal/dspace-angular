@@ -239,7 +239,6 @@ import { ThemedPageErrorComponent } from './page-error/themed-page-error.compone
               .then((m) => m.SubscriptionsPageRoutingModule),
             canActivate: [AuthenticatedGuard]
           },
-          { path: '**', pathMatch: 'full', component: ThemedPageNotFoundComponent },
           {
             path: LICENSES_MODULE_PATH,
             loadChildren: () => import('./clarin-licenses/clarin-license.module').then((m) => m.ClarinLicenseModule),

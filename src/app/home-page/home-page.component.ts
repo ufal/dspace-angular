@@ -29,6 +29,7 @@ import { SearchObjects } from '../shared/search/models/search-objects.model';
  */
 import { environment } from '../../environments/environment';
 import { UsageReportDataService } from '../core/statistics/usage-report-data.service';
+import { isUndefined } from '../shared/empty.util';
 @Component({
   selector: 'ds-home-page',
   styleUrls: ['./home-page.component.scss'],
@@ -138,6 +139,9 @@ export class HomePageComponent implements OnInit {
 
     this.topItems$ = new BehaviorSubject<Item[]>([]);
     for (let i = 0; i < maxTopItemsCount; i++) {
+      if (isUndefined(top3ItemsId?.[i])) {
+        return;
+      }
       this.itemService.findById(top3ItemsId?.[i], false)
         .pipe(getFirstSucceededRemoteDataPayload())
         .subscribe((item: Item) => {

@@ -19,7 +19,7 @@ import {PutData, PutDataImpl} from '../base/put-data';
 import {DeleteData, DeleteDataImpl} from '../base/delete-data';
 import {IdentifiableDataService} from '../base/identifiable-data.service';
 import {NoContent} from '../../shared/NoContent.model';
-import {SearchData} from '../base/search-data';
+import { SearchData, SearchDataImpl } from '../base/search-data';
 import {FindListOptions} from '../find-list-options.model';
 import {FollowLinkConfig} from '../../../shared/utils/follow-link-config.model';
 import {PaginatedList} from '../paginated-list.model';
@@ -53,6 +53,7 @@ export class ClarinLicenseDataService extends IdentifiableDataService<ClarinLice
   ) {
     super(linkName, requestService, rdbService, objectCache, halService, undefined);
 
+    this.searchData = new SearchDataImpl(this.linkPath, requestService, rdbService, objectCache, halService, this.responseMsToLive);
     this.createData = new CreateDataImpl(this.linkPath, requestService, rdbService, objectCache, halService, notificationsService, this.responseMsToLive);
     this.putData = new PutDataImpl(this.linkPath, requestService, rdbService, objectCache, halService, this.responseMsToLive);
     this.deleteData = new DeleteDataImpl(this.linkPath, requestService, rdbService, objectCache, halService, notificationsService, this.responseMsToLive, this.constructIdEndpoint);
