@@ -5,7 +5,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { of, of as observableOf } from 'rxjs';
 import { TranslateModule } from '@ngx-translate/core';
-import { DynamicFormControlEvent, DynamicFormControlEventType } from '@ng-dynamic-forms/core';
 import { createSuccessfulRemoteDataObject$ } from '../../../shared/remote-data.utils';
 import { createTestComponent} from '../../../shared/testing/utils.test';
 import { NotificationsService } from '../../../shared/notifications/notifications.service';

@@ -12,13 +12,12 @@ import { ClarinLicenseResourceMapping } from '../../shared/clarin/clarin-license
 import { BaseDataService } from '../base/base-data.service';
 import { dataService } from '../base/data-service.decorator';
 import { CoreState } from '../../core-state.model';
-import {SearchData} from '../base/search-data';
-import {MetadataField} from '../../metadata/metadata-field.model';
-import {FindListOptions} from '../find-list-options.model';
-import {FollowLinkConfig} from '../../../shared/utils/follow-link-config.model';
-import {Observable} from 'rxjs';
-import {RemoteData} from '../remote-data';
-import {PaginatedList} from '../paginated-list.model';
+import { SearchData } from '../base/search-data';
+import { FindListOptions } from '../find-list-options.model';
+import { FollowLinkConfig } from '../../../shared/utils/follow-link-config.model';
+import { Observable } from 'rxjs';
+import { RemoteData } from '../remote-data';
+import { PaginatedList } from '../paginated-list.model';
 
 export const linkName = 'clarinlicenseresourcemappings';
 export const AUTOCOMPLETE = new ResourceType(linkName);

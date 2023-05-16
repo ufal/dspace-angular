@@ -35,7 +35,6 @@ import { environment } from 'src/environments/environment';
 import { SubmissionObject } from '../../core/submission/models/submission-object.model';
 import { SearchFilterConfig } from './models/search-filter-config.model';
 import { WorkspaceItem } from '../..//core/submission/models/workspaceitem.model';
-import { ItemSearchResult } from '../object-collection/shared/item-search-result.model';
 
 @Component({
   selector: 'ds-search',

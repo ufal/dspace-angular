@@ -1,13 +1,12 @@
+// eslint-disable-next-line max-classes-per-file
 import { Component, Input, OnInit } from '@angular/core';
 import { Item } from '../../core/shared/item.model';
-import { MetadataValue } from '../../core/shared/metadata.models';
-import { CollectionDataService } from '../../core/data/collection-data.service';
 import {
   getFirstCompletedRemoteData,
   getFirstSucceededRemoteDataPayload, getFirstSucceededRemoteListPayload
 } from '../../core/shared/operators';
 import { Collection } from '../../core/shared/collection.model';
-import { isNull, isUndefined } from '../empty.util';
+import { isNull } from '../empty.util';
 import { followLink } from '../utils/follow-link-config.model';
 import { Community } from '../../core/shared/community.model';
 import { BehaviorSubject } from 'rxjs';
@@ -27,6 +26,7 @@ import { Bitstream } from '../../core/shared/bitstream.model';
 import { LicenseType } from '../../item-page/clarin-license-info/clarin-license-info.component';
 import { ListableObject } from '../object-collection/shared/listable-object.model';
 import { ItemSearchResult } from '../object-collection/shared/item-search-result.model';
+import {CollectionDataService} from '../../core/data/collection-data.service';
 
 /**
  * Show item on the Home/Search page in the customized box with Item's information.
@@ -60,7 +60,7 @@ export class ClarinItemBoxViewComponent implements OnInit {
   /**
    * The subject of the Item e.g., `Article,..`
    */
-  itemType ='';
+  itemType = '';
   /**
    * The name of the Item.
    */

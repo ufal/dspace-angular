@@ -16,7 +16,6 @@ import {
 } from '../../core/shared/clarin/constants';
 import { RemoteDataBuildService } from '../../core/cache/builders/remote-data-build.service';
 import { hasValue, isEmpty, isNotEmpty, isNotNull, isUndefined } from '../../shared/empty.util';
-import { isEqual } from 'lodash';
 import { HALEndpointService } from '../../core/shared/hal-endpoint.service';
 import { AuthrnBitstream } from '../../core/shared/clarin/bitstream-authorization.model';
 import { FeatureID } from '../../core/data/feature-authorization/feature-id';
@@ -25,6 +24,7 @@ import { FileService } from '../../core/shared/file.service';
 import { getForbiddenRoute } from '../../app-routing-paths';
 import { redirectOn4xx } from 'src/app/core/shared/authorized.operators';
 import { hasFailed, RequestEntryState } from 'src/app/core/data/request-entry-state.model';
+import isEqual from 'lodash/isEqual';
 
 /**
  * `/<BITSTREAM_UUID>/download` page

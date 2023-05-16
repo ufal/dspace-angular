@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Inject, Renderer2, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, ViewChild } from '@angular/core';
 import { DynamicFormControlModel } from '@ng-dynamic-forms/core';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
 import { JsonPatchOperationPathCombiner, } from '../../../core/json-patch/builder/json-patch-operation-path-combiner';

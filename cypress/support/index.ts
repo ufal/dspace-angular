@@ -72,3 +72,6 @@ export const TEST_WITHDRAWN_REPLACED_ITEM_WITH_AUTHORS = Cypress.env('CLARIN_TES
 export const TEST_WITHDRAWN_REASON = Cypress.env('CLARIN_TEST_WITHDRAWN_REASON') || 'reason';
 export const TEST_WITHDRAWN_REPLACEMENT = Cypress.env('CLARIN_TEST_WITHDRAWN_REPLACEMENT') || 'new URL';
 export const TEST_WITHDRAWN_AUTHORS = Cypress.env('CLARIN_TEST_WITHDRAWN_AUTHORS') || 'author1, author2';
+
+export const TEST_COLLECTION_NAME = 'Col';
+export const TEST_COMMUNITY_NAME = 'Com';

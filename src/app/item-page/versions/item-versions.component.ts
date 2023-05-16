@@ -38,10 +38,10 @@ import { PaginatedList } from 'src/app/core/data/paginated-list.model';
 import { PaginationComponentOptions } from 'src/app/shared/pagination/pagination-component-options.model';
 import { VersionHistoryDataService } from 'src/app/core/data/version-history-data.service';
 import { PaginationService } from 'src/app/core/pagination/pagination.service';
-import { Version } from "../../core/shared/version.model";
-import { hasValue, hasValueOperator, isNotNull } from "../../shared/empty.util";
-import { PaginatedSearchOptions } from "../../shared/search/models/paginated-search-options.model";
-import { followLink } from "../../shared/utils/follow-link-config.model";
+import { Version } from '../../core/shared/version.model';
+import { PaginatedSearchOptions } from '../../shared/search/models/paginated-search-options.model';
+import { followLink } from '../../shared/utils/follow-link-config.model';
+import { hasValue, hasValueOperator, isNotNull } from '../../shared/empty.util';
 
 @Component({
   selector: 'ds-item-versions',

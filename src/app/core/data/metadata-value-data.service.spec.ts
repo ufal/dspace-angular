@@ -10,10 +10,10 @@ import { MetadataValueDataService } from './metadata-value-data.service';
 import { RequestParam } from '../cache/models/request-param.model';
 import { buildPaginatedList , PaginatedList} from './paginated-list.model';
 import { MetadataValue } from '../metadata/metadata-value.model';
-import { join } from 'lodash';
 import { VocabularyEntry } from '../submission/vocabularies/models/vocabulary-entry.model';
 import { RemoteData } from './remote-data';
 import { FindListOptions } from './find-list-options.model';
+import join from 'lodash/join';
 
 /**
  * The test class for the `medatata-value-data.service.ts`.
