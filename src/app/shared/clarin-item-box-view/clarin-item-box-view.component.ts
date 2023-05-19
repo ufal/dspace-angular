@@ -1,4 +1,3 @@
-// eslint-disable-next-line max-classes-per-file
 import { Component, Input, OnInit } from '@angular/core';
 import { Item } from '../../core/shared/item.model';
 import {
@@ -26,7 +25,7 @@ import { Bitstream } from '../../core/shared/bitstream.model';
 import { LicenseType } from '../../item-page/clarin-license-info/clarin-license-info.component';
 import { ListableObject } from '../object-collection/shared/listable-object.model';
 import { ItemSearchResult } from '../object-collection/shared/item-search-result.model';
-import {CollectionDataService} from '../../core/data/collection-data.service';
+import { CollectionDataService } from '../../core/data/collection-data.service';
 
 /**
  * Show item on the Home/Search page in the customized box with Item's information.
@@ -210,13 +209,4 @@ export class ClarinItemBoxViewComponent implements OnInit {
   secureImageData(imageByteArray) {
     return secureImageData(this.sanitizer, imageByteArray);
   }
-}
-
-/**
- * Redirect the user after clicking on the `Author`.
- */
-// tslint:disable-next-line:max-classes-per-file
-export class AuthorNameLink {
-  name: string;
-  url: string;
 }
