@@ -57,7 +57,7 @@ services:
     - '-c'
     - |
       while (!</dev/tcp/dspacedb/5432) > /dev/null 2>&1; do sleep 1; done;
-      /dspace/bin/dspace database migrate
+      /dspace/bin/dspace database migrate force
       custom_run.sh
   # DSpace database container
   dspacedb:

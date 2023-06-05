@@ -1,13 +1,16 @@
-import { Options } from 'cypress-axe';
-import { TEST_SUBMIT_USER, TEST_SUBMIT_USER_PASSWORD, TEST_SUBMIT_COLLECTION_NAME } from 'cypress/support';
-import { testA11y } from 'cypress/support/utils';
+import {
+  TEST_SUBMIT_USER,
+  TEST_SUBMIT_USER_PASSWORD,
+  TEST_SUBMIT_COLLECTION_NAME,
+  TEST_ADMIN_USER
+} from 'cypress/support';
 
 describe('My DSpace page', () => {
     it('should display recent submissions and pass accessibility tests', () => {
         cy.visit('/mydspace');
 
         // This page is restricted, so we will be shown the login form. Fill it out & submit.
-        cy.loginViaForm(TEST_SUBMIT_USER, TEST_SUBMIT_USER_PASSWORD);
+        cy.loginViaForm(TEST_ADMIN_USER, TEST_SUBMIT_USER_PASSWORD);
 
         cy.get('ds-my-dspace-page').should('exist');
 
