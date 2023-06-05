@@ -61,9 +61,9 @@ describe('Tombstone  Page', () => {
 
 describe('Admin Tombstone  Page', () => {
   beforeEach(() => {
-    cy.visit('/');
+    cy.visit('/login');
     // Login as admin
-    cy.login(TEST_ADMIN_USER, TEST_ADMIN_PASSWORD);
+    cy.loginViaForm(TEST_ADMIN_USER, TEST_ADMIN_PASSWORD);
   });
 
   it('the admin should see ds-item-page',{

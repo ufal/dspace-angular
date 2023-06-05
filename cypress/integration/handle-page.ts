@@ -12,10 +12,10 @@ describe('Handle Page', () => {
     },
     defaultCommandTimeout: 10000
   }, () => {
-    cy.visit('/');
+    cy.visit('/login');
 
     // Login as admin
-    cy.login(TEST_ADMIN_USER, TEST_ADMIN_PASSWORD);
+    cy.loginViaForm(TEST_ADMIN_USER, TEST_ADMIN_PASSWORD);
 
     cy.visit('/handle-table');
 

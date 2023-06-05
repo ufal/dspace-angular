@@ -9,7 +9,6 @@ import {
  */
 describe('Admin Menu Page', () => {
   beforeEach(() => {
-    cy.visit('/');
     // Create a new submission
     cy.visit('/submit?collection=' + TEST_SUBMIT_COLLECTION_UUID + '&entityType=none');
 
