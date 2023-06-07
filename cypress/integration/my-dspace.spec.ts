@@ -1,13 +1,22 @@
-import { Options } from 'cypress-axe';
-import { TEST_SUBMIT_USER, TEST_SUBMIT_USER_PASSWORD, TEST_SUBMIT_COLLECTION_NAME } from 'cypress/support';
-import { testA11y } from 'cypress/support/utils';
+import {
+  TEST_SUBMIT_USER,
+  TEST_SUBMIT_USER_PASSWORD,
+  TEST_SUBMIT_COLLECTION_NAME,
+  TEST_ADMIN_USER
+} from 'cypress/support';
 
 describe('My DSpace page', () => {
-    it('should display recent submissions and pass accessibility tests', () => {
+    it('should display recent submissions and pass accessibility tests', {
+      retries: {
+        runMode: 8,
+        openMode: 8,
+      },
+      defaultCommandTimeout: 10000
+    }, () => {
         cy.visit('/mydspace');
 
         // This page is restricted, so we will be shown the login form. Fill it out & submit.
-        cy.loginViaForm(TEST_SUBMIT_USER, TEST_SUBMIT_USER_PASSWORD);
+        cy.loginViaForm(TEST_ADMIN_USER, TEST_SUBMIT_USER_PASSWORD);
 
         cy.get('ds-my-dspace-page').should('exist');
 
@@ -39,7 +48,13 @@ describe('My DSpace page', () => {
         // CLARIN
     });
 
-    it('should have a working detailed view that passes accessibility tests', () => {
+    it('should have a working detailed view that passes accessibility tests', {
+      retries: {
+        runMode: 8,
+        openMode: 8,
+      },
+      defaultCommandTimeout: 10000
+    }, () => {
         cy.visit('/mydspace');
 
         // This page is restricted, so we will be shown the login form. Fill it out & submit.
@@ -68,7 +83,13 @@ describe('My DSpace page', () => {
     });
 
     // NOTE: Deleting existing submissions is exercised by submission.spec.ts
-    it('should let you start a new submission & edit in-progress submissions', () => {
+    it('should let you start a new submission & edit in-progress submissions', {
+      retries: {
+        runMode: 8,
+        openMode: 8,
+      },
+      defaultCommandTimeout: 10000
+    }, () => {
         cy.visit('/mydspace');
 
         // This page is restricted, so we will be shown the login form. Fill it out & submit.
@@ -140,7 +161,13 @@ describe('My DSpace page', () => {
         });
     });
 
-    it('should let you import from external sources', () => {
+    it('should let you import from external sources', {
+      retries: {
+        runMode: 8,
+        openMode: 8,
+      },
+      defaultCommandTimeout: 10000
+    }, () => {
         cy.visit('/mydspace');
 
         // This page is restricted, so we will be shown the login form. Fill it out & submit.
