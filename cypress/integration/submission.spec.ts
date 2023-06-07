@@ -1,4 +1,10 @@
-import { TEST_SUBMIT_USER, TEST_SUBMIT_USER_PASSWORD, TEST_SUBMIT_COLLECTION_NAME, TEST_SUBMIT_COLLECTION_UUID }
+import {
+  TEST_SUBMIT_USER,
+  TEST_SUBMIT_USER_PASSWORD,
+  TEST_SUBMIT_COLLECTION_NAME,
+  TEST_SUBMIT_COLLECTION_UUID,
+  TEST_ADMIN_USER, TEST_ADMIN_PASSWORD
+}
   from 'cypress/support';
 import { createItemProcess } from '../support/commands';
 
@@ -33,18 +39,12 @@ describe('New Submission page', () => {
         cy.get('button#discard_submit').click();
     });
 
-    it('should block submission & show errors if required fields are missing', {
-      retries: {
-        runMode: 8,
-        openMode: 8,
-      },
-      defaultCommandTimeout: 10000
-    }, () => {
+    it('should block submission & show errors if required fields are missing',() => {
         // Create a new submission
         cy.visit('/submit?collection='.concat(TEST_SUBMIT_COLLECTION_UUID).concat('&entityType=none'));
 
         // This page is restricted, so we will be shown the login form. Fill it out & submit.
-        cy.loginViaForm(TEST_SUBMIT_USER, TEST_SUBMIT_USER_PASSWORD);
+        cy.loginViaForm(TEST_ADMIN_USER, TEST_ADMIN_PASSWORD);
 
         // Attempt an immediate deposit without filling out any fields
         cy.get('button#deposit').click();
@@ -99,13 +99,7 @@ describe('New Submission page', () => {
         });
     });
 
-    it('should allow for deposit if all required fields completed & file uploaded', {
-      retries: {
-        runMode: 8,
-        openMode: 8,
-      },
-      defaultCommandTimeout: 10000
-    }, () => {
+    it('should allow for deposit if all required fields completed & file uploaded',() => {
         // Create a new submission
         cy.visit('/submit?collection=' + TEST_SUBMIT_COLLECTION_UUID + '&entityType=none');
 
