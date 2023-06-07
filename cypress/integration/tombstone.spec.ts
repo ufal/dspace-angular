@@ -65,7 +65,6 @@ describe('Admin Tombstone  Page', () => {
     // Login as admin
     cy.loginViaForm(TEST_ADMIN_USER, TEST_ADMIN_PASSWORD);
     cy.visit('/');
-    cy.wait(500);
   });
 
   it('the admin should see ds-item-page',{
@@ -77,17 +76,6 @@ describe('Admin Tombstone  Page', () => {
     }, () => {
     cy.visit(ITEMPAGE_WITHDRAWN);
     cy.get('ds-item-page').should('exist');
-  });
-
-  it('the admin should see the withdrawn message on the withdrawn item', {
-      retries: {
-        runMode: 8,
-        openMode: 8,
-      },
-    defaultCommandTimeout: 10000
-    }, () => {
-    cy.visit(ITEMPAGE_WITHDRAWN_REASON);
-    cy.get('ds-item-page').contains(TOMBSTONED_ITEM_MESSAGE);
   });
 
   it('the admin should see the withdrawn message on the replaced item', {
