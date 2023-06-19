@@ -14,6 +14,7 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE/build-scripts/run/
           pwd
+
           touch .env.dev-5 || true
           echo DSPACE_REST_HOST=dev-5.pc > .env.dev-5
           echo REST_URL=http://dev-5.pc:8080/server >> .env.dev-5
@@ -22,7 +23,8 @@ jobs:
           echo DOCKER_OWNER=dataquest >> .env.dev-5
           ## echo NODE_ENV="development" >> .env.dev-5
           echo DSPACE_UI_IMAGE="dataquest/dspace-angular:dspace-7_x" >> .env.dev-5
+
           export ENVFILE=$(pwd)/.env.dev-5
-          docker stop dspacedb
-          docker rm dspacedb
-          docker volume rm dq-d7_pgdata
+          docker stop dspacedb dspace dspace-angular
+          docker rm dspacedb dspace dspace-angular
+          docker volume rm dq-d7_pgdata 
