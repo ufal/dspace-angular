@@ -78,7 +78,7 @@ export class DsDynamicSponsorAutocompleteComponent extends DsDynamicAutocomplete
       fundingName = fundingFields?.[3];
     }
     return DsDynamicAutocompleteService.pretifySuggestion(fundingProjectCode, fundingName, this.translateService);
-  }
+  };
 
   /**
    * Converts a text values stream from the `<input>` element to the array stream of the items
@@ -122,7 +122,7 @@ export class DsDynamicSponsorAutocompleteComponent extends DsDynamicAutocomplete
         return list.page;
       }),
       tap(() => this.changeSearchingStatus(false)),
-      merge(this.hideSearchingWhenUnsubscribed))
+      merge(this.hideSearchingWhenUnsubscribed));
 
   /**
    * Check if in the complex input type is funding type selected as EU.
