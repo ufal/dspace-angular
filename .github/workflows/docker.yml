@@ -6,10 +6,7 @@ name: Docker images
 on:
   push:
     branches:
-      - dtq-dev
-      - dtq-dev-present
-    tags:
-      - 'dspace-**'
+      - dtq-dev-7.5
   pull_request:
   workflow_dispatch:
 
