@@ -42,13 +42,6 @@
 
         djc.inlinemetadata = typeof opts.inlinemetadata === 'object' ? opts.inlinemetadata : [];
         djc.inlinemetadata.push({
-          'country': '_all_',
-          'entityID': 'https://idm.clarin.eu',
-          'geo': {'lat': 51.833298, 'lon': 5.866699},
-          'title': 'Clarin.eu website account',
-          'weight': 1000
-        });
-        djc.inlinemetadata.push({
           'country': 'CZ',
           'entityID': 'https://cas.cuni.cz/idp/shibboleth',
           'geo': {'lat': '50.0705102', 'lon': '14.4198844'},
