@@ -6,7 +6,7 @@ name: Docker images
 on:
   push:
     branches:
-      - dtq-dev
+      - customer/uk
   pull_request:
   workflow_dispatch:
 
@@ -89,5 +89,5 @@ jobs:
 
   deploy:
     needs: docker
-    uses: dataquest-dev/dspace-angular/.github/workflows/deploy.yml@dtq-dev
+    uses: dataquest-dev/dspace-angular/.github/workflows/deploy.yml@customer/uk
     secrets: inherit
