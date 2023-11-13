@@ -5,9 +5,10 @@ on:
     inputs:
       INSTANCE:
         required: true
-        default: '8'
+        default: '2'
         type: choice
         options:
+          - '2'
           - '5'
           - '8'
 
