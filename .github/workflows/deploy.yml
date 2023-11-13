@@ -21,6 +21,7 @@ on:
         type: choice
         options:
           - '*'
+          - '2'
           - '5'
           - '8'
       IMPORT:
@@ -30,7 +31,7 @@ on:
 
 jobs:
   deploy:
-    if: github.event.inputs.INSTANCE == '*' || github.event.inputs.INSTANCE == '8'
+    if: github.event.inputs.INSTANCE == '*' || github.event.inputs.INSTANCE == '2'
     runs-on: dspace-dep-1
     timeout-minutes: 5
     steps:
@@ -42,9 +43,9 @@ jobs:
           pwd
           
           touch .env.dev-5 || true
-          echo INSTANCE=8 >> .env.dev-5
+          echo INSTANCE=2 >> .env.dev-5
           echo DSPACE_HOST=dev-5.pc >> .env.dev-5
-          echo DSPACE_VER=dspace-7_x >> .env.dev-5
+          echo DSPACE_VER=customer-uk >> .env.dev-5
           echo DSPACE_SSL=false >> .env.dev-5
           echo DOCKER_OWNER=dataquest >> .env.dev-5
           echo DSPACE_UI_IMAGE=\${DOCKER_OWNER}/dspace-angular:\$DSPACE_VER >> .env.dev-5
@@ -66,11 +67,11 @@ jobs:
           ./start.sh dspace-5
 
   deploy-import:
-    if: github.event.inputs.INSTANCE == '*' || github.event.inputs.INSTANCE == '8'
+    if: github.event.inputs.INSTANCE == '*' || github.event.inputs.INSTANCE == '10'
     runs-on: dspace-dep-1
     timeout-minutes: 120
     env:
-      INSTANCE: '8'
+      INSTANCE: '2'
       ENVFILE: /opt/dspace-envs/.env.dspace.imported.dev-5
     steps:
       - uses: actions/checkout@v4
