@@ -41,7 +41,7 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE/build-scripts/run/
           pwd
-          
+
           touch .env.dev-5 || true
           echo INSTANCE=2 >> .env.dev-5
           echo DSPACE_HOST=dev-5.pc >> .env.dev-5
@@ -66,8 +66,8 @@ jobs:
           export ENVFILE=$(pwd)/.env.dev-5
           ./start.sh dspace-5
 
-  deploy-import:
-    if: github.event.inputs.INSTANCE == '*' || github.event.inputs.INSTANCE == '10'
+  deploy-2:
+    if: github.event.inputs.INSTANCE == '*' || github.event.inputs.INSTANCE == '8'
     runs-on: dspace-dep-1
     timeout-minutes: 120
     env:
@@ -87,8 +87,17 @@ jobs:
           ./start.sh dspace-$INSTANCE
           /bin/bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' http://dev-5.pc:8$INSTANCE/server/api)" != "200" ]]; do sleep 5; done'
 
+
+
+  import-2:
+    runs-on: dspace-dep-1
+    if: github.event.inputs.IMPORT == 'true'
+    needs: deploy-2
+    env:
+      INSTANCE: '2'
+      ENVFILE: /opt/dspace-envs/.env.dspace.imported.dev-5
+    steps:
       - uses: ./.github/actions/import-db
-        if: github.event.inputs.IMPORT != false
         with:
           INSTANCE: ${{ env.INSTANCE }}
           DATADIR: /opt/dspace-data/clarin-dspace/
