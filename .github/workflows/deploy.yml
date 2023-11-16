@@ -64,7 +64,7 @@ jobs:
           echo S3_REGION_NAME=eu-central-1 >> .env.dev-5
 
           export ENVFILE=$(pwd)/.env.dev-5
-          ./start.sh dspace-2
+          ./start.sh dspace-${{ env.INSTANCE }}
 
   deploy-2:
     if: github.event.inputs.INSTANCE == '*' || github.event.inputs.INSTANCE == '8'
