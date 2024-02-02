@@ -58,7 +58,7 @@ jobs:
           echo S3_ENABLED=true >> .env.dev-5
           echo S3_RELATIVE_PATH=true >> .env.dev-5
           echo S3_BUCKET=testbucket >> .env.dev-5
-          echo S3_SUBFOLDER=dtq-test >> .env.dev-5
+          echo S3_SUBFOLDER=eighty-two >> .env.dev-5
           echo S3_ACCESS=${{ secrets.AMAZON_ACCESS }} >> .env.dev-5
           echo S3_SECRET=${{ secrets.AMAZON_SECRET }} >> .env.dev-5
           echo S3_REGION_NAME=us-east-1 >> .env.dev-5
