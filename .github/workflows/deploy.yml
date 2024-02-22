@@ -36,7 +36,7 @@ jobs:
     timeout-minutes: 5
     env:
       INSTANCE: '2'
-      ENVFILE: /opt/dspace-envs/.env.dspace.dev-5
+      ENVFILE: /opt/dspace-envs/.env.dspace.dev-5.uk
     steps:
       - uses: actions/checkout@v4
 
