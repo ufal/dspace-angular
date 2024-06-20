@@ -21,7 +21,7 @@ jobs:
   dspace-angular:
     # Ensure this job never runs on forked repos. It's only executed for 'dspace/dspace-angular'
     if: github.repository == 'ufal/dspace-angular'
-    uses: ufal/DSpace/.github/workflows/reusable-docker-build.yml@clarin-v7
+    uses: ufal/clarin-dspace/.github/workflows/reusable-docker-build.yml@clarin-v7
     with:
       build_id: dspace-angular
       image_name: ufal/dspace-angular
@@ -38,7 +38,7 @@ jobs:
   dspace-angular-dist:
     # Ensure this job never runs on forked repos. It's only executed for 'ufal/dspace-angular'
     if: github.repository == 'ufal/dspace-angular' && false # not used for now
-    uses: ufal/DSpace/.github/workflows/reusable-docker-build.yml@clarin-v7
+    uses: ufal/clarin-dspace/.github/workflows/reusable-docker-build.yml@clarin-v7
     with:
       build_id: dspace-angular-dist
       image_name: dspace/dspace-angular
