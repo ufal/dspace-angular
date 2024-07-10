@@ -26,11 +26,6 @@ nav.navbar {
   width: var(--ds-login-logo-width);
 }
 
-.clarin-logo {
-  height: var(--ds-login-logo-height);
-  width: var(--ds-login-logo-width);
-}
-
 /** Mobile menu styling **/
 @media screen and (max-width: map-get($grid-breakpoints, md)-0.02) {
   .navbar {
