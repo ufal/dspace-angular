@@ -1,0 +1,19 @@
+:host {
+  display: block;
+
+  div.background-image {
+    color: var($gray-800);
+    background-color: var(--ds-clarin-home-news-background-color);
+    .container {
+      background-color: #f2f2f2;
+      border-bottom: solid 1px #e5e5e5;
+      border-radius: 0 !important;
+    }
+  }
+
+  .jumbotron {
+    background-color: transparent;
+  }
+}
+
+
