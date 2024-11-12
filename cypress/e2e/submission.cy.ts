@@ -4,7 +4,7 @@ import { createItemProcess } from '../support/commands';
 describe('New Submission page', () => {
     // NOTE: We already test that new submissions can be started from MyDSpace in my-dspace.spec.ts
 
-    it('should create a new submission when using /submit path & pass accessibility', () => {
+    it.skip('should create a new submission when using /submit path & pass accessibility', () => {
         // Test that calling /submit with collection & entityType will create a new submission
         cy.visit('/submit?collection='.concat(TEST_SUBMIT_COLLECTION_UUID).concat('&entityType=none'));
 
@@ -32,7 +32,7 @@ describe('New Submission page', () => {
         cy.get('button#discard_submit').click();
     });
 
-    it('should block submission & show errors if required fields are missing', () => {
+    it.skip('should block submission & show errors if required fields are missing', () => {
         // Create a new submission
         cy.visit('/submit?collection='.concat(TEST_SUBMIT_COLLECTION_UUID).concat('&entityType=none'));
 

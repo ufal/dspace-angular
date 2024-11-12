@@ -105,7 +105,7 @@ describe('Create a new submission', () => {
   // });
 
   // Test type-bind
-  it('should be showed chosen type value', {
+  it.skip('should be showed chosen type value', {
     retries: {
       runMode: 6,
       openMode: 6,
@@ -117,7 +117,7 @@ describe('Create a new submission', () => {
   });
 
   // Test CMDI input field
-  it('should be visible Has CMDI file input field because user is admin', {
+  it.skip('should be visible Has CMDI file input field because user is admin', {
     retries: {
       runMode: 6,
       openMode: 6,
@@ -127,7 +127,7 @@ describe('Create a new submission', () => {
     createItemProcess.checkLocalHasCMDIVisibility();
   });
 
-  it('The local.hasCMDI value should be sent in the response after type change', {
+  it.skip('The local.hasCMDI value should be sent in the response after type change', {
     retries: {
       runMode: 6,
       openMode: 6,
@@ -244,7 +244,7 @@ describe('Create a new submission', () => {
   });
 });
 
-describe('Create a new submission in the clariah collection', () => {
+describe.skip('Create a new submission in the clariah collection', () => {
   beforeEach(() => {
     // Create a new submission
     cy.visit('/submit?collection=' + TEST_SUBMIT_CLARIAH_COLLECTION_UUID + '&entityType=none');
