@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { BehaviorSubject, combineLatest as observableCombineLatest, fromEvent} from 'rxjs';
+import { BehaviorSubject, combineLatest as observableCombineLatest, fromEvent } from 'rxjs';
 import { RemoteData } from '../../core/data/remote-data';
 import { PaginatedList } from '../../core/data/paginated-list.model';
 import { HandleDataService } from '../../core/data/handle-data.service';
@@ -28,7 +28,7 @@ import {
   SITE,
   SUCCESSFUL_RESPONSE_START_CHAR
 } from '../../core/handle/handle.resource-type';
-import {getHandlePageRoute } from 'src/app/community-page/community-page-routing-paths';
+import { getHandlePageRoute } from 'src/app/community-page/community-page-routing-paths';
 
 
 /**
@@ -48,9 +48,9 @@ export const RESOURCE_TYPE_SEARCH_OPTION = 'resourceTypeId';
 })
 export class HandleTableComponent implements OnInit {
 
- getHandlePageRoute(resourceId: string | undefined): string {
-  return getHandlePageRoute(resourceId ?? '');
-}
+  getHandlePageRoute(resourceId: string | undefined): string {
+    return getHandlePageRoute(resourceId ?? '');
+  }
 
   constructor(private handleDataService: HandleDataService,
     private paginationService: PaginationService,
@@ -144,7 +144,6 @@ export class HandleTableComponent implements OnInit {
     this.initializeSortingOptions();
     this.getAllHandles();
 
-
     this.handleOption = this.translateService.instant('handle-table.table.handle');
     this.internalOption = this.translateService.instant('handle-table.table.internal');
     this.resourceTypeOption = this.translateService.instant('handle-table.table.resource-type');
@@ -174,11 +173,9 @@ export class HandleTableComponent implements OnInit {
     ).subscribe((res: RemoteData<PaginatedList<Handle>>) => {
       this.handlesRD$.next(res);
       this.isLoading = false;
-      console.log(res.payload.page[0]);
-      console.log(res.payload.page);
     });
 
-    
+
   }
 
   /**
