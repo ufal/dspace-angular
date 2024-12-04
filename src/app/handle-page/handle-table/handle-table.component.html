@@ -42,8 +42,8 @@
                   <th scope="col">{{"handle-table.table.handle" | translate}}</th>
                   <th scope="col">{{"handle-table.table.internal" | translate}}</th>
                   <th scope="col">{{"handle-table.table.url" | translate}}</th>
-                  <!-- <th scope="col">{{"handle-table.table.resource-type" | translate}}</th> -->
-                  <th scope="col">{{"handle-table.table.resource-type-id" | translate}}</th>
+                  <th scope="col">{{"handle-table.table.resource-type" | translate}}</th>
+                  <!-- <th scope="col">{{"handle-table.table.resource-type-id" | translate}}</th> -->
                   <th scope="col">{{"handle-table.table.resource-id" | translate}}</th>
                 </tr>
               </thead>
@@ -54,7 +54,7 @@
                       (change)="switchSelectedHandle(handle.id)" type="checkbox" name="{{handle.id}}"></td>
 
                   <td class="version-row-element-version">
-                    {{handle?.handle}} 
+                    {{handle?.handle}}
                   </td>
 
                   <td class="version-row-element-editor">
@@ -63,12 +63,12 @@
                     </span>
                     <span *ngIf="handle?.resourceTypeID != null">
                       {{ 'handle-table.table.is-internal' | translate }}
-                    </span> 
+                    </span>
                   </td>
 
                   <td class="version-row-element-editor">
                     <a *ngIf="handle?.url" [href]="handle?.url" target="_blank" rel="noopener noreferrer">
-                      {{handle?.url}} 
+                      {{handle?.url}}
 
                     </a>
                   </td>
