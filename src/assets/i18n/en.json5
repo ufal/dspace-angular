@@ -3191,6 +3191,10 @@
 
   "login.form.or-divider": "or",
 
+  "login.auth.failed.shibboleth.title": "Shibboleth authentication failed",
+
+  "login.auth.failed.shibboleth.message": "Authentication failed because your IDP did not send the required Shibboleth headers. Please contact the Help Desk by email: {{ email }} .",
+
   "login.title": "Login",
 
   "login.breadcrumbs": "Login",
@@ -4217,11 +4221,13 @@
 
   "search.filters.applied.f.has_content_in_original_bundle": "Contain Files",
 
-  "search.filters.applied.f.itemtype": "Type",
+  "search.filters.applied.f.type": "Type",
 
   "search.filters.applied.f.namedresourcetype": "Status",
 
   "search.filters.applied.f.subject": "Subject",
+
+  "search.filters.applied.f.subjectFirstValue": "Subject",
 
   "search.filters.applied.f.submitter": "Submitter",
 
@@ -4311,11 +4317,11 @@
 
   "search.filters.filter.has_content_in_original_bundle.head": "Contain Files",
 
-  "search.filters.filter.itemtype.head": "Type",
+  "search.filters.filter.type.head": "Type",
 
-  "search.filters.filter.itemtype.placeholder": "Type",
+  "search.filters.filter.type.placeholder": "Type",
 
-  "search.filters.filter.itemtype.label": "Search type",
+  "search.filters.filter.type.label": "Search type",
 
   "search.filters.filter.jobTitle.head": "Job Title",
 
@@ -5964,4 +5970,9 @@
 
   "change.submitter.page.changed-error": "An error occurred while changing the submitter",
 
+  "change.submitter.page.cannot.see.submitter.message": "You do not have permission to see submitter information.",
+
+  "change.submitter.page.items.handle.message": "Item's handle: ",
+
+  "change.submitter.page.items.name.message": "Item's name: ",
 }
