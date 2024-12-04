@@ -28,6 +28,7 @@ import {
   SITE,
   SUCCESSFUL_RESPONSE_START_CHAR
 } from '../../core/handle/handle.resource-type';
+import { getHandlePageRoute } from 'src/app/community-page/community-page-routing-paths';
 
 /**
  * Constants for converting the searchQuery for the server
@@ -167,6 +168,10 @@ export class HandleTableComponent implements OnInit {
       this.handlesRD$.next(res);
       this.isLoading = false;
     });
+  }
+
+  getHandlePageRoute(resourceId: string | undefined): string {
+    return getHandlePageRoute(resourceId ?? '');
   }
 
   /**
