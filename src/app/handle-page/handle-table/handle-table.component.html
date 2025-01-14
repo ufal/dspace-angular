@@ -43,6 +43,7 @@
                   <th scope="col">{{"handle-table.table.internal" | translate}}</th>
                   <th scope="col">{{"handle-table.table.url" | translate}}</th>
                   <th scope="col">{{"handle-table.table.resource-type" | translate}}</th>
+                  <th scope="col">{{"handle-table.table.resource-type" | translate}}</th>
                   <!-- <th scope="col">{{"handle-table.table.resource-type-id" | translate}}</th> -->
                   <th scope="col">{{"handle-table.table.resource-id" | translate}}</th>
                 </tr>
@@ -53,9 +54,16 @@
                   <td><input class="collection-checkbox" [ngModel]="selectedHandle === handle.id"
                       (change)="switchSelectedHandle(handle.id)" type="checkbox" name="{{handle.id}}"></td>
 
-                  <td class="version-row-element-version">
+                  <!-- <td class="version-row-element-version">
                     {{handle?.handle}}
+                  </td> -->
+
+                  <td class="version-row-element-editor">
+                    <a [routerLink]="['/downloads']" class="btn btn-primary">
+                      Download-  {{ 'handle-table.handle' | translate }}
+                    </a>
                   </td>
+
 
                   <td class="version-row-element-editor">
                     <span *ngIf="handle?.resourceTypeID == null">

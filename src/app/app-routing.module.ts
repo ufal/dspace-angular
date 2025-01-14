@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, NoPreloading } from '@angular/router';
 import { AuthBlockingGuard } from './core/auth/auth-blocking.guard';
-
 import { AuthenticatedGuard } from './core/auth/authenticated.guard';
 import {
   SiteAdministratorGuard
@@ -44,6 +43,9 @@ import { MenuResolver } from './menu.resolver';
 import { ThemedPageErrorComponent } from './page-error/themed-page-error.component';
 import { HANDLE_TABLE_MODULE_PATH } from './handle-page/handle-page-routing-paths';
 import { STATIC_PAGE_PATH } from './static-page/static-page-routing-paths';
+import { ViewsComponent } from './data/views/views.component';
+import { DownloadsComponent } from './data/downloads/downloads.component';
+
 
 @NgModule({
   imports: [
@@ -70,6 +72,25 @@ import { STATIC_PAGE_PATH } from './static-page/static-page-routing-paths';
             data: { showBreadcrumbs: false },
             canActivate: [EndUserAgreementCurrentUserGuard]
           },
+          // {
+          //   path: 'downloads', // Define the new route
+          //   component: DownloadsComponent,
+          //  // canActivate: [EndUserAgreementCurrentUserGuard] // Optional, based on your app's access rules
+          // },
+          {
+            path: 'views', // Define the new route
+            component: ViewsComponent,
+          //  canActivate: [EndUserAgreementCurrentUserGuard] // Optional, based on your app's access rules
+          },
+          {
+            path: 'downloads',
+            loadChildren: () => import('./data/downloads/downloads.component')
+              .then((m) => m.DownloadsComponent),
+            canActivate: [EndUserAgreementCurrentUserGuard]
+          },
+
+          //import { DownloadsComponent } from './data/downloads/downloads.component';
+
           {
             path: 'community-list',
             loadChildren: () => import('./community-list-page/community-list-page.module')
