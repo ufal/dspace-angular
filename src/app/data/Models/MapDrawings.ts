@@ -41,7 +41,6 @@ export function drawDots(
     .attr('fill', '#d04a35')
     .on('click', (event: any, d: [string, number] | undefined) => {
       console.log('Clicked data point:', d);
-      // Emit the clicked data point
       dataPointClicked.emit(d);
       const selectedDataElement = document.getElementById('selectedData') as HTMLInputElement;
       if (selectedDataElement) {
@@ -58,17 +57,16 @@ export function drawLine(
   x: d3.ScaleBand<string>,
   y: d3.ScaleLinear<number, number>
 ): void {
-  // Define the area generator
   const area = d3.area<[string, number]>()
     .x((d: [string, number]) => (x(d[0]) ?? 0) + x.bandwidth() / 2)
-    .y0(y(0))  // Base of the area (y=0)
+    .y0(y(0))
     .y1((d: [string, number]) => y(d[1]));
 
-  // Append the area to the SVG
+
   svg.append('path')
     .datum(data)
-    .attr('fill', 'red')  // Color of the area
-    .attr('opacity', 0.2)  // Adjust opacity for visibility
+    .attr('fill', 'red')
+    .attr('opacity', 0.2)
     .attr('d', area);
 
   // Define the line generator
@@ -76,11 +74,10 @@ export function drawLine(
     .x((d: [string, number]) => (x(d[0]) ?? 0) + x.bandwidth() / 2)
     .y((d: [string, number]) => y(d[1]));
 
-  // Append the line to the SVG
   svg.append('path')
     .datum(data)
     .attr('fill', 'none')
-    .attr('stroke', '#d04a35')  // Color of the line
+    .attr('stroke', '#d04a35')
     .attr('stroke-width', 1.5)
     .attr('d', line);
 }
@@ -120,19 +117,17 @@ export function createYAxis(
 ): d3.ScaleLinear<number, number> {
   // Extract the numeric values from the data
   const numericData = data.map(d => d[1]);
-
-  // Create a linear scale for the Y-axis
   const y = d3.scaleLinear()
-    .domain([0, d3.max(numericData) ?? 0]) // Use nullish coalescing to provide a default value
+    .domain([0, d3.max(numericData) ?? 0])
     .range([height, 0]);
 
-  // Append the Y-axis to the SVG
+
   svg.append('g')
-    .call(d3.axisLeft(y).ticks(d3.max(numericData, d => Math.ceil(d / 250)) ?? 0)); // Use nullish coalescing
+    .call(d3.axisLeft(y).ticks(d3.max(numericData, d => Math.ceil(d / 250)) ?? 0));
 
   // Add grid lines to the Y-axis
   svg.selectAll('.y-grid')
-    .data(y.ticks(d3.max(numericData, d => Math.ceil(d / 100)) ?? 0)) // Use nullish coalescing
+    .data(y.ticks(d3.max(numericData, d => Math.ceil(d / 100)) ?? 0))
     .enter()
     .append('line')
     .attr('class', 'y-grid')

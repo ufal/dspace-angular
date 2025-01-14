@@ -17,7 +17,6 @@ interface DownloadData {
   styleUrls: ['./views.component.scss']
 })
 
-
 export class ViewsComponent implements OnInit {
 
   @Output() dataPointClicked = new EventEmitter<[string, number]>();
@@ -42,7 +41,7 @@ export class ViewsComponent implements OnInit {
   ngOnInit(): void {
     const targetUrl = this.searchID;
     console.log(this.dataPointClicked);
-    // Fetch and plot decade data
+
     this.plotDataService.getDecadeData(this.dataUrl1, targetUrl).subscribe({
       next: data => {
         this.plotDecade = data;
@@ -62,7 +61,7 @@ export class ViewsComponent implements OnInit {
       error: err => console.error('Error fetching yearly data', err)
     });
 
-    // Fetch and plot monthly data
+
     this.plotDataService.getMonthData(this.dataUrl3, targetUrl).subscribe({
       next: data => {
         this.dataMonthly = data;
@@ -72,18 +71,16 @@ export class ViewsComponent implements OnInit {
       error: err => console.error('Error fetching monthly data', err)
     });
 
-    // Subscribe to dataPointClicked EventEmitter
+
     this.dataPointClicked.subscribe(dataPoint => {
-      console.log('Data point received:', dataPoint); // Log the emitted data point
+      console.log('Data point received:', dataPoint);
       const [year, month] = dataPoint;
       let findMonth = year.slice(0, -5);
       let findYear = year.slice(-4);
-     // this.reloadPlot(parseInt(findMonth), parseInt(findYear));
       this.reloadPlot(parseInt(findMonth, 10), parseInt(findYear, 10));
     });
   }
 
-  // Reload plot method
   public reloadPlot(month: number, year: number): void {
     console.log('Reloading plots with Year=', year, 'Month=', this.months[month - 1]);
     this.year = year;
@@ -91,11 +88,11 @@ export class ViewsComponent implements OnInit {
     const targetUrl = this.searchID;
     const dataUrl2 = this.dataUrl1 + '&date=' + String(this.year);
     const dataUrl3 = dataUrl2 + '-' + String(this.month);
-    // Clean up existing charts
+
     this.el.nativeElement.querySelector('#yearlyChart').innerHTML = '';
     this.el.nativeElement.querySelector('#monthlyChart').innerHTML = '';
 
-    // Fetch and plot yearly data
+
     this.plotDataService.getYearlyData(dataUrl2, targetUrl).subscribe({
       next: data => {
         this.dataYearly = data;
@@ -105,7 +102,7 @@ export class ViewsComponent implements OnInit {
       error: err => console.error('Error fetching yearly data', err)
     });
 
-    // Fetch and plot monthly data
+
     this.plotDataService.getMonthData(dataUrl3, targetUrl).subscribe({
       next: data => {
         this.dataMonthly = data;

@@ -1,1 +1,14 @@
-<p>downloads works!</p>
+<div class="container">
+  <p class="title">
+    DOWNLOADS | Decade, Yearly, And Month
+  </p>
+
+  <div id="monthlyChart" class="chart"></div>
+  <button id="monthlyButton" class="button">Use Monthly Data for {{ months[month - 1] }} {{ year }}</button>
+
+  <div id="yearlyChart" class="chart"></div>
+  <button id="yearlyButton" class="button">Use Yearly Data for {{ months[month - 1] }} {{ year }}</button>
+
+  <div id="decadeChart" class="chart"></div>
+  <button id="decadeButton" class="button">Use Decade Data</button>
+</div>

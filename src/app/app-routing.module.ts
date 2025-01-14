@@ -51,7 +51,7 @@ import { DownloadsComponent } from './data/downloads/downloads.component';
   imports: [
     RouterModule.forRoot([
       { path: INTERNAL_SERVER_ERROR, component: ThemedPageInternalServerErrorComponent },
-      { path: ERROR_PAGE , component: ThemedPageErrorComponent },
+      { path: ERROR_PAGE, component: ThemedPageErrorComponent },
       {
         path: '',
         canActivate: [AuthBlockingGuard],
@@ -72,24 +72,17 @@ import { DownloadsComponent } from './data/downloads/downloads.component';
             data: { showBreadcrumbs: false },
             canActivate: [EndUserAgreementCurrentUserGuard]
           },
-          // {
-          //   path: 'downloads', // Define the new route
-          //   component: DownloadsComponent,
-          //  // canActivate: [EndUserAgreementCurrentUserGuard] // Optional, based on your app's access rules
-          // },
           {
-            path: 'views', // Define the new route
+            path: 'views',
             component: ViewsComponent,
-          //  canActivate: [EndUserAgreementCurrentUserGuard] // Optional, based on your app's access rules
-          },
-          {
-            path: 'downloads',
-            loadChildren: () => import('./data/downloads/downloads.component')
-              .then((m) => m.DownloadsComponent),
             canActivate: [EndUserAgreementCurrentUserGuard]
           },
 
-          //import { DownloadsComponent } from './data/downloads/downloads.component';
+          {
+            path: 'downloads',
+            component: DownloadsComponent,
+            canActivate: [EndUserAgreementCurrentUserGuard]
+          },
 
           {
             path: 'community-list',
@@ -302,7 +295,7 @@ import { DownloadsComponent } from './data/downloads/downloads.component';
       initialNavigation: 'enabledBlocking',
       preloadingStrategy: NoPreloading,
       onSameUrlNavigation: 'reload',
-})
+    })
   ],
   exports: [RouterModule],
 })

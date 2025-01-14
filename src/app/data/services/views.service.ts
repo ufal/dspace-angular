@@ -1,22 +1,7 @@
-// import { Injectable } from '@angular/core';
-
-// @Injectable({
-//   providedIn: 'root'
-// })
-// export class ViewsService {
-
-//   constructor() { }
-// }
-
-
-
-
-
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { getMaxValueForEachYear } from '../Models/MapFunctions';
-// import { getMaxValueForEachYear } from '../Models/MapFunctions';
 
 interface ViewData {
   nb_hits: number;
@@ -118,33 +103,6 @@ export class ViewsService {
     }
     return monthlyData;
   }
-
-  // private prepareYearData(views: Views, targetUrl: string): [string, number][] {
-  //   const plotYearlyData: [string, number][] = [];
-  //   const yearHitsAccumulator: { [key: string]: number } = {};
-  //   for (const year in views) {
-  //     if (views.hasOwnProperty(year)) {
-  //       const yearData = views[year];
-  //       if (!yearHitsAccumulator[year]) { yearHitsAccumulator[year] = 0; }
-  //       for (const month in yearData) {
-  //         if (yearData.hasOwnProperty(month)) {
-  //           const monthData = yearData[month];
-  //           for (const day in monthData) {
-  //             let z = monthData[targetUrl]
-  //             if (z) {
-  //               let hitsData = z['nb_hits'];
-  //               let hitsMoth = month + "_" + year;
-  //               plotYearlyData.push([String(hitsMoth), Number(hitsData)]);
-  //             }
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }
-  //   return getMaxValueForEachYear(plotYearlyData);
-  // }
-
-
 
   private prepareYearData(views: Views, targetUrl: string): [string, number][] {
     const plotYearlyData: [string, number][] = [];
