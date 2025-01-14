@@ -58,18 +58,22 @@ interface Data {
   providedIn: 'root'
 })
 export class DownloadsService {
-  private apiUrl = '/api?h=11234/1-2837&date=2020-04';
+  public year = 2020;
+  public month = 4;
+  private apiUrl = '/api?h=11234/1-2837';
+  private apiUrl2 = this.apiUrl + '&date=' + String(this.year);
+  private apiUrl3 = this.apiUrl2 + '-' + String(this.month);
 
   constructor(private http: HttpClient) { }
 
   getMonthData(targetUrl: string): Observable<[string, number][]> {
-    return this.http.get<Data>(this.apiUrl).pipe(
+    return this.http.get<Data>(this.apiUrl3).pipe(
       map(data => this.prepareMonthlyData(data.response.downloads, targetUrl))
     );
   }
 
   getYearlyData(targetUrl: string): Observable<[string, number][]> {
-    return this.http.get<Data>(this.apiUrl).pipe(
+    return this.http.get<Data>(this.apiUrl2).pipe(
       map(data => this.prepareYearData(data.response.downloads, targetUrl))
     );
   }
@@ -78,6 +82,58 @@ export class DownloadsService {
     return this.http.get<Data>(this.apiUrl).pipe(
       map(data => this.prepareDecadePlotData(data.response.downloads, targetUrl))
     );
+  }
+
+  private prepareMonthlyData(downloads: Views, targetUrl: string): [string, number][] {
+    const monthlyData: [string, number][] = [];
+    for (const year in downloads) {
+      if (downloads.hasOwnProperty(year)) {
+        const yearData = downloads[year];
+        for (const month in yearData) {
+          if (yearData.hasOwnProperty(month)) {
+            const monthData = yearData[month];
+            for (const day in monthData) {
+              if (monthData.hasOwnProperty(day)) {
+                const dayData = monthData[day];
+                if (year !== 'total') {
+                  const key = Object.keys(dayData)[0];
+                  const hitsN = dayData[key].nb_hits;
+                  monthlyData.push([String(day), Number(hitsN)]);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    return monthlyData;
+  }
+
+  private prepareYearData(downloads: Views, targetUrl: string): [string, number][] {
+    const plotYearlyData: [string, number][] = [];
+    const yearHitsAccumulator: { [key: string]: number } = {};
+    for (const year in downloads) {
+      if (downloads.hasOwnProperty(year)) {
+        const yearData = downloads[year];
+        yearHitsAccumulator[year] = yearHitsAccumulator[year] || 0;
+        for (const month in yearData) {
+          if (yearData.hasOwnProperty(month)) {
+            const monthData = yearData[month];
+            console.log(monthData);
+            for (const day in monthData) {
+              if (monthData.hasOwnProperty(day)) {
+                const z = monthData[day];
+                if (z) {
+                  const hitsMonth = `${month}_${year}`;
+                  plotYearlyData.push([hitsMonth, Number(z.nb_hits)]);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    return getMaxValueForEachYear(plotYearlyData);
   }
 
   private prepareDecadePlotData(downloads: Views, targetUrl: string): [string, number][] {
@@ -112,63 +168,4 @@ export class DownloadsService {
     return maxByYear;
   }
 
-  private prepareYearData(downloads: Views, targetUrl: string): [string, number][] {
-    const plotYearlyData: [string, number][] = [];
-    const yearHitsAccumulator: { [key: string]: number } = {};
-
-    for (const year in downloads) {
-      if (downloads.hasOwnProperty(year)) {
-        const yearData = downloads[year];
-        yearHitsAccumulator[year] = yearHitsAccumulator[year] || 0;
-
-        for (const month in yearData) {
-          if (yearData.hasOwnProperty(month)) {
-            const monthData = yearData[month];
-
-            for (const day in monthData) {
-              if (monthData.hasOwnProperty(day)) {
-                const z = monthData[day];
-                if (z) {
-                  const hitsData = z.nb_hits;
-                  const hitsMonth = `${month}_${year}`;
-                  plotYearlyData.push([hitsMonth, Number(hitsData)]);
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-
-    return getMaxValueForEachYear(plotYearlyData);
-  }
-
-  private prepareMonthlyData(downloads: Views, targetUrl: string): [string, number][] {
-    const monthlyData: [string, number][] = [];
-    for (const year in downloads) {
-      if (downloads.hasOwnProperty(year)) {
-        const yearData = downloads[year];
-        for (const month in yearData) {
-          if (yearData.hasOwnProperty(month)) {
-            const monthData = yearData[month];
-            for (const day in monthData) {
-              if (monthData.hasOwnProperty(day)) {
-                const dayData = monthData[day];
-                let CurrentID = Object.keys(dayData)[0];
-                if (year !== 'total') {
-                  const key = Object.keys(dayData)[0];
-                  let z = monthData[targetUrl];
-                  const hitsN = dayData[key].nb_hits;
-                  console.log(hitsN);
-
-                  monthlyData.push([String(day), Number(hitsN)]);
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    return monthlyData;
-  }
 }

@@ -78,8 +78,7 @@ import { DownloadsComponent } from './data/downloads/downloads.component';
             canActivate: [EndUserAgreementCurrentUserGuard]
           },
 
-          {
-            path: 'downloads',
+          {            path: 'downloads',
             component: DownloadsComponent,
             canActivate: [EndUserAgreementCurrentUserGuard]
           },

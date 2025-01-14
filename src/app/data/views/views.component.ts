@@ -33,16 +33,13 @@ export class ViewsComponent implements OnInit {
 
   public year = 2020;
   public month = 4;
-  private dataUrl1 = 'https://lindat.cz/statistics/handle?h=11234/1-2837';
-  private dataUrl2 = this.dataUrl1 + '&date=' + String(this.year);
-  private dataUrl3 = this.dataUrl2 + '-' + String(this.month);
   constructor(private plotDataService: ViewsService, private el: ElementRef) { }
 
   ngOnInit(): void {
     const targetUrl = this.searchID;
     console.log(this.dataPointClicked);
 
-    this.plotDataService.getDecadeData(this.dataUrl1, targetUrl).subscribe({
+    this.plotDataService.getDecadeData( targetUrl).subscribe({
       next: data => {
         this.plotDecade = data;
         const container = this.el.nativeElement.querySelector('#decadeChart');
@@ -52,7 +49,7 @@ export class ViewsComponent implements OnInit {
     });
 
     // Fetch and plot yearly data
-    this.plotDataService.getYearlyData(this.dataUrl2, targetUrl).subscribe({
+    this.plotDataService.getYearlyData( targetUrl).subscribe({
       next: data => {
         this.dataYearly = data;
         const container = this.el.nativeElement.querySelector('#yearlyChart');
@@ -62,7 +59,7 @@ export class ViewsComponent implements OnInit {
     });
 
 
-    this.plotDataService.getMonthData(this.dataUrl3, targetUrl).subscribe({
+    this.plotDataService.getMonthData(targetUrl).subscribe({
       next: data => {
         this.dataMonthly = data;
         const container = this.el.nativeElement.querySelector('#monthlyChart');
@@ -86,14 +83,11 @@ export class ViewsComponent implements OnInit {
     this.year = year;
     this.month = month;
     const targetUrl = this.searchID;
-    const dataUrl2 = this.dataUrl1 + '&date=' + String(this.year);
-    const dataUrl3 = dataUrl2 + '-' + String(this.month);
-
     this.el.nativeElement.querySelector('#yearlyChart').innerHTML = '';
     this.el.nativeElement.querySelector('#monthlyChart').innerHTML = '';
 
 
-    this.plotDataService.getYearlyData(dataUrl2, targetUrl).subscribe({
+    this.plotDataService.getYearlyData( targetUrl).subscribe({
       next: data => {
         this.dataYearly = data;
         const container = this.el.nativeElement.querySelector('#yearlyChart');
@@ -103,7 +97,7 @@ export class ViewsComponent implements OnInit {
     });
 
 
-    this.plotDataService.getMonthData(dataUrl3, targetUrl).subscribe({
+    this.plotDataService.getMonthData( targetUrl).subscribe({
       next: data => {
         this.dataMonthly = data;
         const container = this.el.nativeElement.querySelector('#monthlyChart');

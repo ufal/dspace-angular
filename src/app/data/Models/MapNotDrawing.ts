@@ -49,7 +49,7 @@ export function drawLine(
   // Define the area generator
   const area = d3.area<[string, number]>()
     .x((d: [string, number]) => (x(d[0]) ?? 0) + x.bandwidth() / 2)
-    .y0(y(0))  // Base of the area (y=0)
+    .y0(y(0))
     .y1((d: [string, number]) => y(d[1]));
 
   svg.append('path')
@@ -58,7 +58,7 @@ export function drawLine(
     .attr('opacity', 0.2)
     .attr('d', area);
 
-  // Define the line generator
+
   const line = d3.line<[string, number]>()
     .x((d: [string, number]) => (x(d[0]) ?? 0) + x.bandwidth() / 2)
     .y((d: [string, number]) => y(d[1]));
@@ -105,7 +105,6 @@ export function createYAxis(
   data: [string, number][],
   height: number
 ): d3.ScaleLinear<number, number> {
-  // Extract the numeric values from the data
   const numericData = data.map(d => d[1]);
   const y = d3.scaleLinear()
     .domain([0, d3.max(numericData) ?? 0])

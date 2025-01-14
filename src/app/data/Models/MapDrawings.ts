@@ -69,7 +69,7 @@ export function drawLine(
     .attr('opacity', 0.2)
     .attr('d', area);
 
-  // Define the line generator
+
   const line = d3.line<[string, number]>()
     .x((d: [string, number]) => (x(d[0]) ?? 0) + x.bandwidth() / 2)
     .y((d: [string, number]) => y(d[1]));
@@ -115,7 +115,6 @@ export function createYAxis(
   data: [string, number][],
   height: number
 ): d3.ScaleLinear<number, number> {
-  // Extract the numeric values from the data
   const numericData = data.map(d => d[1]);
   const y = d3.scaleLinear()
     .domain([0, d3.max(numericData) ?? 0])
@@ -125,7 +124,6 @@ export function createYAxis(
   svg.append('g')
     .call(d3.axisLeft(y).ticks(d3.max(numericData, d => Math.ceil(d / 250)) ?? 0));
 
-  // Add grid lines to the Y-axis
   svg.selectAll('.y-grid')
     .data(y.ticks(d3.max(numericData, d => Math.ceil(d / 100)) ?? 0))
     .enter()
