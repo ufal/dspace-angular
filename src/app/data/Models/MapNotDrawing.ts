@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-namespace
 import * as d3 from 'd3';
 
 export function createChartNoDraw(
@@ -18,8 +19,54 @@ export function createChartNoDraw(
     .attr('transform', `translate(${margin.left}, ${margin.top})`);
   const x = createXAxis(svg, data, innerWidth);
   const y = createYAxis(svg, data, innerHeight);
-  drawLine(svg, data, x, y);
+  drawLine(svg, data, x, y, width);
+  drawDots(svg, data, x, y,);
 }
+
+export function drawLine(
+  svg: d3.Selection<SVGGElement, unknown, null, undefined>,
+  data: [string, number][],
+  x: d3.ScaleBand<string>,
+  y: d3.ScaleLinear<number, number>,
+  width: number
+): void {
+  // Get the container dimensions
+  const container = svg.node()?.parentElement;
+  if (!container) {return;}
+
+  const height = container.clientHeight;
+
+  // Set the SVG element to be responsive
+  svg
+    .attr('width', width)
+    .attr('height', height)
+    .attr('viewBox', `0 0 ${width} ${height}`)
+    .attr('preserveAspectRatio', 'xMinYMin meet');
+
+  // Define the area generator
+  const area = d3.area<[string, number]>()
+    .x((d: [string, number]) => (x(d[0]) ?? 0) + x.bandwidth() / 2)
+    .y0(y(0))
+    .y1((d: [string, number]) => y(d[1]));
+
+  svg.append('path')
+    .datum(data)
+    .attr('fill', 'green')
+    .attr('opacity', 0.2)
+    .attr('d', area);
+
+  const line = d3.line<[string, number]>()
+    .x((d: [string, number]) => (x(d[0]) ?? 0) + x.bandwidth() / 2)
+    .y((d: [string, number]) => y(d[1]));
+
+  svg.append('path')
+    .datum(data)
+    .attr('fill', 'none')
+    .attr('stroke', '#d04a35')
+    .attr('stroke-width', 1.5)
+    .attr('d', line);
+}
+
 
 
 export function drawDots(
@@ -36,39 +83,7 @@ export function drawDots(
     .attr('cx', (d: [string, number]) => (x(d[0]) ?? 0) + x.bandwidth() / 2)
     .attr('cy', (d: [string, number]) => y(d[1]))
     .attr('r', 5)
-    .attr('fill', '#d04a35');
-}
-
-
-export function drawLine(
-  svg: d3.Selection<SVGGElement, unknown, null, undefined>,
-  data: [string, number][],
-  x: d3.ScaleBand<string>,
-  y: d3.ScaleLinear<number, number>
-): void {
-  // Define the area generator
-  const area = d3.area<[string, number]>()
-    .x((d: [string, number]) => (x(d[0]) ?? 0) + x.bandwidth() / 2)
-    .y0(y(0))
-    .y1((d: [string, number]) => y(d[1]));
-
-  svg.append('path')
-    .datum(data)
-    .attr('fill', 'red')
-    .attr('opacity', 0.2)
-    .attr('d', area);
-
-
-  const line = d3.line<[string, number]>()
-    .x((d: [string, number]) => (x(d[0]) ?? 0) + x.bandwidth() / 2)
-    .y((d: [string, number]) => y(d[1]));
-
-  svg.append('path')
-    .datum(data)
-    .attr('fill', 'none')
-    .attr('stroke', '#d04a35')
-    .attr('stroke-width', 1.5)
-    .attr('d', line);
+    .attr('fill', 'black');
 }
 
 export function createXAxis(
@@ -127,3 +142,4 @@ export function createYAxis(
     .attr('stroke-dasharray', '2,2');
   return y;
 }
+

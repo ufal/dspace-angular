@@ -4,6 +4,7 @@ import { IStats } from '../Models/Models';
 import { DownloadsService } from '../services/downloads.service';
 import { createChart } from '../Models/MapDrawings';
 import { createChartNoDraw } from '../Models/MapNotDrawing';
+import { TranslateService } from '@ngx-translate/core';
 
 interface DownloadData {
   [year: string]: IStats;
@@ -29,7 +30,9 @@ export class DownloadsComponent implements OnInit {
 
     public year = 2020;
     public month = 4;
-    constructor(private plotDataService: DownloadsService, private el: ElementRef) { }
+    constructor(private plotDataService: DownloadsService, private el: ElementRef,
+        private translateService: TranslateService,
+    ) { }
 
     ngOnInit(): void {
       const targetUrl = this.searchID;
@@ -71,6 +74,19 @@ export class DownloadsComponent implements OnInit {
         let findYear = year.slice(-4);
         this.reloadPlot(parseInt(findMonth, 10), parseInt(findYear, 10));
       });
+
+
+      // this.handleOption = this.translateService.instant(
+      //   'handle-table.table.handle'
+      // );
+      // this.internalOption = this.translateService.instant(
+      //   'handle-table.table.internal'
+      // );
+      // this.resourceTypeOption = this.translateService.instant(
+      //   'handle-table.table.resource-type'
+      // );
+
+
     }
 
 

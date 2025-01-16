@@ -80,18 +80,13 @@
                     {{ "handle-table.table.internal" | translate }}
                   </th>
                   <th scope="col">
-                    {{ "handle-table.table.url" | translate }}
+                    {{ "handle-table.table.url"}}
                   </th>
                   <th scope="col">
                     {{ "handle-table.table.resource-type" | translate }}
                   </th>
                   <th scope="col">
-                    {{ "handle-table.table.resource-type" | translate }}
-                  </th>
-
-                  <!-- <th scope="col">{{"handle-table.table.resource-type-id" | translate}}</th> -->
-                  <th scope="col">
-                    {{ "handle-table.table.resource-id" | translate }}
+                    {{ "handle-table.table.resource-id"  }}
                   </th>
                 </tr>
               </thead>
@@ -109,25 +104,14 @@
                       name="{{ handle.id }}"
                     />
                   </td>
-
-                  <!-- <td class="version-row-element-version">
-                    {{handle?.handle}}
-                  </td> -->
-
-                  <!-- <td class="version-row-element-editor">
-                    <a [routerLink]="['/downloads']" class="btn btn-primary">
-                      Download- {{ "handle-table.handle" | translate }}
-                    </a>
-                  </td> -->
-
                   <td class="version-row-element-editor">
-                    <span *ngIf="handle?.resourceId != null">
+                    <span *ngIf="handle?.handle != null">
                       <a
                         [href]="'/downloads/'"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        Downloads- {{ handle?.resourceId }}
+                        Downloads- {{ handle?.handle }}
                       </a>
                     </span>
                   </td>

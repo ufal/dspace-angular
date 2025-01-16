@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-namespace
 import * as d3 from 'd3';
 import { EventEmitter } from '@angular/core';
 
@@ -22,6 +23,32 @@ export function createChart(
   const y = createYAxis(svg, data, innerHeight);
   drawLine(svg, data, x, y);
   drawDots(svg, data, x, y, dataPointClicked);
+}
+
+export function drawLine(
+  svg: d3.Selection<SVGGElement, unknown, null, undefined>,
+  data: [string, number][],
+  x: d3.ScaleBand<string>,
+  y: d3.ScaleLinear<number, number>
+): void {
+  const area = d3.area<[string, number]>()
+    .x((d: [string, number]) => (x(d[0]) ?? 0) + x.bandwidth() / 2)
+    .y0(y(0))
+    .y1((d: [string, number]) => y(d[1]));
+  svg.append('path')
+    .datum(data)
+    .attr('fill', 'red')
+    .attr('opacity', 0.2)
+    .attr('d', area);
+  const line = d3.line<[string, number]>()
+    .x((d: [string, number]) => (x(d[0]) ?? 0) + x.bandwidth() / 2)
+    .y((d: [string, number]) => y(d[1]));
+  svg.append('path')
+    .datum(data)
+    .attr('fill', 'none')
+    .attr('stroke', '#d04a35')
+    .attr('stroke-width', 1.5)
+    .attr('d', line);
 }
 
 export function drawDots(
@@ -51,36 +78,6 @@ export function drawDots(
     });
 }
 
-export function drawLine(
-  svg: d3.Selection<SVGGElement, unknown, null, undefined>,
-  data: [string, number][],
-  x: d3.ScaleBand<string>,
-  y: d3.ScaleLinear<number, number>
-): void {
-  const area = d3.area<[string, number]>()
-    .x((d: [string, number]) => (x(d[0]) ?? 0) + x.bandwidth() / 2)
-    .y0(y(0))
-    .y1((d: [string, number]) => y(d[1]));
-
-
-  svg.append('path')
-    .datum(data)
-    .attr('fill', 'red')
-    .attr('opacity', 0.2)
-    .attr('d', area);
-
-
-  const line = d3.line<[string, number]>()
-    .x((d: [string, number]) => (x(d[0]) ?? 0) + x.bandwidth() / 2)
-    .y((d: [string, number]) => y(d[1]));
-
-  svg.append('path')
-    .datum(data)
-    .attr('fill', 'none')
-    .attr('stroke', '#d04a35')
-    .attr('stroke-width', 1.5)
-    .attr('d', line);
-}
 
 export function createXAxis(
   svg: d3.Selection<SVGGElement, unknown, null, undefined>,
@@ -119,8 +116,6 @@ export function createYAxis(
   const y = d3.scaleLinear()
     .domain([0, d3.max(numericData) ?? 0])
     .range([height, 0]);
-
-
   svg.append('g')
     .call(d3.axisLeft(y).ticks(d3.max(numericData, d => Math.ceil(d / 250)) ?? 0));
 

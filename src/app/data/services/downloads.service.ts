@@ -2,57 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { getMaxValueForEachYear } from '../Models/MapFunctions';
-
-interface ViewData {
-  nb_hits: number;
-  nb_visits: number;
-  nb_uniq_visitors: number;
-  nb_uniq_pageviews: number;
-}
-
-interface DayData {
-  [url: string]: ViewData;
-}
-
-interface MonthData {
-  [day: string]: DayData;
-}
-
-interface YearData {
-  [month: string]: MonthData;
-}
-
-interface Views {
-  [year: string]: YearData;
-}
-
-interface TotalData {
-  [year: string]: {
-    [month: string]: {
-      [day: string]: ViewData;
-    }
-  }
-}
-
-interface Downloads {
-  [year: string]: {
-    [month: string]: {
-      [day: string]: {
-        [url: string]: ViewData;
-      }
-    }
-  }
-}
-
-interface Response {
-  views: Views;
-  total: TotalData;
-  downloads: Downloads;
-}
-
-interface Data {
-  response: Response;
-}
+import { Data } from 'ejs';
+import { Views } from '../Models/Models';
 
 @Injectable({
   providedIn: 'root'
