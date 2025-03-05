@@ -25,13 +25,6 @@ export function getCommunityEditRolesRoute(id) {
   return new URLCombiner(getCollectionPageRoute(id), COMMUNITY_EDIT_PATH, COMMUNITY_EDIT_ROLES_PATH).toString();
 }
 
-export function getHandlePageRoute(input: string): string {
-  const source_array = ['Community', 'Collection', 'Item', 'Site'];
-  const results_options = ['communities', 'collections', 'items', 'sites'];
-  const index = source_array.indexOf(input);
-  return new URLCombiner(results_options[index] || 'pending').toString();
-}
-
 export const COMMUNITY_CREATE_PATH = 'create';
 export const COMMUNITY_EDIT_PATH = 'edit';
 export const COMMUNITY_EDIT_ROLES_PATH = 'roles';

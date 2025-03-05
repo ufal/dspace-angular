@@ -28,7 +28,9 @@ import {
   SITE,
   SUCCESSFUL_RESPONSE_START_CHAR
 } from '../../core/handle/handle.resource-type';
-import { getHandlePageRoute } from 'src/app/community-page/community-page-routing-paths';
+import { getCommunityPageRoute } from '../../community-page/community-page-routing-paths';
+import { getCollectionPageRoute } from '../../collection-page/collection-page-routing-paths';
+import { getEntityPageRoute } from '../../item-page/item-page-routing-paths';
 
 /**
  * Constants for converting the searchQuery for the server
@@ -170,8 +172,27 @@ export class HandleTableComponent implements OnInit {
     });
   }
 
-  getHandlePageRoute(resourceId: string | undefined): string {
-    return getHandlePageRoute(resourceId ?? '');
+  getItemPageRoute(id: string): string {
+    return getEntityPageRoute(null, id);
+  }
+
+  type2route(type: string): (id: string) => string {
+    switch (type) {
+      case COMMUNITY:
+        return getCommunityPageRoute;
+      case COLLECTION:
+        return getCollectionPageRoute;
+      case ITEM:
+        return this.getItemPageRoute;
+    }
+  }
+
+  getHandleTargetPageRoute(handle: Handle): string {
+    return this.type2route(handle.resourceTypeID)(handle.resourceId);
+  }
+
+  shouldLink(handle: Handle): boolean {
+    return handle.resourceTypeID !== SITE;
   }
 
   /**

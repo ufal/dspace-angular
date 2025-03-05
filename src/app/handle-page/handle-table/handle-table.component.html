@@ -75,10 +75,12 @@
                 </td>
                 <td class="version-row-element-editor">
                   <span *ngIf="handle?.resourceId != null">
-                    <a [href]="getHandlePageRoute(handle?.resourceTypeID)+'/' + handle?.resourceId" target="_blank"
-                      rel="noopener noreferrer">
+                    <a *ngIf="shouldLink(handle); else noLink" [href]="getHandleTargetPageRoute(handle)" target="_blank" rel="noopener noreferrer">
                       {{handle?.resourceId}}
                     </a>
+                    <ng-template #noLink>
+                      {{handle?.resourceId}}
+                    </ng-template>
                   </span>
                 </td>
               </tr>
