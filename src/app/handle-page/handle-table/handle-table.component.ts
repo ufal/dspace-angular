@@ -242,7 +242,7 @@ export class HandleTableComponent implements OnInit {
           this.switchSelectedHandle(this.selectedHandle);
           this.router.navigate([this.handleRoute, this.editHandlePath],
             { queryParams: { id: handle.id, _selflink: handle._links.self.href, handle: handle.handle,
-                url: handle.url, resourceType: handle.resourceTypeID, resourceId: handle.id,
+                url: handle.url, resourceType: handle.resourceTypeID, resourceId: handle.resourceId,
                 currentPage: this.options.currentPage } },
           );
         }
