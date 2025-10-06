@@ -8436,7 +8436,7 @@
   // "clarin-license-agreement-page.download-error": "An error occurred while downloading the file. Please try again later.",
   "clarin-license-agreement-page.download-error": "Při stahování souboru došlo k chybě. Zkuste to prosím znovu později.",
   // "home.image.glass":"Home page glass maginier image",
-  "home.image.glass":"Obrázek skleněného lupa na domovské stránce",
+  "home.image.glass": "Obrázek skleněného lupa na domovské stránce",
 
   // "home.image.lindat-color-line": "Lindat color line image",
   "home.image.lindat-color-line": "Obrázek barevné linie Lindat",
@@ -8469,6 +8469,6 @@
   "static.deposit.image.step-6-2": "Obrázek výběru licence v kroku 6.2",
 
   // "static.deposit.image.step-6-3": "Step 6.3 Open license selector image",
-  "static.deposit.image.step-6-3": "Obrázek otevření výběru licence v kroku 6.3"
+  "static.deposit.image.step-6-3": "Obrázek otevření výběru licence v kroku 6.3",
 
 }

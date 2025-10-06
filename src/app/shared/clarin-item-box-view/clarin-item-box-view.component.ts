@@ -270,14 +270,14 @@ export class ClarinItemBoxViewComponent implements OnInit {
 
   // formating the alt text according to itemType
   formateIconsAltText(itemType: string){
-    if(!itemType) return 'icon';
+    if (!itemType) {return 'icon';}
     return itemType
     .replace(/([A-Z])/g, ' $1')
-    .replace(/-/g, ' ') 
-    .replace(/\s+/g, ' ') 
+    .replace(/-/g, ' ')
+    .replace(/\s+/g, ' ')
     .trim()
     .toLowerCase()
-    .replace(/^\w/, c => c.toUpperCase()) + ' icon'; 
+    .replace(/^\w/, c => c.toUpperCase()) + ' icon';
   }
 }
 
