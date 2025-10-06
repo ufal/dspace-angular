@@ -267,6 +267,18 @@ export class ClarinItemBoxViewComponent implements OnInit {
     const imgElement = event.target as HTMLImageElement;
     imgElement.src = this.ITEM_TYPE_IMAGES_PATH + this.ITEM_TYPE_DEFAULT_IMAGE_NAME;
   }
+
+  // formating the alt text according to itemType
+  formateIconsAltText(itemType: string){
+    if(!itemType) return 'icon';
+    return itemType
+    .replace(/([A-Z])/g, ' $1')
+    .replace(/-/g, ' ') 
+    .replace(/\s+/g, ' ') 
+    .trim()
+    .toLowerCase()
+    .replace(/^\w/, c => c.toUpperCase()) + ' icon'; 
+  }
 }
 
 /**
