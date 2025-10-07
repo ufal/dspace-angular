@@ -8435,8 +8435,8 @@
   "change.submitter.page.items.name.message": "Název záznamu: ",
   // "clarin-license-agreement-page.download-error": "An error occurred while downloading the file. Please try again later.",
   "clarin-license-agreement-page.download-error": "Při stahování souboru došlo k chybě. Zkuste to prosím znovu později.",
-  // "home.image.glass":"Home page glass maginier image",
-  "home.image.glass": "Obrázek skleněného lupa na domovské stránce",
+  // "home.image.glass":"Home page glass magnifier image",
+  "home.image.glass": "Obrázek lupy na domovské stránce",
 
   // "home.image.lindat-color-line": "Lindat color line image",
   "home.image.lindat-color-line": "Obrázek barevné linie Lindat",
