@@ -38,7 +38,6 @@ import { MenuResolver } from './menu.resolver';
 import { ThemedPageErrorComponent } from './page-error/themed-page-error.component';
 import { HANDLE_TABLE_MODULE_PATH } from './handle-page/handle-page-routing-paths';
 import { STATIC_PAGE_PATH } from './static-page/static-page-routing-paths';
-import { ReverseAuthGuard } from './core/auth/reverse-authenticated.guard';
 
 @NgModule({
   imports: [
@@ -208,7 +207,6 @@ import { ReverseAuthGuard } from './core/auth/reverse-authenticated.guard';
                 import('./login-page/login-page.module').then(
                   (m) => m.LoginPageModule
                 ),
-              // canActivate: [ReverseAuthGuard],
             },
             {
               path: 'logout',
