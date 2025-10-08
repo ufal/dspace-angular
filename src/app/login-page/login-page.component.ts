@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { combineLatest as observableCombineLatest, Subscription } from 'rxjs';
-import { filter, take } from 'rxjs/operators';
+import { filter, switchMap, take } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 
 import { AppState } from '../app.reducer';
@@ -54,26 +54,8 @@ export class LoginPageComponent implements OnDestroy, OnInit {
    * Initialize instance variables
    */
   ngOnInit() {
-    let auth = false;
-    this.authService
-      .isAuthenticated()
-      .pipe(take(1))
-      .subscribe((authResult) => {
-        console.log(authResult);
-        auth = authResult;
-
-        if (auth) {
-          console.log('is authenticated', auth);
-          this.authService
-            .getAuthenticatedUserFromStore()
-            .subscribe((user: EPerson) => {
-              this.authenticatedUser = user;
-            });
-        } else {
-          console.log('is null');
-          this.authenticatedUser = null;
-        }
-      });
+    // initializing the auth state
+    this.initializeTheAuthenticationState();
 
     const queryParamsObs = this.route.queryParams;
     const authenticated = this.store.select(isAuthenticated);
@@ -105,6 +87,35 @@ export class LoginPageComponent implements OnDestroy, OnInit {
             this.store.dispatch(new AuthenticationSuccessAction(authToken));
           }
         }
+      });
+  }
+
+  // checking if user is authenticated and is in store
+  initializeTheAuthenticationState() {
+    this.authService
+      .isAuthenticated()
+      .pipe(
+        take(1),
+        switchMap((isUserAuthenticated: boolean) => {
+          if (isUserAuthenticated) {
+            return this.authService
+              .getAuthenticatedUserFromStore()
+              .pipe(take(1));
+          } else {
+            return [null];
+          }
+        })
+      )
+      .subscribe({
+        next: (user: EPerson | null) => {
+          this.authenticatedUser = user;
+
+          if (user) {
+          }
+        },
+        error: (error) => {
+          this.authenticatedUser = null;
+        },
       });
   }
 
