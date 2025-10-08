@@ -17,7 +17,6 @@ import { AuthTokenInfo } from '../core/auth/models/auth-token-info.model';
 import { isAuthenticated } from '../core/auth/selectors';
 import { AuthService } from '../core/auth/auth.service';
 import { EPerson } from '../core/eperson/models/eperson.model';
-
 /**
  * This component represents the login page
  */
@@ -109,11 +108,8 @@ export class LoginPageComponent implements OnDestroy, OnInit {
       .subscribe({
         next: (user: EPerson | null) => {
           this.authenticatedUser = user;
-
-          if (user) {
-          }
         },
-        error: (error) => {
+        error: () => {
           this.authenticatedUser = null;
         },
       });
