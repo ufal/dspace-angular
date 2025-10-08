@@ -1,6 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core';
+import {
+  ModuleWithProviders,
+  NgModule,
+  Optional,
+  SkipSelf,
+} from '@angular/core';
 
 import { EffectsModule } from '@ngrx/effects';
 
@@ -14,7 +19,7 @@ import { EndpointMockingRestService } from '../shared/mocks/dspace-rest/endpoint
 import {
   MOCK_RESPONSE_MAP,
   mockResponseMap,
-  ResponseMapMock
+  ResponseMapMock,
 } from '../shared/mocks/dspace-rest/mocks/response-map.mock';
 import { NotificationsService } from '../shared/notifications/notifications.service';
 import { SelectableListService } from '../shared/object-list/selectable-list/selectable-list.service';
@@ -72,7 +77,10 @@ import { RoleService } from './roles/role.service';
 import { FeedbackDataService } from './feedback/feedback-data.service';
 
 import { ServerResponseService } from './services/server-response.service';
-import { NativeWindowFactory, NativeWindowService } from './services/window.service';
+import {
+  NativeWindowFactory,
+  NativeWindowService,
+} from './services/window.service';
 import { BitstreamFormat } from './shared/bitstream-format.model';
 import { Bitstream } from './shared/bitstream.model';
 import { BrowseDefinition } from './shared/browse-definition.model';
@@ -128,9 +136,7 @@ import { Feature } from './shared/feature.model';
 import { Authorization } from './shared/authorization.model';
 import { FeatureDataService } from './data/feature-authorization/feature-data.service';
 import { AuthorizationDataService } from './data/feature-authorization/authorization-data.service';
-import {
-  SiteAdministratorGuard
-} from './data/feature-authorization/feature-authorization-guard/site-administrator.guard';
+import { SiteAdministratorGuard } from './data/feature-authorization/feature-authorization-guard/site-administrator.guard';
 import { Registration } from './shared/registration.model';
 import { MetadataSchemaDataService } from './data/metadata-schema-data.service';
 import { MetadataFieldDataService } from './data/metadata-field-data.service';
@@ -196,12 +202,16 @@ import { ClarinVerificationTokenDataService } from './data/clarin/clarin-verific
 import { ClruaDataService } from './data/clarin/clrua-data.service';
 import { BitstreamChecksum } from './shared/bitstream-checksum.model';
 import { BitstreamChecksumDataService } from './bitstream-checksum-data.service';
+import { ReverseAuthGuard } from './auth/reverse-authenticated.guard';
 
 /**
  * When not in production, endpoint responses can be mocked for testing purposes
  * If there is no mock version available for the endpoint, the actual REST response will be used just like in production mode
  */
-export const restServiceFactory = (mocks: ResponseMapMock, http: HttpClient) => {
+export const restServiceFactory = (
+  mocks: ResponseMapMock,
+  http: HttpClient
+) => {
   if (environment.production) {
     return new DspaceRestService(http);
   } else {
@@ -211,8 +221,12 @@ export const restServiceFactory = (mocks: ResponseMapMock, http: HttpClient) => 
 
 const IMPORTS = [
   CommonModule,
-  StoreModule.forFeature('core', coreReducers, storeModuleConfig as StoreConfig<CoreState, Action>),
-  EffectsModule.forFeature(coreEffects)
+  StoreModule.forFeature(
+    'core',
+    coreReducers,
+    storeModuleConfig as StoreConfig<CoreState, Action>
+  ),
+  EffectsModule.forFeature(coreEffects),
 ];
 
 const DECLARATIONS = [];
@@ -221,6 +235,7 @@ const EXPORTS = [];
 
 const PROVIDERS = [
   AuthenticatedGuard,
+  ReverseAuthGuard,
   CommunityDataService,
   CollectionDataService,
   SiteDataService,
@@ -234,7 +249,11 @@ const PROVIDERS = [
   ClarinVerificationTokenDataService,
   DSOResponseParsingService,
   { provide: MOCK_RESPONSE_MAP, useValue: mockResponseMap },
-  { provide: DspaceRestService, useFactory: restServiceFactory, deps: [MOCK_RESPONSE_MAP, HttpClient] },
+  {
+    provide: DspaceRestService,
+    useFactory: restServiceFactory,
+    deps: [MOCK_RESPONSE_MAP, HttpClient],
+  },
   EPersonDataService,
   LinkHeadService,
   HALEndpointService,
@@ -329,116 +348,106 @@ const PROVIDERS = [
   OrcidHistoryDataService,
   SupervisionOrderDataService,
   HandleDataService,
-  BitstreamChecksumDataService
+  BitstreamChecksumDataService,
 ];
 
 /**
  * Declaration needed to make sure all decorator functions are called in time
  */
-export const models =
-  [
-    Root,
-    DSpaceObject,
-    Bundle,
-    Bitstream,
-    BitstreamFormat,
-    BitstreamChecksum,
-    Item,
-    Site,
-    Collection,
-    Community,
-    EPerson,
-    Group,
-    ResourcePolicy,
-    MetadataSchema,
-    MetadataField,
-    MetadataBitstream,
-    License,
-    WorkflowItem,
-    WorkspaceItem,
-    SubmissionCcLicence,
-    SubmissionCcLicenceUrl,
-    SubmissionDefinitionsModel,
-    SubmissionFormsModel,
-    SubmissionSectionModel,
-    SubmissionUploadsModel,
-    AuthStatus,
-    BrowseEntry,
-    BrowseDefinition,
-    NonHierarchicalBrowseDefinition,
-    FlatBrowseDefinition,
-    ValueListBrowseDefinition,
-    HierarchicalBrowseDefinition,
-    ClaimedTask,
-    TaskObject,
-    PoolTask,
-    Relationship,
-    RelationshipType,
-    ItemType,
-    ExternalSource,
-    ExternalSourceEntry,
-    Script,
-    Process,
-    Version,
-    VersionHistory,
-    WorkflowAction,
-    AdvancedWorkflowInfo,
-    RatingAdvancedWorkflowInfo,
-    SelectReviewerAdvancedWorkflowInfo,
-    TemplateItem,
-    Feature,
-    Authorization,
-    Registration,
-    Vocabulary,
-    VocabularyEntry,
-    VocabularyEntryDetail,
-    ConfigurationProperty,
-    ShortLivedToken,
-    Registration,
-    UsageReport,
-    Root,
-    SearchConfig,
-    SubmissionAccessesModel,
-    AccessStatusObject,
-    ResearcherProfile,
-    OrcidQueue,
-    OrcidHistory,
-    AccessStatusObject,
-    IdentifierData,
-    Subscription,
-    ItemRequest,
-    BulkAccessConditionOptions,
-    Handle
-  ];
+export const models = [
+  Root,
+  DSpaceObject,
+  Bundle,
+  Bitstream,
+  BitstreamFormat,
+  BitstreamChecksum,
+  Item,
+  Site,
+  Collection,
+  Community,
+  EPerson,
+  Group,
+  ResourcePolicy,
+  MetadataSchema,
+  MetadataField,
+  MetadataBitstream,
+  License,
+  WorkflowItem,
+  WorkspaceItem,
+  SubmissionCcLicence,
+  SubmissionCcLicenceUrl,
+  SubmissionDefinitionsModel,
+  SubmissionFormsModel,
+  SubmissionSectionModel,
+  SubmissionUploadsModel,
+  AuthStatus,
+  BrowseEntry,
+  BrowseDefinition,
+  NonHierarchicalBrowseDefinition,
+  FlatBrowseDefinition,
+  ValueListBrowseDefinition,
+  HierarchicalBrowseDefinition,
+  ClaimedTask,
+  TaskObject,
+  PoolTask,
+  Relationship,
+  RelationshipType,
+  ItemType,
+  ExternalSource,
+  ExternalSourceEntry,
+  Script,
+  Process,
+  Version,
+  VersionHistory,
+  WorkflowAction,
+  AdvancedWorkflowInfo,
+  RatingAdvancedWorkflowInfo,
+  SelectReviewerAdvancedWorkflowInfo,
+  TemplateItem,
+  Feature,
+  Authorization,
+  Registration,
+  Vocabulary,
+  VocabularyEntry,
+  VocabularyEntryDetail,
+  ConfigurationProperty,
+  ShortLivedToken,
+  Registration,
+  UsageReport,
+  Root,
+  SearchConfig,
+  SubmissionAccessesModel,
+  AccessStatusObject,
+  ResearcherProfile,
+  OrcidQueue,
+  OrcidHistory,
+  AccessStatusObject,
+  IdentifierData,
+  Subscription,
+  ItemRequest,
+  BulkAccessConditionOptions,
+  Handle,
+];
 
 @NgModule({
-  imports: [
-    ...IMPORTS
-  ],
-  declarations: [
-    ...DECLARATIONS
-  ],
-  exports: [
-    ...EXPORTS
-  ],
-  providers: [
-    ...PROVIDERS
-  ]
+  imports: [...IMPORTS],
+  declarations: [...DECLARATIONS],
+  exports: [...EXPORTS],
+  providers: [...PROVIDERS],
 })
-
 export class CoreModule {
   static forRoot(): ModuleWithProviders<CoreModule> {
     return {
       ngModule: CoreModule,
-      providers: [
-        ...PROVIDERS
-      ]
+      providers: [...PROVIDERS],
     };
   }
 
   constructor(@Optional() @SkipSelf() parentModule: CoreModule) {
     if (isNotEmpty(parentModule)) {
-      throw new Error('CoreModule is already loaded. Import it in the AppModule only');
+      throw new Error(
+        'CoreModule is already loaded. Import it in the AppModule only'
+      );
     }
   }
 }
