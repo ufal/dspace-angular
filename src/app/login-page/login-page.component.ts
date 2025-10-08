@@ -10,11 +10,13 @@ import {
   AddAuthenticationMessageAction,
   AuthenticatedAction,
   AuthenticationSuccessAction,
-  ResetAuthenticationMessagesAction
+  ResetAuthenticationMessagesAction,
 } from '../core/auth/auth.actions';
 import { hasValue, isNotEmpty } from '../shared/empty.util';
 import { AuthTokenInfo } from '../core/auth/models/auth-token-info.model';
 import { isAuthenticated } from '../core/auth/selectors';
+import { AuthService } from '../core/auth/auth.service';
+import { EPerson } from '../core/eperson/models/eperson.model';
 
 /**
  * This component represents the login page
@@ -22,10 +24,9 @@ import { isAuthenticated } from '../core/auth/selectors';
 @Component({
   selector: 'ds-login-page',
   styleUrls: ['./login-page.component.scss'],
-  templateUrl: './login-page.component.html'
+  templateUrl: './login-page.component.html',
 })
 export class LoginPageComponent implements OnDestroy, OnInit {
-
   /**
    * Subscription to unsubscribe onDestroy
    * @type {Subscription}
@@ -33,40 +34,78 @@ export class LoginPageComponent implements OnDestroy, OnInit {
   sub: Subscription;
 
   /**
+   * The current authenticated user. It is null if the user is not authenticated.
+   */
+  authenticatedUser = null;
+
+  /**
    * Initialize instance variables
    *
    * @param {ActivatedRoute} route
    * @param {Store<AppState>} store
    */
-  constructor(private route: ActivatedRoute,
-              private store: Store<AppState>) {}
+  constructor(
+    private route: ActivatedRoute,
+    private store: Store<AppState>,
+    private authService: AuthService
+  ) {}
 
   /**
    * Initialize instance variables
    */
   ngOnInit() {
+    let auth = false;
+    this.authService
+      .isAuthenticated()
+      .pipe(take(1))
+      .subscribe((authResult) => {
+        console.log(authResult);
+        auth = authResult;
+
+        if (auth) {
+          console.log('is authenticated', auth);
+          this.authService
+            .getAuthenticatedUserFromStore()
+            .subscribe((user: EPerson) => {
+              this.authenticatedUser = user;
+            });
+        } else {
+          console.log('is null');
+          this.authenticatedUser = null;
+        }
+      });
+
     const queryParamsObs = this.route.queryParams;
     const authenticated = this.store.select(isAuthenticated);
-    this.sub = observableCombineLatest(queryParamsObs, authenticated).pipe(
-      filter(([params, auth]) => isNotEmpty(params.token) || isNotEmpty(params.expired)),
-      take(1)
-    ).subscribe(([params, auth]) => {
-      const token = params.token;
-      let authToken: AuthTokenInfo;
-      if (!auth) {
-        if (isNotEmpty(token)) {
-          authToken = new AuthTokenInfo(token);
-          this.store.dispatch(new AuthenticatedAction(authToken));
-        } else if (isNotEmpty(params.expired)) {
-          this.store.dispatch(new AddAuthenticationMessageAction('auth.messages.expired'));
+
+    this.sub = observableCombineLatest(queryParamsObs, authenticated)
+      .pipe(
+        filter(
+          ([params, auth]) =>
+            isNotEmpty(params.token) || isNotEmpty(params.expired)
+        ),
+        take(1)
+      )
+      .subscribe(([params, auth]) => {
+        console.log('is authenticated', auth);
+        const token = params.token;
+        let authToken: AuthTokenInfo;
+        if (!auth) {
+          if (isNotEmpty(token)) {
+            authToken = new AuthTokenInfo(token);
+            this.store.dispatch(new AuthenticatedAction(authToken));
+          } else if (isNotEmpty(params.expired)) {
+            this.store.dispatch(
+              new AddAuthenticationMessageAction('auth.messages.expired')
+            );
+          }
+        } else {
+          if (isNotEmpty(token)) {
+            authToken = new AuthTokenInfo(token);
+            this.store.dispatch(new AuthenticationSuccessAction(authToken));
+          }
         }
-      } else {
-        if (isNotEmpty(token)) {
-          authToken = new AuthTokenInfo(token);
-          this.store.dispatch(new AuthenticationSuccessAction(authToken));
-        }
-      }
-    });
+      });
   }
 
   /**

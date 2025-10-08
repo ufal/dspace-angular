@@ -1,5 +1,4 @@
 {
-
   "401.help": "You're not authorized to access this page. You can use the button below to get back to the home page.",
 
   "401.link.home-page": "Take me to the home page",
@@ -170,7 +169,7 @@
 
   "admin.registries.schema.breadcrumbs": "Metadata schema",
 
-  "admin.registries.schema.description": "This is the metadata schema for \"{{namespace}}\".",
+  "admin.registries.schema.description": 'This is the metadata schema for "{{namespace}}".',
 
   "admin.registries.schema.fields.head": "Schema metadata fields",
 
@@ -196,23 +195,23 @@
 
   "admin.registries.schema.head": "Metadata Schema",
 
-  "admin.registries.schema.notification.created": "Successfully created metadata schema \"{{prefix}}\"",
+  "admin.registries.schema.notification.created": 'Successfully created metadata schema "{{prefix}}"',
 
   "admin.registries.schema.notification.deleted.failure": "Failed to delete {{amount}} metadata schemas",
 
   "admin.registries.schema.notification.deleted.success": "Successfully deleted {{amount}} metadata schemas",
 
-  "admin.registries.schema.notification.edited": "Successfully edited metadata schema \"{{prefix}}\"",
+  "admin.registries.schema.notification.edited": 'Successfully edited metadata schema "{{prefix}}"',
 
   "admin.registries.schema.notification.failure": "Error",
 
-  "admin.registries.schema.notification.field.created": "Successfully created metadata field \"{{field}}\"",
+  "admin.registries.schema.notification.field.created": 'Successfully created metadata field "{{field}}"',
 
   "admin.registries.schema.notification.field.deleted.failure": "Failed to delete {{amount}} metadata fields",
 
   "admin.registries.schema.notification.field.deleted.success": "Successfully deleted {{amount}} metadata fields",
 
-  "admin.registries.schema.notification.field.edited": "Successfully edited metadata field \"{{field}}\"",
+  "admin.registries.schema.notification.field.edited": 'Successfully edited metadata field "{{field}}"',
 
   "admin.registries.schema.notification.success": "Success",
 
@@ -280,11 +279,11 @@
 
   "admin.access-control.epeople.table.edit": "Edit",
 
-  "admin.access-control.epeople.table.edit.buttons.edit": "Edit \"{{name}}\"",
+  "admin.access-control.epeople.table.edit.buttons.edit": 'Edit "{{name}}"',
 
   "admin.access-control.epeople.table.edit.buttons.edit-disabled": "You are not authorized to edit this group",
 
-  "admin.access-control.epeople.table.edit.buttons.remove": "Delete \"{{name}}\"",
+  "admin.access-control.epeople.table.edit.buttons.remove": 'Delete "{{name}}"',
 
   "admin.access-control.epeople.no-items": "No EPeople to show.",
 
@@ -306,21 +305,21 @@
 
   "admin.access-control.epeople.form.return": "Back",
 
-  "admin.access-control.epeople.form.notification.created.success": "Successfully created EPerson \"{{name}}\"",
+  "admin.access-control.epeople.form.notification.created.success": 'Successfully created EPerson "{{name}}"',
 
-  "admin.access-control.epeople.form.notification.created.failure": "Failed to create EPerson \"{{name}}\"",
+  "admin.access-control.epeople.form.notification.created.failure": 'Failed to create EPerson "{{name}}"',
 
-  "admin.access-control.epeople.form.notification.created.failure.emailInUse": "Failed to create EPerson \"{{name}}\", email \"{{email}}\" already in use.",
+  "admin.access-control.epeople.form.notification.created.failure.emailInUse": 'Failed to create EPerson "{{name}}", email "{{email}}" already in use.',
 
-  "admin.access-control.epeople.form.notification.edited.failure.emailInUse": "Failed to edit EPerson \"{{name}}\", email \"{{email}}\" already in use.",
+  "admin.access-control.epeople.form.notification.edited.failure.emailInUse": 'Failed to edit EPerson "{{name}}", email "{{email}}" already in use.',
 
-  "admin.access-control.epeople.form.notification.edited.success": "Successfully edited EPerson \"{{name}}\"",
+  "admin.access-control.epeople.form.notification.edited.success": 'Successfully edited EPerson "{{name}}"',
 
-  "admin.access-control.epeople.form.notification.edited.failure": "Failed to edit EPerson \"{{name}}\"",
+  "admin.access-control.epeople.form.notification.edited.failure": 'Failed to edit EPerson "{{name}}"',
 
-  "admin.access-control.epeople.form.notification.deleted.success": "Successfully deleted EPerson \"{{name}}\"",
+  "admin.access-control.epeople.form.notification.deleted.success": 'Successfully deleted EPerson "{{name}}"',
 
-  "admin.access-control.epeople.form.notification.deleted.failure": "Failed to delete EPerson \"{{name}}\"",
+  "admin.access-control.epeople.form.notification.deleted.failure": 'Failed to delete EPerson "{{name}}"',
 
   "admin.access-control.epeople.form.groupsEPersonIsMemberOf": "Member of these groups:",
 
@@ -334,9 +333,9 @@
 
   "admin.access-control.epeople.form.goToGroups": "Add to groups",
 
-  "admin.access-control.epeople.notification.deleted.failure": "Error occurred when trying to delete EPerson with id \"{{id}}\" with code: \"{{statusCode}}\" and message: \"{{restResponse.errorMessage}}\"",
+  "admin.access-control.epeople.notification.deleted.failure": 'Error occurred when trying to delete EPerson with id "{{id}}" with code: "{{statusCode}}" and message: "{{restResponse.errorMessage}}"',
 
-  "admin.access-control.epeople.notification.deleted.success": "Successfully deleted EPerson: \"{{name}}\"",
+  "admin.access-control.epeople.notification.deleted.success": 'Successfully deleted EPerson: "{{name}}"',
 
   "admin.access-control.groups.title": "Groups",
 
@@ -372,21 +371,21 @@
 
   "admin.access-control.groups.table.edit": "Edit",
 
-  "admin.access-control.groups.table.edit.buttons.edit": "Edit \"{{name}}\"",
+  "admin.access-control.groups.table.edit.buttons.edit": 'Edit "{{name}}"',
 
-  "admin.access-control.groups.table.edit.buttons.remove": "Delete \"{{name}}\"",
+  "admin.access-control.groups.table.edit.buttons.remove": 'Delete "{{name}}"',
 
   "admin.access-control.groups.no-items": "No groups found with this in their name or this as UUID",
 
-  "admin.access-control.groups.notification.deleted.success": "Successfully deleted group \"{{name}}\"",
+  "admin.access-control.groups.notification.deleted.success": 'Successfully deleted group "{{name}}"',
 
-  "admin.access-control.groups.notification.deleted.failure.title": "Failed to delete group \"{{name}}\"",
+  "admin.access-control.groups.notification.deleted.failure.title": 'Failed to delete group "{{name}}"',
 
-  "admin.access-control.groups.notification.deleted.failure.content": "Cause: \"{{cause}}\"",
+  "admin.access-control.groups.notification.deleted.failure.content": 'Cause: "{{cause}}"',
 
   "admin.access-control.groups.form.alert.permanent": "This group is permanent, so it can't be edited or deleted. You can still add and remove group members using this page.",
 
-  "admin.access-control.groups.form.alert.workflowGroup": "This group can’t be modified or deleted because it corresponds to a role in the submission and workflow process in the \"{{name}}\" {{comcol}}. You can delete it from the <a href='{{comcolEditRolesRoute}}'>\"assign roles\"</a> tab on the edit {{comcol}} page. You can still add and remove group members using this page.",
+  "admin.access-control.groups.form.alert.workflowGroup": 'This group can’t be modified or deleted because it corresponds to a role in the submission and workflow process in the "{{name}}" {{comcol}}. You can delete it from the <a href=\'{{comcolEditRolesRoute}}\'>"assign roles"</a> tab on the edit {{comcol}} page. You can still add and remove group members using this page.',
 
   "admin.access-control.groups.form.head.create": "Create group",
 
@@ -398,33 +397,33 @@
 
   "admin.access-control.groups.form.groupDescription": "Description",
 
-  "admin.access-control.groups.form.notification.created.success": "Successfully created Group \"{{name}}\"",
+  "admin.access-control.groups.form.notification.created.success": 'Successfully created Group "{{name}}"',
 
-  "admin.access-control.groups.form.notification.created.failure": "Failed to create Group \"{{name}}\"",
+  "admin.access-control.groups.form.notification.created.failure": 'Failed to create Group "{{name}}"',
 
-  "admin.access-control.groups.form.notification.created.failure.groupNameInUse": "Failed to create Group with name: \"{{name}}\", make sure the name is not already in use.",
+  "admin.access-control.groups.form.notification.created.failure.groupNameInUse": 'Failed to create Group with name: "{{name}}", make sure the name is not already in use.',
 
-  "admin.access-control.groups.form.notification.edited.failure": "Failed to edit Group \"{{name}}\"",
+  "admin.access-control.groups.form.notification.edited.failure": 'Failed to edit Group "{{name}}"',
 
-  "admin.access-control.groups.form.notification.edited.failure.groupNameInUse": "Name \"{{name}}\" already in use!",
+  "admin.access-control.groups.form.notification.edited.failure.groupNameInUse": 'Name "{{name}}" already in use!',
 
-  "admin.access-control.groups.form.notification.edited.success": "Successfully edited Group \"{{name}}\"",
+  "admin.access-control.groups.form.notification.edited.success": 'Successfully edited Group "{{name}}"',
 
   "admin.access-control.groups.form.actions.delete": "Delete Group",
 
-  "admin.access-control.groups.form.delete-group.modal.header": "Delete Group \"{{ dsoName }}\"",
+  "admin.access-control.groups.form.delete-group.modal.header": 'Delete Group "{{ dsoName }}"',
 
-  "admin.access-control.groups.form.delete-group.modal.info": "Are you sure you want to delete Group \"{{ dsoName }}\"",
+  "admin.access-control.groups.form.delete-group.modal.info": 'Are you sure you want to delete Group "{{ dsoName }}"',
 
   "admin.access-control.groups.form.delete-group.modal.cancel": "Cancel",
 
   "admin.access-control.groups.form.delete-group.modal.confirm": "Delete",
 
-  "admin.access-control.groups.form.notification.deleted.success": "Successfully deleted group \"{{ name }}\"",
+  "admin.access-control.groups.form.notification.deleted.success": 'Successfully deleted group "{{ name }}"',
 
-  "admin.access-control.groups.form.notification.deleted.failure.title": "Failed to delete group \"{{ name }}\"",
+  "admin.access-control.groups.form.notification.deleted.failure.title": 'Failed to delete group "{{ name }}"',
 
-  "admin.access-control.groups.form.notification.deleted.failure.content": "Cause: \"{{ cause }}\"",
+  "admin.access-control.groups.form.notification.deleted.failure.content": 'Cause: "{{ cause }}"',
 
   "admin.access-control.groups.form.members-list.head": "EPeople",
 
@@ -448,17 +447,17 @@
 
   "admin.access-control.groups.form.members-list.table.edit": "Remove / Add",
 
-  "admin.access-control.groups.form.members-list.table.edit.buttons.remove": "Remove member with name \"{{name}}\"",
+  "admin.access-control.groups.form.members-list.table.edit.buttons.remove": 'Remove member with name "{{name}}"',
 
-  "admin.access-control.groups.form.members-list.notification.success.addMember": "Successfully added member: \"{{name}}\"",
+  "admin.access-control.groups.form.members-list.notification.success.addMember": 'Successfully added member: "{{name}}"',
 
-  "admin.access-control.groups.form.members-list.notification.failure.addMember": "Failed to add member: \"{{name}}\"",
+  "admin.access-control.groups.form.members-list.notification.failure.addMember": 'Failed to add member: "{{name}}"',
 
-  "admin.access-control.groups.form.members-list.notification.success.deleteMember": "Successfully deleted member: \"{{name}}\"",
+  "admin.access-control.groups.form.members-list.notification.success.deleteMember": 'Successfully deleted member: "{{name}}"',
 
-  "admin.access-control.groups.form.members-list.notification.failure.deleteMember": "Failed to delete member: \"{{name}}\"",
+  "admin.access-control.groups.form.members-list.notification.failure.deleteMember": 'Failed to delete member: "{{name}}"',
 
-  "admin.access-control.groups.form.members-list.table.edit.buttons.add": "Add member with name \"{{name}}\"",
+  "admin.access-control.groups.form.members-list.table.edit.buttons.add": 'Add member with name "{{name}}"',
 
   "admin.access-control.groups.form.members-list.notification.failure.noActiveGroup": "No current active group, submit a name first.",
 
@@ -466,7 +465,7 @@
 
   "admin.access-control.groups.form.members-list.no-items": "No EPeople found in that search",
 
-  "admin.access-control.groups.form.subgroups-list.notification.failure": "Something went wrong: \"{{cause}}\"",
+  "admin.access-control.groups.form.subgroups-list.notification.failure": 'Something went wrong: "{{cause}}"',
 
   "admin.access-control.groups.form.subgroups-list.head": "Groups",
 
@@ -486,17 +485,17 @@
 
   "admin.access-control.groups.form.subgroups-list.table.edit": "Remove / Add",
 
-  "admin.access-control.groups.form.subgroups-list.table.edit.buttons.remove": "Remove subgroup with name \"{{name}}\"",
+  "admin.access-control.groups.form.subgroups-list.table.edit.buttons.remove": 'Remove subgroup with name "{{name}}"',
 
-  "admin.access-control.groups.form.subgroups-list.table.edit.buttons.add": "Add subgroup with name \"{{name}}\"",
+  "admin.access-control.groups.form.subgroups-list.table.edit.buttons.add": 'Add subgroup with name "{{name}}"',
 
-  "admin.access-control.groups.form.subgroups-list.notification.success.addSubgroup": "Successfully added subgroup: \"{{name}}\"",
+  "admin.access-control.groups.form.subgroups-list.notification.success.addSubgroup": 'Successfully added subgroup: "{{name}}"',
 
-  "admin.access-control.groups.form.subgroups-list.notification.failure.addSubgroup": "Failed to add subgroup: \"{{name}}\"",
+  "admin.access-control.groups.form.subgroups-list.notification.failure.addSubgroup": 'Failed to add subgroup: "{{name}}"',
 
-  "admin.access-control.groups.form.subgroups-list.notification.success.deleteSubgroup": "Successfully deleted subgroup: \"{{name}}\"",
+  "admin.access-control.groups.form.subgroups-list.notification.success.deleteSubgroup": 'Successfully deleted subgroup: "{{name}}"',
 
-  "admin.access-control.groups.form.subgroups-list.notification.failure.deleteSubgroup": "Failed to delete subgroup: \"{{name}}\"",
+  "admin.access-control.groups.form.subgroups-list.notification.failure.deleteSubgroup": 'Failed to delete subgroup: "{{name}}"',
 
   "admin.access-control.groups.form.subgroups-list.notification.failure.noActiveGroup": "No current active group, submit a name first.",
 
@@ -640,17 +639,17 @@
 
   "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.table.edit": "Remove / Add",
 
-  "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.table.edit.buttons.remove": "Remove member with name \"{{name}}\"",
+  "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.table.edit.buttons.remove": 'Remove member with name "{{name}}"',
 
-  "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.notification.success.addMember": "Successfully added member: \"{{name}}\"",
+  "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.notification.success.addMember": 'Successfully added member: "{{name}}"',
 
-  "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.notification.failure.addMember": "Failed to add member: \"{{name}}\"",
+  "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.notification.failure.addMember": 'Failed to add member: "{{name}}"',
 
-  "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.notification.success.deleteMember": "Successfully deleted member: \"{{name}}\"",
+  "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.notification.success.deleteMember": 'Successfully deleted member: "{{name}}"',
 
-  "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.notification.failure.deleteMember": "Failed to delete member: \"{{name}}\"",
+  "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.notification.failure.deleteMember": 'Failed to delete member: "{{name}}"',
 
-  "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.table.edit.buttons.add": "Add member with name \"{{name}}\"",
+  "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.table.edit.buttons.add": 'Add member with name "{{name}}"',
 
   "advanced-workflow-action-select-reviewer.groups.form.reviewers-list.notification.failure.noActiveGroup": "No current active group, submit a name first.",
 
@@ -678,7 +677,11 @@
 
   "clarin.license.agreement.header.info": "The requested content is distributed under one or more licence(s). You have to agree to the licence(s) below before you can obtain the content. Please, view the licence(s) by clicking on the button(s) and read it carefully. The data filled below might be shared with the submitter of the item and/or for creating statistics.",
 
-  "clarin.license.agreement.signer.header.info": ["The information below identifies you, the SIGNER. If the information is incorrect, please contact our", "Help Desk.", "This information will be stored as part of the electronic signatures."],
+  "clarin.license.agreement.signer.header.info": [
+    "The information below identifies you, the SIGNER. If the information is incorrect, please contact our",
+    "Help Desk.",
+    "This information will be stored as part of the electronic signatures.",
+  ],
 
   "clarin.license.agreement.item.handle": "Item handle",
 
@@ -718,7 +721,10 @@
 
   "clarin.license.agreement.notification.error.required.info": "You must fill in required info.",
 
-  "clarin.license.agreement.error.message.cannot.download": ["Something went wrong and you cannot download this bitstream, please contact", " Help Desk."],
+  "clarin.license.agreement.error.message.cannot.download": [
+    "Something went wrong and you cannot download this bitstream, please contact",
+    " Help Desk.",
+  ],
 
   "clarin.license.agreement.notification.check.email": "You will receive email with download link.",
 
@@ -726,8 +732,7 @@
 
   "clarin.bitstream.expired.dtoken.message": "The download token is expired, you will be redirected to the download page.",
 
-  "bitstream.download.page.back": "Back" ,
-
+  "bitstream.download.page.back": "Back",
 
   "clarin.license.all-page.title": "Available Licenses",
 
@@ -739,8 +744,6 @@
 
   "clarin.license.all-page.extra-information.default": "NONE",
 
-
-
   "bitstream.edit.authorizations.link": "Edit bitstream's Policies",
 
   "bitstream.edit.authorizations.title": "Edit bitstream's Policies",
@@ -749,7 +752,7 @@
 
   "bitstream.edit.bitstream": "Bitstream: ",
 
-  "bitstream.edit.form.description.hint": "Optionally, provide a brief description of the file, for example \"<i>Main article</i>\" or \"<i>Experiment data readings</i>\".",
+  "bitstream.edit.form.description.hint": 'Optionally, provide a brief description of the file, for example "<i>Main article</i>" or "<i>Experiment data readings</i>".',
 
   "bitstream.edit.form.description.label": "Description",
 
@@ -763,11 +766,11 @@
 
   "bitstream.edit.form.newFormat.label": "Describe new format",
 
-  "bitstream.edit.form.newFormat.hint": "The application you used to create the file, and the version number (for example, \"<i>ACMESoft SuperApp version 1.5</i>\").",
+  "bitstream.edit.form.newFormat.hint": 'The application you used to create the file, and the version number (for example, "<i>ACMESoft SuperApp version 1.5</i>").',
 
   "bitstream.edit.form.primaryBitstream.label": "Primary bitstream",
 
-  "bitstream.edit.form.selectedFormat.hint": "If the format is not in the above list, <b>select \"format not in list\" above</b> and describe it under \"Describe new format\".",
+  "bitstream.edit.form.selectedFormat.hint": 'If the format is not in the above list, <b>select "format not in list" above</b> and describe it under "Describe new format".',
 
   "bitstream.edit.form.selectedFormat.label": "Selected Format",
 
@@ -983,7 +986,7 @@
 
   "collection.delete.notification.success": "Successfully deleted collection",
 
-  "collection.delete.text": "Are you sure you want to delete collection \"{{ dso }}\"",
+  "collection.delete.text": 'Are you sure you want to delete collection "{{ dso }}"',
 
   "collection.edit.delete": "Delete this collection",
 
@@ -997,7 +1000,7 @@
 
   "collection.edit.item-mapper.cancel": "Cancel",
 
-  "collection.edit.item-mapper.collection": "Collection: \"<b>{{name}}</b>\"",
+  "collection.edit.item-mapper.collection": 'Collection: "<b>{{name}}</b>"',
 
   "collection.edit.item-mapper.confirm": "Map selected items",
 
@@ -1127,7 +1130,7 @@
 
   "collection.edit.template.error": "An error occurred retrieving the template item",
 
-  "collection.edit.template.head": "Edit Template Item for Collection \"{{ collection }}\"",
+  "collection.edit.template.head": 'Edit Template Item for Collection "{{ collection }}"',
 
   "collection.edit.template.label": "Template item",
 
@@ -1254,7 +1257,7 @@
 
   "community.delete.notification.success": "Successfully deleted community",
 
-  "community.delete.text": "Are you sure you want to delete community \"{{ dso }}\"",
+  "community.delete.text": 'Are you sure you want to delete community "{{ dso }}"',
 
   "community.edit.delete": "Delete this community",
 
@@ -1498,7 +1501,7 @@
 
   "curation.form.handle.hint": "Hint: Enter [your-handle-prefix]/0 to run a task across entire site (not all tasks may support this capability)",
 
-  "deny-request-copy.email.message": "Dear {{ recipientName }},\nIn response to your request I regret to inform you that it's not possible to send you a copy of the file(s) you have requested, concerning the document: \"{{ itemUrl }}\" ({{ itemName }}), of which I am an author.\n\nBest regards,\n{{ authorName }} <{{ authorEmail }}>",
+  "deny-request-copy.email.message": 'Dear {{ recipientName }},\nIn response to your request I regret to inform you that it\'s not possible to send you a copy of the file(s) you have requested, concerning the document: "{{ itemUrl }}" ({{ itemName }}), of which I am an author.\n\nBest regards,\n{{ authorName }} <{{ authorEmail }}>',
 
   "deny-request-copy.email.subject": "Request copy of document",
 
@@ -1612,9 +1615,9 @@
 
   "confirmation-modal.export-batch.confirm": "Export",
 
-  "confirmation-modal.delete-eperson.header": "Delete EPerson \"{{ dsoName }}\"",
+  "confirmation-modal.delete-eperson.header": 'Delete EPerson "{{ dsoName }}"',
 
-  "confirmation-modal.delete-eperson.info": "Are you sure you want to delete EPerson \"{{ dsoName }}\"",
+  "confirmation-modal.delete-eperson.info": 'Are you sure you want to delete EPerson "{{ dsoName }}"',
 
   "confirmation-modal.delete-eperson.cancel": "Cancel",
 
@@ -1630,7 +1633,7 @@
 
   "confirmation-modal.delete-subscription.header": "Delete Subscription",
 
-  "confirmation-modal.delete-subscription.info": "Are you sure you want to delete subscription for \"{{ dsoName }}\"",
+  "confirmation-modal.delete-subscription.info": 'Are you sure you want to delete subscription for "{{ dsoName }}"',
 
   "confirmation-modal.delete-subscription.cancel": "Cancel",
 
@@ -1660,7 +1663,7 @@
 
   "error.search-results": "Error fetching search results",
 
-  "error.invalid-search-query": "Search query is not valid. Please check <a href=\"https://solr.apache.org/guide/query-syntax-and-parsing.html\" target=\"_blank\">Solr query syntax</a> best practices for further information about this error.",
+  "error.invalid-search-query": 'Search query is not valid. Please check <a href="https://solr.apache.org/guide/query-syntax-and-parsing.html" target="_blank">Solr query syntax</a> best practices for further information about this error.',
 
   "error.sub-collections": "Error fetching sub-collections",
 
@@ -1934,7 +1937,6 @@
 
   "home.top-level-communities.help": "Select a community to browse its collections.",
 
-
   "home-page.carousel.ldata.info": "Linguistic Data and NLP Tools",
 
   "home-page.carousel.ldata.find": "Find",
@@ -1969,8 +1971,6 @@
 
   "home-page.new-items.message": "Most Viewed Items - Last Month",
 
-
-
   "handle-table.breadcrumbs": "Handles",
 
   "handle-table.new-handle.breadcrumbs": "New Handle",
@@ -1978,7 +1978,6 @@
   "handle-table.edit-handle.breadcrumbs": "Edit Handle",
 
   "handle-table.global-actions.breadcrumbs": "Global Actions",
-
 
   "handle-table.new-handle.form-handle-input-text": "Handle",
 
@@ -1990,22 +1989,17 @@
 
   "handle-table.new-handle.form-button-submit": "Submit",
 
-
   "handle-table.new-handle.notify.error": "Server Error - Cannot create new handle",
 
   "handle-table.new-handle.notify.successful": "The new handle was created!",
-
 
   "handle-table.edit-handle.notify.error": "Server Error - Cannot edit this handle",
 
   "handle-table.edit-handle.notify.successful": "The handle was edited!",
 
-
   "handle-table.delete-handle.notify.error": "Server Error - Cannot delete this handle",
 
   "handle-table.delete-handle.notify.successful": "The handle was deleted!",
-
-
 
   "handle-table.edit-handle.form-handle-input-text": "Handle",
 
@@ -2051,8 +2045,6 @@
 
   "handle-table.dropdown.search-button": "Search",
 
-
-
   "handle-table.global-actions.title": "Global Actions",
 
   "handle-table.global-actions.actions-list-message": "This is the list of available global actions.",
@@ -2081,13 +2073,9 @@
 
   "handle-table.change-handle-prefix.notify.error.empty-table": "Server Error - Cannot change the global prefix because no Handle exist.",
 
-
-
   "licenses.manage-table.breadcrumbs": "License administration",
 
   "licenses.breadcrumbs": "Licenses",
-
-
 
   "info.end-user-agreement.accept": "I have read and I agree to the End User Agreement",
 
@@ -2251,7 +2239,6 @@
 
   "item.edit.bitstreams.checksum.popover.info.body": "Download the file and compute the checksum.:",
 
-
   "item.edit.delete.cancel": "Cancel",
 
   "item.edit.delete.confirm": "Delete",
@@ -2326,7 +2313,7 @@
 
   "item.edit.item-mapper.head": "Item Mapper - Map Item to Collections",
 
-  "item.edit.item-mapper.item": "Item: \"<b>{{name}}</b>\"",
+  "item.edit.item-mapper.item": 'Item: "<b>{{name}}</b>"',
 
   "item.edit.item-mapper.no-search": "Please enter a query to search",
 
@@ -2368,7 +2355,7 @@
 
   "item.edit.metadata.edit.buttons.unedit": "Stop editing",
 
-  "item.edit.metadata.edit.buttons.virtual": "This is a virtual metadata value, i.e. a value inherited from a related entity. It can’t be modified directly. Add or remove the corresponding relationship in the \"Relationships\" tab",
+  "item.edit.metadata.edit.buttons.virtual": 'This is a virtual metadata value, i.e. a value inherited from a related entity. It can’t be modified directly. Add or remove the corresponding relationship in the "Relationships" tab',
 
   "item.edit.metadata.empty": "The item currently doesn't contain any metadata. Click Add to start adding a metadata value.",
 
@@ -2656,9 +2643,9 @@
 
   "workflow-item.search.result.delete-supervision.modal.confirm": "Delete",
 
-  "workflow-item.search.result.notification.deleted.success": "Successfully deleted supervision order \"{{name}}\"",
+  "workflow-item.search.result.notification.deleted.success": 'Successfully deleted supervision order "{{name}}"',
 
-  "workflow-item.search.result.notification.deleted.failure": "Failed to delete supervision order \"{{name}}\"",
+  "workflow-item.search.result.notification.deleted.failure": 'Failed to delete supervision order "{{name}}"',
 
   "workflow-item.search.result.list.element.supervised-by": "Supervised by:",
 
@@ -2852,7 +2839,6 @@
 
   "item.matomo-statistics.info.message": "Click on a data point to summarize by year / month.",
 
-
   "item.view.box.author.message": "Author(s):",
 
   "item.view.box.publisher.message": "Publisher:",
@@ -2865,11 +2851,9 @@
 
   "item.view.box.description.message": "Description:",
 
-
   "item.view.box.author.preview.and": "and",
 
   "item.view.box.author.preview.show-everyone": "show everyone",
-
 
   "item.file.description.not.supported.video": "Your browser does not support the video tag.",
 
@@ -2894,7 +2878,6 @@
   "item.page.download.button.command.line": "Download instructions for command line",
 
   "item.page.download.button.all.files.zip": "Download all files in item",
-
 
   "item.select.confirm": "Confirm selected",
 
@@ -3016,13 +2999,22 @@
 
   "item.tombstone.withdrawal.reason.default.value": "The reason wasn't specified.",
 
-  "item.tombstone.restricted.contact.help": ["Your user account does not have the credentials to view this item. Please contact the", "Help Desk", "if you have any questions."],
+  "item.tombstone.restricted.contact.help": [
+    "Your user account does not have the credentials to view this item. Please contact the",
+    "Help Desk",
+    "if you have any questions.",
+  ],
 
   "item.tombstone.replaced.another-repository.message": "This item is managed by another repository",
 
   "item.tombstone.replaced.locations.message": "You will find this item at the following location(s):",
 
-  "item.tombstone.replaced.help-desk.message": ["The author(s) asked us to hide this submission.", "We still keep all the data and metadata of the original submission but the submission", "is now located at the above url(s). If you need the contents of the original submission, contact us at our", "Help Desk."],
+  "item.tombstone.replaced.help-desk.message": [
+    "The author(s) asked us to hide this submission.",
+    "We still keep all the data and metadata of the original submission but the submission",
+    "is now located at the above url(s). If you need the contents of the original submission, contact us at our",
+    "Help Desk.",
+  ],
 
   "itemtemplate.edit.metadata.edit.buttons.edit": "Edit",
 
@@ -3212,7 +3204,6 @@
 
   "logout.title": "Logout",
 
-
   "clarin.help-desk.name": "Help Desk",
 
   "clarin.auth-failed.error.message": "Authentication Failed",
@@ -3221,11 +3212,21 @@
 
   "clarin.auth-failed.warning.important.message": "Important!",
 
-  "clarin.auth-failed.warning.no-email.message": ["Your IDP (home organization) has not provided your email address. Please fill and verify your email in order to submit new items to the repository, to download restricted items and optionally to subscribe to advanced statistics and/or collection updates.", "If you have any question contact the ","Help Desk."],
+  "clarin.auth-failed.warning.no-email.message": [
+    "Your IDP (home organization) has not provided your email address. Please fill and verify your email in order to submit new items to the repository, to download restricted items and optionally to subscribe to advanced statistics and/or collection updates.",
+    "If you have any question contact the ",
+    "Help Desk.",
+  ],
 
   "clarin.auth-failed.warning.email-info": "This address will be verified and remembered until your IDP provides a different one. You will still sign in through your IDP.",
 
-  "clarin.auth-failed.warning.has-email.message": ["Your IDP (home organization) has not provided your email address.", "You are registered by the e-mail: ", ". Try to login with that e-mail.", " If you have any login issues contact the ", "Help Desk."],
+  "clarin.auth-failed.warning.has-email.message": [
+    "Your IDP (home organization) has not provided your email address.",
+    "You are registered by the e-mail: ",
+    ". Try to login with that e-mail.",
+    " If you have any login issues contact the ",
+    "Help Desk.",
+  ],
 
   "clarin.auth-failed.netid": "netid",
 
@@ -3243,18 +3244,17 @@
 
   "clarin.auth-failed.send-email.error.message": "Error: cannot sent verification email.",
 
-
-
   "clarin.auth-failed.duplicate-user.header.message": "Authentication Failed",
 
-  "clarin.auth-failed.duplicate-user.error.message": ["Your email", "is already associated with a different user. It is also possible that you used a different identity provider to before. For more information please contact our", "Help Desk"],
-
-
+  "clarin.auth-failed.duplicate-user.error.message": [
+    "Your email",
+    "is already associated with a different user. It is also possible that you used a different identity provider to before. For more information please contact our",
+    "Help Desk",
+  ],
 
   "clarin.missing-headers.error.message": "Your IDP (home organization) has not provided required headers, we cannot allow you to login to our repository without required information.",
 
   "clarin.missing-headers.contact-us.message": "If you have any questions you can contact the ",
-
 
   "clarin.autoregistration.successful.message": "You have been successfully registered.",
 
@@ -3270,14 +3270,16 @@
 
   "clarin.autoregistration.table.value": "Value",
 
-  "clarin.autoregistration.repository.policy.message": ["We use only the required attributes as stated in","However we may log the attributes and keep them for a time period."],
+  "clarin.autoregistration.repository.policy.message": [
+    "We use only the required attributes as stated in",
+    "However we may log the attributes and keep them for a time period.",
+  ],
 
   "clarin.autoregistration.button.continue.to.login": "Continue to login",
 
   "clarin.autoregistration.token.not.valid.message": "Verification token is not valid.",
 
   "clarin.autologin.error.message": "Something went wrong, the user cannot be signed in automatically.",
-
 
   "menu.header.admin": "Management",
 
@@ -4159,7 +4161,6 @@
 
   "clarin-license.button.search.placeholder": "Search by the license name ...",
 
-
   "clarin-license.define-license-form.form-name": "Define new license",
 
   "clarin-license.define-license-form.input-name": "License name",
@@ -4188,8 +4189,6 @@
 
   "clarin-license.delete-license.notification.error-content": "Error: cannot delete License",
 
-
-
   "clarin-license-label.define-license-label.input-label": "Short Label (max 5. chars)",
 
   "clarin-license-label.define-license-label.input-title": "Label Title",
@@ -4201,8 +4200,6 @@
   "clarin-license-label.define-license-label.notification.successful-content": "License Label was defined successfully",
 
   "clarin-license-label.define-license-label.notification.error-content": "Error: cannot define new License Label",
-
-
 
   "search.description": "",
 
@@ -4938,7 +4935,7 @@
 
   "submission.sections.describe.relationship-lookup.selection-tab.title": "Search Results",
 
-  "submission.sections.describe.relationship-lookup.name-variant.notification.content": "Would you like to save \"{{ value }}\" as a name variant for this person so you and others can reuse it for future submissions? If you don't you can still use it for this submission.",
+  "submission.sections.describe.relationship-lookup.name-variant.notification.content": 'Would you like to save "{{ value }}" as a name variant for this person so you and others can reuse it for future submissions? If you don\'t you can still use it for this submission.',
 
   "submission.sections.describe.relationship-lookup.name-variant.notification.confirm": "Save a new name variant",
 
@@ -5220,11 +5217,18 @@
 
   "submission.sections.clarin-license.head.license-decision-message": "By checking this box, you agree to the Distribution License Agreement for this repository to reproduce, translate and distribute your submissions worldwide.",
 
-  "submission.sections.clarin-license.head.license-question-help-desk": ["If you have questions regarding this licence please contact the", "Help Desk"],
+  "submission.sections.clarin-license.head.license-question-help-desk": [
+    "If you have questions regarding this licence please contact the",
+    "Help Desk",
+  ],
 
   "submission.sections.clarin-license.head.license-select-resource": "Select the resource license",
 
-  "submission.sections.clarin-license.head.license-select-providing": ["The License Selector will provide you visual assistance to select the most appropriate license for your data or software. For the list of all supported licenses and their details visit ", "License List Page", "."],
+  "submission.sections.clarin-license.head.license-select-providing": [
+    "The License Selector will provide you visual assistance to select the most appropriate license for your data or software. For the list of all supported licenses and their details visit ",
+    "License List Page",
+    ".",
+  ],
 
   "submission.sections.clarin-license.head.license-open-selector": "OPEN License Selector",
 
@@ -5232,7 +5236,7 @@
 
   "submission.sections.clarin-license.head.license-dropdown-info": "If you already know under which license you want to distribute your work, please select from the dropdown below.",
 
-  "submission.sections.clarin-license.head.license-not-supported-message": "The selected license is not supported at the moment. Please follow the procedure described under section \"None of these licenses suits your needs\".",
+  "submission.sections.clarin-license.head.license-not-supported-message": 'The selected license is not supported at the moment. Please follow the procedure described under section "None of these licenses suits your needs".',
 
   "submission.sections.clarin-license.head.license-select-default-value": "Select a License ...",
 
@@ -5244,7 +5248,11 @@
 
   "submission.sections.clarin-license.head.license-not-offer-proceed-link": "Obtain a link (or a copy) to the license.",
 
-  "submission.sections.clarin-license.head.license-not-offer-proceed-email": ["Send an email to", "Help Desk", "with the license details."],
+  "submission.sections.clarin-license.head.license-not-offer-proceed-email": [
+    "Send an email to",
+    "Help Desk",
+    "with the license details.",
+  ],
 
   "submission.sections.clarin-license.head.license-not-offer-proceed-wait": "Save the unfinished submission and wait. We will add the license to the selection list and contact you.",
 
@@ -5254,7 +5262,11 @@
 
   "submission.sections.clarin-license.toggle.on-text": "Accepted",
 
-  "submission.sections.clarin-notice.message": ["The submission process for this collection (\"","\") is still being fine-tuned. If you find yourself unable to continue the submission because you can't provide the required information, because the required format for a field is too strict, because there's no appropriate field for your information, or for any other reason", "let us know"],
+  "submission.sections.clarin-notice.message": [
+    'The submission process for this collection ("',
+    "\") is still being fine-tuned. If you find yourself unable to continue the submission because you can't provide the required information, because the required format for a field is too strict, because there's no appropriate field for your information, or for any other reason",
+    "let us know",
+  ],
 
   "submission.sections.clarin-notice.toggle.on-text": "Confirmed",
 
@@ -5298,7 +5310,7 @@
 
   "submission.workflow.tasks.claimed.approve": "Approve",
 
-  "submission.workflow.tasks.claimed.approve_help": "If you have reviewed the item and it is suitable for inclusion in the collection, select \"Approve\".",
+  "submission.workflow.tasks.claimed.approve_help": 'If you have reviewed the item and it is suitable for inclusion in the collection, select "Approve".',
 
   "submission.workflow.tasks.claimed.edit": "Edit",
 
@@ -5318,7 +5330,7 @@
 
   "submission.workflow.tasks.claimed.reject.submit": "Reject",
 
-  "submission.workflow.tasks.claimed.reject_help": "If you have reviewed the item and found it is <strong>not</strong> suitable for inclusion in the collection, select \"Reject\".  You will then be asked to enter a message indicating why the item is unsuitable, and whether the submitter should change something and resubmit.",
+  "submission.workflow.tasks.claimed.reject_help": 'If you have reviewed the item and found it is <strong>not</strong> suitable for inclusion in the collection, select "Reject".  You will then be asked to enter a message indicating why the item is unsuitable, and whether the submitter should change something and resubmit.',
 
   "submission.workflow.tasks.claimed.return": "Return to pool",
 
@@ -5372,7 +5384,7 @@
 
   "subscriptions.modal.close": "Close",
 
-  "subscriptions.modal.delete-info": "To remove this subscription, please visit the \"Subscriptions\" page under your user profile",
+  "subscriptions.modal.delete-info": 'To remove this subscription, please visit the "Subscriptions" page under your user profile',
 
   "subscriptions.modal.new-subscription-form.type.content": "Content",
 
@@ -5432,7 +5444,7 @@
 
   "thumbnail.person.placeholder": "No Profile Picture Available",
 
-  "title": "DSpace",
+  title: "DSpace",
 
   "vocabulary-treeview.header": "Hierarchical tree view",
 
@@ -5796,7 +5808,7 @@
 
   "person.page.orcid.synchronization-mode.label": "Synchronization mode",
 
-  "person.page.orcid.synchronization-mode-message": "Please select how you would like synchronization to ORCID to occur. The options include \"Manual\" (you must send your data to ORCID manually), or \"Batch\" (the system will send your data to ORCID via a scheduled script).",
+  "person.page.orcid.synchronization-mode-message": 'Please select how you would like synchronization to ORCID to occur. The options include "Manual" (you must send your data to ORCID manually), or "Batch" (the system will send your data to ORCID via a scheduled script).',
 
   "person.page.orcid.synchronization-mode-funding-message": "Select whether to send your linked Project entities to your ORCID record's list of funding information.",
 
@@ -5930,7 +5942,6 @@
 
   "vocabulary-treeview.search.form.add": "Add",
 
-
   "navbar.repository": "Repository",
 
   "navbar.community-list": "Catalog",
@@ -5984,4 +5995,14 @@
   "change.submitter.page.items.name.message": "Item's name: ",
 
   "clarin-license-agreement-page.download-error": "An error occurred while downloading the file. Please try again later.",
+
+  "login.already-authenticated.header": "You're Already Logged In",
+
+  "login.already-authenticated.message": "You are currently authenticated. Would you like to go to home page or your profile?",
+
+  "login.already-authenticated.go-home": "Home",
+
+  "login.already-authenticated.go-profile": "Profile",
+
+  "login.already-authenticated.logout": "Logout",
 }
