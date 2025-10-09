@@ -18,14 +18,14 @@ describe('LoginPageComponent', () => {
 
   const mockUser = EPersonMock;
   const activatedRouteStub = Object.assign(new ActivatedRouteStub(), {
-    params: observableOf({}),
+    params: observableOf({})
   });
 
   const store: Store<LoginPageComponent> = jasmine.createSpyObj('store', {
     /* eslint-disable no-empty,@typescript-eslint/no-empty-function */
     dispatch: {},
     /* eslint-enable no-empty, @typescript-eslint/no-empty-function */
-    select: observableOf(true),
+    select: observableOf(true)
   });
 
   beforeEach(waitForAsync(() => {
@@ -38,14 +38,16 @@ describe('LoginPageComponent', () => {
     authServiceSpy.getAuthenticatedUserFromStore.and.returnValue(of(mockUser));
 
     TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot()],
+      imports: [
+        TranslateModule.forRoot()
+      ],
       declarations: [LoginPageComponent],
       providers: [
         { provide: ActivatedRoute, useValue: activatedRouteStub },
         { provide: Store, useValue: store },
         { provide: AuthService, useValue: authServiceSpy },
       ],
-      schemas: [NO_ERRORS_SCHEMA],
+      schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
 
     authService = TestBed.inject(AuthService) as jasmine.SpyObj<AuthService>;
