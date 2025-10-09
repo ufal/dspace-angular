@@ -8437,4 +8437,12 @@
   "change.submitter.page.items.name.message": "Název záznamu: ",
   // "clarin-license-agreement-page.download-error": "An error occurred while downloading the file. Please try again later.",
   "clarin-license-agreement-page.download-error": "Při stahování souboru došlo k chybě. Zkuste to prosím znovu později.",
+  // "menu.section.epic-handle":"ePIC handle,
+  "menu.section.epic-handle":"ePIC Handles",
+  // "epic-handle-page.title": "ePIC Handles",
+  "epic-handle-page.title": "ePIC Handles",
+  // "epic-handle-table.title": "ePIC Handle List",
+  "epic-handle-table.title": "ePIC Handle List",
+  // "epic-prefix-handle-page.title": "ePIC Handle Prefix",
+  "epic-prefix-handle-page.title": "ePIC Handle Prefix",
 }
