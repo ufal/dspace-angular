@@ -54,7 +54,7 @@ describe('LoginPageComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(LoginPageComponent);
     comp = fixture.componentInstance; // SearchPageComponent test instance
-    // fixture.detectChanges(); To uncomment
+    fixture.detectChanges();
   });
 
   it('should create instance', () => {
