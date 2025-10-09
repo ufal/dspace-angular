@@ -68,7 +68,6 @@ export class LoginPageComponent implements OnDestroy, OnInit {
         take(1)
       )
       .subscribe(([params, auth]) => {
-        console.log('is authenticated', auth);
         const token = params.token;
         let authToken: AuthTokenInfo;
         if (!auth) {
