@@ -170,6 +170,9 @@ DSPACE_UI_PORT=4000
 ### Unit Tests (Jasmine/Karma)
 - **Location**: `src/**/*.spec.ts` (co-located with source)
 - **Run**: `yarn run test:headless` (CI mode) or `yarn test` (watch mode)
+- **Run single test**: `yarn run test:headless --include='**/path/to/test.spec.ts'`
+  - Use glob patterns relative to workspace root
+  - Example: `yarn run test:headless --include='**/date-picker/date-picker.component.spec.ts'`
 - **Config**: `karma.conf.js`
 - **Coverage**: Generated in `/coverage/dspace-angular/`
 - **Expectations**: ~4801 tests, ~77% coverage, ~3.5 minute runtime
