@@ -407,7 +407,7 @@ export class DefaultAppConfig implements AppConfig {
   // display in supported metadata fields. By default, only dc.description.abstract is supported.
   markdown: MarkdownConfig = {
     enabled: false,
-    mathjax: false,
+    mathjax: false
   };
 
   // Which vocabularies should be used for which search filters

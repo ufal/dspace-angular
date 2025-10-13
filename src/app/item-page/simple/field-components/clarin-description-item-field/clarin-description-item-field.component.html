@@ -1,1 +1,2 @@
-<div [innerHTML]="validTextMetadata" style="white-space: pre-line;"></div>
+<div [innerHTML]="validTextMetadata" style="white-space: pre-line;" *ngIf="!renderMarkdown"></div>
+<div [innerHTML]="validTextMetadata | dsMarkdown | async" *ngIf="renderMarkdown"></div>
