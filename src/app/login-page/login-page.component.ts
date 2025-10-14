@@ -35,7 +35,7 @@ export class LoginPageComponent implements OnDestroy, OnInit {
   /**
    * The current authenticated user. It is null if the user is not authenticated.
    */
-  authenticatedUser = null;
+  authenticatedUser: EPerson | null = null;
 
   /**
    * Initialize instance variables
