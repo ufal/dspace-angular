@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { combineLatest as observableCombineLatest, Subscription } from 'rxjs';
-import { filter, switchMap, take } from 'rxjs/operators';
+import { combineLatest as observableCombineLatest, Subject, Subscription } from 'rxjs';
+import { filter, switchMap, take, takeUntil } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 
 import { AppState } from '../app.reducer';
@@ -31,6 +31,12 @@ export class LoginPageComponent implements OnDestroy, OnInit {
    * @type {Subscription}
    */
   sub: Subscription;
+
+  /**
+    * Subject used to trigger unsubscription from all observables when the component is destroyed.
+    * Used with the takeUntil operator to automatically clean up subscriptions and prevent memory leaks.
+  */
+  private destroy$ = new Subject<boolean>();
 
   /**
    * The current authenticated user. It is null if the user is not authenticated.
@@ -104,6 +110,7 @@ export class LoginPageComponent implements OnDestroy, OnInit {
             return [null];
           }
         })
+        takeUntil(this.destroy$)
       )
       .subscribe({
         next: (user: EPerson | null) => {
@@ -122,6 +129,8 @@ export class LoginPageComponent implements OnDestroy, OnInit {
     if (hasValue(this.sub)) {
       this.sub.unsubscribe();
     }
+    this.destroy$.next(true);
+    this.destroy$.complete()
     // Clear all authentication messages when leaving login page
     this.store.dispatch(new ResetAuthenticationMessagesAction());
   }
