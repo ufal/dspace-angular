@@ -4,8 +4,7 @@ import { Item } from '../../core/shared/item.model';
 import { CollectionDataService } from '../../core/data/collection-data.service';
 import {
   getFirstCompletedRemoteData,
-  getFirstSucceededRemoteDataPayload,
-  getFirstSucceededRemoteListPayload,
+  getFirstSucceededRemoteDataPayload, getFirstSucceededRemoteListPayload
 } from '../../core/shared/operators';
 import { Collection } from '../../core/shared/collection.model';
 import { isEmpty, isNull } from '../empty.util';
@@ -39,7 +38,7 @@ import { AUTHOR_METADATA_FIELDS } from '../../core/shared/clarin/constants';
 @Component({
   selector: 'ds-clarin-item-box-view',
   templateUrl: './clarin-item-box-view.component.html',
-  styleUrls: ['./clarin-item-box-view.component.scss'],
+  styleUrls: ['./clarin-item-box-view.component.scss']
 })
 export class ClarinItemBoxViewComponent implements OnInit {
   protected readonly AUTHOR_METADATA_FIELDS = AUTHOR_METADATA_FIELDS;
@@ -50,7 +49,7 @@ export class ClarinItemBoxViewComponent implements OnInit {
   /**
    * Show information of this item.
    */
-  @Input() object: Item | ListableObject = null;
+  @Input() object: Item|ListableObject = null;
 
   /**
    * This component is composed differently if it is used in the search result.
@@ -82,14 +81,11 @@ export class ClarinItemBoxViewComponent implements OnInit {
   /**
    * The Item's owning community.
    */
-  itemCommunity: BehaviorSubject<Community> = new BehaviorSubject<Community>(
-    null
-  );
+  itemCommunity: BehaviorSubject<Community> = new BehaviorSubject<Community>(null);
   /**
    * URL for the searching Item's owning community.
    */
-  communitySearchRedirect: BehaviorSubject<string> =
-    new BehaviorSubject<string>('');
+  communitySearchRedirect: BehaviorSubject<string> = new BehaviorSubject<string>('');
   /**
    * How kb/mb/gb has Item's files.
    */
@@ -127,15 +123,13 @@ export class ClarinItemBoxViewComponent implements OnInit {
    */
   licenseLabelIcons: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
 
-  constructor(
-    protected collectionService: CollectionDataService,
-    protected bundleService: BundleDataService,
-    protected dsoNameService: DSONameService,
-    protected configurationService: ConfigurationDataService,
-    private clarinLicenseService: ClarinLicenseDataService,
-    private sanitizer: DomSanitizer,
-    private clarinDateService: ClarinDateService
-  ) {}
+  constructor(protected collectionService: CollectionDataService,
+              protected bundleService: BundleDataService,
+              protected dsoNameService: DSONameService,
+              protected configurationService: ConfigurationDataService,
+              private clarinLicenseService: ClarinLicenseDataService,
+              private sanitizer: DomSanitizer,
+              private clarinDateService: ClarinDateService) {}
 
   async ngOnInit(): Promise<void> {
     if (this.object instanceof Item) {
@@ -155,11 +149,8 @@ export class ClarinItemBoxViewComponent implements OnInit {
     this.itemDate = this.clarinDateService.composeItemDate(this.item);
 
     await this.assignBaseUrl();
-    this.publisherRedirectLink =
-      this.getSearchEndpoint() +
-      '?f.publisher=' +
-      encodeURIComponent(this.itemPublisher) +
-      ',equals';
+    this.publisherRedirectLink = this.getSearchEndpoint() + '?f.publisher=' + encodeURIComponent(this.itemPublisher)
+      + ',equals';
     this.getItemCommunity();
     this.loadItemLicense();
     this.getItemFilesSize();
@@ -167,35 +158,26 @@ export class ClarinItemBoxViewComponent implements OnInit {
 
   private getSearchEndpoint(): string {
     // Return the search endpoint URL for with the base URL. Remove trailing slashes to ensure a clean URL.
-    return this.baseUrl.replace(/\/+$/, '') + '/search';
+    return this.baseUrl.replace(/\/+$/, '') +  '/search';
   }
 
   private getItemFilesSize() {
     if (isNull(this.item)) {
       return;
     }
-    const configAllElements: FindListOptions = Object.assign(
-      new FindListOptions(),
-      {
+    const configAllElements: FindListOptions = Object.assign(new FindListOptions(), {
         elementsPerPage: 9999,
-      }
-    );
+      });
 
-    this.bundleService
-      .findByItemAndName(
-        this.item,
-        'ORIGINAL',
-        true,
-        true,
-        followLink('bitstreams', { findListOptions: configAllElements })
-      )
+    this.bundleService.findByItemAndName(this.item, 'ORIGINAL', true, true,
+        followLink('bitstreams', { findListOptions: configAllElements }))
       .pipe(getFirstSucceededRemoteDataPayload())
       .subscribe((bundle: Bundle) => {
         bundle.bitstreams
           .pipe(getFirstSucceededRemoteListPayload())
           .subscribe((bitstreams: Bitstream[]) => {
             let sizeOfAllBitstreams = -1;
-            bitstreams.forEach((bitstream) => {
+            bitstreams.forEach(bitstream => {
               sizeOfAllBitstreams += bitstream.sizeBytes;
             });
             this.itemFilesSizeBytes.next(sizeOfAllBitstreams);
@@ -208,34 +190,23 @@ export class ClarinItemBoxViewComponent implements OnInit {
     if (isNull(this.item)) {
       return;
     }
-    this.collectionService
-      .findByHref(
-        this.item?._links?.owningCollection?.href,
-        true,
-        true,
-        followLink('parentCommunity')
-      )
+    this.collectionService.findByHref(this.item?._links?.owningCollection?.href, true, true, followLink('parentCommunity'))
       .pipe(getFirstSucceededRemoteDataPayload())
       .subscribe((collection: Collection) => {
         collection?.parentCommunity
           .pipe(getFirstSucceededRemoteDataPayload())
           .subscribe((community: Community) => {
             this.itemCommunity.next(community);
-            const encodedRedirectLink =
-              this.getSearchEndpoint() +
-              '?f.items_owning_community=' +
-              encodeURIComponent(this.dsoNameService.getName(community)) +
-              ',equals';
+            const encodedRedirectLink = this.getSearchEndpoint() + '?f.items_owning_community=' + encodeURIComponent(this.dsoNameService.getName(community)) + ',equals';
             this.communitySearchRedirect.next(encodedRedirectLink);
           });
       });
   }
   async assignBaseUrl() {
-    this.baseUrl = await getBaseUrl(this.configurationService).then(
-      (baseUrlResponse: ConfigurationProperty) => {
+    this.baseUrl = await getBaseUrl(this.configurationService)
+      .then((baseUrlResponse: ConfigurationProperty) => {
         return baseUrlResponse?.values?.[0];
-      }
-    );
+      });
   }
 
   private loadItemLicense() {
@@ -266,15 +237,10 @@ export class ClarinItemBoxViewComponent implements OnInit {
         }
       ]
     };
-    this.clarinLicenseService
-      .searchBy('byName', options, false)
+    this.clarinLicenseService.searchBy('byName', options, false)
       .pipe(
         getFirstCompletedRemoteData(),
-        switchMap(
-          (clList: RemoteData<PaginatedList<ClarinLicense>>) =>
-            clList?.payload?.page
-        )
-      )
+        switchMap((clList: RemoteData<PaginatedList<ClarinLicense>>) => clList?.payload?.page))
       .subscribe(clarinLicense => {
         let iconsList = [];
         clarinLicense.extendedClarinLicenseLabels.forEach(extendedCll => {
