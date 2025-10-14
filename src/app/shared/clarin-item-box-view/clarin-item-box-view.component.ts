@@ -262,9 +262,9 @@ export class ClarinItemBoxViewComponent implements OnInit {
       searchParams: [
         {
           fieldName: 'name',
-          fieldValue: this.license,
-        },
-      ],
+          fieldValue: this.license
+        }
+      ]
     };
     this.clarinLicenseService
       .searchBy('byName', options, false)
@@ -275,9 +275,9 @@ export class ClarinItemBoxViewComponent implements OnInit {
             clList?.payload?.page
         )
       )
-      .subscribe((clarinLicense) => {
+      .subscribe(clarinLicense => {
         let iconsList = [];
-        clarinLicense.extendedClarinLicenseLabels.forEach((extendedCll) => {
+        clarinLicense.extendedClarinLicenseLabels.forEach(extendedCll => {
           iconsList.push(extendedCll);
         });
         this.licenseLabelIcons.next(iconsList);
