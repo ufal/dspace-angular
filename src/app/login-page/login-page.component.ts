@@ -80,7 +80,7 @@ export class LoginPageComponent implements OnDestroy, OnInit {
           }
         }
       })
-    )
+    );
 
   }
 
@@ -116,7 +116,7 @@ export class LoginPageComponent implements OnDestroy, OnInit {
           this.authenticatedUser = null;
         },
       })
-    )
+    );
   }
 
   /**
