@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { combineLatest as observableCombineLatest, Subscription } from 'rxjs';
-import { filter, switchMap, take } from 'rxjs/operators';
+import { combineLatest as observableCombineLatest, Subject } from 'rxjs';
+import { filter, switchMap, take, takeUntil } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 
 import { AppState } from '../app.reducer';
@@ -12,7 +12,7 @@ import {
   AuthenticationSuccessAction,
   ResetAuthenticationMessagesAction
 } from '../core/auth/auth.actions';
-import { hasValue, isNotEmpty } from '../shared/empty.util';
+import { isNotEmpty } from '../shared/empty.util';
 import { AuthTokenInfo } from '../core/auth/models/auth-token-info.model';
 import { isAuthenticated } from '../core/auth/selectors';
 import { AuthService } from '../core/auth/auth.service';
@@ -26,17 +26,8 @@ import { EPerson } from '../core/eperson/models/eperson.model';
   templateUrl: './login-page.component.html'
 })
 export class LoginPageComponent implements OnDestroy, OnInit {
-  /**
-   * Subscription to unsubscribe onDestroy
-   * @type {Subscription}
-   */
-  sub: Subscription;
 
-  /**
-   * Subscription for authenticated user to unsubscribe onDestroy
-   * @type {Subscription}
-   */
-  sub2: Subscription;
+  private destroy$ = new Subject<boolean>();
   /**
    * The current authenticated user. It is null if the user is not authenticated.
    */
@@ -65,9 +56,9 @@ export class LoginPageComponent implements OnDestroy, OnInit {
     const queryParamsObs = this.route.queryParams;
     const authenticated = this.store.select(isAuthenticated);
 
-     this.sub = observableCombineLatest(queryParamsObs, authenticated).pipe(
+     observableCombineLatest(queryParamsObs, authenticated).pipe(
       filter(([params, auth]) => isNotEmpty(params.token) || isNotEmpty(params.expired)),
-      take(1)
+      take(1),
     ).subscribe(([params, auth]) => {
       const token = params.token;
       let authToken: AuthTokenInfo;
@@ -96,7 +87,7 @@ export class LoginPageComponent implements OnDestroy, OnInit {
    * @sideeffect Updates the `authenticatedUser` property of the component.
    */
   initializeTheAuthenticationState() {
-    this.sub2 = this.authService
+    this.authService
       .isAuthenticated()
       .pipe(
         take(1),
@@ -108,7 +99,8 @@ export class LoginPageComponent implements OnDestroy, OnInit {
           } else {
             return [null];
           }
-        })
+        }),
+        takeUntil(this.destroy$)
       )
       .subscribe({
         next: (user: EPerson | null) => {
@@ -124,11 +116,9 @@ export class LoginPageComponent implements OnDestroy, OnInit {
    * Unsubscribe from subscription
    */
   ngOnDestroy() {
-    if (hasValue(this.sub)) {
-      this.sub.unsubscribe();
-    }
+    this.destroy$.next(true);
+    this.destroy$.complete();
 
-    this.sub2?.unsubscribe();
     // Clear all authentication messages when leaving login page
     this.store.dispatch(new ResetAuthenticationMessagesAction());
   }
