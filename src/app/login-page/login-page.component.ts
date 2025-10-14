@@ -81,7 +81,14 @@ export class LoginPageComponent implements OnDestroy, OnInit {
       });
   }
 
-  // checking if user is authenticated and is in store
+  /**
+   * Initializes the authentication state by checking if the user is authenticated.
+   * If authenticated, retrieves the authenticated user from the store and updates the `authenticatedUser` property.
+   * If not authenticated or an error occurs, sets `authenticatedUser` to null.
+   *
+   * @returns {void}
+   * @sideeffect Updates the `authenticatedUser` property of the component.
+   */
   initializeTheAuthenticationState() {
     this.authService
       .isAuthenticated()
