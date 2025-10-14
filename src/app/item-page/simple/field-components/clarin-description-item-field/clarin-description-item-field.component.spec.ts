@@ -3,11 +3,8 @@ import { ClarinDescriptionItemFieldComponent } from './clarin-description-item-f
 import { Item } from '../../../../core/shared/item.model';
 import { createSuccessfulRemoteDataObject$ } from '../../../../shared/remote-data.utils';
 import { createPaginatedList } from '../../../../shared/testing/utils.test';
-import {TruncatableService} from "../../../../shared/truncatable/truncatable.service";
-import {DSONameService} from "../../../../core/breadcrumbs/dso-name.service";
-import {DSONameServiceMock} from "../../../../shared/mocks/dso-name.service.mock";
-import {APP_CONFIG} from "../../../../../config/app-config.interface";
-import {environment} from "../../../../../environments/environment";
+import {APP_CONFIG} from '../../../../../config/app-config.interface';
+import {environment} from '../../../../../environments/environment';
 
 describe('ClarinDescriptionItemFieldComponent', () => {
   let component: ClarinDescriptionItemFieldComponent;

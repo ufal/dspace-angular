@@ -28,7 +28,7 @@ export class ClarinDescriptionItemFieldComponent implements OnInit {
   validTextMetadata: string;
 
   /**
-   * This variable will be true if {@link environment.markdown.enabled} is true.
+   * This variable will be true if {@link appConfig.markdown.enabled} is true.
    */
   renderMarkdown;
 
