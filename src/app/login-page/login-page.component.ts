@@ -25,6 +25,7 @@ import { isAuthenticated } from '../core/auth/selectors';
   templateUrl: './login-page.component.html'
 })
 export class LoginPageComponent implements OnDestroy, OnInit {
+
   /**
    * Subscription to unsubscribe onDestroy
    * @type {Subscription}
@@ -63,7 +64,7 @@ export class LoginPageComponent implements OnDestroy, OnInit {
         if (isNotEmpty(token)) {
           authToken = new AuthTokenInfo(token);
           this.store.dispatch(new AuthenticationSuccessAction(authToken));
-          }
+        }
       }
     });
   }
