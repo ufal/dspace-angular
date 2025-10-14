@@ -129,7 +129,7 @@ export class ClarinItemBoxViewComponent implements OnInit {
               protected configurationService: ConfigurationDataService,
               private clarinLicenseService: ClarinLicenseDataService,
               private sanitizer: DomSanitizer,
-              private clarinDateService: ClarinDateService) {}
+              private clarinDateService: ClarinDateService) { }
 
   async ngOnInit(): Promise<void> {
     if (this.object instanceof Item) {
@@ -166,11 +166,11 @@ export class ClarinItemBoxViewComponent implements OnInit {
       return;
     }
     const configAllElements: FindListOptions = Object.assign(new FindListOptions(), {
-        elementsPerPage: 9999,
+        elementsPerPage: 9999
       });
 
     this.bundleService.findByItemAndName(this.item, 'ORIGINAL', true, true,
-        followLink('bitstreams', { findListOptions: configAllElements }))
+      followLink('bitstreams', { findListOptions: configAllElements }))
       .pipe(getFirstSucceededRemoteDataPayload())
       .subscribe((bundle: Bundle) => {
         bundle.bitstreams
