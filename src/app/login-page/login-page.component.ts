@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { combineLatest as observableCombineLatest, Subject } from 'rxjs';
-import { filter, switchMap, take, takeUntil } from 'rxjs/operators';
+import { combineLatest as observableCombineLatest, of, Subscription } from 'rxjs';
+import { filter, switchMap, take } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 
 import { AppState } from '../app.reducer';
@@ -12,7 +12,7 @@ import {
   AuthenticationSuccessAction,
   ResetAuthenticationMessagesAction
 } from '../core/auth/auth.actions';
-import { isNotEmpty } from '../shared/empty.util';
+import { hasValue, isNotEmpty } from '../shared/empty.util';
 import { AuthTokenInfo } from '../core/auth/models/auth-token-info.model';
 import { isAuthenticated } from '../core/auth/selectors';
 import { AuthService } from '../core/auth/auth.service';
@@ -27,7 +27,10 @@ import { EPerson } from '../core/eperson/models/eperson.model';
 })
 export class LoginPageComponent implements OnDestroy, OnInit {
 
-  private destroy$ = new Subject<boolean>();
+  /**
+   * Array to track all subscriptions and unsubscribe them onDestroy
+   */
+  private subs: Subscription[] = [];
   /**
    * The current authenticated user. It is null if the user is not authenticated.
    */
@@ -56,7 +59,8 @@ export class LoginPageComponent implements OnDestroy, OnInit {
     const queryParamsObs = this.route.queryParams;
     const authenticated = this.store.select(isAuthenticated);
 
-     observableCombineLatest(queryParamsObs, authenticated).pipe(
+    this.subs.push(
+      observableCombineLatest(queryParamsObs, authenticated).pipe(
       filter(([params, auth]) => isNotEmpty(params.token) || isNotEmpty(params.expired)),
       take(1),
     ).subscribe(([params, auth]) => {
@@ -75,7 +79,9 @@ export class LoginPageComponent implements OnDestroy, OnInit {
           this.store.dispatch(new AuthenticationSuccessAction(authToken));
           }
         }
-      });
+      })
+    )
+
   }
 
   /**
@@ -87,7 +93,8 @@ export class LoginPageComponent implements OnDestroy, OnInit {
    * @sideeffect Updates the `authenticatedUser` property of the component.
    */
   initializeTheAuthenticationState() {
-    this.authService
+    this.subs.push(
+      this.authService
       .isAuthenticated()
       .pipe(
         take(1),
@@ -97,10 +104,9 @@ export class LoginPageComponent implements OnDestroy, OnInit {
               .getAuthenticatedUserFromStore()
               .pipe(take(1));
           } else {
-            return [null];
+            return of(null);
           }
         }),
-        takeUntil(this.destroy$)
       )
       .subscribe({
         next: (user: EPerson | null) => {
@@ -109,16 +115,17 @@ export class LoginPageComponent implements OnDestroy, OnInit {
         error: () => {
           this.authenticatedUser = null;
         },
-      });
+      })
+    )
   }
 
   /**
    * Unsubscribe from subscription
    */
   ngOnDestroy() {
-    this.destroy$.next(true);
-    this.destroy$.complete();
-
+    this.subs
+      .filter((sub) => hasValue(sub))
+      .forEach((sub) => sub.unsubscribe());
     // Clear all authentication messages when leaving login page
     this.store.dispatch(new ResetAuthenticationMessagesAction());
   }
