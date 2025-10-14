@@ -42,6 +42,7 @@ export class LoginPageComponent implements OnDestroy, OnInit {
    *
    * @param {ActivatedRoute} route
    * @param {Store<AppState>} store
+   * @param authService
    */
   constructor(
     private route: ActivatedRoute,
