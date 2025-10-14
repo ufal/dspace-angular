@@ -1466,6 +1466,8 @@
 
   "curation-task.task.citationpage.label": "Generate Citation Page",
 
+  "curation-task.task.checkhandles.label": "Check Item Handles",
+
   "curation-task.task.checklinks.label": "Check Links in Metadata",
 
   "curation-task.task.noop.label": "NOOP",
@@ -5995,4 +5997,29 @@
   "login.already-authenticated.go-profile": "Profile",
 
   "login.already-authenticated.logout": "Logout",
+  "home.image.glass": "Home page glass magnifier image",
+
+  "home.image.lindat-color-line": "Lindat color line image",
+
+  "static.deposit.image.step-1": "Step 1 Menu Login image",
+
+  "static.deposit.image.step-2": "Step 2 Menu Submissions image",
+
+  "static.deposit.image.step-2-1": "Step 2.1 Starting a submission image",
+
+  "static.deposit.image.step-3": "Step 3 Submission information image",
+
+  "static.deposit.image.step-4": "Step 4 Describing item people and organizations image",
+
+  "static.deposit.image.step-4-1": "Step 4.1 Describing item source details image",
+
+  "static.deposit.image.step-5": "Step 5 Uploading file image",
+
+  "static.deposit.image.step-6-1": "Step 6.1 Distribution license agreement image",
+
+  "static.deposit.image.step-6-2": "Step 6.2 Selecting license image",
+
+  "static.deposit.image.step-6-3": "Step 6.3 Open license selector image",
+
+  "home.news.image.banner": "Home news banner image",
 }
