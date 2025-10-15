@@ -30,7 +30,7 @@ describe('EpicNewHandlePageComponent', () => {
     const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
     const activatedRoute = {
       snapshot: {
-        queryParams: { currentPage: 1 }
+        queryParams: { currentPage: 1, prefix: '11148' }
       }
     };
     translateService = getMockTranslateService();
@@ -55,8 +55,6 @@ describe('EpicNewHandlePageComponent', () => {
     epicHandleService = TestBed.inject(EpicHandleDataService) as jasmine.SpyObj<EpicHandleDataService>;
     router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
     translateService = TestBed.inject(TranslateService) as jasmine.SpyObj<TranslateService>;
-
-    spyOn(localStorage, 'getItem').and.returnValue('11148');
   });
 
   beforeEach(() => {
@@ -70,15 +68,10 @@ describe('EpicNewHandlePageComponent', () => {
   });
 
   describe('Component Initialization', () => {
-    it('should load prefix from localStorage', () => {
-      expect(component.prefix).toBe('11148');
-    });
-
     it('should redirect to prefix page if no prefix', () => {
-      (localStorage.getItem as jasmine.Spy).and.returnValue(null);
-
+      // simulate missing prefix in route snapshot
+      (component as any).route = { snapshot: { queryParams: {} } } as any;
       component.ngOnInit();
-
       expect(router.navigate).toHaveBeenCalledWith(['/epic-handle-table/prefix']);
     });
 
@@ -228,7 +221,7 @@ describe('EpicNewHandlePageComponent', () => {
       setTimeout(() => {
         expect(router.navigate).toHaveBeenCalledWith(
           ['/epic-handle-table'],
-          { queryParams: { currentPage: 1 } }
+          { queryParams: { currentPage: 1, prefix: '11148' } }
         );
         done();
       }, 100);
@@ -236,21 +229,19 @@ describe('EpicNewHandlePageComponent', () => {
 
     it('should redirect back on cancel', () => {
       component.onCancel();
-
       expect(router.navigate).toHaveBeenCalledWith(
         ['/epic-handle-table'],
-        { queryParams: { currentPage: 1 } }
+        { queryParams: { currentPage: 1, prefix: '11148' } }
       );
     });
 
     it('should redirect without currentPage when not provided', () => {
       component.currentPage = undefined;
-
       component.redirectBack();
 
       expect(router.navigate).toHaveBeenCalledWith(
         ['/epic-handle-table'],
-        { queryParams: {} }
+        { queryParams: { prefix: '11148' } }
       );
     });
   });

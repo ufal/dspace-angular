@@ -29,13 +29,13 @@ export class EpicHandleNewComponent implements OnInit {
     private epicHandleService: EpicHandleDataService
   ) { }
   ngOnInit(): void {
-    this.prefix = localStorage.getItem('prefix');
+    const params = this.route.snapshot.queryParams || {};
+    this.currentPage = params.currentPage;
+    this.prefix = params.prefix;
     if (!this.prefix) {
-      // use routing helper to build the correct absolute path
-      this.router.navigate([`${getEpicHandleTableModulePath()}/${EPIC_HANDLE_TABLE_PREFIX}`]);
+      this.router.navigate(['/epic-handle-table/prefix']);
       return;
     }
-    this.currentPage = this.route.snapshot.queryParams.currentPage;
   }
 
   onClickSubmit(value: any) {
@@ -78,8 +78,11 @@ export class EpicHandleNewComponent implements OnInit {
   }
 
   redirectBack() {
-    const queryParams = this.currentPage ? { currentPage: this.currentPage } : {}
-    this.router.navigate([getEpicHandleTableModulePath()], { queryParams })
+    const queryParams: any = this.currentPage ? { currentPage: this.currentPage } : {};
+    if (this.prefix) {
+      queryParams.prefix = this.prefix;
+    }
+    this.router.navigate([getEpicHandleTableModulePath()], { queryParams });
   }
 
   onCancel() {
