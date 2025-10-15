@@ -70,17 +70,12 @@ describe('EpicPrefixHandlePageComponent', () => {
   });
 
   describe('navigateToEpicHandleList', () => {
-    beforeEach(() => {
-      spyOn(localStorage, 'setItem');
-    });
-
     it('should navigate when form is valid', () => {
       component.prefixForm.get('prefix').setValue('11148');
       component.navigateToEpicHandleList({ prefix: '11148' });
 
       expect(epicHandleService.setPrefix).toHaveBeenCalledWith('11148');
-      expect(localStorage.setItem).toHaveBeenCalledWith('prefix', '11148');
-      expect(router.navigate).toHaveBeenCalledWith(['/epic-handle-table']);
+      expect(router.navigate).toHaveBeenCalledWith(['/epic-handle-table'], { queryParams: { prefix: '11148' } });
     });
 
     it('should trim whitespace from prefix', () => {
@@ -88,7 +83,6 @@ describe('EpicPrefixHandlePageComponent', () => {
       component.navigateToEpicHandleList({ prefix: '  11148  ' });
 
       expect(epicHandleService.setPrefix).toHaveBeenCalledWith('11148');
-      expect(localStorage.setItem).toHaveBeenCalledWith('prefix', '11148');
     });
 
     it('should not navigate when form is invalid', () => {
