@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { EpicHandleDataService } from '../../core/data/epic-handle-data.service';
+import { query } from 'express';
 
 @Component({
   selector: 'ds-epic-handle-prefix',
@@ -28,8 +29,7 @@ export class EpicHandlePrefixComponent {
 
     if (isValidTrimmed) {
       this.epicHandleDataService.setPrefix(trimmedPrefix);
-      localStorage.setItem('prefix', trimmedPrefix);
-      this.router.navigate(['/epic-handle-table']);
+      this.router.navigate(['/epic-handle-table'], { queryParams: { prefix: trimmedPrefix}});
     }
   }
 

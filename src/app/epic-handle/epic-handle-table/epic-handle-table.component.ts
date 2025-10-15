@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
 import { SortOptions } from 'src/app/core/cache/models/sort-options.model';
@@ -21,7 +21,8 @@ export class EpicHandleTableComponent implements OnInit {
     public router: Router,
     private cdr: ChangeDetectorRef,
     private translateService: TranslateService,
-    private notificationsService: NotificationsService,) {
+    private notificationsService: NotificationsService,
+    private route: ActivatedRoute) {
   }
   handlesRD$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   pageSize = 10;
@@ -39,17 +40,22 @@ export class EpicHandleTableComponent implements OnInit {
   totalElements: number = null;
 
   ngOnInit(): void {
-    const persistedPrefix = localStorage.getItem('prefix');
-    if (!persistedPrefix) {
-      this.router.navigate(['/epic-handle-table/prefix']);
-      return;
-    }
-    this.epicHandleDataService.setPrefix(persistedPrefix);
-    this.prefix = persistedPrefix;
-    this.handleRoute = getEpicHandleTableModulePath();
-    this.initializePaginationOptions();
-    this.initializeSortingOptions();
-    this.getAllHandles()
+    // get the prefix from query params and initialize inside the subscription so we only
+    // proceed once we have the prefix available
+    this.route.queryParams.pipe(take(1)).subscribe(params => {
+      this.prefix = params['prefix'];
+      if (!this.prefix) {
+        this.router.navigate(['/epic-handle-table/prefix']);
+        return;
+      }
+
+      // setting the prefix in the service
+      this.epicHandleDataService.setPrefix(this.prefix);
+      this.handleRoute = getEpicHandleTableModulePath();
+      this.initializePaginationOptions();
+      this.initializeSortingOptions();
+      this.getAllHandles();
+    });
   }
 
   getAllHandles() {
@@ -71,7 +77,6 @@ export class EpicHandleTableComponent implements OnInit {
       this.prefix,
       urlPattern,
       this.totalElements,
-      false
     ).subscribe((response) => {
       this.handlesRD$.next(response);
       this.isLoading = false;
@@ -107,10 +112,9 @@ export class EpicHandleTableComponent implements OnInit {
 
 
   redirectToNewHandle() {
-    console.log("redirecting to new handle page")
     this.router.navigate([this.handleRoute, this.newHandleRoute],
-      { queryParams: { currentPage: this.options.currentPage } }
-    )
+      { queryParams: { currentPage: this.options.currentPage, prefix: this.prefix } }
+    );
   }
   redirectToEditHandle() {
 
@@ -131,10 +135,11 @@ export class EpicHandleTableComponent implements OnInit {
             queryParams: {
               id: handle.id,
               url: handle.url,
-              currentPage: this.options.currentPage
+              currentPage: this.options.currentPage,
+              prefix: this.prefix
             }
           }
-        )
+        );
       }
     })
   }
@@ -204,7 +209,6 @@ export class EpicHandleTableComponent implements OnInit {
 
 
   changePrefix() {
-    localStorage.removeItem('prefix');
     this.router.navigate(['/epic-handle-table/prefix']);
   }
 

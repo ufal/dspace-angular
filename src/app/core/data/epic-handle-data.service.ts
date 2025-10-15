@@ -8,18 +8,12 @@ import { DefaultChangeAnalyzer } from './default-change-analyzer.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { NotificationsService } from '../../shared/notifications/notifications.service';
 import { Handle } from '../handle/handle.model';
-import { EPICHANDLE } from '../handle/handle.resource-type';
 import { map, mergeMap, Observable } from 'rxjs';
 import { RemoteData } from './remote-data';
 import { CoreState } from '../core-state.model';
-import { BaseDataService } from './base/base-data.service';
-import { dataService } from './base/data-service.decorator';
-import { CreateData, CreateDataImpl } from './base/create-data';
-import { RequestParam } from '../cache/models/request-param.model';
-import { FindAllData, FindAllDataImpl } from './base/find-all-data';
+import { CreateData } from './base/create-data';
+import { FindAllData } from './base/find-all-data';
 import { FindListOptions } from './find-list-options.model';
-import { FollowLinkConfig } from '../../shared/utils/follow-link-config.model';
-import { PaginatedList } from './paginated-list.model';
 import { isNotEmpty } from 'src/app/shared/empty.util';
 import { DeleteRequest, PostRequest, PutRequest } from './request.models';
 
@@ -31,9 +25,6 @@ import { DeleteRequest, PostRequest, PutRequest } from './request.models';
   providedIn: 'root',
 })
 export class EpicHandleDataService {
-
-  private createData: CreateData<Handle>;
-  private findAllData: FindAllData<Handle>;
   private currentPrefix: string = '';
   constructor(
     protected requestService: RequestService,
@@ -54,7 +45,7 @@ export class EpicHandleDataService {
     return this.currentPrefix;
   }
 
-  findAll(options: FindListOptions, prefix: string, urlPattern?: string, totalElements?: number, runCountSynchronously: boolean = false): Observable<any> {
+  findAll(options: FindListOptions, prefix: string, urlPattern?: string, totalElements?: number,): Observable<any> {
     return this.halService.getEndpoint('epichandles').pipe(
       map(baseUrl => {
         const url = `${baseUrl}/${prefix}`;
@@ -74,10 +65,6 @@ export class EpicHandleDataService {
 
         if (totalElements) {
           params = params.set('totalElements', String(totalElements));
-        }
-
-        if (runCountSynchronously) {
-          params = params.set('runCountSynchronously', 'true');
         }
 
         return { url, params };
