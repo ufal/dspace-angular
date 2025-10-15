@@ -84,7 +84,6 @@ export class EpicHandleEditComponent implements OnInit {
       })
   }
 
-
   redirectBack() {
     const queryParams = this.currentPage ? { currentPage: this.currentPage } : {};
     this.router.navigate([getEpicHandleTableModulePath()], { queryParams })
@@ -93,5 +92,4 @@ export class EpicHandleEditComponent implements OnInit {
   onCancel() {
     this.redirectBack();
   }
-
 }

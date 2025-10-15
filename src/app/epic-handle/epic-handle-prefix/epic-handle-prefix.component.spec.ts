@@ -1,13 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { EpicPrefixHandlePageComponent } from './epic-handle-prefix.component';
+import { EpicHandlePrefixComponent } from './epic-handle-prefix.component';
 import { EpicHandleDataService } from '../../core/data/epic-handle-data.service';
 import { TranslateModule } from '@ngx-translate/core';
 
 describe('EpicPrefixHandlePageComponent', () => {
-  let component: EpicPrefixHandlePageComponent;
-  let fixture: ComponentFixture<EpicPrefixHandlePageComponent>;
+  let component: EpicHandlePrefixComponent;
+  let fixture: ComponentFixture<EpicHandlePrefixComponent>;
   let router: jasmine.SpyObj<Router>;
   let epicHandleService: jasmine.SpyObj<EpicHandleDataService>;
 
@@ -16,7 +16,7 @@ describe('EpicPrefixHandlePageComponent', () => {
     const epicHandleServiceSpy = jasmine.createSpyObj('EpicHandleDataService', ['setPrefix']);
 
     await TestBed.configureTestingModule({
-      declarations: [EpicPrefixHandlePageComponent],
+      declarations: [EpicHandlePrefixComponent],
       imports: [ReactiveFormsModule, TranslateModule.forRoot()],
       providers: [
         { provide: Router, useValue: routerSpy },
@@ -29,7 +29,7 @@ describe('EpicPrefixHandlePageComponent', () => {
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(EpicPrefixHandlePageComponent);
+    fixture = TestBed.createComponent(EpicHandlePrefixComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

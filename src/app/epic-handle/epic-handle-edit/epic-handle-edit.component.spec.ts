@@ -29,7 +29,6 @@ describe('EpicEditHandlePageComponent', () => {
     const epicHandleServiceSpy = jasmine.createSpyObj('EpicHandleDataService', ['update']);
     const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
     const notificationsSpy = jasmine.createSpyObj('NotificationsService', ['success', 'error']);
-    const translateSpy = jasmine.createSpyObj('TranslateService', ['instant']);
     const activatedRoute = {
       snapshot: {
         queryParams: {
