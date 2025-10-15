@@ -27,8 +27,8 @@ export class EpicHandleTableComponent implements OnInit {
   pageSize = 10;
   options: PaginationComponentOptions;
   sortConfiguration: SortOptions;
-  searchQuery: '';
-  pidQuery: '';
+  searchQuery: string = '';
+  pidQuery: string = '';
   private previousSearchQuery = '';
   isLoading = false;
   handleRoute: string;
@@ -87,6 +87,12 @@ export class EpicHandleTableComponent implements OnInit {
     })
   }
 
+  clearSearch() {
+    this.searchQuery = '';
+    this.totalElements = null;
+    this.getAllHandles();
+  }
+
   private initializeSortingOptions() {
     this.sortConfiguration = defaultSortConfiguration;
   }
@@ -133,7 +139,12 @@ export class EpicHandleTableComponent implements OnInit {
     })
   }
 
-  goToHandle(id) { }
+  goToHandle(id) {
+    if (!id) {
+      return;
+    }
+    window.open(`/handle/${id}`, '_blank');
+  }
 
   deleteHandle() {
     if (isEmpty(this.selectedHandle)) {
