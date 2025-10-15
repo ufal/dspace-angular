@@ -6,7 +6,7 @@ import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-transla
 import { getMockTranslateService } from 'src/app/shared/mocks/translate.service.mock';
 import { TranslateLoaderMock } from 'src/app/shared/mocks/translate-loader.mock';
 import { NotificationsService } from 'src/app/shared/notifications/notifications.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { of, throwError } from 'rxjs';
 
 describe('EpicHandleTableComponent', () => {
@@ -16,6 +16,7 @@ describe('EpicHandleTableComponent', () => {
   let notificationsService: jasmine.SpyObj<NotificationsService>;
   let router: jasmine.SpyObj<Router>;
   let translateService: TranslateService;
+  let activatedRoute: any;
 
   const mockHandles = [
     {
@@ -45,6 +46,9 @@ describe('EpicHandleTableComponent', () => {
     const notificationsSpy = jasmine.createSpyObj('NotificationsService', ['success', 'error']);
     const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
     translateService = getMockTranslateService();
+    activatedRoute = {
+      queryParams: of({ prefix: '11148' })
+    };
 
     await TestBed.configureTestingModule({
       declarations: [ EpicHandleTableComponent ],
@@ -58,6 +62,7 @@ describe('EpicHandleTableComponent', () => {
         { provide: EpicHandleDataService, useValue: epicHandleDataServiceSpy },
         { provide: NotificationsService, useValue: notificationsSpy },
         { provide: Router, useValue: routerSpy},
+        { provide: ActivatedRoute, useValue: activatedRoute },
       ]
     })
     .compileComponents();
@@ -67,13 +72,6 @@ describe('EpicHandleTableComponent', () => {
     router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
     fixture = TestBed.createComponent(EpicHandleTableComponent);
     component = fixture.componentInstance;
-    // stub localStorage.getItem to return prefix used in tests
-    spyOn(localStorage, 'getItem').and.callFake((key: string) => {
-      if (key === 'prefix') {
-        return '11148';
-      }
-      return null;
-    });
     // make findAll return the mockResponse by default
     epicHandleDataService.findAll.and.returnValue(of(mockResponse));
     epicHandleDataService.deleteByHandleId && (epicHandleDataService.deleteByHandleId as jasmine.Spy).and.returnValue(of({ hasSucceeded: true, statusCode: 204 }));
@@ -86,10 +84,9 @@ describe('EpicHandleTableComponent', () => {
 
   describe('Component Initialization', () => {
     it('should redirect to prefix page if no prefix in localStorage', () => {
-      // create a fresh fixture where localStorage returns null
-      (localStorage.getItem as jasmine.Spy).and.returnValue(null);
+      // simulate no prefix in query params
+      activatedRoute.queryParams = of({});
       const f = TestBed.createComponent(EpicHandleTableComponent);
-      const comp = f.componentInstance;
       f.detectChanges();
 
       expect(router.navigate).toHaveBeenCalledWith(['/epic-handle-table/prefix']);
@@ -97,7 +94,6 @@ describe('EpicHandleTableComponent', () => {
 
     it('should set prefix from localStorage', () => {
       fixture.detectChanges();
-
       expect(component.prefix).toBe('11148');
       expect(epicHandleDataService.setPrefix).toHaveBeenCalledWith('11148');
     });
@@ -166,7 +162,6 @@ describe('EpicHandleTableComponent', () => {
         '11148',
         'example.com',
         null,
-        false
       );
     });
   });
@@ -236,7 +231,7 @@ describe('EpicHandleTableComponent', () => {
 
       expect(router.navigate).toHaveBeenCalledWith(
         ['/epic-handle-table', 'new-epic-handle'],
-        { queryParams: { currentPage: 1 } }
+        { queryParams: { currentPage: 1, prefix: '11148' } }
       );
     });
 
@@ -268,11 +263,7 @@ describe('EpicHandleTableComponent', () => {
     });
 
     it('should navigate to prefix page on changePrefix', () => {
-      spyOn(localStorage, 'removeItem');
-
       component.changePrefix();
-
-      expect(localStorage.removeItem).toHaveBeenCalledWith('prefix');
       expect(router.navigate).toHaveBeenCalledWith(['/epic-handle-table/prefix']);
     });
   });
