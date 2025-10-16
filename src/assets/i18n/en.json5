@@ -6116,7 +6116,7 @@
 
   "epic-handle-table.pid.placeholder":"Enter PID suffix",
 
-  "epic-handle-table.go-to-pid.button":"Go to PID"
+  "epic-handle-table.go-to-pid.button":"Go to PID",
 
   "login.already-authenticated.header": "You're Already Logged In",
 
