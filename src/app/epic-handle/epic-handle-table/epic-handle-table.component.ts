@@ -214,28 +214,59 @@ export class EpicHandleTableComponent implements OnInit {
 
 
   goToPID() {
+    const raw = (this.pidQuery || '').trim();
+    if (!raw) {
+      return;
+    }
+
+    if (!this.isPidInputValid()) {
+      // show an inline notification
+      this.notificationsService.error(null, this.translateService.instant('epic-handle-table.pid.invalid'));
+      return;
+    }
+
     this.handlesRD$.pipe(
       take(1)
     ).subscribe(handlesRD => {
       const handles = handlesRD?.payload?.page || [];
-      const handle = handles.find(h => {
-        const parts = h.id.split('/');
-        return parts[1] === this.pidQuery
-      });
+
+      // only accept full id (prefix/suffix)
+      const handle = handles.find(h => h.id === raw);
 
       if (handle) {
-        this.switchSelectedHandle(this.selectedHandle);
+        this.switchSelectedHandle(handle.id);
         this.router.navigate([this.handleRoute, this.editHandlePath],
           {
             queryParams: {
               id: handle.id,
               url: handle.url,
-              currentPage: this.options.currentPage
+              currentPage: this.options.currentPage,
+              prefix: this.prefix
             }
           }
-        )
+        );
+      } else {
+        this.notificationsService.error(null, this.translateService.instant('epic-handle-table.pid.notfound'));
       }
-    })
+    });
+  }
+
+  /**
+   * Validate the PID input.
+   * Accepts either a suffix-only (e.g. "TEST-001") or a full id "prefix/suffix".
+   * If the user enters only the prefix (equal to this.prefix) without a suffix, treat as invalid.
+   */
+  isPidInputValid(): boolean {
+    const val = (this.pidQuery || '').trim();
+    if (!val) {
+      return false;
+    }
+    // require explicit prefix/suffix format
+    if (val.includes('/')) {
+      const parts = val.split('/');
+      return parts.length === 2 && parts[0].length > 0 && parts[1].length > 0;
+    }
+    return false;
   }
 
 }

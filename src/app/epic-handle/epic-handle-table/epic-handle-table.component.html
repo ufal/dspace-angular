@@ -112,9 +112,12 @@
         <input type="text" id="epic-handle-pid-box" class="form-control" [(ngModel)]="pidQuery"
           [placeholder]="'epic-handle-table.pid.placeholder' | translate" (keyup.enter)="goToPID()">
         <button type="button" class="btn btn-primary search-button mt-1" (click)="goToPID()"
-          [disabled]="isLoading || !pidQuery">
+          [disabled]="isLoading || !isPidInputValid()">
           {{ 'epic-handle-table.go-to-pid.button' | translate }} <i class="fas fa-arrow-right"></i>
         </button>
+        <div *ngIf="pidQuery && !isPidInputValid()" class="text-danger small mt-1">
+          {{ 'epic-handle-table.pid.prefix-suffix-required' | translate }}
+        </div>
       </div>
     </div>
   </div>
