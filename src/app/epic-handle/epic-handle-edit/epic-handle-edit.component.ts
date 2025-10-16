@@ -31,14 +31,14 @@ export class EpicHandleEditComponent implements OnInit {
 
     this.currentPage = this.route.snapshot.queryParams.currentPage;
     if (!this.handleId) {
-      this.notificationService.error('', this.translateService.instant('epic-handle-table.edit-handle.notify.error.no-handle'))
-      this.redirectBack()
-      return
+      this.notificationService.error('', this.translateService.instant('epic-handle-table.edit-handle.notify.error.no-handle'));
+      this.redirectBack();
+      return;
     }
 
     const parts = this.handleId.split('/');
     if (parts.length !== 2) {
-      this.notificationService.error('', this.translateService.instant('epic-handle-table.edit-handle.notify.error.invalid-handle'))
+      this.notificationService.error('', this.translateService.instant('epic-handle-table.edit-handle.notify.error.invalid-handle'));
       this.redirectBack();
       return;
     }
@@ -53,8 +53,8 @@ export class EpicHandleEditComponent implements OnInit {
       this.notificationService.error(
         this.translateService.instant('epic-handle-table.edit-handle.notify.error.url-required'),
         this.translateService.instant('epic-handle-table.edit-handle.notify.error')
-      )
-      return
+      );
+      return;
     }
 
     this.isLoading = true;
@@ -63,13 +63,13 @@ export class EpicHandleEditComponent implements OnInit {
       .subscribe((handleResponse) => {
         this.isLoading = false;
         if (isNull(handleResponse)) {
-          this.notificationService.error("", this.translateService.instant('epic-handle-table.edit-handle.notify.error'))
-          return
+          this.notificationService.error('', this.translateService.instant('epic-handle-table.edit-handle.notify.error'));
+          return;
         }
 
         if (handleResponse.hasSucceeded) {
-          this.notificationService.success('', this.translateService.instant('epic-handle-table.edit-handle.notify.successful'))
-          this.redirectBack()
+          this.notificationService.success('', this.translateService.instant('epic-handle-table.edit-handle.notify.successful'));
+          this.redirectBack();
         } else if (handleResponse.hasFailed) {
           const errorMsg = handleResponse.errorMessage ||
             this.translateService.instant('epic-handle-table.edit-handle.notify.error');
@@ -81,12 +81,12 @@ export class EpicHandleEditComponent implements OnInit {
           '',
           this.translateService.instant('epic-handle-table.edit-handle.notify.error')
         );
-      })
+      });
   }
 
   redirectBack() {
     const queryParams = this.currentPage ? { currentPage: this.currentPage } : {};
-    this.router.navigate([getEpicHandleTableModulePath()], { queryParams })
+    this.router.navigate([getEpicHandleTableModulePath()], { queryParams });
   }
 
   onCancel() {

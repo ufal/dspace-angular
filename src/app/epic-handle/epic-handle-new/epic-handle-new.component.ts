@@ -7,7 +7,7 @@ import { RemoteData } from 'src/app/core/data/remote-data';
 import { Handle } from 'src/app/core/handle/handle.model';
 import { getFirstCompletedRemoteData } from 'src/app/core/shared/operators';
 import { NotificationsService } from 'src/app/shared/notifications/notifications.service';
-import { getEpicHandleTableModulePath, EPIC_HANDLE_TABLE_PREFIX } from '../epic-handle-routing-paths';
+import { getEpicHandleTableModulePath } from '../epic-handle-routing-paths';
 
 @Component({
   selector: 'ds-epic-handle-new',
@@ -61,20 +61,20 @@ export class EpicHandleNewComponent implements OnInit {
           this.notificationService.error(
             '', this.translateService.instant('epic-handle-table.new-handle.notify.error')
           );
-          return
+          return;
         }
 
         if (handleResponse.hasSucceeded) {
-          this.notificationService.success('', this.translateService.instant('epic-handle-table.new-handle.notify.successful'))
+          this.notificationService.success('', this.translateService.instant('epic-handle-table.new-handle.notify.successful'));
           this.redirectBack();
         } else if (handleResponse.hasFailed) {
           const errorMsg = handleResponse.errorMessage || this.translateService.instant('epic-handle-table.new-handle.notify.error');
-          this.notificationService.error('', errorMsg)
+          this.notificationService.error('', errorMsg);
         }
       }, error => {
         this.isLoading = false;
-        this.notificationService.error('', this.translateService.instant('epic-handle-table.new-handle.notify.error'))
-      })
+        this.notificationService.error('', this.translateService.instant('epic-handle-table.new-handle.notify.error'));
+      });
   }
 
   redirectBack() {

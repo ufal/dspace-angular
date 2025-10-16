@@ -11,8 +11,6 @@ import { Handle } from '../handle/handle.model';
 import { map, mergeMap, Observable } from 'rxjs';
 import { RemoteData } from './remote-data';
 import { CoreState } from '../core-state.model';
-import { CreateData } from './base/create-data';
-import { FindAllData } from './base/find-all-data';
 import { FindListOptions } from './find-list-options.model';
 import { isNotEmpty } from 'src/app/shared/empty.util';
 import { DeleteRequest, PostRequest, PutRequest } from './request.models';
@@ -25,7 +23,7 @@ import { DeleteRequest, PostRequest, PutRequest } from './request.models';
   providedIn: 'root',
 })
 export class EpicHandleDataService {
-  private currentPrefix: string = '';
+  private currentPrefix = '';
   constructor(
     protected requestService: RequestService,
     protected rdbService: RemoteDataBuildService,
@@ -87,9 +85,10 @@ export class EpicHandleDataService {
             pageInfo: pageInfo,
             totalElements: response.totalElements || 0
           }
-        }
+        };
       })
-    )}
+    );
+}
 
   create(
     prefix: string,
@@ -106,7 +105,7 @@ export class EpicHandleDataService {
           params = params.set('prefix', subPrefix);
         }
         if (isNotEmpty(subSuffix)) {
-          params = params.set('suffix', subSuffix)
+          params = params.set('suffix', subSuffix);
         }
 
         return { endpoint, params };
@@ -116,9 +115,10 @@ export class EpicHandleDataService {
         const request = new PostRequest(requestId, fullUrl, null);
         this.requestService.send(request);
 
-        return this.rdbService.buildFromRequestUUID<Handle>(requestId)
+        return this.rdbService.buildFromRequestUUID<Handle>(requestId);
       })
-    )}
+    );
+}
 
   update(
     prefix: string,
@@ -128,17 +128,17 @@ export class EpicHandleDataService {
     return this.halService.getEndpoint('epichandles').pipe(
       map(baseUrl => {
         const endpoint = `${baseUrl}/${prefix}/${suffix}`;
-        const params = new HttpParams().set('url', url)
-        return { endpoint, params }
+        const params = new HttpParams().set('url', url);
+        return { endpoint, params };
       }),
       mergeMap(({ endpoint, params }) => {
         const requestId = this.requestService.generateRequestId();
         const fullUrl = `${endpoint}?${params.toString()}`;
         const request = new PutRequest(requestId, fullUrl, null);
         this.requestService.send(request);
-        return this.rdbService.buildFromRequestUUID<Handle>(requestId)
+        return this.rdbService.buildFromRequestUUID<Handle>(requestId);
       })
-    )
+    );
   }
   delete(prefix: string, suffix: string): Observable<RemoteData<any>> {
     return this.halService.getEndpoint('epichandles').pipe(

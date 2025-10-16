@@ -28,8 +28,8 @@ export class EpicHandleTableComponent implements OnInit {
   pageSize = 10;
   options: PaginationComponentOptions;
   sortConfiguration: SortOptions;
-  searchQuery: string = '';
-  pidQuery: string = '';
+  searchQuery = '';
+  pidQuery = '';
   private previousSearchQuery = '';
   isLoading = false;
   handleRoute: string;
@@ -43,7 +43,7 @@ export class EpicHandleTableComponent implements OnInit {
     // get the prefix from query params and initialize inside the subscription so we only
     // proceed once we have the prefix available
     this.route.queryParams.pipe(take(1)).subscribe(params => {
-      this.prefix = params['prefix'];
+      this.prefix = params.prefix;
       if (!this.prefix) {
         this.router.navigate(['/epic-handle-table/prefix']);
         return;
@@ -64,7 +64,7 @@ export class EpicHandleTableComponent implements OnInit {
     if (this.searchQuery !== this.previousSearchQuery) {
       this.options.currentPage = 1;
       this.totalElements = null;
-      this.previousSearchQuery = this.searchQuery
+      this.previousSearchQuery = this.searchQuery;
     }
 
     const urlPattern = this.searchQuery?.trim() !== '' ? this.searchQuery?.trim() : undefined;
@@ -82,14 +82,14 @@ export class EpicHandleTableComponent implements OnInit {
       this.isLoading = false;
 
       if (response?.payload?.totalElements !== undefined) {
-        this.totalElements = response.payload.totalElements
+        this.totalElements = response.payload.totalElements;
       }
-      this.cdr.detectChanges()
+      this.cdr.detectChanges();
     }, (error) => {
       console.error('Error loading epic handles: ', error);
       this.isLoading = false;
-      this.notificationsService.error(null, this.translateService.instant('error'))
-    })
+      this.notificationsService.error(null, this.translateService.instant('error'));
+    });
   }
 
   clearSearch() {
@@ -119,7 +119,7 @@ export class EpicHandleTableComponent implements OnInit {
   redirectToEditHandle() {
 
     if (isEmpty(this.selectedHandle)) {
-      return
+      return;
     }
 
     this.handlesRD$.pipe(
@@ -141,7 +141,7 @@ export class EpicHandleTableComponent implements OnInit {
           }
         );
       }
-    })
+    });
   }
 
   goToHandle(id) {
@@ -192,7 +192,7 @@ export class EpicHandleTableComponent implements OnInit {
   }
 
   onPageChange() {
-    this.getAllHandles()
+    this.getAllHandles();
   }
 
   switchSelectedHandle(handleId) {
@@ -204,7 +204,7 @@ export class EpicHandleTableComponent implements OnInit {
   }
 
   searchHandles() {
-    this.getAllHandles()
+    this.getAllHandles();
   }
 
 

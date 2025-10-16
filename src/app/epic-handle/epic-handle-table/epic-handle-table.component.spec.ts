@@ -67,7 +67,7 @@ describe('EpicHandleTableComponent', () => {
     })
     .compileComponents();
     epicHandleDataService = TestBed.inject(EpicHandleDataService) as jasmine.SpyObj<EpicHandleDataService>;
-    translateService = TestBed.inject(TranslateService) as jasmine.SpyObj<TranslateService>
+    translateService = TestBed.inject(TranslateService) as jasmine.SpyObj<TranslateService>;
     notificationsService = TestBed.inject(NotificationsService) as jasmine.SpyObj<NotificationsService>;
     router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
     fixture = TestBed.createComponent(EpicHandleTableComponent);
