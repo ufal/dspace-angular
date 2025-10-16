@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { isNull } from 'lodash';
 import { EpicHandleDataService } from 'src/app/core/data/epic-handle-data.service';
 import { RemoteData } from 'src/app/core/data/remote-data';
 import { Handle } from 'src/app/core/handle/handle.model';
 import { getFirstCompletedRemoteData } from 'src/app/core/shared/operators';
 import { NotificationsService } from 'src/app/shared/notifications/notifications.service';
 import { getEpicHandleTableModulePath } from '../epic-handle-routing-paths';
+import { isNull } from 'src/app/shared/empty.util';
 
 @Component({
   selector: 'ds-epic-handle-new',

@@ -54,7 +54,7 @@ export class EpicHandleTableComponent implements OnInit {
       this.handleRoute = getEpicHandleTableModulePath();
       this.initializePaginationOptions();
       this.initializeSortingOptions();
-      // this.getAllHandles();
+      this.getAllHandles();
     });
   }
 
@@ -184,7 +184,7 @@ export class EpicHandleTableComponent implements OnInit {
         },
         (error) => {
           this.isLoading = false;
-          const errorMessage = error?.error?.message ||
+          const errorMessage = error?.message ||
             this.translateService.instant('epic-handle-table.delete-handle.notify.error');
           this.notificationsService.error(null, errorMessage);
         }

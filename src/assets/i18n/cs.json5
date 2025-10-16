@@ -8443,7 +8443,7 @@
   "change.submitter.page.items.name.message": "Název záznamu: ",
   // "clarin-license-agreement-page.download-error": "An error occurred while downloading the file. Please try again later.",
   "clarin-license-agreement-page.download-error": "Při stahování souboru došlo k chybě. Zkuste to prosím znovu později.",
-  "menu.section.epic-handle":"ePIC Handles",
+  "menu.section.epic-handle": "ePIC Handles",
 
   // "epic-prefix-handle-page": "ePIC Handle Prefix",
   "epic-prefix-handle-page": "ePIC Handle Prefix",
@@ -8576,10 +8576,10 @@
   // "epic-handle-table.edit-handle.notify.error.invalid-handle": "Invalid handle format.",
   "epic-handle-table.edit-handle.notify.error.invalid-handle": "Invalid handle format.",
   // "epic-handle-table.pid.placeholder":"Enter PID suffix",
-  "epic-handle-table.pid.placeholder":"Enter PID suffix",
+  "epic-handle-table.pid.placeholder": "Enter PID suffix",
 
   // "epic-handle-table.go-to-pid.button":"Go to PID",
-  "epic-handle-table.go-to-pid.button":"Go to PID",
+  "epic-handle-table.go-to-pid.button": "Go to PID",
   // "login.already-authenticated.header": "You're Already Logged In",
   "login.already-authenticated.header": "Již jste přihlášeni",
   // "login.already-authenticated.message": "You are currently authenticated. Would you like to go to your personal space or home page?",

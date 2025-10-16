@@ -74,7 +74,10 @@ describe('EpicHandleTableComponent', () => {
     component = fixture.componentInstance;
     // make findAll return the mockResponse by default
     epicHandleDataService.findAll.and.returnValue(of(mockResponse));
-    epicHandleDataService.deleteByHandleId && (epicHandleDataService.deleteByHandleId as jasmine.Spy).and.returnValue(of({ hasSucceeded: true, statusCode: 204 }));
+    // epicHandleDataService.deleteByHandleId && (epicHandleDataService.deleteByHandleId as jasmine.Spy).and.returnValue(of({ hasSucceeded: true, statusCode: 204 }));
+    if (epicHandleDataService.deleteByHandleId) {
+      (epicHandleDataService.deleteByHandleId as jasmine.Spy).and.returnValue(of({ hasSucceeded: true, statusCode: 204 }));
+    }
     fixture.detectChanges();
   });
 

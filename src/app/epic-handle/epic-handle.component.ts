@@ -6,5 +6,4 @@ import { Component } from '@angular/core';
   styleUrls: ['./epic-handle.component.scss']
 })
 export class EpicHandleComponent {
-  constructor() { }
 }

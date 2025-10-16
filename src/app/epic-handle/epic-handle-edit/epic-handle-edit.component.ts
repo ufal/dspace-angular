@@ -5,7 +5,7 @@ import { EpicHandleDataService } from 'src/app/core/data/epic-handle-data.servic
 import { NotificationsService } from 'src/app/shared/notifications/notifications.service';
 import { getEpicHandleTableModulePath } from '../epic-handle-routing-paths';
 import { getFirstCompletedRemoteData } from 'src/app/core/shared/operators';
-import { isNull } from 'lodash';
+import { isNull } from 'src/app/shared/empty.util';
 
 @Component({
   selector: 'ds-epic-handle-edit',

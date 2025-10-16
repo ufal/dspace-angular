@@ -5991,7 +5991,7 @@
 
   "clarin-license-agreement-page.download-error": "An error occurred while downloading the file. Please try again later.",
 
-  "menu.section.epic-handle":"ePIC Handles",
+  "menu.section.epic-handle": "ePIC Handles",
 
   "epic-prefix-handle-page": "ePIC Handle Prefix",
   "epic-prefix-handle-page.title": "Enter ePIC Handle Prefix",
@@ -6114,9 +6114,9 @@
 
   "epic-handle-table.edit-handle.notify.error.invalid-handle": "Invalid handle format.",
 
-  "epic-handle-table.pid.placeholder":"Enter PID suffix",
+  "epic-handle-table.pid.placeholder": "Enter PID suffix",
 
-  "epic-handle-table.go-to-pid.button":"Go to PID",
+  "epic-handle-table.go-to-pid.button": "Go to PID",
 
   "login.already-authenticated.header": "You're Already Logged In",
 
