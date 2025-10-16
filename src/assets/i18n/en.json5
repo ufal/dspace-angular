@@ -278,6 +278,8 @@
 
   "admin.access-control.epeople.table.email": "E-mail (exact)",
 
+  "admin.access-control.epeople.table.lastActive": "Last time active",
+
   "admin.access-control.epeople.table.edit": "Edit",
 
   "admin.access-control.epeople.table.edit.buttons.edit": "Edit \"{{name}}\"",
@@ -725,6 +727,8 @@
   "clarin.license.agreement.notification.cannot.send.email": "Error: cannot send the email.",
 
   "clarin.bitstream.expired.dtoken.message": "The download token is expired, you will be redirected to the download page.",
+
+  "clarin.bitstream.authorization.denied.message": "Access to download \"{{bitstream}}\" file was denied by the bitstream resource policy.",
 
   "bitstream.download.page.back": "Back" ,
 
@@ -6113,4 +6117,39 @@
   "epic-handle-table.pid.placeholder":"Enter PID suffix",
 
   "epic-handle-table.go-to-pid.button":"Go to PID"
+
+  "login.already-authenticated.header": "You're Already Logged In",
+
+  "login.already-authenticated.message": "You are currently authenticated. Would you like to go to home page or your profile?",
+
+  "login.already-authenticated.go-home": "Home",
+
+  "login.already-authenticated.go-profile": "Profile",
+
+  "login.already-authenticated.logout": "Logout",
+  "home.image.glass": "Home page glass magnifier image",
+
+  "home.image.lindat-color-line": "Lindat color line image",
+
+  "static.deposit.image.step-1": "Step 1 Menu Login image",
+
+  "static.deposit.image.step-2": "Step 2 Menu Submissions image",
+
+  "static.deposit.image.step-2-1": "Step 2.1 Starting a submission image",
+
+  "static.deposit.image.step-3": "Step 3 Submission information image",
+
+  "static.deposit.image.step-4": "Step 4 Describing item people and organizations image",
+
+  "static.deposit.image.step-4-1": "Step 4.1 Describing item source details image",
+
+  "static.deposit.image.step-5": "Step 5 Uploading file image",
+
+  "static.deposit.image.step-6-1": "Step 6.1 Distribution license agreement image",
+
+  "static.deposit.image.step-6-2": "Step 6.2 Selecting license image",
+
+  "static.deposit.image.step-6-3": "Step 6.3 Open license selector image",
+
+  "home.news.image.banner": "Home news banner image",
 }
