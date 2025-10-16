@@ -2869,8 +2869,9 @@
 
   "item.view.box.no-files.message": "This item contains no files.",
 
-  "item.view.box.description.message": "Description:",
+  "item.view.box.markdown.formatted.text": "Markdown formatted text",
 
+  "item.view.box.description.message": "Description:",
 
   "item.view.box.author.preview.and": "and",
 

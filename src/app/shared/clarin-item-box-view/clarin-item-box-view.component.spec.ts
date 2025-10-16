@@ -14,6 +14,9 @@ import { ClarinLicenseDataService } from 'src/app/core/data/clarin/clarin-licens
 import { ClarinDateService } from '../clarin-date.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { DSONameServiceMock } from '../mocks/dso-name.service.mock';
+import { MarkdownPipe } from '../utils/markdown.pipe';
+import { APP_CONFIG } from '../../../config/app-config.interface';
+import { environment } from '../../../environments/environment';
 
 describe('ClarinItemBoxViewComponent', () => {
   let component: ClarinItemBoxViewComponent;
@@ -60,7 +63,7 @@ describe('ClarinItemBoxViewComponent', () => {
         }),
         StoreModule.forRoot(),
       ],
-      declarations: [ClarinItemBoxViewComponent],
+      declarations: [ClarinItemBoxViewComponent, MarkdownPipe],
       providers: [
         { provide: CollectionDataService, useValue: collectionDataServiceMock },
         { provide: BundleDataService, useValue: bundleDataServiceMock },
@@ -75,6 +78,7 @@ describe('ClarinItemBoxViewComponent', () => {
         { provide: ClarinDateService, useValue: clarinDateServiceMock },
         { provide: DSONameService, useValue: new DSONameServiceMock() },
         { provide: DomSanitizer, useValue: sanitizerStub },
+        { provide: APP_CONFIG, useValue: environment },
         provideMockStore({ initialState }),
       ],
     }).compileComponents();

@@ -30,10 +30,10 @@ export class ClarinDescriptionItemFieldComponent implements OnInit {
   /**
    * This variable will be true if {@link appConfig.markdown.enabled} is true.
    */
-  renderMarkdown;
+  renderMarkdown: boolean;
 
   ngOnInit(): void {
-    this.renderMarkdown = !!this.appConfig.markdown.enabled;
+    this.renderMarkdown = !!this.appConfig.markdown.enabled && this.markdownEnabled();
 
     // Store all description metadata values
     let updatedMVs = [];
@@ -43,6 +43,14 @@ export class ClarinDescriptionItemFieldComponent implements OnInit {
 
     // Join the metadata values with a line break
     this.validTextMetadata = updatedMVs.join('<br>');
+  }
+
+  /**
+   * Check if the item uses Markdown to render description text.
+   * */
+  private markdownEnabled() {
+    const useMarkdown = this.item.metadata?.['local.description.usemarkdown']?.[0]?.value;
+    return useMarkdown !== undefined && useMarkdown.toLowerCase() === 'yes';
   }
 
 }

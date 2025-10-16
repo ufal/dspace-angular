@@ -28,7 +28,22 @@
         </div>
         <div *ngIf="isSearchResult === false && itemDescription != null" class="row d-block pt-1">
           <div><strong>{{'item.view.box.description.message' | translate}}</strong></div>
-          <div class="clarin-item-description pr-3">{{itemDescription}}</div>
+          <div *ngIf="renderMarkdown" class="clarin-item-description">
+            <span class="pr-1">
+              <a class="preview-btn collapsed" data-toggle="collapse" role="button" href="#description_{{ item.id }}">
+                <i class="fa fa-eye">&nbsp;</i>
+                {{'item.view.box.markdown.formatted.text' | translate}}
+              </a>
+            </span>
+          </div>
+          <div *ngIf="!renderMarkdown" class="clarin-item-description pr-3">{{itemDescription}}</div>
+        </div>
+        <div class="in collapse" id="description_{{ item.id }}" style="height: auto" >
+          <div style="margin: 1px 1px 1px 1px" class="panel panel-info">
+            <div [style]="'border: 0.5px solid lightgrey; max-height: 500px; padding: 10px; margin: 0px; overflow: scroll'" class="panel-body">
+                  <div [innerHTML]="itemDescription | dsMarkdown | async"></div>
+            </div>
+          </div>
         </div>
         <div class="row d-flex pt-1">
           <div class="label label-info label-icon"><i class="fas fa-paperclip fa-sm"></i></div>
