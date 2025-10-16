@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 import { SortOptions } from 'src/app/core/cache/models/sort-options.model';
-import { EpicHandle, EpicHandleDataService, EpicHandleResponse } from 'src/app/core/data/epic-handle-data.service';
+import { EpicHandleDataService } from 'src/app/core/data/epic-handle-data.service';
 import { NotificationsService } from 'src/app/shared/notifications/notifications.service';
 import { PaginationComponentOptions } from 'src/app/shared/pagination/pagination-component-options.model';
 import { EPIC_HANDLE_TABLE_EDIT_HANDLE_PATH, EPIC_HANDLE_TABLE_NEW_HANDLE_PATH, getEpicHandleTableModulePath } from '../epic-handle-routing-paths';
@@ -11,9 +11,6 @@ import { scan, switchMap, take } from 'rxjs/operators';
 import { isEmpty } from '../../shared/empty.util';
 import { defaultPagination, defaultSortConfiguration } from 'src/app/clarin-licenses/clarin-license-table-pagination';
 import { PaginationService } from 'src/app/core/pagination/pagination.service';
-import { RemoteData } from 'src/app/core/data/remote-data';
-import { PaginatedList } from 'src/app/core/data/paginated-list.model';
-import { Handle } from 'src/app/core/handle/handle.model';
 
 @Component({
   selector: 'ds-epic-handle-table',

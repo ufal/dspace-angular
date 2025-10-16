@@ -85,7 +85,7 @@ export class EpicHandleDataService {
           totalElements: response.totalElements || 0,
           totalPages: response.totalPages || 0,
           currentPage: (response.pageable?.pageNumber || 0) + 1
-        })
+        });
 
 
         return {
