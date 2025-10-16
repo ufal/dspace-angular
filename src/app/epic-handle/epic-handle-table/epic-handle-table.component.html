@@ -31,7 +31,6 @@
                   <th scope="col" style="width: 50px;"></th>
                   <th scope="col">{{ 'epic-handle-table.table.handle' | translate }}</th>
                   <th scope="col">{{ 'epic-handle-table.table.url' | translate }}</th>
-                  <th scope="col" style="width: 100px;">{{ 'epic-handle-table.table.actions' | translate }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -56,13 +55,6 @@
                     <span *ngIf="!handle.url" class="text-muted">
                       {{ 'epic-handle-table.table.no-url' | translate }}
                     </span>
-                  </td>
-
-                  <td class="text-center">
-                    <button type="button" class="btn btn-sm btn-outline-primary" (click)="goToHandle(handle.id)"
-                      [title]="'epic-handle-table.button.goto-handle' | translate">
-                      <i class="fas fa-external-link-alt"></i>
-                    </button>
                   </td>
                 </tr>
 
