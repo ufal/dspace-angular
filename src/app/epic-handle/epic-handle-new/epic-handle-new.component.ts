@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { EpicHandleDataService } from 'src/app/core/data/epic-handle-data.service';
+import { EpicHandle, EpicHandleDataService } from 'src/app/core/data/epic-handle-data.service';
 import { RemoteData } from 'src/app/core/data/remote-data';
 import { Handle } from 'src/app/core/handle/handle.model';
 import { getFirstCompletedRemoteData } from 'src/app/core/shared/operators';
@@ -55,7 +55,7 @@ export class EpicHandleNewComponent implements OnInit {
       value.subPrefix?.trim(),
       value.subSuffix?.trim()
     ).pipe(getFirstCompletedRemoteData())
-      .subscribe((handleResponse: RemoteData<Handle>) => {
+      .subscribe((handleResponse: RemoteData<EpicHandle>) => {
         this.isLoading = false;
         if (isNull(handleResponse)) {
           this.notificationService.error(

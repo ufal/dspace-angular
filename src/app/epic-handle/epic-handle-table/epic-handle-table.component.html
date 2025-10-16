@@ -21,7 +21,7 @@
       <div *ngVar="(handlesRD$ | async) as handleData">
         <div class="mb-2 table-responsive">
           <ds-pagination (paginationChange)="onPageChange()" [sortOptions]="sortConfiguration" [hideGear]="true"
-            [hidePagerWhenSinglePage]="false" [paginationOptions]="options"
+            [hidePagerWhenSinglePage]="true" [paginationOptions]="options"
             [pageInfoState]="handleData?.payload?.pageInfo" [collectionSize]="handleData?.payload?.totalElements"
             [retainScrollPosition]="true">
 

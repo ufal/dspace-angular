@@ -1,15 +1,19 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, combineLatest } from 'rxjs';
 import { SortOptions } from 'src/app/core/cache/models/sort-options.model';
-import { EpicHandleDataService } from 'src/app/core/data/epic-handle-data.service';
+import { EpicHandle, EpicHandleDataService, EpicHandleResponse } from 'src/app/core/data/epic-handle-data.service';
 import { NotificationsService } from 'src/app/shared/notifications/notifications.service';
 import { PaginationComponentOptions } from 'src/app/shared/pagination/pagination-component-options.model';
 import { EPIC_HANDLE_TABLE_EDIT_HANDLE_PATH, EPIC_HANDLE_TABLE_NEW_HANDLE_PATH, getEpicHandleTableModulePath } from '../epic-handle-routing-paths';
-import { take } from 'rxjs/operators';
+import { scan, switchMap, take } from 'rxjs/operators';
 import { isEmpty } from '../../shared/empty.util';
 import { defaultPagination, defaultSortConfiguration } from 'src/app/clarin-licenses/clarin-license-table-pagination';
+import { PaginationService } from 'src/app/core/pagination/pagination.service';
+import { RemoteData } from 'src/app/core/data/remote-data';
+import { PaginatedList } from 'src/app/core/data/paginated-list.model';
+import { Handle } from 'src/app/core/handle/handle.model';
 
 @Component({
   selector: 'ds-epic-handle-table',
@@ -22,7 +26,8 @@ export class EpicHandleTableComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private translateService: TranslateService,
     private notificationsService: NotificationsService,
-    private route: ActivatedRoute) {
+    private route: ActivatedRoute,
+    private paginationService: PaginationService) {
   }
   handlesRD$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   pageSize = 10;
@@ -60,35 +65,42 @@ export class EpicHandleTableComponent implements OnInit {
 
   getAllHandles() {
     this.isLoading = true;
+    // load the current pagination and sorting options
+    const currentPagination$ = this.getCurrentPagination();
+    const currentSort$ = this.getCurrentSort();
+    const searchTerm$ = new BehaviorSubject<string>(this.searchQuery);
 
-    if (this.searchQuery !== this.previousSearchQuery) {
-      this.options.currentPage = 1;
-      this.totalElements = null;
-      this.previousSearchQuery = this.searchQuery;
-    }
-
-    const urlPattern = this.searchQuery?.trim() !== '' ? this.searchQuery?.trim() : undefined;
-
-    this.epicHandleDataService.findAll(
-      {
-        currentPage: this.options?.currentPage,
-        elementsPerPage: this.options?.pageSize
-      },
-      this.prefix,
-      urlPattern,
-      this.totalElements,
-    ).subscribe((response) => {
+    combineLatest([currentPagination$, currentSort$, searchTerm$]).pipe(
+      scan((prevState, [currentPagination, currentSort, searchTerm]) => {
+        // If search term has changed, reset to page 1; otherwise, keep current page
+        const currentPage = prevState.searchTerm !== searchTerm ? 1 : currentPagination.currentPage;
+        return { currentPage, currentPagination, currentSort, searchTerm };
+      }, { searchTerm: '', currentPage: 1, currentPagination: this.getCurrentPagination(),
+        currentSort: this.getCurrentSort() }),
+        switchMap(({ currentPage, currentPagination, currentSort, searchTerm }) => {
+          return this.epicHandleDataService.findAll({
+            currentPage: currentPage,
+            elementsPerPage: currentPagination.pageSize,
+            sort: {field: currentSort.field, direction: currentSort.direction}
+          }, this.prefix, searchTerm?.trim() !== '' ? searchTerm?.trim() : undefined, this.totalElements
+        );
+      }),
+    ).pipe(take(1)).subscribe((response) => {
       this.handlesRD$.next(response);
       this.isLoading = false;
 
-      if (response?.payload?.totalElements !== undefined) {
-        this.totalElements = response.payload.totalElements;
+      if (response?.payload?.pageInfo?.totalElements !== undefined) {
+        this.totalElements = response.payload.pageInfo?.totalElements;
       }
       this.cdr.detectChanges();
     }, (error) => {
-      console.error('Error loading epic handles: ', error);
       this.isLoading = false;
-      this.notificationsService.error(null, this.translateService.instant('error'));
+      if (error?.error?.status){
+        this.notificationsService.error(null, this.translateService.instant(error?.error?.message));
+      } else {
+        this.notificationsService.error(null, this.translateService.instant('error'));
+      }
+
     });
   }
 
@@ -153,10 +165,6 @@ export class EpicHandleTableComponent implements OnInit {
 
   deleteHandle() {
     if (isEmpty(this.selectedHandle)) {
-      return;
-    }
-
-    if (!confirm(this.translateService.instant('epic-handle-table.delete-handle.confirm'))) {
       return;
     }
 
@@ -253,7 +261,34 @@ export class EpicHandleTableComponent implements OnInit {
           }
         );
       } else {
-        this.notificationsService.error(null, this.translateService.instant('epic-handle-table.pid.notfound'));
+        const suffix = raw.includes('/') ? raw.split('/')[1] : raw;
+        this.isLoading = true;
+        this.epicHandleDataService.findByPrefixAndSuffix(this.prefix, suffix).pipe(take(1)).subscribe(handleResponse => {
+          this.isLoading = false;
+          if (handleResponse) {
+            const fetchedHandle = handleResponse;
+            this.switchSelectedHandle(fetchedHandle.id);
+            this.router.navigate([this.handleRoute, this.editHandlePath],
+              {
+                queryParams: {
+                  id: fetchedHandle.id,
+                  url: fetchedHandle.url,
+                  currentPage: this.options.currentPage,
+                  prefix: this.prefix
+                }
+              }
+            );
+          } else {
+            this.notificationsService.error(null, this.translateService.instant('epic-handle-table.pid.notfound'));
+          }
+        }, error => {
+          this.isLoading = false;
+          if (error?.error?.status){
+            this.notificationsService.error(null, this.translateService.instant(error?.error?.message));
+          } else {
+            this.notificationsService.error(null, this.translateService.instant('error'));
+          }
+        });
       }
     });
   }
@@ -276,4 +311,18 @@ export class EpicHandleTableComponent implements OnInit {
     }
     return true;
   }
+
+    /**
+     * Get the current pagination options.
+    */
+    private getCurrentPagination() {
+      return this.paginationService.getCurrentPagination(this.options.id, defaultPagination);
+    }
+
+    /**
+     * Get the current sorting options.
+    */
+    private getCurrentSort() {
+      return this.paginationService.getCurrentSort(this.options.id, defaultSortConfiguration);
+    }
 }

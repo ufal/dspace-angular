@@ -226,7 +226,7 @@ describe('EpicEditHandlePageComponent', () => {
       setTimeout(() => {
         expect(router.navigate).toHaveBeenCalledWith(
           ['/epic-handle-table'],
-          { queryParams: { currentPage: 1 } }
+          { queryParams: { prefix: '11148', currentPage: 1 } }
         );
         done();
       }, 100);
@@ -237,7 +237,7 @@ describe('EpicEditHandlePageComponent', () => {
 
       expect(router.navigate).toHaveBeenCalledWith(
         ['/epic-handle-table'],
-        { queryParams: { currentPage: 1 } }
+        { queryParams: { prefix: '11148', currentPage: 1 } }
       );
     });
 
@@ -248,7 +248,7 @@ describe('EpicEditHandlePageComponent', () => {
 
       expect(router.navigate).toHaveBeenCalledWith(
         ['/epic-handle-table'],
-        { queryParams: {} }
+        { queryParams: { prefix: '11148' } }
       );
     });
   });

@@ -85,7 +85,9 @@ export class EpicHandleEditComponent implements OnInit {
   }
 
   redirectBack() {
-    const queryParams = this.currentPage ? { currentPage: this.currentPage } : {};
+    console.log(this.currentPage);
+    let queryParams: any = this.currentPage ? { currentPage: this.currentPage } : {};
+    queryParams = this.prefix ? {  prefix: this.prefix, ...queryParams, } : queryParams;
     this.router.navigate([getEpicHandleTableModulePath()], { queryParams });
   }
 

@@ -4,17 +4,26 @@ import { RemoteDataBuildService } from '../cache/builders/remote-data-build.serv
 import { Store } from '@ngrx/store';
 import { HALEndpointService } from '../shared/hal-endpoint.service';
 import { ObjectCacheService } from '../cache/object-cache.service';
-import { DefaultChangeAnalyzer } from './default-change-analyzer.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { NotificationsService } from '../../shared/notifications/notifications.service';
-import { Handle } from '../handle/handle.model';
 import { map, mergeMap, Observable } from 'rxjs';
 import { RemoteData } from './remote-data';
 import { CoreState } from '../core-state.model';
 import { FindListOptions } from './find-list-options.model';
 import { isNotEmpty } from 'src/app/shared/empty.util';
 import { DeleteRequest, PostRequest, PutRequest } from './request.models';
+import { PageInfo } from '../shared/page-info.model';
 
+export interface EpicHandleResponse {
+    payload: {
+      page: EpicHandle[];
+      pageInfo: PageInfo;
+    }
+}
+export interface EpicHandle{
+  id: string;
+  url: string;
+}
 
 /**
  * A service responsible for fetching/sending data from/to the REST API on the metadatafields endpoint
@@ -30,7 +39,6 @@ export class EpicHandleDataService {
     protected store: Store<CoreState>,
     protected halService: HALEndpointService,
     protected objectCache: ObjectCacheService,
-    protected comparator: DefaultChangeAnalyzer<Handle>,
     protected http: HttpClient,
     protected notificationsService: NotificationsService) {
   }
@@ -43,7 +51,7 @@ export class EpicHandleDataService {
     return this.currentPrefix;
   }
 
-  findAll(options: FindListOptions, prefix: string, urlPattern?: string, totalElements?: number,): Observable<any> {
+  findAll(options: FindListOptions, prefix: string, urlPattern?: string, totalElements?: number,): Observable<EpicHandleResponse> {
     return this.halService.getEndpoint('epichandles').pipe(
       map(baseUrl => {
         const url = `${baseUrl}/${prefix}`;
@@ -71,31 +79,31 @@ export class EpicHandleDataService {
         return this.http.get<any>(url, { params });
       }),
       map(response => {
-        const handles = response.content || [];
-        const pageInfo = {
+        const handles: EpicHandle[] = response.content || [];
+        const pageInfo = new PageInfo({
           elementsPerPage: response.pageable?.pageSize || options.elementsPerPage || 10,
           totalElements: response.totalElements || 0,
           totalPages: response.totalPages || 0,
           currentPage: (response.pageable?.pageNumber || 0) + 1
-        };
+        })
+
 
         return {
           payload: {
             page: handles,
             pageInfo: pageInfo,
-            totalElements: response.totalElements || 0
           }
         };
       })
     );
-}
+  }
 
   create(
     prefix: string,
     url: string,
     subPrefix?: string,
     subSuffix?: string,
-  ): Observable<RemoteData<Handle>> {
+  ): Observable<RemoteData<EpicHandle>> {
     return this.halService.getEndpoint('epichandles').pipe(
       map(baseUrl => {
         const endpoint = `${baseUrl}/${prefix}`;
@@ -115,16 +123,16 @@ export class EpicHandleDataService {
         const request = new PostRequest(requestId, fullUrl, null);
         this.requestService.send(request);
 
-        return this.rdbService.buildFromRequestUUID<Handle>(requestId);
+        return this.rdbService.buildFromRequestUUID<EpicHandle>(requestId);
       })
     );
-}
+  }
 
   update(
     prefix: string,
     suffix: string,
     url: string
-  ): Observable<RemoteData<Handle>> {
+  ): Observable<RemoteData<EpicHandle>> {
     return this.halService.getEndpoint('epichandles').pipe(
       map(baseUrl => {
         const endpoint = `${baseUrl}/${prefix}/${suffix}`;
@@ -136,7 +144,7 @@ export class EpicHandleDataService {
         const fullUrl = `${endpoint}?${params.toString()}`;
         const request = new PutRequest(requestId, fullUrl, null);
         this.requestService.send(request);
-        return this.rdbService.buildFromRequestUUID<Handle>(requestId);
+        return this.rdbService.buildFromRequestUUID<EpicHandle>(requestId);
       })
     );
   }
@@ -158,6 +166,18 @@ export class EpicHandleDataService {
       throw new Error('Invalid handle ID format. Expected: prefix/suffix');
     }
     return this.delete(parts[0], parts[1]);
+  }
+
+
+  findByPrefixAndSuffix(prefix: string, suffix: string): Observable<any> {
+    // we search for the handle using the prefix and suffix
+    return this.halService.getEndpoint('epichandles').pipe(
+      map(baseUrl => `${baseUrl}/${prefix}/${suffix}`),
+      mergeMap(url => this.http.get<any>(url)),
+      map(response => {
+        return response;
+      })
+    );
   }
 
 }

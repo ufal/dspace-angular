@@ -1,13 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EpicHandleTableComponent } from './epic-handle-table.component';
-import { EpicHandleDataService } from 'src/app/core/data/epic-handle-data.service';
+import { EpicHandle, EpicHandleDataService, EpicHandleResponse } from 'src/app/core/data/epic-handle-data.service';
 import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
 import { getMockTranslateService } from 'src/app/shared/mocks/translate.service.mock';
 import { TranslateLoaderMock } from 'src/app/shared/mocks/translate-loader.mock';
 import { NotificationsService } from 'src/app/shared/notifications/notifications.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { of, throwError } from 'rxjs';
+import { PaginationServiceStub } from 'src/app/shared/testing/pagination-service.stub';
+import { PaginationService } from 'src/app/core/pagination/pagination.service';
+import { PageInfo } from 'src/app/core/shared/page-info.model';
 
 describe('EpicHandleTableComponent', () => {
   let component: EpicHandleTableComponent;
@@ -17,8 +20,8 @@ describe('EpicHandleTableComponent', () => {
   let router: jasmine.SpyObj<Router>;
   let translateService: TranslateService;
   let activatedRoute: any;
-
-  const mockHandles = [
+   let paginationService;
+  const mockHandles: EpicHandle[] = [
     {
       id: '11148/TEST-001',
       url: 'http://example1.com'
@@ -29,16 +32,15 @@ describe('EpicHandleTableComponent', () => {
     }
   ];
 
-  const mockResponse = {
+  const mockResponse: EpicHandleResponse = {
     payload: {
-      page: mockHandles,
+      page : mockHandles,
       pageInfo: {
         elementsPerPage: 10,
         totalElements: 2,
         totalPages: 1,
         currentPage: 1
-      },
-      totalElements: 2
+      } as PageInfo,
     }
   };
   beforeEach(async () => {
@@ -49,7 +51,7 @@ describe('EpicHandleTableComponent', () => {
     activatedRoute = {
       queryParams: of({ prefix: '11148' })
     };
-
+    paginationService = new PaginationServiceStub();
     await TestBed.configureTestingModule({
       declarations: [ EpicHandleTableComponent ],
       imports: [TranslateModule.forRoot({
@@ -63,6 +65,7 @@ describe('EpicHandleTableComponent', () => {
         { provide: NotificationsService, useValue: notificationsSpy },
         { provide: Router, useValue: routerSpy},
         { provide: ActivatedRoute, useValue: activatedRoute },
+        { provide: PaginationService, useValue: paginationService }
       ]
     })
     .compileComponents();
@@ -134,7 +137,7 @@ describe('EpicHandleTableComponent', () => {
     });
 
     it('should handle error when loading handles', (done) => {
-      epicHandleDataService.findAll.and.returnValue(throwError({ error: 'Error' }));
+      epicHandleDataService.findAll.and.returnValue(throwError(() => ({ error: 'Error' })));
 
       component.getAllHandles();
 
@@ -160,12 +163,14 @@ describe('EpicHandleTableComponent', () => {
       component.searchQuery = 'example.com';
       component.getAllHandles();
 
-      expect(epicHandleDataService.findAll).toHaveBeenCalledWith(
-        jasmine.any(Object),
-        '11148',
-        'example.com',
-        null,
-      );
+      // The method uses combineLatest and scan, which triggers the call
+      // Check that findAll was called with the search query
+      const calls = epicHandleDataService.findAll.calls.all();
+      const callWithSearchTerm = calls.find(call => call.args[2] === 'example.com');
+      expect(callWithSearchTerm).toBeDefined();
+      expect(callWithSearchTerm.args[0]).toEqual(jasmine.any(Object));
+      expect(callWithSearchTerm.args[1]).toBe('11148');
+      expect(callWithSearchTerm.args[2]).toBe('example.com');
     });
   });
 
@@ -288,18 +293,7 @@ describe('EpicHandleTableComponent', () => {
       expect(epicHandleDataService.deleteByHandleId).not.toHaveBeenCalled();
     });
 
-    it('should show confirmation dialog', () => {
-      spyOn(window, 'confirm').and.returnValue(false);
-      component.selectedHandle = '11148/TEST-001';
-
-      component.deleteHandle();
-
-      expect(window.confirm).toHaveBeenCalled();
-      expect(epicHandleDataService.deleteByHandleId).not.toHaveBeenCalled();
-    });
-
-    it('should delete handle when confirmed', (done) => {
-      spyOn(window, 'confirm').and.returnValue(true);
+    it('should delete handle immediately when selected', (done) => {
       spyOn(component, 'getAllHandles');
       component.selectedHandle = '11148/TEST-001';
 
@@ -314,8 +308,7 @@ describe('EpicHandleTableComponent', () => {
     });
 
     it('should handle delete error', (done) => {
-      spyOn(window, 'confirm').and.returnValue(true);
-      epicHandleDataService.deleteByHandleId.and.returnValue(throwError({ error: 'Error' }));
+      epicHandleDataService.deleteByHandleId.and.returnValue(throwError(() => ({ error: 'Error' })));
       component.selectedHandle = '11148/TEST-001';
 
       component.deleteHandle();
