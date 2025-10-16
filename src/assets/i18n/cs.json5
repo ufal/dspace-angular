@@ -311,6 +311,9 @@
   // "admin.access-control.epeople.table.email": "Email (exact)",
   // TODO Source message changed - Revise the translation
   "admin.access-control.epeople.table.email": "E-mail (přesný)",
+  // "admin.access-control.epeople.table.lastActive": "Last time active",
+  // TODO Source message changed - Revise the translation
+  "admin.access-control.epeople.table.lastActive": "Naposledy aktivní",
   // "admin.access-control.epeople.table.edit": "Edit",
   "admin.access-control.epeople.table.edit": "Upravit",
   // "admin.access-control.epeople.table.edit.buttons.edit": "Edit \"{{name}}\"",
@@ -1085,6 +1088,9 @@
   "clarin.license.agreement.notification.cannot.send.email": "Error: cannot send the email.",
   // "clarin.bitstream.expired.dtoken.message": "The download token is expired, you will be redirected to the download page.",
   "clarin.bitstream.expired.dtoken.message": "Platnost tokenu pro stahování vypršel, budete přesměrováni na stránku stahování.",
+  // "clarin.bitstream.authorization.denied.message": "Access to download \"{{bitstream}}\" file was denied by the bitstream resource policy.",
+  // TODO Source message changed - Revise the translation
+  "clarin.bitstream.authorization.denied.message": "Přístup ke stažení souboru \"{{bitstream}}\" byl zamítnut.",
   // "bitstream.download.page.back": "Back" ,
   "bitstream.download.page.back": "Zpět",
   // "clarin.license.all-page.title": "Available Licenses",
@@ -8445,4 +8451,50 @@
   "epic-handle-table.title": "ePIC Handle List",
   // "epic-prefix-handle-page.title": "ePIC Handle Prefix",
   "epic-prefix-handle-page.title": "ePIC Handle Prefix",
+  // "login.already-authenticated.header": "You're Already Logged In",
+  "login.already-authenticated.header": "Již jste přihlášeni",
+  // "login.already-authenticated.message": "You are currently authenticated. Would you like to go to your personal space or home page?",
+  "login.already-authenticated.message": "Jste aktuálně přihlášeni. Chcete přejít do svého osobního profilu nebo na domovskou stránku?",
+  // "login.already-authenticated.go-home": "Home",
+  "login.already-authenticated.go-home": "Domů",
+  // "login.already-authenticated.go-profile": "Profile",
+  "login.already-authenticated.go-profile": "Profil",
+  // "login.already-authenticated.logout": "Logout",
+  "login.already-authenticated.logout": "Odhlásit se",
+  // "home.image.glass":"Home page glass magnifier image",
+  "home.image.glass": "Lupa",
+
+  // "home.image.lindat-color-line": "Lindat color line image",
+  "home.image.lindat-color-line": "Barevná linka s barvami LINDAT",
+
+  // "static.deposit.image.step-1": "Step 1 Menu Login image",
+  "static.deposit.image.step-1": "Krok 1: menu - přihlášení",
+
+  // "static.deposit.image.step-2": "Step 2 Menu Submissions image",
+  "static.deposit.image.step-2": "Krok 2: menu - příspěvky",
+
+  // "static.deposit.image.step-2-1": "Step 2.1 Starting a submission image",
+  "static.deposit.image.step-2-1": "Krok 2.1: vytvoření nového příspěvku",
+
+  // "static.deposit.image.step-3": "Step 3 Submission information image",
+  "static.deposit.image.step-3": "Krok 3: informace o příspěvku",
+
+  // "static.deposit.image.step-4": "Step 4 Describing item people and organizations image",
+  "static.deposit.image.step-4": "Krok 4: popis osob a organizací u příspěvku",
+
+  // "static.deposit.image.step-4-1": "Step 4.1 Describing item source details image",
+  "static.deposit.image.step-4-1": "Krok 4.1: podrobnosti o původu příspěvku",
+
+  // "static.deposit.image.step-5": "Step 5 Uploading file image",
+  "static.deposit.image.step-5": "Krok 5: nahrání souboru",
+
+  // "static.deposit.image.step-6-1": "Step 6.1 Distribution license agreement image",
+  "static.deposit.image.step-6-1": "Krok 6.1: Odsouhlasení distribuční licence",
+
+  // "static.deposit.image.step-6-2": "Step 6.2 Selecting license image",
+  "static.deposit.image.step-6-2": "Krok 6.2: Výběr licence",
+
+  // "static.deposit.image.step-6-3": "Step 6.3 Open license selector image",
+  "static.deposit.image.step-6-3": "Krok 6.3: Open license selector - nástroj pro výběr licence",
+
 }
