@@ -10,7 +10,7 @@ import { EpicHandleEditComponent } from './epic-handle-edit/epic-handle-edit.com
 const routes: Routes = [
   {
     path: 'prefix',
-    resolve: { breadcrmb: I18nBreadcrumbResolver },
+    resolve: { breadcrumb: I18nBreadcrumbResolver },
     data: {
       breadcrumbKey: 'epic-handle-table'
     },
@@ -18,7 +18,7 @@ const routes: Routes = [
   },
   {
     path: EPIC_HANDLE_TABLE_NEW_HANDLE_PATH,
-    resolve: { breacrumb: I18nBreadcrumbResolver },
+    resolve: { breadcrumb: I18nBreadcrumbResolver },
     data: {
       breadcrumbKey: 'epic-handle-table.new-handle'
     },
@@ -26,7 +26,7 @@ const routes: Routes = [
   },
   {
     path: EPIC_HANDLE_TABLE_EDIT_HANDLE_PATH,
-    resolve: { breacrumb: I18nBreadcrumbResolver },
+    resolve: { breadcrumb: I18nBreadcrumbResolver },
     data: {
       breadcrumbKey: 'epic-handle-table.edit-handle'
     },
@@ -34,7 +34,7 @@ const routes: Routes = [
   },
   {
     path: '',
-    resolve: { breadcrmb: I18nBreadcrumbResolver },
+    resolve: { breadcrumb: I18nBreadcrumbResolver },
     data: {
       breadcrumbKey: 'epic-handle-table'
     },
