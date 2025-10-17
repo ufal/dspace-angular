@@ -103,7 +103,7 @@ export class EpicHandleDataService {
           handle.url = item.url;
           handle._links = {
             self: {
-              href: `/server/api/epichandles/${item.id}`
+              href: `/server/api/core/epichandles/${item.id}`
             }
           };
           return handle;

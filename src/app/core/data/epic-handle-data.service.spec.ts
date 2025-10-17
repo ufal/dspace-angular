@@ -22,13 +22,10 @@ describe('EpicHandleDataService',()=>{
     const mockPrefix = '11148';
     const mockSuffix = 'TEST-001';
     const mockHandleId = `${mockPrefix}/${mockSuffix}`;
-    const mockHandle: EpicHandle = {
-      id: mockHandleId,
-      url: 'http://example.com',
-      _links: {
-        self: { href: `${mockBaseUrl}/${mockHandleId}`}
-    }
-    } as EpicHandle;
+    const mockHandle = new EpicHandle();
+    mockHandle.id = mockHandleId;
+    mockHandle.url = 'http://example.com';
+    mockHandle._links = { self: { href: `/server/api/core/epichandles/${mockHandleId}` } };
 
     beforeEach(() => {
         const halServiceSpy = jasmine.createSpyObj('HALEndpointService', ['getEndpoint']);

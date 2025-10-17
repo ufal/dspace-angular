@@ -33,8 +33,7 @@ describe('EpicEditHandlePageComponent', () => {
       snapshot: {
         queryParams: {
           id: '11148/TEST-001',
-          url: 'http://example.com',
-          currentPage: 1
+          url: 'http://example.com'
         }
       }
     };
@@ -77,7 +76,6 @@ describe('EpicEditHandlePageComponent', () => {
     it('should load handle data from route params', () => {
       expect(component.handleId).toBe('11148/TEST-001');
       expect(component.url).toBe('http://example.com');
-      expect(component.currentPage).toBe(1);
     });
 
     it('should split handle ID into prefix and suffix', () => {
@@ -226,7 +224,7 @@ describe('EpicEditHandlePageComponent', () => {
       setTimeout(() => {
         expect(router.navigate).toHaveBeenCalledWith(
           ['/epic-handle-table'],
-          { queryParams: { prefix: '11148', currentPage: 1 } }
+          { queryParams: { prefix: '11148' } }
         );
         done();
       }, 100);
@@ -237,15 +235,12 @@ describe('EpicEditHandlePageComponent', () => {
 
       expect(router.navigate).toHaveBeenCalledWith(
         ['/epic-handle-table'],
-        { queryParams: { prefix: '11148', currentPage: 1 } }
+        { queryParams: { prefix: '11148'} }
       );
     });
 
     it('should redirect without currentPage when not provided', () => {
-      component.currentPage = undefined;
-
       component.redirectBack();
-
       expect(router.navigate).toHaveBeenCalledWith(
         ['/epic-handle-table'],
         { queryParams: { prefix: '11148' } }

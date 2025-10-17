@@ -74,10 +74,6 @@ describe('EpicNewHandlePageComponent', () => {
       component.ngOnInit();
       expect(router.navigate).toHaveBeenCalledWith(['/epic-handle-table/prefix']);
     });
-
-    it('should load currentPage from route params', () => {
-      expect(component.currentPage).toBe(1);
-    });
   });
 
   describe('Form Submission', () => {
