@@ -61,7 +61,7 @@ export class EpicHandleTableComponent implements OnInit, OnDestroy {
       this.initializeSortingOptions();
       this.getAllHandles();
     })
-    )
+    );
 
   }
 
@@ -158,7 +158,7 @@ export class EpicHandleTableComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.subs.push(editSub)
+    this.subs.push(editSub);
   }
 
   goToHandle(id) {
@@ -203,7 +203,7 @@ export class EpicHandleTableComponent implements OnInit, OnDestroy {
         }
       );
 
-    this.subs.push(deleteSub)
+    this.subs.push(deleteSub);
   }
 
   onPageChange() {
@@ -295,10 +295,10 @@ export class EpicHandleTableComponent implements OnInit, OnDestroy {
           }
         });
 
-        this.subs.push(findSub)
+        this.subs.push(findSub);
       }
     });
-    this.subs.push(pidSub)
+    this.subs.push(pidSub);
   }
 
   /**
@@ -340,6 +340,6 @@ export class EpicHandleTableComponent implements OnInit, OnDestroy {
       if (hasValue(sub)) {
         sub.unsubscribe();
       }
-    })
+    });
   }
 }
