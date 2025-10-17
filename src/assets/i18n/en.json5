@@ -6118,6 +6118,8 @@
 
   "epic-handle-table.go-to-pid.button": "Go to PID",
 
+  "epic-handle-table.pid.prefix-suffix-required": "Suffix is required!",
+
   "login.already-authenticated.header": "You're Already Logged In",
 
   "login.already-authenticated.message": "You are currently authenticated. Would you like to go to home page or your profile?",

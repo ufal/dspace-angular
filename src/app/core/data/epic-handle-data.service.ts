@@ -13,16 +13,30 @@ import { FindListOptions } from './find-list-options.model';
 import { isNotEmpty } from 'src/app/shared/empty.util';
 import { DeleteRequest, PostRequest, PutRequest } from './request.models';
 import { PageInfo } from '../shared/page-info.model';
-
+import { EpicHandle } from '../epicHandle/models/epic-handle.model';
 export interface EpicHandleResponse {
     payload: {
       page: EpicHandle[];
       pageInfo: PageInfo;
     }
 }
-export interface EpicHandle{
-  id: string;
-  url: string;
+
+export interface SpringBootPageable {
+  offset: number;
+  pageSize: number;
+  pageNumber: number;
+}
+
+export interface EpicHandleSearchResponse {
+  content: Array<{
+    id: string;
+    url: string;
+  }>;
+  pageable: SpringBootPageable
+  last: boolean;
+  totalElements: number;
+  totalPages: number;
+  numberOfElements: number;
 }
 
 /**
@@ -33,6 +47,8 @@ export interface EpicHandle{
 })
 export class EpicHandleDataService {
   private currentPrefix = '';
+  private linkPath = 'epichandles';
+
   constructor(
     protected requestService: RequestService,
     protected rdbService: RemoteDataBuildService,
@@ -52,7 +68,7 @@ export class EpicHandleDataService {
   }
 
   findAll(options: FindListOptions, prefix: string, urlPattern?: string, totalElements?: number,): Observable<EpicHandleResponse> {
-    return this.halService.getEndpoint('epichandles').pipe(
+    return this.halService.getEndpoint(this.linkPath).pipe(
       map(baseUrl => {
         const url = `${baseUrl}/${prefix}`;
         let params = new HttpParams();
@@ -71,15 +87,27 @@ export class EpicHandleDataService {
 
         if (totalElements) {
           params = params.set('totalElements', String(totalElements));
+        }else {
+          params = params.set('totalElements', String(17600));
         }
 
         return { url, params };
       }),
       mergeMap(({ url, params }) => {
-        return this.http.get<any>(url, { params });
+        return this.http.get<EpicHandleSearchResponse>(url, { params });
       }),
       map(response => {
-        const handles: EpicHandle[] = response.content || [];
+        const handles: EpicHandle[] = (response.content || []).map(item => {
+          const handle = new EpicHandle();
+          handle.id = item.id;
+          handle.url = item.url;
+          handle._links = {
+            self: {
+              href: `/server/api/epichandles/${item.id}`
+            }
+          }
+          return handle;
+        });
         const pageInfo = new PageInfo({
           elementsPerPage: response.pageable?.pageSize || options.elementsPerPage || 10,
           totalElements: response.totalElements || 0,
@@ -169,13 +197,19 @@ export class EpicHandleDataService {
   }
 
 
-  findByPrefixAndSuffix(prefix: string, suffix: string): Observable<any> {
+  findByPrefixAndSuffix(prefix: string, suffix: string): Observable<EpicHandle> {
     // we search for the handle using the prefix and suffix
     return this.halService.getEndpoint('epichandles').pipe(
       map(baseUrl => `${baseUrl}/${prefix}/${suffix}`),
-      mergeMap(url => this.http.get<any>(url)),
+      mergeMap(url => this.http.get<{id: string; url: string; _links?: any}>(url)),
       map(response => {
-        return response;
+        const handle = new EpicHandle();
+        handle.id = response.id;
+        handle.url = response.url;
+        handle._links = response._links || {
+          self: { href: `/server/api/epichandles/${response.id}`}
+        }
+        return handle;
       })
     );
   }

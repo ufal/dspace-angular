@@ -144,7 +144,6 @@ export class EpicHandleTableComponent implements OnInit {
             queryParams: {
               id: handle.id,
               url: handle.url,
-              currentPage: this.options.currentPage,
               prefix: this.prefix
             }
           }
@@ -252,7 +251,6 @@ export class EpicHandleTableComponent implements OnInit {
             queryParams: {
               id: handle.id,
               url: handle.url,
-              currentPage: this.options.currentPage,
               prefix: this.prefix
             }
           }
@@ -270,7 +268,6 @@ export class EpicHandleTableComponent implements OnInit {
                 queryParams: {
                   id: fetchedHandle.id,
                   url: fetchedHandle.url,
-                  currentPage: this.options.currentPage,
                   prefix: this.prefix
                 }
               }

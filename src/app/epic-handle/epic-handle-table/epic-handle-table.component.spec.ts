@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EpicHandleTableComponent } from './epic-handle-table.component';
-import { EpicHandle, EpicHandleDataService, EpicHandleResponse } from 'src/app/core/data/epic-handle-data.service';
+import { EpicHandleDataService, EpicHandleResponse } from 'src/app/core/data/epic-handle-data.service';
 import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
 import { getMockTranslateService } from 'src/app/shared/mocks/translate.service.mock';
 import { TranslateLoaderMock } from 'src/app/shared/mocks/translate-loader.mock';
@@ -11,6 +11,7 @@ import { of, throwError } from 'rxjs';
 import { PaginationServiceStub } from 'src/app/shared/testing/pagination-service.stub';
 import { PaginationService } from 'src/app/core/pagination/pagination.service';
 import { PageInfo } from 'src/app/core/shared/page-info.model';
+import { EpicHandle } from 'src/app/core/epicHandle/models/epic-handle.model';
 
 describe('EpicHandleTableComponent', () => {
   let component: EpicHandleTableComponent;
@@ -20,17 +21,17 @@ describe('EpicHandleTableComponent', () => {
   let router: jasmine.SpyObj<Router>;
   let translateService: TranslateService;
   let activatedRoute: any;
-   let paginationService;
-  const mockHandles: EpicHandle[] = [
+  let paginationService;
+  const mockHandles: EpicHandle[] =  [
     {
       id: '11148/TEST-001',
-      url: 'http://example1.com'
+      url: 'http://example1.com',
     },
     {
       id: '11148/TEST-002',
       url: 'http://example2.com'
     }
-  ];
+  ] as EpicHandle[];
 
   const mockResponse: EpicHandleResponse = {
     payload: {

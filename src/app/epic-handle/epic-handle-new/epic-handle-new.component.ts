@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { EpicHandle, EpicHandleDataService } from 'src/app/core/data/epic-handle-data.service';
+import { EpicHandleDataService } from 'src/app/core/data/epic-handle-data.service';
 import { RemoteData } from 'src/app/core/data/remote-data';
 import { getFirstCompletedRemoteData } from 'src/app/core/shared/operators';
 import { NotificationsService } from 'src/app/shared/notifications/notifications.service';
 import { getEpicHandleTableModulePath } from '../epic-handle-routing-paths';
 import { isNull } from 'src/app/shared/empty.util';
+import { EpicHandle } from 'src/app/core/epicHandle/models/epic-handle.model';
+import { query } from '@angular/animations';
 
 @Component({
   selector: 'ds-epic-handle-new',
@@ -77,10 +79,7 @@ export class EpicHandleNewComponent implements OnInit {
   }
 
   redirectBack() {
-    const queryParams: any = this.currentPage ? { currentPage: this.currentPage } : {};
-    if (this.prefix) {
-      queryParams.prefix = this.prefix;
-    }
+    const queryParams = this.prefix ? {prefix: this.prefix} : {};
     this.router.navigate([getEpicHandleTableModulePath()], { queryParams });
   }
 

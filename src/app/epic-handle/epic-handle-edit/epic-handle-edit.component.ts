@@ -48,7 +48,7 @@ export class EpicHandleEditComponent implements OnInit {
     this.newUrl = this.url;
   }
 
-  onClickSubmit(value: any) {
+  onClickSubmit(value: { url: string }) {
     if (!value.url || value.url.trim() === '') {
       this.notificationService.error(
         this.translateService.instant('epic-handle-table.edit-handle.notify.error.url-required'),
@@ -85,9 +85,7 @@ export class EpicHandleEditComponent implements OnInit {
   }
 
   redirectBack() {
-    console.log(this.currentPage);
-    let queryParams: any = this.currentPage ? { currentPage: this.currentPage } : {};
-    queryParams = this.prefix ? {  prefix: this.prefix, ...queryParams, } : queryParams;
+    let queryParams = this.prefix ? {  prefix: this.prefix} : {};
     this.router.navigate([getEpicHandleTableModulePath()], { queryParams });
   }
 
