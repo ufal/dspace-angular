@@ -1,14 +1,14 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, combineLatest } from 'rxjs';
+import { BehaviorSubject, combineLatest, Subscription } from 'rxjs';
 import { SortOptions } from 'src/app/core/cache/models/sort-options.model';
 import { EpicHandleDataService } from 'src/app/core/data/epic-handle-data.service';
 import { NotificationsService } from 'src/app/shared/notifications/notifications.service';
 import { PaginationComponentOptions } from 'src/app/shared/pagination/pagination-component-options.model';
 import { EPIC_HANDLE_TABLE_EDIT_HANDLE_PATH, EPIC_HANDLE_TABLE_NEW_HANDLE_PATH, getEpicHandleTableModulePath } from '../epic-handle-routing-paths';
 import { scan, switchMap, take } from 'rxjs/operators';
-import { isEmpty } from '../../shared/empty.util';
+import { hasValue, isEmpty } from '../../shared/empty.util';
 import { defaultPagination, defaultSortConfiguration } from 'src/app/clarin-licenses/clarin-license-table-pagination';
 import { PaginationService } from 'src/app/core/pagination/pagination.service';
 
@@ -17,7 +17,7 @@ import { PaginationService } from 'src/app/core/pagination/pagination.service';
   templateUrl: './epic-handle-table.component.html',
   styleUrls: ['./epic-handle-table.component.scss']
 })
-export class EpicHandleTableComponent implements OnInit {
+export class EpicHandleTableComponent implements OnInit, OnDestroy {
   constructor(private epicHandleDataService: EpicHandleDataService,
     public router: Router,
     private cdr: ChangeDetectorRef,
@@ -26,6 +26,7 @@ export class EpicHandleTableComponent implements OnInit {
     private route: ActivatedRoute,
     private paginationService: PaginationService) {
   }
+
   handlesRD$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   pageSize = 10;
   options: PaginationComponentOptions;
@@ -40,11 +41,13 @@ export class EpicHandleTableComponent implements OnInit {
   selectedHandle = null;
   prefix = '';
   totalElements: number = null;
+  private subs: Subscription[] = [];
 
   ngOnInit(): void {
     // get the prefix from query params and initialize inside the subscription so we only
     // proceed once we have the prefix available
-    this.route.queryParams.pipe(take(1)).subscribe(params => {
+    this.subs.push(
+      this.route.queryParams.pipe(take(1)).subscribe(params => {
       this.prefix = params.prefix;
       if (!this.prefix) {
         this.router.navigate(['/epic-handle-table/prefix']);
@@ -57,7 +60,9 @@ export class EpicHandleTableComponent implements OnInit {
       this.initializePaginationOptions();
       this.initializeSortingOptions();
       this.getAllHandles();
-    });
+    })
+    )
+
   }
 
   getAllHandles() {
@@ -67,7 +72,7 @@ export class EpicHandleTableComponent implements OnInit {
     const currentSort$ = this.getCurrentSort();
     const searchTerm$ = new BehaviorSubject<string>(this.searchQuery);
 
-    combineLatest([currentPagination$, currentSort$, searchTerm$]).pipe(
+    const getAllSub = combineLatest([currentPagination$, currentSort$, searchTerm$]).pipe(
       scan((prevState, [currentPagination, currentSort, searchTerm]) => {
         // If search term has changed, reset to page 1; otherwise, keep current page
         const currentPage = prevState.searchTerm !== searchTerm ? 1 : currentPagination.currentPage;
@@ -99,6 +104,8 @@ export class EpicHandleTableComponent implements OnInit {
       }
 
     });
+
+    this.subs.push(getAllSub);
   }
 
   clearSearch() {
@@ -131,7 +138,7 @@ export class EpicHandleTableComponent implements OnInit {
       return;
     }
 
-    this.handlesRD$.pipe(
+    const editSub = this.handlesRD$.pipe(
       take(1)
     ).subscribe(handlesRD => {
       const handles = handlesRD?.payload?.page || [];
@@ -150,6 +157,8 @@ export class EpicHandleTableComponent implements OnInit {
         );
       }
     });
+
+    this.subs.push(editSub)
   }
 
   goToHandle(id) {
@@ -166,7 +175,7 @@ export class EpicHandleTableComponent implements OnInit {
 
     this.isLoading = true;
 
-    this.epicHandleDataService.deleteByHandleId(this.selectedHandle)
+    const deleteSub = this.epicHandleDataService.deleteByHandleId(this.selectedHandle)
       .pipe(take(1))
       .subscribe(
         (response) => {
@@ -193,6 +202,8 @@ export class EpicHandleTableComponent implements OnInit {
           this.notificationsService.error(null, errorMessage);
         }
       );
+
+    this.subs.push(deleteSub)
   }
 
   onPageChange() {
@@ -229,7 +240,7 @@ export class EpicHandleTableComponent implements OnInit {
       return;
     }
 
-    this.handlesRD$.pipe(
+    const pidSub = this.handlesRD$.pipe(
       take(1)
     ).subscribe(handlesRD => {
       const handles = handlesRD?.payload?.page || [];
@@ -258,7 +269,7 @@ export class EpicHandleTableComponent implements OnInit {
       } else {
         const suffix = raw.includes('/') ? raw.split('/')[1] : raw;
         this.isLoading = true;
-        this.epicHandleDataService.findByPrefixAndSuffix(this.prefix, suffix).pipe(take(1)).subscribe(handleResponse => {
+        const findSub = this.epicHandleDataService.findByPrefixAndSuffix(this.prefix, suffix).pipe(take(1)).subscribe(handleResponse => {
           this.isLoading = false;
           if (handleResponse) {
             const fetchedHandle = handleResponse;
@@ -283,8 +294,11 @@ export class EpicHandleTableComponent implements OnInit {
             this.notificationsService.error(null, this.translateService.instant('error'));
           }
         });
+
+        this.subs.push(findSub)
       }
     });
+    this.subs.push(pidSub)
   }
 
   /**
@@ -306,17 +320,26 @@ export class EpicHandleTableComponent implements OnInit {
     return true;
   }
 
-    /**
-     * Get the current pagination options.
-    */
-    private getCurrentPagination() {
-      return this.paginationService.getCurrentPagination(this.options.id, defaultPagination);
-    }
+  /**
+   * Get the current pagination options.
+  */
+  private getCurrentPagination() {
+    return this.paginationService.getCurrentPagination(this.options.id, defaultPagination);
+  }
 
-    /**
-     * Get the current sorting options.
-    */
-    private getCurrentSort() {
-      return this.paginationService.getCurrentSort(this.options.id, defaultSortConfiguration);
-    }
+  /**
+   * Get the current sorting options.
+  */
+  private getCurrentSort() {
+    return this.paginationService.getCurrentSort(this.options.id, defaultSortConfiguration);
+  }
+
+  ngOnDestroy(): void {
+    this.handlesRD$.complete();
+    this.subs.forEach(sub => {
+      if (hasValue(sub)) {
+        sub.unsubscribe();
+      }
+    })
+  }
 }
