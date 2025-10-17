@@ -87,7 +87,7 @@ export class EpicHandleDataService {
 
         if (totalElements) {
           params = params.set('totalElements', String(totalElements));
-        }else {
+        } else {
           params = params.set('totalElements', String(17600));
         }
 
@@ -105,7 +105,7 @@ export class EpicHandleDataService {
             self: {
               href: `/server/api/epichandles/${item.id}`
             }
-          }
+          };
           return handle;
         });
         const pageInfo = new PageInfo({
@@ -208,7 +208,7 @@ export class EpicHandleDataService {
         handle.url = response.url;
         handle._links = response._links || {
           self: { href: `/server/api/epichandles/${response.id}`}
-        }
+        };
         return handle;
       })
     );

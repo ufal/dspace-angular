@@ -8,7 +8,6 @@ import { NotificationsService } from 'src/app/shared/notifications/notifications
 import { getEpicHandleTableModulePath } from '../epic-handle-routing-paths';
 import { isNull } from 'src/app/shared/empty.util';
 import { EpicHandle } from 'src/app/core/epicHandle/models/epic-handle.model';
-import { query } from '@angular/animations';
 
 @Component({
   selector: 'ds-epic-handle-new',

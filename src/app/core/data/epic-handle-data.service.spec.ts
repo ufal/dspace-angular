@@ -9,6 +9,7 @@ import { ObjectCacheService } from '../cache/object-cache.service';
 import { DefaultChangeAnalyzer } from './default-change-analyzer.service';
 import { NotificationsService } from 'src/app/shared/notifications/notifications.service';
 import { of } from 'rxjs';
+import { EpicHandle } from '../epicHandle/models/epic-handle.model';
 
 describe('EpicHandleDataService',()=>{
     let service: EpicHandleDataService;
@@ -21,13 +22,13 @@ describe('EpicHandleDataService',()=>{
     const mockPrefix = '11148';
     const mockSuffix = 'TEST-001';
     const mockHandleId = `${mockPrefix}/${mockSuffix}`;
-    const mockHandle: any = {
+    const mockHandle: EpicHandle = {
       id: mockHandleId,
       url: 'http://example.com',
       _links: {
         self: { href: `${mockBaseUrl}/${mockHandleId}`}
     }
-};
+    } as EpicHandle;
 
     beforeEach(() => {
         const halServiceSpy = jasmine.createSpyObj('HALEndpointService', ['getEndpoint']);

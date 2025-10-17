@@ -30,7 +30,7 @@ describe('EpicNewHandlePageComponent', () => {
     const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
     const activatedRoute = {
       snapshot: {
-        queryParams: { currentPage: 1, prefix: '11148' }
+        queryParams: { prefix: '11148' }
       }
     };
     translateService = getMockTranslateService();
@@ -221,7 +221,7 @@ describe('EpicNewHandlePageComponent', () => {
       setTimeout(() => {
         expect(router.navigate).toHaveBeenCalledWith(
           ['/epic-handle-table'],
-          { queryParams: { currentPage: 1, prefix: '11148' } }
+          { queryParams: { prefix: '11148' } }
         );
         done();
       }, 100);
@@ -231,7 +231,7 @@ describe('EpicNewHandlePageComponent', () => {
       component.onCancel();
       expect(router.navigate).toHaveBeenCalledWith(
         ['/epic-handle-table'],
-        { queryParams: { currentPage: 1, prefix: '11148' } }
+        { queryParams: { prefix: '11148' } }
       );
     });
 
