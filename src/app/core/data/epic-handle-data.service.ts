@@ -6,7 +6,7 @@ import { HALEndpointService } from '../shared/hal-endpoint.service';
 import { ObjectCacheService } from '../cache/object-cache.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { NotificationsService } from '../../shared/notifications/notifications.service';
-import { map, mergeMap, Observable } from 'rxjs';
+import { catchError, map, mergeMap, Observable, throwError } from 'rxjs';
 import { RemoteData } from './remote-data';
 import { CoreState } from '../core-state.model';
 import { FindListOptions } from './find-list-options.model';
@@ -87,8 +87,6 @@ export class EpicHandleDataService {
 
         if (totalElements) {
           params = params.set('totalElements', String(totalElements));
-        } else {
-          params = params.set('totalElements', String(17600));
         }
 
         return { url, params };
@@ -122,6 +120,9 @@ export class EpicHandleDataService {
             pageInfo: pageInfo,
           }
         };
+      }),
+      catchError(error => {
+        return throwError(() => error);
       })
     );
   }
@@ -152,6 +153,9 @@ export class EpicHandleDataService {
         this.requestService.send(request);
 
         return this.rdbService.buildFromRequestUUID<EpicHandle>(requestId);
+      }),
+      catchError(error => {
+        return throwError(() => error);
       })
     );
   }
@@ -173,6 +177,9 @@ export class EpicHandleDataService {
         const request = new PutRequest(requestId, fullUrl, null);
         this.requestService.send(request);
         return this.rdbService.buildFromRequestUUID<EpicHandle>(requestId);
+      }),
+      catchError(error => {
+        return throwError(() => error);
       })
     );
   }
@@ -184,6 +191,9 @@ export class EpicHandleDataService {
         const request = new DeleteRequest(requestId, url);
         this.requestService.send(request);
         return this.rdbService.buildFromRequestUUID(requestId);
+      }),
+      catchError(error => {
+        return throwError(() => error);
       })
     );
   }
@@ -210,6 +220,9 @@ export class EpicHandleDataService {
           self: { href: `/server/api/epichandles/${response.id}`}
         };
         return handle;
+      }),
+      catchError(error => {
+        return throwError(() => error);
       })
     );
   }
