@@ -94,7 +94,7 @@ export class FullItemPageComponent extends ItemPageComponent implements OnInit, 
     this.subs.push(this.route.data.subscribe((data: Data) => {
         this.fromSubmissionObject = hasValue(data.wfi) || hasValue(data.wsi);
 
-        if(hasValue(data.wfi)) {
+        if (hasValue(data.wfi)) {
           this.workflowItem = data.wfi.payload;
           this.claimedTask$ = this.itemRD$.pipe(
             filter((itemRD: RemoteData<Item>) => itemRD?.hasSucceeded && hasValue(itemRD.payload)),

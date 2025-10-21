@@ -46,7 +46,7 @@ export class ClaimedTaskActionsComponent extends MyDSpaceActionsComponent<Claime
    * Whether to show the view button (default: true)
    * Set to false when already on the view page
    */
-  @Input() showViewButton: boolean = true;
+  @Input() showViewButton = true;
 
   /**
    * The workflow action available for this task

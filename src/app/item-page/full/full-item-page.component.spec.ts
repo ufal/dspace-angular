@@ -335,7 +335,7 @@ describe('FullItemPageComponent', () => {
       });
 
       it('should initialize workflowItem', () => {
-        expect(comp.workflowItem).toEqual(mockWorkflowItem)
+        expect(comp.workflowItem).toEqual(mockWorkflowItem);
       });
 
       it('should create claimedTask$ observable', (done) => {
@@ -388,7 +388,7 @@ describe('FullItemPageComponent', () => {
         const firstActions = claimedTaskActions[0];
         const itemInfo = fixture.debugElement.query(By.css('.full-item-info'));
 
-        expect(firstActions.nativeElement.compareDocumentPosition(itemInfo.nativeElement)).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
+        expect(firstActions.nativeElement.compareDocumentPosition(itemInfo.nativeElement)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
       });
 
       it('should display claimed task actions at the bottom', () => {
@@ -402,7 +402,7 @@ describe('FullItemPageComponent', () => {
         const secondActions = claimedTaskActions[1];
         const itemInfo = fixture.debugElement.query(By.css('.full-item-info'));
 
-        expect(secondActions.nativeElement.compareDocumentPosition(itemInfo.nativeElement)).toBe(Node.DOCUMENT_POSITION_PRECEDING)
+        expect(secondActions.nativeElement.compareDocumentPosition(itemInfo.nativeElement)).toBe(Node.DOCUMENT_POSITION_PRECEDING);
       });
 
       it('should render claimed-task-actions components', () => {
@@ -493,7 +493,7 @@ describe('FullItemPageComponent', () => {
         expect(subsLength).toBeGreaterThan(0);
 
         comp.subs.forEach((sub) => {
-          if(sub) {
+          if (sub) {
             spyOn(sub, 'unsubscribe');
           }
         });
@@ -501,7 +501,7 @@ describe('FullItemPageComponent', () => {
         comp.ngOnDestroy();
 
         comp.subs.filter(sub => sub).forEach((sub) => {
-          expect(sub.unsubscribe).toHaveBeenCalled()
+          expect(sub.unsubscribe).toHaveBeenCalled();
         });
       });
     });
