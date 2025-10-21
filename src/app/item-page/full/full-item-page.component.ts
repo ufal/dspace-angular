@@ -119,11 +119,7 @@ export class FullItemPageComponent extends ItemPageComponent implements OnInit, 
               );
 
               if (claimedTask.action) {
-                console.log('📡 Making action observable HOT with shareReplay...');
                 const sharedAction$ = (claimedTask.action as Observable<RemoteData<WorkflowAction>>).pipe(
-                  tap((actionRD) => {
-                    console.log('📦 Action data received:', actionRD?.hasSucceeded, actionRD?.payload?.options?.length);
-                  }),
                   shareReplay(1)
                 );
                 claimedTask.action = sharedAction$;

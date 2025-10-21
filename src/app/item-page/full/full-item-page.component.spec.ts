@@ -6,7 +6,7 @@ import { ChangeDetectionStrategy, NO_ERRORS_SCHEMA, PLATFORM_ID } from '@angular
 import { TruncatePipe } from '../../shared/utils/truncate.pipe';
 import { FullItemPageComponent } from './full-item-page.component';
 import { MetadataService } from '../../core/metadata/metadata.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ActivatedRouteStub } from '../../shared/testing/active-router.stub';
 import { VarDirective } from '../../shared/utils/var.directive';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -34,8 +34,15 @@ import { ConfigurationProperty } from '../../core/shared/configuration-property.
 import { HALEndpointService } from '../../core/shared/hal-endpoint.service';
 import { cold } from 'jasmine-marbles';
 import { ReplacePipe } from '../../shared/utils/replace.pipe';
+import { WorkflowItem } from 'src/app/core/submission/models/workflowitem.model';
+import { WorkflowAction } from 'src/app/core/tasks/models/workflow-action-object.model';
+import { ClaimedTask } from 'src/app/core/tasks/models/claimed-task-object.model';
+import { ClaimedTaskDataService } from 'src/app/core/tasks/claimed-task-data.service';
+import { LinkService } from 'src/app/core/cache/builders/link.service';
+import { getMockLinkService } from 'src/app/shared/mocks/link-service.mock';
 
 const mockItem: Item = Object.assign(new Item(), {
+  uuid: 'test-item-uuid',
   bundles: createSuccessfulRemoteDataObject$(createPaginatedList([])),
   metadata: {
     'dc.title': [
@@ -52,6 +59,26 @@ const mockWithdrawnItem: Item = Object.assign(new Item(), {
   metadata: [],
   relationships: createRelationshipsObservable(),
   isWithdrawn: true
+});
+
+const mockWorkflowItem: WorkflowItem = Object.assign(new WorkflowItem(), {
+  id: 'workflow-item-1',
+  uuid: 'workflow-uuid-1',
+  item: observableOf(createSuccessfulRemoteDataObject(mockItem))
+});
+
+const mockWorkflowAction: WorkflowAction = Object.assign(new WorkflowAction(), {
+  id: 'action-1',
+  options: ['submit_approve', 'submit_reject', 'submit_edit_metadata', 'return_to_pool']
+});
+
+const mockClaimedTask: ClaimedTask = Object.assign(new ClaimedTask(), {
+  id: 'claimed-task-1',
+  workflowitem: observableOf(createSuccessfulRemoteDataObject(mockWorkflowItem)),
+  action: observableOf(createSuccessfulRemoteDataObject(mockWorkflowAction)),
+  _links: {
+    workflowitem: { href: 'https://rest.api/workflowitems/workflow-item-1' }
+  }
 });
 
 const metadataServiceStub = {
@@ -73,6 +100,9 @@ describe('FullItemPageComponent', () => {
   let serverResponseService: jasmine.SpyObj<ServerResponseService>;
   let signpostingDataService: jasmine.SpyObj<SignpostingDataService>;
   let linkHeadService: jasmine.SpyObj<LinkHeadService>;
+  let claimedTaskService: ClaimedTaskDataService;
+  let linkService: LinkService;
+  let router: Router;
 
   const mocklink = {
     href: 'http://test.org',
@@ -115,6 +145,21 @@ describe('FullItemPageComponent', () => {
     linkHeadService = jasmine.createSpyObj('LinkHeadService', {
       addTag: jasmine.createSpy('setHeader'),
       removeTag: jasmine.createSpy('removeTag'),
+    });
+
+    claimedTaskService = jasmine.createSpyObj('claimedTaskService', {
+      findByItem: observableOf(createSuccessfulRemoteDataObject(mockClaimedTask))
+    });
+
+    linkService = getMockLinkService();
+
+    router = jasmine.createSpyObj('router', {
+      navigate: null,
+      createUrlTree: {},
+      serializeUrl: '/testing-url'
+    }, {
+      events: observableOf({}),
+      url: ''
     });
 
     const mockMetadataBitstreamDataService = {
@@ -162,6 +207,9 @@ describe('FullItemPageComponent', () => {
         { provide: MetadataSchemaDataService, useValue: {} },
         { provide: MetadataFieldDataService, useValue: {} },
         { provide: HALEndpointService, useValue: halService },
+        { provide: ClaimedTaskDataService, useValue: claimedTaskService },
+        { provide: LinkService, useValue: linkService },
+        { provide: Router, useValue: router },
         RegistryService
       ],
       schemas: [NO_ERRORS_SCHEMA]
@@ -270,6 +318,121 @@ describe('FullItemPageComponent', () => {
     it('should add the signposting links', () => {
       expect(serverResponseService.setHeader).toHaveBeenCalled();
       expect(linkHeadService.addTag).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  describe('Workflow Actions Integration', () => {
+    describe('when route data contains workflow item', () => {
+      beforeEach(() => {
+        routeData.wfi = createSuccessfulRemoteDataObject(mockWorkflowItem);
+        routeStub.data = observableOf(routeData);
+        comp.ngOnInit();
+        fixture.detectChanges();
+      });
+
+      it('should set fromSubmissionObject to true', () => {
+        expect(comp.fromSubmissionObject).toBe(true);
+      });
+
+      it('should initialize workflowItem', () => {
+        expect(comp.workflowItem).toEqual(mockWorkflowItem)
+      });
+
+      it('should create claimedTask$ observable', (done) => {
+        comp.claimedTask$.subscribe(claimedTaskRD => {
+          expect(claimedTaskRD.hasSucceeded).toBe(true);
+          expect(claimedTaskRD.payload).toEqual(mockClaimedTask);
+          done();
+        });
+      });
+
+      it('should have claimedTask$ observable that depends on itemRD$', () => {
+        expect(comp.claimedTask$).toBeDefined();
+        expect(claimedTaskService.findByItem).toHaveBeenCalledWith(mockItem.uuid);
+      });
+
+      it('should populate item$ BehaviorSubject', (done) => {
+        // The component subscribes to claimedTask$ internally during ngOnInit
+        // which populates item$ when the workflow item's item observable emits
+        comp.item$.subscribe((item) => {
+          if (item) {
+            expect(item).toEqual(mockItem);
+            done();
+          }
+        });
+      });
+
+      it('should populate workflowitem$ BehaviorSubject', (done) => {
+        comp.workflowitem$.subscribe((wfi) => {
+          expect(wfi).toEqual(mockWorkflowItem);
+          done();
+        });
+      });
+
+      it('should call linkService.resolveLinks with correct parameters', (done) => {
+        expect(linkService.resolveLinks).toHaveBeenCalledWith(
+          mockClaimedTask,
+          jasmine.any(Object),
+          jasmine.any(Object)
+        );
+        done();
+      });
+
+      it('should display claimed task actions at the top', () => {
+        comp.item$.next(mockItem);
+        comp.workflowitem$.next(mockWorkflowItem);
+        comp.claimedTask$ = observableOf(createSuccessfulRemoteDataObject(mockClaimedTask));
+        fixture.detectChanges();
+
+        const claimedTaskActions = fixture.debugElement.queryAll(By.css('ds-claimed-task-actions'));
+        expect(claimedTaskActions.length).toBeGreaterThanOrEqual(1);
+
+        const firstActions = claimedTaskActions[0];
+        const itemInfo = fixture.debugElement.query(By.css('.full-item-info'));
+
+        expect(firstActions.nativeElement.compareDocumentPosition(itemInfo.nativeElement)).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
+      });
+
+      it('should display claimed task actions at the bottom', () => {
+        comp.item$.next(mockItem);
+        comp.workflowitem$.next(mockWorkflowItem);
+        comp.claimedTask$ = observableOf(createSuccessfulRemoteDataObject(mockClaimedTask));
+        fixture.detectChanges();
+
+        const claimedTaskActions = fixture.debugElement.queryAll(By.css('ds-claimed-task-actions'));
+
+        const secondActions = claimedTaskActions[1];
+        const itemInfo = fixture.debugElement.query(By.css('.full-item-info'));
+
+        expect(secondActions.nativeElement.compareDocumentPosition(itemInfo.nativeElement)).toBe(Node.DOCUMENT_POSITION_PRECEDING)
+      });
+
+      it('should pass showViewButton as false to claimed-task-actions', () => {
+        comp.item$.next(mockItem);
+        comp.workflowitem$.next(mockWorkflowItem);
+        comp.claimedTask$ = observableOf(createSuccessfulRemoteDataObject(mockClaimedTask));
+        fixture.detectChanges();
+        const claimedTaskActions = fixture.debugElement.queryAll(By.css('ds-claimed-task-actions'));
+        claimedTaskActions.forEach((actionElement) => {
+          const componentInstance = actionElement.nativeNode;
+          expect(componentInstance.showViewButton).toBe(false);
+        });
+      });
+
+      it('should render claimed-task-actions components with proper bindings', () => {
+        comp.item$.next(mockItem);
+        comp.workflowitem$.next(mockWorkflowItem);
+        comp.claimedTask$ = observableOf(createSuccessfulRemoteDataObject(mockClaimedTask));
+        fixture.detectChanges();
+        const claimedTaskActions = fixture.debugElement.queryAll(By.css('ds-claimed-task-actions'));
+        expect(claimedTaskActions.length).toBe(2);
+        claimedTaskActions.forEach((actionElement) => {
+          expect(actionElement.nativeNode.item).toEqual(mockItem)
+          expect(actionElement.nativeNode.workflowitem).toEqual(mockWorkflowItem)
+          expect(actionElement.nativeNode.object).toEqual(mockClaimedTask)
+          expect(actionElement).toBeTruthy();
+        });
+      });
     });
   });
 });
