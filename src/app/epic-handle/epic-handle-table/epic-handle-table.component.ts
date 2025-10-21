@@ -87,7 +87,6 @@ export class EpicHandleTableComponent implements OnInit, OnDestroy {
     ).pipe(take(1)).subscribe((response) => {
       this.handlesRD$.next(response);
       this.isLoading = false;
-
       if (response?.payload?.pageInfo?.totalElements !== undefined) {
         this.totalElements = response.payload.pageInfo?.totalElements;
       }
@@ -99,7 +98,7 @@ export class EpicHandleTableComponent implements OnInit, OnDestroy {
       } else {
         this.notificationsService.error(null, this.translateService.instant('error'));
       }
-
+      this.cdr.detectChanges();
     });
 
     this.subs.push(getAllSub);
@@ -156,13 +155,6 @@ export class EpicHandleTableComponent implements OnInit, OnDestroy {
     });
 
     this.subs.push(editSub);
-  }
-
-  goToHandle(id) {
-    if (!id) {
-      return;
-    }
-    window.open(`/handle/${id}`, '_blank');
   }
 
   deleteHandle() {
@@ -226,7 +218,6 @@ export class EpicHandleTableComponent implements OnInit, OnDestroy {
 
 
   goToPID() {
-
     const raw = (this.pidQuery || '').trim();
     if (!raw) {
       return;
@@ -268,6 +259,7 @@ export class EpicHandleTableComponent implements OnInit, OnDestroy {
         this.isLoading = true;
         const findSub = this.epicHandleDataService.findByPrefixAndSuffix(this.prefix, suffix).pipe(take(1)).subscribe(handleResponse => {
           this.isLoading = false;
+          this.cdr.detectChanges();
           if (handleResponse) {
             const fetchedHandle = handleResponse;
             this.switchSelectedHandle(fetchedHandle.id);
@@ -285,6 +277,7 @@ export class EpicHandleTableComponent implements OnInit, OnDestroy {
           }
         }, error => {
           this.isLoading = false;
+          this.cdr.detectChanges();
           if (error?.error?.status){
             this.notificationsService.error(null, this.translateService.instant(error?.error?.message));
           } else {
