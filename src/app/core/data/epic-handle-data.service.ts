@@ -28,10 +28,7 @@ export interface SpringBootPageable {
 }
 
 export interface EpicHandleSearchResponse {
-  content: Array<{
-    id: string;
-    url: string;
-  }>;
+  content: Array<EpicHandle>;
   pageable: SpringBootPageable
   last: boolean;
   totalElements: number;
@@ -46,7 +43,6 @@ export interface EpicHandleSearchResponse {
   providedIn: 'root',
 })
 export class EpicHandleDataService {
-  private currentPrefix = '';
   private linkPath = 'epichandles';
 
   constructor(
@@ -87,17 +83,7 @@ export class EpicHandleDataService {
         return this.http.get<EpicHandleSearchResponse>(url, { params });
       }),
       map(response => {
-        const handles: EpicHandle[] = (response.content || []).map(item => {
-          const handle = new EpicHandle();
-          handle.id = item.id;
-          handle.url = item.url;
-          handle._links = {
-            self: {
-              href: `/server/api/core/epichandles/${item.id}`
-            }
-          };
-          return handle;
-        });
+        const handles: EpicHandle[] = response.content || [];
         const pageInfo = new PageInfo({
           elementsPerPage: response.pageable?.pageSize || options.elementsPerPage || 10,
           totalElements: response.totalElements || 0,
