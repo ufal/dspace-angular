@@ -59,14 +59,6 @@ export class EpicHandleDataService {
     protected notificationsService: NotificationsService) {
   }
 
-  setPrefix(prefix: string) {
-    this.currentPrefix = prefix;
-  }
-
-  getPrefix(): string {
-    return this.currentPrefix;
-  }
-
   findAll(options: FindListOptions, prefix: string, urlPattern?: string, totalElements?: number,): Observable<EpicHandleResponse> {
     return this.halService.getEndpoint(this.linkPath).pipe(
       map(baseUrl => {

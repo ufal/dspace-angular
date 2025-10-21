@@ -27,7 +27,6 @@ export class EpicHandlePrefixComponent {
     const isValidTrimmed = /^[a-zA-Z0-9]+$/.test(trimmedPrefix);
 
     if (isValidTrimmed) {
-      this.epicHandleDataService.setPrefix(trimmedPrefix);
       this.router.navigate(['/epic-handle-table'], { queryParams: { prefix: trimmedPrefix}});
     }
   }

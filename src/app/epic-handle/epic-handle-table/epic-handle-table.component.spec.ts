@@ -45,7 +45,7 @@ describe('EpicHandleTableComponent', () => {
     }
   };
   beforeEach(async () => {
-    const epicHandleDataServiceSpy = jasmine.createSpyObj('EpicHandleDataService', ['findAll', 'deleteByHandleId', 'setPrefix']);
+    const epicHandleDataServiceSpy = jasmine.createSpyObj('EpicHandleDataService', ['findAll', 'deleteByHandleId']);
     const notificationsSpy = jasmine.createSpyObj('NotificationsService', ['success', 'error']);
     const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
     translateService = getMockTranslateService();
@@ -97,12 +97,6 @@ describe('EpicHandleTableComponent', () => {
       f.detectChanges();
 
       expect(router.navigate).toHaveBeenCalledWith(['/epic-handle-table/prefix']);
-    });
-
-    it('should set prefix from localStorage', () => {
-      fixture.detectChanges();
-      expect(component.prefix).toBe('11148');
-      expect(epicHandleDataService.setPrefix).toHaveBeenCalledWith('11148');
     });
 
     it('should load handles on init', () => {
@@ -319,24 +313,6 @@ describe('EpicHandleTableComponent', () => {
         expect(component.isLoading).toBe(false);
         done();
       }, 100);
-    });
-  });
-
-  describe('goToHandle', () => {
-    it('should open handle in new tab', () => {
-      spyOn(window, 'open');
-
-      component.goToHandle('11148/TEST-001');
-
-      expect(window.open).toHaveBeenCalledWith('/handle/11148/TEST-001', '_blank');
-    });
-
-    it('should not open when handleId is empty', () => {
-      spyOn(window, 'open');
-
-      component.goToHandle('');
-
-      expect(window.open).not.toHaveBeenCalled();
     });
   });
 

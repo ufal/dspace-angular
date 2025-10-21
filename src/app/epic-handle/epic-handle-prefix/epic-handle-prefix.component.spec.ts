@@ -9,11 +9,10 @@ describe('EpicPrefixHandlePageComponent', () => {
   let component: EpicHandlePrefixComponent;
   let fixture: ComponentFixture<EpicHandlePrefixComponent>;
   let router: jasmine.SpyObj<Router>;
-  let epicHandleService: jasmine.SpyObj<EpicHandleDataService>;
 
   beforeEach(async () => {
     const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
-    const epicHandleServiceSpy = jasmine.createSpyObj('EpicHandleDataService', ['setPrefix']);
+    const epicHandleServiceSpy = {};
 
     await TestBed.configureTestingModule({
       declarations: [EpicHandlePrefixComponent],
@@ -25,7 +24,6 @@ describe('EpicPrefixHandlePageComponent', () => {
     }).compileComponents();
 
     router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
-    epicHandleService = TestBed.inject(EpicHandleDataService) as jasmine.SpyObj<EpicHandleDataService>;
   });
 
   beforeEach(() => {
@@ -73,23 +71,17 @@ describe('EpicPrefixHandlePageComponent', () => {
     it('should navigate when form is valid', () => {
       component.prefixForm.get('prefix').setValue('11148');
       component.navigateToEpicHandleList({ prefix: '11148' });
-
-      expect(epicHandleService.setPrefix).toHaveBeenCalledWith('11148');
       expect(router.navigate).toHaveBeenCalledWith(['/epic-handle-table'], { queryParams: { prefix: '11148' } });
     });
 
     it('should trim whitespace from prefix', () => {
       component.prefixForm.get('prefix').setValue('  11148  ');
       component.navigateToEpicHandleList({ prefix: '  11148  ' });
-
-      expect(epicHandleService.setPrefix).toHaveBeenCalledWith('11148');
     });
 
     it('should not navigate when form is invalid', () => {
       component.prefixForm.get('prefix').setValue('');
       component.navigateToEpicHandleList({ prefix: '' });
-
-      expect(epicHandleService.setPrefix).not.toHaveBeenCalled();
       expect(router.navigate).not.toHaveBeenCalled();
     });
 

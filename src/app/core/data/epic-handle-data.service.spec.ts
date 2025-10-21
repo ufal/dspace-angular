@@ -64,23 +64,6 @@ describe('EpicHandleDataService',()=>{
       httpMock.verify();
     });
 
-    describe('Prefix Management', () => {
-      it('should set prefix', () => {
-        service.setPrefix(mockPrefix);
-        expect(service.getPrefix()).toBe(mockPrefix);
-      });
-
-      it('should get prefix', () => {
-        service.setPrefix(mockPrefix);
-        const prefix = service.getPrefix();
-        expect(prefix).toBe(mockPrefix);
-      });
-
-      it('should initialize with empty prefix', () => {
-        expect(service.getPrefix()).toBe('');
-      });
-    });
-
     describe('findAll', () => {
       const mockPaginationResponse = {
         content: [mockHandle],

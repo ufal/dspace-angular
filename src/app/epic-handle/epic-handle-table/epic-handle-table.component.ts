@@ -33,7 +33,6 @@ export class EpicHandleTableComponent implements OnInit, OnDestroy {
   sortConfiguration: SortOptions;
   searchQuery = '';
   pidQuery = '';
-  private previousSearchQuery = '';
   isLoading = false;
   handleRoute: string;
   newHandleRoute = EPIC_HANDLE_TABLE_NEW_HANDLE_PATH;
@@ -54,8 +53,6 @@ export class EpicHandleTableComponent implements OnInit, OnDestroy {
         return;
       }
 
-      // setting the prefix in the service
-      this.epicHandleDataService.setPrefix(this.prefix);
       this.handleRoute = getEpicHandleTableModulePath();
       this.initializePaginationOptions();
       this.initializeSortingOptions();
