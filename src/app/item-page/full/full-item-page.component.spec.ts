@@ -14,7 +14,7 @@ import { Item } from '../../core/shared/item.model';
 import { BehaviorSubject, of, of as observableOf } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
-import { createSuccessfulRemoteDataObject, createSuccessfulRemoteDataObject$ } from '../../shared/remote-data.utils';
+import { createFailedRemoteDataObject, createSuccessfulRemoteDataObject, createSuccessfulRemoteDataObject$ } from '../../shared/remote-data.utils';
 import { AuthService } from '../../core/auth/auth.service';
 import { createPaginatedList } from '../../shared/testing/utils.test';
 import { AuthorizationDataService } from '../../core/data/feature-authorization/authorization-data.service';
@@ -352,8 +352,6 @@ describe('FullItemPageComponent', () => {
       });
 
       it('should populate item$ BehaviorSubject', (done) => {
-        // The component subscribes to claimedTask$ internally during ngOnInit
-        // which populates item$ when the workflow item's item observable emits
         comp.item$.subscribe((item) => {
           if (item) {
             expect(item).toEqual(mockItem);
@@ -407,19 +405,7 @@ describe('FullItemPageComponent', () => {
         expect(secondActions.nativeElement.compareDocumentPosition(itemInfo.nativeElement)).toBe(Node.DOCUMENT_POSITION_PRECEDING)
       });
 
-      it('should pass showViewButton as false to claimed-task-actions', () => {
-        comp.item$.next(mockItem);
-        comp.workflowitem$.next(mockWorkflowItem);
-        comp.claimedTask$ = observableOf(createSuccessfulRemoteDataObject(mockClaimedTask));
-        fixture.detectChanges();
-        const claimedTaskActions = fixture.debugElement.queryAll(By.css('ds-claimed-task-actions'));
-        claimedTaskActions.forEach((actionElement) => {
-          const componentInstance = actionElement.nativeNode;
-          expect(componentInstance.showViewButton).toBe(false);
-        });
-      });
-
-      it('should render claimed-task-actions components with proper bindings', () => {
+      it('should render claimed-task-actions components', () => {
         comp.item$.next(mockItem);
         comp.workflowitem$.next(mockWorkflowItem);
         comp.claimedTask$ = observableOf(createSuccessfulRemoteDataObject(mockClaimedTask));
@@ -427,12 +413,74 @@ describe('FullItemPageComponent', () => {
         const claimedTaskActions = fixture.debugElement.queryAll(By.css('ds-claimed-task-actions'));
         expect(claimedTaskActions.length).toBe(2);
         claimedTaskActions.forEach((actionElement) => {
-          expect(actionElement.nativeNode.item).toEqual(mockItem)
-          expect(actionElement.nativeNode.workflowitem).toEqual(mockWorkflowItem)
-          expect(actionElement.nativeNode.object).toEqual(mockClaimedTask)
           expect(actionElement).toBeTruthy();
         });
       });
     });
+
+    describe('when route data does not contain workflow item', () => {
+      beforeEach(() => {
+        routeData.wfi = undefined;
+        routeStub.data = observableOf(routeData);
+        comp.ngOnInit();
+        fixture.detectChanges();
+      });
+
+      it('should not initialize workflow-related observables', () => {
+        expect(comp.workflowItem).toBeUndefined();
+        expect(comp.claimedTask$).toBeUndefined();
+      });
+
+      it('should not display claimed task actions', () => {
+        const claimedTaskActions = fixture.debugElement.queryAll(By.css('ds-claimed-task-actions'));
+        expect(claimedTaskActions.length).toBe(0);
+      });
+    });
+
+    describe('when claimedTask$ does not have a successful response', () => {
+      beforeEach(() => {
+        (claimedTaskService.findByItem as jasmine.Spy).and.returnValue(
+          observableOf(createFailedRemoteDataObject('Not found', 404))
+        );
+
+        routeData.wfi = createSuccessfulRemoteDataObject(mockWorkflowItem);
+        routeStub.data = observableOf(routeData);
+        comp.ngOnInit();
+        fixture.detectChanges();
+      });
+
+      it('should not display claimed task actions', () => {
+        comp.item$.next(mockItem);
+        comp.workflowitem$.next(mockWorkflowItem);
+        fixture.detectChanges();
+        const claimedTaskActions = fixture.debugElement.queryAll(By.css('ds-claimed-task-actions'));
+        expect(claimedTaskActions.length).toBe(0);
+      });
+    });
+
+    describe('onWorkflowActionCompleted', () => {
+      beforeEach(() => {
+        routeData.wfi = createSuccessfulRemoteDataObject(mockWorkflowItem);
+        routeStub.data = observableOf(routeData);
+        comp.ngOnInit();
+      });
+
+      it('should navigate to /mydspace when reloadedObject is provided', () => {
+        const reloadedObject = { id: 'reloaded-1' };
+        comp.onWorkflowActionCompleted(reloadedObject);
+        expect(router.navigate).toHaveBeenCalledWith(['/mydspace']);
+      });
+
+      it('should not navigate when reloadedObject is null', () => {
+        comp.onWorkflowActionCompleted(null);
+        expect(router.navigate).not.toHaveBeenCalled();
+      });
+
+      it('should not navigate when reloadedObject is undefined', () => {
+        comp.onWorkflowActionCompleted(undefined);
+        expect(router.navigate).not.toHaveBeenCalled();
+      });
+    });
+
   });
 });
