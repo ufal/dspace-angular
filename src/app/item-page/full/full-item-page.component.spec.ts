@@ -474,7 +474,7 @@ describe('FullItemPageComponent', () => {
       });
     });
 
-    describe('subscription cleaup', () => {
+    describe('subscription cleanup', () => {
       it('should unsubscribe from all subscriptions on destroy', () => {
         routeData.wfi = createSuccessfulRemoteDataObject(mockWorkflowItem);
         routeStub.data = observableOf(routeData);

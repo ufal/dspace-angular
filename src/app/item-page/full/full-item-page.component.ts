@@ -1,4 +1,4 @@
-import { filter, map, switchMap, shareReplay } from 'rxjs/operators';
+import { filter, map, switchMap, shareReplay, tap, mergeMap } from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
 import { ActivatedRoute, Data, Router } from '@angular/router';
 
@@ -29,7 +29,6 @@ import { ClaimedTaskDataService } from 'src/app/core/tasks/claimed-task-data.ser
 import { LinkService } from '../../core/cache/builders/link.service';
 import { followLink } from '../../shared/utils/follow-link-config.model';
 import { getFirstCompletedRemoteData } from '../../core/shared/operators';
-import { mergeMap, tap } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
 import { WorkflowAction } from 'src/app/core/tasks/models/workflow-action-object.model';
 
