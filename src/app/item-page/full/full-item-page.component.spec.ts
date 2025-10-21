@@ -161,7 +161,6 @@ describe('FullItemPageComponent', () => {
       events: observableOf({}),
       url: ''
     });
-
     const mockMetadataBitstreamDataService = {
       searchByHandleParams: () => of({}) // Returns a mock Observable
     };
@@ -320,7 +319,6 @@ describe('FullItemPageComponent', () => {
       expect(linkHeadService.addTag).toHaveBeenCalledTimes(2);
     });
   });
-
   describe('Workflow Actions Integration', () => {
     describe('when route data contains workflow item', () => {
       beforeEach(() => {
@@ -381,13 +379,10 @@ describe('FullItemPageComponent', () => {
         comp.workflowitem$.next(mockWorkflowItem);
         comp.claimedTask$ = observableOf(createSuccessfulRemoteDataObject(mockClaimedTask));
         fixture.detectChanges();
-
         const claimedTaskActions = fixture.debugElement.queryAll(By.css('ds-claimed-task-actions'));
         expect(claimedTaskActions.length).toBeGreaterThanOrEqual(1);
-
         const firstActions = claimedTaskActions[0];
         const itemInfo = fixture.debugElement.query(By.css('.full-item-info'));
-
         expect(firstActions.nativeElement.compareDocumentPosition(itemInfo.nativeElement)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
       });
 
@@ -396,12 +391,9 @@ describe('FullItemPageComponent', () => {
         comp.workflowitem$.next(mockWorkflowItem);
         comp.claimedTask$ = observableOf(createSuccessfulRemoteDataObject(mockClaimedTask));
         fixture.detectChanges();
-
         const claimedTaskActions = fixture.debugElement.queryAll(By.css('ds-claimed-task-actions'));
-
         const secondActions = claimedTaskActions[1];
         const itemInfo = fixture.debugElement.query(By.css('.full-item-info'));
-
         expect(secondActions.nativeElement.compareDocumentPosition(itemInfo.nativeElement)).toBe(Node.DOCUMENT_POSITION_PRECEDING);
       });
 
