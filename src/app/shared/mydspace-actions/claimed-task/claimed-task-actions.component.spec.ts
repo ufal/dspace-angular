@@ -284,5 +284,4 @@ describe('integration with action buttons', () => {
     });
   }));
 });
-
 });

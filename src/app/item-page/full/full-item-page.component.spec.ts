@@ -489,9 +489,7 @@ describe('FullItemPageComponent', () => {
             spyOn(sub, 'unsubscribe');
           }
         });
-
         comp.ngOnDestroy();
-
         comp.subs.filter(sub => sub).forEach((sub) => {
           expect(sub.unsubscribe).toHaveBeenCalled();
         });
