@@ -482,5 +482,28 @@ describe('FullItemPageComponent', () => {
       });
     });
 
+    describe('subscription cleaup', () => {
+      it('should unsubscribe from all subscriptions on destroy', () => {
+        routeData.wfi = createSuccessfulRemoteDataObject(mockWorkflowItem);
+        routeStub.data = observableOf(routeData);
+        comp.ngOnInit();
+        fixture.detectChanges();
+
+        const subsLength = comp.subs.length;
+        expect(subsLength).toBeGreaterThan(0);
+
+        comp.subs.forEach((sub) => {
+          if(sub) {
+            spyOn(sub, 'unsubscribe');
+          }
+        });
+
+        comp.ngOnDestroy();
+
+        comp.subs.filter(sub => sub).forEach((sub) => {
+          expect(sub.unsubscribe).toHaveBeenCalled()
+        });
+      });
+    });
   });
 });
