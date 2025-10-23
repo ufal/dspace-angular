@@ -11,7 +11,8 @@ import {
   ITEM_EDIT_PATH,
   MATOMO_STATISTICS_PATH, ORCID_PATH,
   TOMBSTONE_ITEM_PATH,
-  UPLOAD_BITSTREAM_PATH
+  UPLOAD_BITSTREAM_PATH,
+  VIEWS_DOWNLOADS_STATISTICS_PATH
 } from './item-page-routing-paths';
 import { ItemPageAdministratorGuard } from './item-page-administrator.guard';
 import { LinkMenuItemModel } from '../shared/menu/menu-item/models/link.model';
@@ -81,6 +82,14 @@ import {
               dso: ItemPageResolver,
             }
           },
+          // {
+          //   path: VIEWS_DOWNLOADS_STATISTICS_PATH,
+          //   component: ViewsDownloadsStatisticsComponent,
+          //   canActivate: [AuthenticatedGuard],
+          //   resolve: {
+          //     dso: ItemPageResolver,
+          //   }
+          // },
           {
             path: ORCID_PATH,
             component: OrcidPageComponent,

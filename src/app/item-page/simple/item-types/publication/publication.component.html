@@ -107,10 +107,13 @@
       [iconName]="'fa-sitemap'"
       [separator]="'<br />'">
     </ds-clarin-collections-item-field>
-    <div class="clarin-item-page-field">
+    <div class="clarin-item-page-field d-flex justify-content-between align-items-center">
       <a [routerLink]="[itemPageRoute + '/full']">
         {{"item.page.link.full" | translate}}
       </a>
+      <button class="btn btn-secondary btn-sm ml-auto" [routerLink]="['/items', object.id, 'statistics']">
+        <i class="fa fa-bar-chart"></i> View Statistics
+      </button>
     </div>
     <!--    <ds-clarin-files-item-field [item]="object"-->
     <!--                                [iconName]="'fa-paperclip'"-->
