@@ -94,7 +94,6 @@ import { ViewsDownloadsStatisticsComponent } from './views-downloads-statistics/
 
 const ENTRY_COMPONENTS = [
   // put only entry components that use custom decorator
-  ViewsDownloadsStatisticsComponent,
   PublicationComponent,
   UntypedItemComponent
 ];
@@ -157,7 +156,7 @@ const DECLARATIONS = [
   ClarinDateItemFieldComponent,
   ClarinDescriptionItemFieldComponent,
   ClarinFilesSectionComponent,
-  // ViewsDownloadsStatisticsComponent
+  ViewsDownloadsStatisticsComponent
 ];
 
 @NgModule({

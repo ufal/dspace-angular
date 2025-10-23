@@ -1,1 +1,100 @@
-<p>views-downloads-statistics works!</p>
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-header">
+      <div class="header-content">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h2 class="card-title mb-0">{{ getTitle() }}</h2>
+          <button class="btn btn-outline-secondary btn-sm" (click)="backToItem()">
+            <i class="fas fa-arrow-left"></i> Back to Item
+          </button>
+        </div>
+
+        <div class="info-message">
+          <span class="info-icon">ℹ️</span>
+          <span class="info-text">Click on a data point to drill down by year / month.</span>
+        </div>
+
+        <div class="toggles-and-back">
+          <div class="metric-toggles">
+            <button
+              [class.active]="activeMetric === 'views'"
+              (click)="selectMetric('views')"
+              class="btn btn-toggle">
+              <svg class="toggle-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 3v18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M18 17l-3-3-4 4-4-4-3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <div class="toggle-content">
+                <span class="toggle-text">Views</span>
+                <span class="toggle-count">{{ formatNumber(getTotalViews()) }}</span>
+              </div>
+            </button>
+            <button
+              [class.active]="activeMetric === 'downloads'"
+              (click)="selectMetric('downloads')"
+              class="btn btn-toggle">
+              <svg class="toggle-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <div class="toggle-content">
+                <span class="toggle-text">Downloads</span>
+                <span class="toggle-count">{{ formatNumber(getTotalDownloads()) }}</span>
+              </div>
+            </button>
+          </div>
+
+          <button *ngIf="selectedYear || selectedMonth"
+                class="btn-back"
+                (click)="onBack()">
+            <span class="back-icon">←</span>
+            <span class="back-text">Back to {{ selectedMonth ? 'Months' : 'Years' }}</span>
+          </button>
+        </div>
+
+        <div class="stats-range-title">
+          Statistics for {{ getYearLabel() }} {{ getYearRange() }}
+        </div>
+      </div>
+    </div>
+
+    <div class="card-content">
+      <div *ngIf="loading" class="loading">
+        <i class="fas fa-spinner fa-spin"></i> Loading statistics...
+      </div>
+      <div *ngIf="error" class="alert alert-danger">
+        {{ error }}
+      </div>
+
+      <div class="chart-container" *ngIf="!loading && !error">
+        <div #chartContainer></div>
+      </div>
+    </div>
+
+    <div *ngIf="activeMetric === 'downloads' && !loading && !error" class="file-stats-section">
+      <h3 class="file-stats-title">File-wise Download Statistics</h3>
+
+      <div *ngIf="yearlyFileStats.length > 0" class="yearly-stats">
+        <div *ngFor="let yearData of yearlyFileStats" class="year-group">
+          <h4 class="year-heading">{{ yearData.year }}</h4>
+          <div class="file-stats-list">
+            <div *ngFor="let file of yearData.files" class="file-stat-item">
+              <span class="file-count">{{ file.count }}</span>
+              <span class="file-name">{{ file.filename }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="fileStats.length > 0 && yearlyFileStats.length === 0" class="file-stats-list">
+        <div *ngFor="let file of fileStats" class="file-stat-item">
+          <span class="file-count">{{ file.count }}</span>
+          <span class="file-name">{{ file.filename }}</span>
+        </div>
+      </div>
+
+      <div *ngIf="fileStats.length === 0 && yearlyFileStats.length === 0" class="no-data">
+        No download statistics available
+      </div>
+    </div>
+  </div>
+</div>
