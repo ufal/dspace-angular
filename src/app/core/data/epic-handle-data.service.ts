@@ -60,7 +60,6 @@ export class EpicHandleDataService {
       map(baseUrl => {
         const url = `${baseUrl}/${prefix}`;
         let params = new HttpParams();
-
         if (isNotEmpty(urlPattern)) {
           params = params.set('url', urlPattern);
         }
@@ -73,7 +72,7 @@ export class EpicHandleDataService {
           params = params.set('size', String(options.elementsPerPage));
         }
 
-        if (totalElements) {
+        if (totalElements && !isNotEmpty(urlPattern)) {
           params = params.set('totalElements', String(totalElements));
         }
 
