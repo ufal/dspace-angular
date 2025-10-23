@@ -1,6 +1,6 @@
 <div class="d-flex justify-content-between mb-1">
   <ds-themed-results-back-button *ngIf="showBackButton | async" [back]="back"></ds-themed-results-back-button>
-  <button class="btn btn-secondary" [routerLink]="['/items',object.id, 'statistics']"><i class="fa fa-bar-chart"></i> View statistics</button>
+  <button class="btn btn-secondary" [routerLink]="['/items',object.id, 'views-downloads-statistics']"><i class="fa fa-bar-chart"></i> View statistics</button>
 </div>
 
 <div class="row" *ngIf="iiifEnabled">
