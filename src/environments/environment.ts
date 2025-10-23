@@ -26,6 +26,11 @@ export const environment: Partial<BuildConfig> = {
   },
 
   signpostingEnabled: false,
+
+  statistics: {
+    baseUrl: 'http://localhost:8080/server/api/statistics',
+    endpoint: '/handle'
+  }
 };
 
 /*
