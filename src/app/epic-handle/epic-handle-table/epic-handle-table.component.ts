@@ -208,6 +208,7 @@ export class EpicHandleTableComponent implements OnInit, OnDestroy {
   }
 
   searchHandles() {
+    this.totalElements = null;
     this.getAllHandles();
   }
 

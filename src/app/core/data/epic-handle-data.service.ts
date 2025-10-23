@@ -72,7 +72,7 @@ export class EpicHandleDataService {
           params = params.set('size', String(options.elementsPerPage));
         }
 
-        if (totalElements && !isNotEmpty(urlPattern)) {
+        if (totalElements) {
           params = params.set('totalElements', String(totalElements));
         }
 
