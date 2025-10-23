@@ -30,6 +30,7 @@ import { DSOEditMenuResolver } from '../shared/dso-page/dso-edit-menu.resolver';
 import {
   ClarinZipDownloadPageComponent
 } from '../bitstream-page/clarin-zip-download-page/clarin-zip-download-page.component';
+import { ViewsDownloadsStatisticsComponent } from './views-downloads-statistics/views-downloads-statistics.component';
 
 @NgModule({
   imports: [
@@ -82,14 +83,14 @@ import {
               dso: ItemPageResolver,
             }
           },
-          // {
-          //   path: VIEWS_DOWNLOADS_STATISTICS_PATH,
-          //   component: ViewsDownloadsStatisticsComponent,
-          //   canActivate: [AuthenticatedGuard],
-          //   resolve: {
-          //     dso: ItemPageResolver,
-          //   }
-          // },
+          {
+            path: VIEWS_DOWNLOADS_STATISTICS_PATH,
+            component: ViewsDownloadsStatisticsComponent,
+            canActivate: [AuthenticatedGuard],
+            resolve: {
+              dso: ItemPageResolver,
+            }
+          },
           {
             path: ORCID_PATH,
             component: OrcidPageComponent,

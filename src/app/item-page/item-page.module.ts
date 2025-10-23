@@ -90,9 +90,11 @@ import { ClarinIdentifierItemFieldComponent } from './simple/field-components/cl
 import { ClarinDateItemFieldComponent } from './simple/field-components/clarin-date-item-field/clarin-date-item-field.component';
 import { ClarinDescriptionItemFieldComponent } from './simple/field-components/clarin-description-item-field/clarin-description-item-field.component';
 import { ClarinFilesSectionComponent } from './clarin-files-section/clarin-files-section.component';
+import { ViewsDownloadsStatisticsComponent } from './views-downloads-statistics/views-downloads-statistics.component';
 
 const ENTRY_COMPONENTS = [
   // put only entry components that use custom decorator
+  ViewsDownloadsStatisticsComponent,
   PublicationComponent,
   UntypedItemComponent
 ];
@@ -154,7 +156,8 @@ const DECLARATIONS = [
   ClarinIdentifierItemFieldComponent,
   ClarinDateItemFieldComponent,
   ClarinDescriptionItemFieldComponent,
-  ClarinFilesSectionComponent
+  ClarinFilesSectionComponent,
+  // ViewsDownloadsStatisticsComponent
 ];
 
 @NgModule({
