@@ -1,0 +1,17 @@
+<button
+  *ngIf="!isSubscribed"
+  class="btn btn-outline-info btn-sm"
+  (click)="onSubscribe()"
+  [disabled]="isLoading">
+
+  <i class="fa fa-bell" aria-hidden="true"></i>
+  Subscribe
+</button>
+<button
+  *ngIf="isSubscribed"
+  class="btn btn-outline-secondary btn-sm"
+  (click)="onUnsubscribe()"
+  [disabled]="isLoading">
+  <i class="fa fa-bell-slash" aria-hidden="true"></i>
+  Unsubscribe
+</button>

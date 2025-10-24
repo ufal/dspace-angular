@@ -7,6 +7,9 @@ import { Observable } from 'rxjs';
 import { getDSpaceQuery, isIiifEnabled, isIiifSearchEnabled } from './item-iiif-utils';
 import { filter, map, take } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { select, Store } from '@ngrx/store';
+import { AppState } from 'src/app/app.reducer';
+import { isAuthenticated } from 'src/app/core/auth/selectors';
 
 @Component({
   selector: 'ds-item',
@@ -51,8 +54,11 @@ export class ItemComponent implements OnInit {
 
   mediaViewer;
 
+  isAuthenticated$: Observable<boolean>;
+
   constructor(protected routeService: RouteService,
-              protected router: Router) {
+              protected router: Router,
+              private store: Store<AppState>) {
     this.mediaViewer = environment.mediaViewer;
   }
 
@@ -84,5 +90,7 @@ export class ItemComponent implements OnInit {
     if (this.iiifSearchEnabled) {
       this.iiifQuery$ = getDSpaceQuery(this.object, this.routeService);
     }
+
+    this.isAuthenticated$ = this.store.pipe(select(isAuthenticated))
   }
 }

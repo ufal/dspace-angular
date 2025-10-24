@@ -91,6 +91,7 @@ import { ClarinDateItemFieldComponent } from './simple/field-components/clarin-d
 import { ClarinDescriptionItemFieldComponent } from './simple/field-components/clarin-description-item-field/clarin-description-item-field.component';
 import { ClarinFilesSectionComponent } from './clarin-files-section/clarin-files-section.component';
 import { ViewsDownloadsStatisticsComponent } from './views-downloads-statistics/views-downloads-statistics.component';
+import { MatomoSubscriptionButtonComponent } from './matomo-subscription-button/matomo-subscription-button.component';
 
 const ENTRY_COMPONENTS = [
   // put only entry components that use custom decorator
@@ -156,7 +157,8 @@ const DECLARATIONS = [
   ClarinDateItemFieldComponent,
   ClarinDescriptionItemFieldComponent,
   ClarinFilesSectionComponent,
-  ViewsDownloadsStatisticsComponent
+  ViewsDownloadsStatisticsComponent,
+  MatomoSubscriptionButtonComponent
 ];
 
 @NgModule({
