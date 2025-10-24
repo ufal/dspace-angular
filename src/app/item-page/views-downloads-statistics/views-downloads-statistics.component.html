@@ -9,45 +9,47 @@
           </button>
         </div>
 
-        <div class="info-message">
+        <!-- <div class="info-message">
           <span class="info-icon">ℹ️</span>
           <span class="info-text">Click on a data point to drill down by year / month.</span>
+        </div> -->
+        <div class="row px-2 py-2 rounded alert-info">
+          <i class="fas fa-info-circle pt-1"></i>
+          <span class="pl-2">Click on a data point to drill down by year / month.</span>
         </div>
 
         <div class="toggles-and-back">
           <div class="metric-toggles">
-            <button
-              [class.active]="activeMetric === 'views'"
-              (click)="selectMetric('views')"
-              class="btn btn-toggle">
-              <svg class="toggle-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M3 3v18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M18 17l-3-3-4 4-4-4-3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
+            <button type="button"
+                    class="btn btn-outline-success stats-toggle-btn"
+                    [class.active]="activeMetric === 'views'"
+                    (click)="selectMetric('views')">
+              <div class="toggle-icon-wrapper">
+                <i class="far fa-eye"></i>
+              </div>
               <div class="toggle-content">
-                <span class="toggle-text">Views</span>
-                <span class="toggle-count">{{ formatNumber(getTotalViews()) }}</span>
+                <span>Views</span>
+                <strong>{{ formatNumber(getTotalViews()) }}</strong>
               </div>
             </button>
-            <button
-              [class.active]="activeMetric === 'downloads'"
-              (click)="selectMetric('downloads')"
-              class="btn btn-toggle">
-              <svg class="toggle-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
+            <button type="button"
+                    class="btn btn-outline-info stats-toggle-btn"
+                    [class.active]="activeMetric === 'downloads'"
+                    (click)="selectMetric('downloads')">
+              <div class="toggle-icon-wrapper">
+                <i class="fas fa-download"></i>
+              </div>
               <div class="toggle-content">
-                <span class="toggle-text">Downloads</span>
-                <span class="toggle-count">{{ formatNumber(getTotalDownloads()) }}</span>
+                <span>Downloads</span>
+                <strong>{{ formatNumber(getTotalDownloads()) }}</strong>
               </div>
             </button>
           </div>
-
-          <button *ngIf="selectedYear || selectedMonth"
-                class="btn-back"
-                (click)="onBack()">
-            <span class="back-icon">←</span>
-            <span class="back-text">Back to {{ selectedMonth ? 'Months' : 'Years' }}</span>
+          <button class="btn btn-info"
+                  *ngIf="selectedYear || selectedMonth"
+                  (click)="onBack()">
+            <i class="fas fa-arrow-left"></i>
+            Back to {{ selectedMonth ? 'Months' : 'Years' }}
           </button>
         </div>
 

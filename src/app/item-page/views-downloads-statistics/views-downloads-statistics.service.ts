@@ -1,7 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Inject, Injectable } from "@angular/core";
 import { map, Observable, of } from "rxjs";
-import { getBaseUrl } from "src/app/shared/clarin-shared-util";
 import { APP_CONFIG, AppConfig } from "src/config/app-config.interface";
 import { MOCK_STATISTICS_DATA } from "./mock-statistics-data";
 
@@ -46,7 +45,7 @@ export interface StatsData {
 })
 export class ViewsDownloadsStatisticsService {
   // Set this to true to use mock data instead of fetching from the server
-  private USE_MOCK_DATA = true;
+  private USE_MOCK_DATA = false;
 
   private baseUrl: string;
   private endpoint: string
