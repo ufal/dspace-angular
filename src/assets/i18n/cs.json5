@@ -8572,8 +8572,8 @@
   // "matomo.subscription.unsubscribe.error.title": "Unsubscribe Failed",
   "matomo.subscription.unsubscribe.error.title": "Odhlášení se nezdařilo",
 
-  // "matomo.subscription.unsubscribe.error.message": "Unable to unsubscribe from item statistics. Please try again later."
-  "matomo.subscription.unsubscribe.error.message": "Nepodařilo se odhlásit z odběru statistik položky. Zkuste to prosím později."
+  // "matomo.subscription.unsubscribe.error.message": "Unable to unsubscribe from item statistics. Please try again later.",
+  "matomo.subscription.unsubscribe.error.message": "Nepodařilo se odhlásit z odběru statistik položky. Zkuste to prosím později.",
 
   //"matomo.subscription.subscribe.tooltip": "Subscribe to receive monthly statistics reports for this item",
   "matomo.subscription.subscribe.tooltip": "Subscribe to receive monthly statistics reports for this item",
