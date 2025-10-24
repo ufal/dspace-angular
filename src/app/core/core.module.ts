@@ -196,6 +196,7 @@ import { ClarinVerificationTokenDataService } from './data/clarin/clarin-verific
 import { ClruaDataService } from './data/clarin/clrua-data.service';
 import { BitstreamChecksum } from './shared/bitstream-checksum.model';
 import { BitstreamChecksumDataService } from './bitstream-checksum-data.service';
+import { MatomoReportSubscriptionDataService } from './data/clarin/matomo-report-subscription-data.service';
 
 /**
  * When not in production, endpoint responses can be mocked for testing purposes
@@ -329,7 +330,8 @@ const PROVIDERS = [
   OrcidHistoryDataService,
   SupervisionOrderDataService,
   HandleDataService,
-  BitstreamChecksumDataService
+  BitstreamChecksumDataService,
+  MatomoReportSubscriptionDataService
 ];
 
 /**

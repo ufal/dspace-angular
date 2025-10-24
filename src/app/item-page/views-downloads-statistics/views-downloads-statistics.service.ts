@@ -3,6 +3,8 @@ import { Inject, Injectable } from "@angular/core";
 import { map, Observable, of } from "rxjs";
 import { APP_CONFIG, AppConfig } from "src/config/app-config.interface";
 import { MOCK_STATISTICS_DATA } from "./mock-statistics-data";
+import { MOCK_STATISTICS_DATA_2019_MONTHS } from "./mock-statistics-data-2019-months";
+import { MOCK_STATISTICS_DATA_2019_6_DAYS } from "./mock-statistics-data-2019-6-days";
 
 export interface ApiResponse {
   response: {
@@ -45,7 +47,7 @@ export interface StatsData {
 })
 export class ViewsDownloadsStatisticsService {
   // Set this to true to use mock data instead of fetching from the server
-  private USE_MOCK_DATA = false;
+  private USE_MOCK_DATA = true;
 
   private baseUrl: string;
   private endpoint: string
@@ -55,10 +57,27 @@ export class ViewsDownloadsStatisticsService {
   }
 
   getStats(handle: string, year?: string, month?: string): Observable<StatsData>{
-    // If using mock data, return it directly
+    // If using mock data, return appropriate mock based on year/month
     if (this.USE_MOCK_DATA) {
-      console.log('Using mock statistics data for views-downloads-statistics');
-      return of(MOCK_STATISTICS_DATA).pipe(
+      console.log(`Using mock statistics data for views-downloads-statistics (year: ${year}, month: ${month})`);
+      
+      // Select appropriate mock data based on drill-down level
+      let mockData: ApiResponse;
+      if (!year) {
+        // Year view - show all years
+        mockData = MOCK_STATISTICS_DATA;
+      } else if (year === '2019' && month === '6') {
+        // Day view for 2019 June - show all days
+        mockData = MOCK_STATISTICS_DATA_2019_6_DAYS;
+      } else if (year === '2019' && !month) {
+        // Month view for 2019 - show all months
+        mockData = MOCK_STATISTICS_DATA_2019_MONTHS;
+      } else {
+        // Default to year view for other cases
+        mockData = MOCK_STATISTICS_DATA;
+      }
+      
+      return of(mockData).pipe(
         map(response => {
           const fileStastsResult = this.extractFileStats(response, year, month);
           return {

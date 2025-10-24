@@ -1,7 +1,7 @@
 <div class="d-flex justify-content-between mb-1">
   <ds-themed-results-back-button *ngIf="showBackButton | async" [back]="back"></ds-themed-results-back-button>
-  <div class="d-flex flex-row gap-1">
-    <!-- <ds-matomo-subscription-button [item]="object"></ds-matomo-subscription-button> -->
+  <div class="d-flex flex-row gap-1 align-items-end" *ngIf="isAuthenticated$ | async">
+    <ds-matomo-subscription-button [item]="object"></ds-matomo-subscription-button>
     <button class="btn btn-secondary" [routerLink]="['/items',object.id, 'views-downloads-statistics']"><i class="fa fa-bar-chart"></i> View statistics</button>
   </div>
 </div>
