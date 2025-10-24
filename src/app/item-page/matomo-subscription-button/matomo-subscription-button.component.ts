@@ -17,7 +17,6 @@ export class MatomoSubscriptionButtonComponent implements OnInit, OnDestroy {
 
   @Input() item: Item;
 
-  // Simple states
   isLoading = true;
   isSubscribed = false;
 

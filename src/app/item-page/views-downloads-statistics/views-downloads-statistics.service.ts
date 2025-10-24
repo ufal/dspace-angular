@@ -46,7 +46,6 @@ export interface StatsData {
   providedIn: 'root'
 })
 export class ViewsDownloadsStatisticsService {
-  // Set this to true to use mock data instead of fetching from the server
   private USE_MOCK_DATA = true;
 
   private baseUrl: string;
@@ -57,26 +56,18 @@ export class ViewsDownloadsStatisticsService {
   }
 
   getStats(handle: string, year?: string, month?: string): Observable<StatsData>{
-    // If using mock data, return appropriate mock based on year/month
     if (this.USE_MOCK_DATA) {
-      console.log(`Using mock statistics data for views-downloads-statistics (year: ${year}, month: ${month})`);
-      
-      // Select appropriate mock data based on drill-down level
       let mockData: ApiResponse;
       if (!year) {
-        // Year view - show all years
         mockData = MOCK_STATISTICS_DATA;
       } else if (year === '2019' && month === '6') {
-        // Day view for 2019 June - show all days
         mockData = MOCK_STATISTICS_DATA_2019_6_DAYS;
       } else if (year === '2019' && !month) {
-        // Month view for 2019 - show all months
         mockData = MOCK_STATISTICS_DATA_2019_MONTHS;
       } else {
-        // Default to year view for other cases
         mockData = MOCK_STATISTICS_DATA;
       }
-      
+
       return of(mockData).pipe(
         map(response => {
           const fileStastsResult = this.extractFileStats(response, year, month);
@@ -90,7 +81,6 @@ export class ViewsDownloadsStatisticsService {
       );
     }
 
-    // Real API call
     let url =  `${this.baseUrl}${this.endpoint}?h=${handle}`;
     if(year) {
       url += `&date=${year}`;
@@ -117,7 +107,6 @@ export class ViewsDownloadsStatisticsService {
     if (!year) {
       const keys = new Set([...Object.keys(response.response.views.total), ...Object.keys(response.response.downloads.total)]);
       const years = [...keys].filter((key) => key !== 'nb_hits' && key !== 'nb_visits' && key !== 'nb_uniq_visitors' && key !== 'nb_uniq_pageviews');
-      // Yearly data
       return years.map((y) => ({
         period: y,
         views: response.response.views.total[y]?.nb_hits || 0,
@@ -125,7 +114,6 @@ export class ViewsDownloadsStatisticsService {
       })).sort((a, b) => a.period.localeCompare(b.period));
     }
 
-    // Monthly view
     if (!month) {
       const months = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"];
       return months.map((m) => ({
@@ -135,7 +123,6 @@ export class ViewsDownloadsStatisticsService {
       })).sort((a, b) => Number(a.period) - Number(b.period));
     }
 
-    // Daily view
     const days = [...Array(new Date(Number(year), Number(month), 0).getDate()).keys()].map((x) => ((x + 1) + ""));
     return days.map((d) => ({
       period: d,

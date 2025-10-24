@@ -6,6 +6,7 @@ import { Location } from '@angular/common';
 import { RemoteData } from 'src/app/core/data/remote-data';
 import { Item } from 'src/app/core/shared/item.model';
 import { ChartDrawerService } from './chart-drawer.service';
+import { TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'ds-views-downloads-statistics',
   templateUrl: './views-downloads-statistics.component.html',
@@ -35,7 +36,8 @@ export class ViewsDownloadsStatisticsComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private location: Location,
     private cdr: ChangeDetectorRef,
-    private chartDrawer: ChartDrawerService
+    private chartDrawer: ChartDrawerService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit() {
@@ -76,9 +78,8 @@ export class ViewsDownloadsStatisticsComponent implements OnInit, OnDestroy {
           this.cdr.detectChanges();
           setTimeout(() => this.drawChart(), 0);
         },
-        error: (err) => {
-          console.error('Error fetching data:', err);
-          this.error = 'Failed to load statistics. Please try again later.';
+        error: () => {
+          this.error = this.translate.instant('statistics.views-downloads.error');
           this.loading = false;
           this.cdr.detectChanges();
         }
@@ -117,20 +118,25 @@ export class ViewsDownloadsStatisticsComponent implements OnInit, OnDestroy {
 
   getTitle(): string {
     if (this.selectedMonth) {
-      return `Daily Statistics for ${this.getMonthName(this.selectedMonth)} ${this.selectedYear}`;
+      return this.translate.instant('statistics.views-downloads.title.daily', {
+        month: this.getMonthName(this.selectedMonth),
+        year: this.selectedYear
+      });
     } else if (this.selectedYear) {
-      return `Monthly Statistics for ${this.selectedYear}`;
+      return this.translate.instant('statistics.views-downloads.title.monthly', {
+        year: this.selectedYear
+      });
     }
-    return 'Repository Usage Statistics';
+    return this.translate.instant('statistics.views-downloads.title.yearly');
   }
 
   getYearLabel(): string {
     if (this.selectedMonth) {
       return `${this.getMonthName(this.selectedMonth)}`;
     } else if (this.selectedYear) {
-      return 'All Months';
+      return this.translate.instant('statistics.views-downloads.all-months');
     }
-    return 'All Years';
+    return this.translate.instant('statistics.views-downloads.all-years');
   }
 
   getYearRange(): string {
@@ -157,11 +163,15 @@ export class ViewsDownloadsStatisticsComponent implements OnInit, OnDestroy {
   }
 
   private getMonthName(month: string): string {
-    const months = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
+    const monthKeys = [
+      'january', 'february', 'march', 'april', 'may', 'june',
+      'july', 'august', 'september', 'october', 'november', 'december'
     ];
-    return months[parseInt(month, 10) - 1] || month;
+    const monthIndex = parseInt(month, 10) - 1;
+    if (monthIndex >= 0 && monthIndex < monthKeys.length) {
+      return this.translate.instant(`statistics.views-downloads.months.${monthKeys[monthIndex]}`);
+    }
+    return month;
   }
 
   backToItem(): void {
@@ -178,7 +188,7 @@ export class ViewsDownloadsStatisticsComponent implements OnInit, OnDestroy {
       this.currentData,
       this.activeMetric,
       (data: ChartData) => this.onDataPointClick(data),
-      !!this.selectedMonth // Last level if month is selected
+      !!this.selectedMonth
     );
   }
 
