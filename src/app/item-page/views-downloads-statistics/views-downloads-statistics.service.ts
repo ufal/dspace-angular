@@ -2,9 +2,6 @@ import { HttpClient } from "@angular/common/http";
 import { Inject, Injectable } from "@angular/core";
 import { map, Observable, of } from "rxjs";
 import { APP_CONFIG, AppConfig } from "src/config/app-config.interface";
-import { MOCK_STATISTICS_DATA } from "./mock-statistics-data";
-import { MOCK_STATISTICS_DATA_2019_MONTHS } from "./mock-statistics-data-2019-months";
-import { MOCK_STATISTICS_DATA_2019_6_DAYS } from "./mock-statistics-data-2019-6-days";
 
 export interface ApiResponse {
   response: {
@@ -56,31 +53,6 @@ export class ViewsDownloadsStatisticsService {
   }
 
   getStats(handle: string, year?: string, month?: string): Observable<StatsData>{
-    if (this.USE_MOCK_DATA) {
-      let mockData: ApiResponse;
-      if (!year) {
-        mockData = MOCK_STATISTICS_DATA;
-      } else if (year === '2019' && month === '6') {
-        mockData = MOCK_STATISTICS_DATA_2019_6_DAYS;
-      } else if (year === '2019' && !month) {
-        mockData = MOCK_STATISTICS_DATA_2019_MONTHS;
-      } else {
-        mockData = MOCK_STATISTICS_DATA;
-      }
-
-      return of(mockData).pipe(
-        map(response => {
-          const fileStastsResult = this.extractFileStats(response, year, month);
-          return {
-            chartData: this.transformData(response, year, month),
-            fileStats: fileStastsResult.flat,
-            yearlyFileStats: fileStastsResult.yearly,
-            rawResponse: response
-          }
-        })
-      );
-    }
-
     let url =  `${this.baseUrl}${this.endpoint}?h=${handle}`;
     if(year) {
       url += `&date=${year}`;
@@ -100,7 +72,6 @@ export class ViewsDownloadsStatisticsService {
         }
       })
     )
-
   }
 
   private transformData(response: ApiResponse, year?: string, month?: string): ChartData[] {
