@@ -23,6 +23,9 @@ import { RegistryService } from 'src/app/core/registry/registry.service';
 import { HALEndpointService } from '../../core/shared/hal-endpoint.service';
 import { makeLinks } from '../../shared/clarin-shared-util';
 import { SEPARATOR } from 'src/app/shared/form/builder/ds-dynamic-form-ui/models/ds-dynamic-complex.model';
+import { select, Store } from '@ngrx/store';
+import { AppState } from 'src/app/app.reducer';
+import { isAuthenticated } from 'src/app/core/auth/selectors';
 
 /**
  * This component renders a full item page.
@@ -51,6 +54,7 @@ export class FullItemPageComponent extends ItemPageComponent implements OnInit, 
 
   subs = [];
 
+  isAuthenticated$: Observable<boolean>;
   constructor(
     protected route: ActivatedRoute,
     protected router: Router,
@@ -63,7 +67,8 @@ export class FullItemPageComponent extends ItemPageComponent implements OnInit, 
     protected linkHeadService: LinkHeadService,
     @Inject(PLATFORM_ID) protected platformId: string,
     protected halService: HALEndpointService,
-    protected registryService: RegistryService
+    protected registryService: RegistryService,
+    private store: Store<AppState>
   ) {
     super(route, router, items, authService, authorizationService, responseService, signpostingDataService, linkHeadService, platformId, registryService, halService);
   }
@@ -80,6 +85,8 @@ export class FullItemPageComponent extends ItemPageComponent implements OnInit, 
         this.fromSubmissionObject = hasValue(data.wfi) || hasValue(data.wsi);
       })
     );
+
+    this.isAuthenticated$ = this.store.pipe(select(isAuthenticated));
   }
 
   /**

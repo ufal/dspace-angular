@@ -29,7 +29,7 @@ export class ViewsDownloadsStatisticsComponent implements OnInit, OnDestroy {
   item: Item;
   itemHandle: string;
 
-  private subscriptions: Subscription[] = [];
+  subscriptions: Subscription[] = [];
 
   constructor(
     private statsService: ViewsDownloadsStatisticsService,
@@ -60,7 +60,7 @@ export class ViewsDownloadsStatisticsComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
-  private fetchData(year?: string, month?: string) {
+  fetchData(year?: string, month?: string) {
     if (!this.itemHandle) {
       return;
     }
@@ -178,7 +178,7 @@ export class ViewsDownloadsStatisticsComponent implements OnInit, OnDestroy {
     this.location.back();
   }
 
-  private drawChart(): void {
+  drawChart(): void {
     if (!this.chartContainer) {
       return;
     }

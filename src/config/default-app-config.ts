@@ -441,5 +441,5 @@ export class DefaultAppConfig implements AppConfig {
   statistics: StatisticsConfig = {
     baseUrl: 'http://localhost:8080/server/api/statistics',
     endpoint: '/handle'
-  }
+  };
 }

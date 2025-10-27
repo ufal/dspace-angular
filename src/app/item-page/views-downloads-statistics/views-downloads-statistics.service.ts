@@ -1,7 +1,7 @@
-import { HttpClient } from "@angular/common/http";
-import { Inject, Injectable } from "@angular/core";
-import { map, Observable, of } from "rxjs";
-import { APP_CONFIG, AppConfig } from "src/config/app-config.interface";
+import { HttpClient } from '@angular/common/http';
+import { Inject, Injectable } from '@angular/core';
+import { map, Observable } from 'rxjs';
+import { APP_CONFIG, AppConfig } from 'src/config/app-config.interface';
 
 export interface ApiResponse {
   response: {
@@ -10,7 +10,7 @@ export interface ApiResponse {
       total: any;
     };
     downloads: {
-      [year:string]: any;
+      [year: string]: any;
       total: any;
     }
   }
@@ -46,7 +46,7 @@ export class ViewsDownloadsStatisticsService {
   private USE_MOCK_DATA = true;
 
   private baseUrl: string;
-  private endpoint: string
+  private endpoint: string;
   constructor(private http: HttpClient, @Inject(APP_CONFIG) private appConfig: AppConfig){
     this.baseUrl = this.appConfig.statistics?.baseUrl || 'http://localhost:8080/server/api/statistics';
     this.endpoint = this.appConfig.statistics?.endpoint || '/handle';
@@ -54,9 +54,9 @@ export class ViewsDownloadsStatisticsService {
 
   getStats(handle: string, year?: string, month?: string): Observable<StatsData>{
     let url =  `${this.baseUrl}${this.endpoint}?h=${handle}`;
-    if(year) {
+    if (year) {
       url += `&date=${year}`;
-      if(month){
+      if (month){
         url += `-${month}`;
       }
     }
@@ -69,9 +69,9 @@ export class ViewsDownloadsStatisticsService {
           fileStats: fileStastsResult.flat,
           yearlyFileStats: fileStastsResult.yearly,
           rawResponse: response
-        }
+        };
       })
-    )
+    );
   }
 
   private transformData(response: ApiResponse, year?: string, month?: string): ChartData[] {
@@ -86,7 +86,7 @@ export class ViewsDownloadsStatisticsService {
     }
 
     if (!month) {
-      const months = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"];
+      const months = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
       return months.map((m) => ({
         period: m,
         views: response.response.views.total[year][m]?.nb_hits || 0,
@@ -94,7 +94,7 @@ export class ViewsDownloadsStatisticsService {
       })).sort((a, b) => Number(a.period) - Number(b.period));
     }
 
-    const days = [...Array(new Date(Number(year), Number(month), 0).getDate()).keys()].map((x) => ((x + 1) + ""));
+    const days = [...Array(new Date(Number(year), Number(month), 0).getDate()).keys()].map((x) => ((x + 1) + ''));
     return days.map((d) => ({
       period: d,
       views: response.response.views.total[year][month][d]?.nb_hits || 0,
@@ -112,10 +112,10 @@ export class ViewsDownloadsStatisticsService {
 
     const processTimePeriod = (periodData: any): Map<string, number> => {
       const fileMap = new Map<string, number>();
-      if (!periodData) return fileMap;
+      if (!periodData) {return fileMap;}
 
       const processRecursive = (data: any) => {
-        if (!data) return;
+        if (!data) {return;}
 
         Object.keys(data).forEach(key => {
           if (key === 'nb_hits' || key === 'nb_visits' || key === 'nb_uniq_visitors' || key === 'nb_uniq_pageviews') {

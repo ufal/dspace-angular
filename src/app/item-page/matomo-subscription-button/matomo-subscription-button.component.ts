@@ -20,7 +20,7 @@ export class MatomoSubscriptionButtonComponent implements OnInit, OnDestroy {
   isLoading = true;
   isSubscribed = false;
 
-  private subscriptions: Subscription[] = [];
+  subscriptions: Subscription[] = [];
 
   constructor(
     private matomoSubscriptionService: MatomoReportSubscriptionDataService,
@@ -60,11 +60,9 @@ export class MatomoSubscriptionButtonComponent implements OnInit, OnDestroy {
         next: (rd: RemoteData<MatomoReportSubscription>) => {
           if (rd.hasSucceeded && rd.payload) {
             this.isSubscribed = true;
-          }
-          else if (rd.hasFailed && rd.statusCode === 404) {
+          } else if (rd.hasFailed && rd.statusCode === 404) {
             this.isSubscribed = false;
-          }
-          else {
+          } else {
             this.isSubscribed = false;
           }
 

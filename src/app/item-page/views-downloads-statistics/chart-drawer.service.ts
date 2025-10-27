@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import * as d3 from 'd3';
+import { select, scalePoint, max, scaleLinear, line, curveMonotoneX, area, axisBottom, axisLeft } from 'd3';
 import { ChartData } from './views-downloads-statistics.service';
 
 export interface ChartConfig {
@@ -23,8 +23,6 @@ export class ChartDrawerService {
     }
   };
 
-  constructor() {}
-
   drawChart(
     containerElement: HTMLElement,
     data: ChartData[],
@@ -36,9 +34,9 @@ export class ChartDrawerService {
     const chartConfig = { ...this.defaultConfig, ...config };
     const { width, height, margin, colors } = chartConfig;
 
-    d3.select(containerElement).selectAll('*').remove();
+    select(containerElement).selectAll('*').remove();
 
-    const svg = d3.select(containerElement)
+    const svg = select(containerElement)
       .append('svg')
       .attr('width', '100%')
       .attr('height', '100%')
@@ -46,48 +44,48 @@ export class ChartDrawerService {
       .append('g')
       .attr('transform', `translate(${margin.left},${margin.top})`);
 
-    const xScale = d3.scalePoint()
+    const xScale = scalePoint()
       .domain(data.map(d => d.period))
       .range([0, width])
       .padding(0);
 
-    const dataMax = d3.max(data, d => d[activeMetric]) || 0;
+    const dataMax = max(data, d => d[activeMetric]) || 0;
     const yMax = dataMax * 1.2;
 
-    const yScale = d3.scaleLinear()
+    const yScale = scaleLinear()
       .domain([0, yMax])
       .range([height, 0])
       .nice();
 
     const createLine = () => {
-      return d3.line<ChartData>()
+      return line<ChartData>()
         .x(d => xScale(d.period) || 0)
         .y(d => yScale(d[activeMetric]))
-        .curve(d3.curveMonotoneX);
+        .curve(curveMonotoneX);
     };
 
     const createArea = () => {
-      return d3.area<ChartData>()
+      return area<ChartData>()
         .x(d => xScale(d.period) || 0)
         .y0(height)
         .y1(d => yScale(d[activeMetric]))
-        .curve(d3.curveMonotoneX);
+        .curve(curveMonotoneX);
     };
 
     svg.append('g')
       .attr('transform', `translate(0,${height})`)
-      .call(d3.axisBottom(xScale))
+      .call(axisBottom(xScale))
       .selectAll('text')
       .style('text-anchor', 'middle')
       .attr('dx', '0')
       .attr('dy', '20');
 
     svg.append('g')
-      .call(d3.axisLeft(yScale));
+      .call(axisLeft(yScale));
 
     svg.append('g')
       .attr('class', 'grid')
-      .call(d3.axisLeft(yScale)
+      .call(axisLeft(yScale)
         .tickSize(-width)
         .tickFormat(() => '')
       )
@@ -138,8 +136,7 @@ export class ChartDrawerService {
       .style('text-transform', 'capitalize')
       .text(activeMetric);
 
-    // Add tooltip
-    const tooltip = d3.select(containerElement)
+    const tooltip = select(containerElement)
       .append('div')
       .attr('class', 'tooltip')
       .style('opacity', 0)
@@ -150,7 +147,6 @@ export class ChartDrawerService {
       .style('border-radius', '4px')
       .style('pointer-events', 'none');
 
-    // Add hover effects
     svg.selectAll('circle')
       .on('mouseover', (event: any, d: ChartData) => {
         tooltip.transition()
@@ -170,5 +166,3 @@ export class ChartDrawerService {
       });
   }
 }
-
-
