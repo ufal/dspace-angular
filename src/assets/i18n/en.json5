@@ -6106,4 +6106,6 @@
   "matomo.subscription.subscribe.tooltip": "Subscribe to receive monthly statistics reports for this item",
 
   "matomo.subscription.unsubscribe.tooltip": "Unsubscribe from monthly statistics reports for this item",
+
+  "statistics.views-downloads.view-button": "Statistics"
 }
