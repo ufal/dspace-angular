@@ -30,10 +30,6 @@ import { WorkflowItem } from 'src/app/core/submission/models/workflowitem.model'
 import { ClaimedTask } from 'src/app/core/tasks/models/claimed-task-object.model';
 import { ClaimedTaskDataService } from 'src/app/core/tasks/claimed-task-data.service';
 import { LinkService } from '../../core/cache/builders/link.service';
-import { followLink } from '../../shared/utils/follow-link-config.model';
-import { getFirstCompletedRemoteData } from '../../core/shared/operators';
-import { EMPTY } from 'rxjs';
-import { WorkflowAction } from 'src/app/core/tasks/models/workflow-action-object.model';
 
 /**
  * This component renders a full item page.
