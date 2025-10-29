@@ -1,4 +1,4 @@
-import { filter, map, switchMap, shareReplay, tap, mergeMap } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
 import { ActivatedRoute, Data, Router } from '@angular/router';
 
