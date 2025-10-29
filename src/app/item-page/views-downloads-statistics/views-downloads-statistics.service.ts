@@ -43,8 +43,6 @@ export interface StatsData {
   providedIn: 'root'
 })
 export class ViewsDownloadsStatisticsService {
-  private USE_MOCK_DATA = true;
-
   private baseUrl: string;
   private endpoint: string;
   constructor(private http: HttpClient, @Inject(APP_CONFIG) private appConfig: AppConfig){
@@ -63,11 +61,11 @@ export class ViewsDownloadsStatisticsService {
 
     return this.http.get<ApiResponse>(url).pipe(
       map(response => {
-        const fileStastsResult = this.extractFileStats(response, year, month);
+        const fileStatsResult = this.extractFileStats(response, year, month);
         return {
           chartData: this.transformData(response, year, month),
-          fileStats: fileStastsResult.flat,
-          yearlyFileStats: fileStastsResult.yearly,
+          fileStats: fileStatsResult.flat,
+          yearlyFileStats: fileStatsResult.yearly,
           rawResponse: response
         };
       })

@@ -68,4 +68,3 @@ export class MatomoReportSubscriptionDataService extends IdentifiableDataService
     );
   }
 }
-

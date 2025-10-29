@@ -90,7 +90,6 @@ export class ItemComponent implements OnInit {
     if (this.iiifSearchEnabled) {
       this.iiifQuery$ = getDSpaceQuery(this.object, this.routeService);
     }
-
     this.isAuthenticated$ = this.store.pipe(select(isAuthenticated));
   }
 }

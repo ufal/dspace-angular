@@ -68,7 +68,7 @@ export class FullItemPageComponent extends ItemPageComponent implements OnInit, 
     @Inject(PLATFORM_ID) protected platformId: string,
     protected halService: HALEndpointService,
     protected registryService: RegistryService,
-    private store: Store<AppState>
+    private store: Store<AppState>,
   ) {
     super(route, router, items, authService, authorizationService, responseService, signpostingDataService, linkHeadService, platformId, registryService, halService);
   }
@@ -85,7 +85,6 @@ export class FullItemPageComponent extends ItemPageComponent implements OnInit, 
         this.fromSubmissionObject = hasValue(data.wfi) || hasValue(data.wsi);
       })
     );
-
     this.isAuthenticated$ = this.store.pipe(select(isAuthenticated));
   }
 

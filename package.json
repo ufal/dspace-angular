@@ -53,7 +53,6 @@
     "minimist": "^1.2.5",
     "webdriver-manager": "^12.1.8",
     "ts-node": "10.2.1",
-    "@types/d3-dispatch": "3.0.6"
   },
   "dependencies": {
     "@angular/animations": "^15.2.8",

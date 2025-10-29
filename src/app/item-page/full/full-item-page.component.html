@@ -24,11 +24,9 @@
           </div>
           <div class="d-flex flex-row gap-1 align-items-end" *ngIf="isAuthenticated$ | async">
               <ds-matomo-subscription-button [item]="item"></ds-matomo-subscription-button>
-              <button class="btn btn-secondary" [routerLink]="['/items',item.id, 'views-downloads-statistics']"><i class="fa fa-bar-chart"></i> View statistics</button>
+              <button class="btn btn-secondary" [routerLink]="['/items',item.id, 'views-downloads-statistics']"><i class="fa fa-bar-chart"></i> {{'item.page.view.statistics' | translate}}</button>
           </div>
         </div>
-
-
         <ds-clarin-ref-box [item]="item"></ds-clarin-ref-box>
         <table class="table table-responsive table-striped">
           <tbody>
