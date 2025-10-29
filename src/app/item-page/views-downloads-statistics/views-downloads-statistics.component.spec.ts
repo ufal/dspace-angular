@@ -11,7 +11,7 @@ import { delay } from 'rxjs/operators';
 import { RemoteData } from 'src/app/core/data/remote-data';
 import { Item } from 'src/app/core/shared/item.model';
 
-@Pipe({ name: 'ds-translate' })
+@Pipe({ name: 'translate' })
 class MockTranslatePipe implements PipeTransform {
   transform(key: string): string {
     if (key === 'statistics.views-downloads.months.june') {return 'June';}

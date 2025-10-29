@@ -1,8 +1,8 @@
-import { filter, map } from 'rxjs/operators';
+import { filter, map, switchMap, shareReplay, tap, mergeMap } from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
 import { ActivatedRoute, Data, Router } from '@angular/router';
 
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, EMPTY } from 'rxjs';
 
 import { ItemPageComponent } from '../simple/item-page.component';
 import { MetadataMap } from '../../core/shared/metadata.models';
@@ -30,6 +30,9 @@ import { WorkflowItem } from 'src/app/core/submission/models/workflowitem.model'
 import { ClaimedTask } from 'src/app/core/tasks/models/claimed-task-object.model';
 import { ClaimedTaskDataService } from 'src/app/core/tasks/claimed-task-data.service';
 import { LinkService } from '../../core/cache/builders/link.service';
+import { followLink } from '../../shared/utils/follow-link-config.model';
+import { getFirstCompletedRemoteData } from '../../core/shared/operators';
+import { WorkflowAction } from 'src/app/core/tasks/models/workflow-action-object.model';
 
 /**
  * This component renders a full item page.
@@ -93,6 +96,76 @@ export class FullItemPageComponent extends ItemPageComponent implements OnInit, 
 
     this.subs.push(this.route.data.subscribe((data: Data) => {
         this.fromSubmissionObject = hasValue(data.wfi) || hasValue(data.wsi);
+
+        if (hasValue(data.wfi)) {
+          this.workflowItem = data.wfi.payload;
+          this.claimedTask$ = this.itemRD$.pipe(
+            filter((itemRD: RemoteData<Item>) => itemRD?.hasSucceeded && hasValue(itemRD.payload)),
+            map((itemRD: RemoteData<Item>) => itemRD.payload.uuid),
+            switchMap((itemUuid: string) => {
+              return this.claimedTaskService.findByItem(itemUuid);
+            }),
+            filter((claimedTaskRD: RemoteData<ClaimedTask>) => {
+              return claimedTaskRD?.hasSucceeded && hasValue(claimedTaskRD?.payload);
+            }),
+            shareReplay(1)
+          );
+          this.subs.push(this.claimedTask$.subscribe((claimedTaskRD: RemoteData<ClaimedTask>) => {
+            if (claimedTaskRD?.hasSucceeded && claimedTaskRD.payload) {
+              const claimedTask = claimedTaskRD.payload;
+              this.linkService.resolveLinks(claimedTask,
+                followLink('workflowitem', {},
+                  followLink('item', {}, followLink('bundles')),
+                  followLink('submitter')
+                ),
+                followLink('action')
+              );
+
+              if (claimedTask.action) {
+                const sharedAction$ = (claimedTask.action as Observable<RemoteData<WorkflowAction>>).pipe(
+                  shareReplay(1)
+                );
+                claimedTask.action = sharedAction$;
+                this.subs.push(sharedAction$.subscribe());
+              }
+
+              if (claimedTask.workflowitem) {
+                const sharedWorkflowitem$ = (claimedTask.workflowitem as Observable<RemoteData<WorkflowItem>>).pipe(
+                  shareReplay(1)
+                );
+
+                claimedTask.workflowitem = sharedWorkflowitem$;
+
+                this.subs.push(
+                  sharedWorkflowitem$.pipe(
+                    getFirstCompletedRemoteData(),
+                    tap((wfiRD: RemoteData<WorkflowItem>) => {
+                      if (wfiRD.hasSucceeded) {
+                        this.workflowitem$.next(wfiRD.payload);
+                      }
+                    }),
+                    mergeMap((wfiRD: RemoteData<WorkflowItem>) => {
+                      if (wfiRD.hasSucceeded && wfiRD.payload.item) {
+                        const sharedItem$ = (wfiRD.payload.item as Observable<RemoteData<Item>>).pipe(
+                          shareReplay(1)
+                        );
+                        wfiRD.payload.item = sharedItem$;
+                        return sharedItem$.pipe(getFirstCompletedRemoteData());
+                      } else {
+                        return EMPTY;
+                      }
+                    }),
+                    tap((itemRD: RemoteData<Item>) => {
+                      if (hasValue(itemRD) && itemRD.hasSucceeded) {
+                        this.item$.next(itemRD.payload);
+                      }
+                    })
+                  ).subscribe()
+                );
+              }
+            }
+          }));
+        }
       })
     );
 
