@@ -169,6 +169,4 @@ export class ViewsDownloadsStatisticsService {
       return { flat: mapToArray(fileMap), yearly: [] };
     }
   }
-
-
 }

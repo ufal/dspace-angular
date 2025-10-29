@@ -5,7 +5,6 @@
     <button class="btn btn-secondary" [routerLink]="['/items',object.id, 'views-downloads-statistics']"><i class="fa fa-bar-chart"></i> {{ 'statistics.views-downloads.view-button' | translate }}</button>
   </div>
 </div>
-
 <div class="row" *ngIf="iiifEnabled">
   <div class="col-12">
     <ds-mirador-viewer id="iiif-viewer"

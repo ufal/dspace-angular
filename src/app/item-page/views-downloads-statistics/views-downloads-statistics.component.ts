@@ -191,5 +191,4 @@ export class ViewsDownloadsStatisticsComponent implements OnInit, OnDestroy {
       !!this.selectedMonth
     );
   }
-
 }
