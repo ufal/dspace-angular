@@ -21,6 +21,8 @@ export class TruncatablePartComponent implements AfterViewChecked, OnInit, OnDes
   /**
    * A boolean value to expand the view when id is not available
    */
+  @Input() noIdExpandable = false;
+
   /**
    * Number of lines shown when the part is expanded. -1 indicates no limit
    */
@@ -139,6 +141,7 @@ export class TruncatablePartComponent implements AfterViewChecked, OnInit, OnDes
     }
   }
 
+  /**
    * Expand or collapse using the icons when no id available
    * @param event
    * @param expand
