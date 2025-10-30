@@ -7,7 +7,7 @@
        [ngClass]="isCurrent() ? 'text-light' : 'text-primary'"
        [innerHTML]="dsoTitle"></div>
 </ds-truncatable-part>
-<ds-truncatable-part *ngIf="description" [maxLines]="1" [background]="isCurrent() ? 'primary' : 'default'" [showToggle]="false">
+<ds-truncatable-part noIdExpandable="true" *ngIf="description" [maxLines]="1" [background]="isCurrent() ? 'primary' : 'default'" [showToggle]="true">
   <div class="text-secondary"
        [ngClass]="isCurrent() ? 'text-light' : 'text-secondary'"
        [innerHTML]="description"></div>

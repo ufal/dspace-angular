@@ -1,6 +1,9 @@
 .content:not(.truncated) ~ button.expandButton {
   display: none;
 }
+.content:not(.truncated) ~ i.expandIcon {
+  display: none;
+}
 
 .btn:focus {
   box-shadow: none !important;

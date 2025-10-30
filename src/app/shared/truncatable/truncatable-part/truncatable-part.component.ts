@@ -19,6 +19,9 @@ export class TruncatablePartComponent implements AfterViewChecked, OnInit, OnDes
   @Input() minLines: number;
 
   /**
+   * A boolean value to expand the view when id is not available
+   */
+  /**
    * Number of lines shown when the part is expanded. -1 indicates no limit
    */
   @Input() maxLines = -1;
@@ -134,6 +137,17 @@ export class TruncatablePartComponent implements AfterViewChecked, OnInit, OnDes
         entry.classList.add('removeFaded');
       }
     }
+  }
+
+   * Expand or collapse using the icons when no id available
+   * @param event
+   * @param expand
+   */
+  toggleWithoutId(event: Event, expand) {
+    event.stopPropagation();
+    this.expand = expand;
+    this.lines = expand ? '-1' : "1";
+    this.expandable = !this.expandable
   }
 
   /**
