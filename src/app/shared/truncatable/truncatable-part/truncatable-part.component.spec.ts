@@ -152,4 +152,183 @@ describe('TruncatablePartComponent', () => {
     });
   });
 
+  describe('noIdExpandable property', () => {
+    it('should have default value of false', () => {
+      expect(comp.noIdExpandable).toBe(false)
+    });
+
+    it('should accept true value for noIdExpandable', () => {
+      comp.noIdExpandable = true;
+      expect(comp.noIdExpandable).toBe(true)
+    });
+  });
+
+  describe('toggleWithoutId method', () => {
+    it('should set expand to true and lines to -1 when expand parameter is true', () => {
+      comp.expand = false;
+      comp.expandable = false;
+
+      const mockEvent = jasmine.createSpyObj('Event', ['stopPropagation']);
+      comp.toggleWithoutId(mockEvent, true);
+
+      expect(comp.expand).toBe(true);
+      expect(comp.lines).toBe('-1')
+    });
+
+    it('should set expand to false and lines to 1 when expand parameter is false', () => {
+      comp.expand = true;
+      comp.expandable = true;
+
+      const mockEvent = jasmine.createSpyObj('Event', ['stopPropagation']);
+      comp.toggleWithoutId(mockEvent, false);
+
+      expect(comp.expand).toBe(false);
+      expect(comp.lines).toBe('1');
+    });
+
+    it('should call stopPropagation on the event', () => {
+      const mockEvent = jasmine.createSpyObj('Event', ['stopPropagation']);
+      comp.toggleWithoutId(mockEvent, true);
+
+      expect(mockEvent.stopPropagation).toHaveBeenCalled();
+    });
+
+    it('should toggle expandable from false to true', () => {
+      comp.expandable = false;
+      const mockEvent = jasmine.createSpyObj('Event', ['stopPropagation']);
+      comp.toggleWithoutId(mockEvent, true);
+
+      expect(comp.expandable).toBe(true);
+    });
+
+    it('should toggle expandable from true to false', () => {
+      comp.expandable = true;
+      const mockEvent = jasmine.createSpyObj('Event', ['stopPropagation']);
+      comp.toggleWithoutId(mockEvent, false);
+
+      expect(comp.expandable).toBe(false);
+    });
+  });
+
+  describe('When noIdExpandable is false (default behavior)', () => {
+    beforeEach(() => {
+      comp.noIdExpandable = false;
+      comp.id = 'test-id-123';
+      comp.minLines = 3;
+      fixture.detectChanges();
+    });
+
+    it('should display the traditional expand button', () => {
+      const expandButton = fixture.debugElement.query(By.css('.expandButton'));
+      expect(expandButton).not.toBeNull();
+    });
+
+    it('should not display the expand icon', () => {
+      const expandIcon = fixture.debugElement.query(By.css('.expandIcon'));
+      expect(expandIcon).toBeNull();
+    });
+
+    it('should not display the collapse icon', () => {
+      const collapseIcon = fixture.debugElement.query(By.css('.collapseIcon'));
+      expect(collapseIcon).toBeNull();
+    });
+  });
+
+  describe('When noIdExpandable is true', () => {
+    beforeEach(() => {
+      comp.noIdExpandable = true;
+      comp.minLines = 3;
+      comp.expandable = false;
+      fixture.detectChanges();
+    });
+
+    it('should hide the traditional expand button', () => {
+      const expandButton = fixture.debugElement.query(By.css('.expandButton'));
+      expect(expandButton).toBeNull();
+    });
+
+    it('should hide the traditional collapse button', () => {
+      const collapseButton = fixture.debugElement.query(By.css('.collapseButton'));
+      expect(collapseButton).toBeNull();
+    });
+
+    it('should display the expand icon when expandable is false', () => {
+      comp.expandable = false;
+      fixture.detectChanges();
+
+      const expandIcon = fixture.debugElement.query(By.css('.expandIcon'));
+      expect(expandIcon).not.toBeNull();
+    });
+
+    it('should display the collapse icon when expandable is true', () => {
+      comp.expandable = true;
+      fixture.detectChanges();
+
+      const collapseIcon = fixture.debugElement.query(By.css('.collapseIcon'));
+      expect(collapseIcon).not.toBeNull();
+    });
+
+    it('should not display the expand icon when expandable is true', () => {
+      comp.expandable = true;
+      fixture.detectChanges();
+
+      const expandIcon = fixture.debugElement.query(By.css('.expandIcon'));
+      expect(expandIcon).toBeNull();
+    });
+
+    it('should show only expand icon when not expandable', () => {
+      comp.expandable = false;
+      fixture.detectChanges();
+
+      const expandIcon = fixture.debugElement.query(By.css('.expandIcon'));
+      const collapseIcon = fixture.debugElement.query(By.css('.collapseIcon'));
+
+      expect(expandIcon).not.toBeNull();
+      expect(collapseIcon).toBeNull();
+    });
+
+    it('should show only collapse icon when expandable', () => {
+      comp.expandable = true;
+      fixture.detectChanges();
+
+      const expandIcon = fixture.debugElement.query(By.css('.expandIcon'));
+      const collapseIcon = fixture.debugElement.query(By.css('.collapseIcon'));
+
+      expect(expandIcon).toBeNull();
+      expect(collapseIcon).not.toBeNull();
+    });
+  });
+
+  describe('Icon click handlers', () => {
+    beforeEach(() => {
+      comp.noIdExpandable = true;
+      comp.expandable = false;
+      fixture.detectChanges();
+    });
+
+    it('should call toggleWithoutId with true when expand icon is clicked', () => {
+      spyOn(comp, 'toggleWithoutId');
+
+      const expandIcon = fixture.debugElement.query(By.css('.expandIcon'));
+      expandIcon.nativeElement.click();
+
+      expect(comp.toggleWithoutId).toHaveBeenCalled();
+      const args = (comp.toggleWithoutId as jasmine.Spy).calls.mostRecent().args;
+      expect(args[1]).toBe(true);
+    });
+
+    it('should call toggleWithoutId with false when collapse icon is clicked', () => {
+      comp.expandable = true;
+      fixture.detectChanges();
+
+      spyOn(comp, 'toggleWithoutId');
+
+      const collapseIcon = fixture.debugElement.query(By.css('.collapseIcon'));
+      collapseIcon.nativeElement.click();
+
+      expect(comp.toggleWithoutId).toHaveBeenCalled();
+      const args = (comp.toggleWithoutId as jasmine.Spy).calls.mostRecent().args;
+      expect(args[1]).toBe(false);
+    });
+  });
 });
