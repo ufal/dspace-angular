@@ -47,7 +47,6 @@ export class SidebarSearchListElementComponent<T extends SearchResult<K>, K exte
     super(truncatableService, dsoNameService, null);
   }
 
-
   /**
    * Initialise the component variables
    */
@@ -145,7 +144,6 @@ export class SidebarSearchListElementComponent<T extends SearchResult<K>, K exte
   getParent(): Observable<RemoteData<DSpaceObject>> {
     if (typeof (this.dso as any).getParentLinkKey === 'function') {
       const propertyName = (this.dso as any).getParentLinkKey();
-
       return this.linkService.resolveLink(this.dso, followLink(propertyName))[propertyName].pipe(
         find((parentRD: RemoteData<ChildHALResource & DSpaceObject>) => parentRD.hasSucceeded || parentRD.statusCode === 204)
       );
