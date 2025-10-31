@@ -18,12 +18,21 @@
     </div>
 
     <div class="form-group mb-3">
+      <label for="suffix" class="form-label">
+        {{ 'epic-handle-table.new-handle.form-suffix-input-text' | translate }}
+      </label>
+      <input type="text" class="form-control" id="suffix" name="suffix" [(ngModel)]="suffix"
+        [placeholder]="'epic-handle-table.new-handle.form-suffix-input-placeholder' | translate"
+        [disabled]="isSuffixDisabled">
+    </div>
+
+    <div class="form-group mb-3">
       <label for="subPrefix" class="form-label">
         {{ 'epic-handle-table.new-handle.form-subprefix-input-text' | translate }}
       </label>
       <input type="text" class="form-control" id="subPrefix" name="subPrefix" [(ngModel)]="subPrefix"
         [placeholder]="'epic-handle-table.new-handle.form-subprefix-input-placeholder' | translate"
-        [disabled]="isLoading">
+        [disabled]="isSubValuesDisabled">
     </div>
 
     <div class="form-group mb-3">
@@ -32,16 +41,16 @@
       </label>
       <input type="text" class="form-control" id="subSuffix" name="subSuffix" [(ngModel)]="subSuffix"
         [placeholder]="'epic-handle-table.new-handle.form-subsuffix-input-placeholder' | translate"
-        [disabled]="isLoading">
+        [disabled]="isSubValuesDisabled">
     </div>
 
     <div class="btn-group mt-3">
       <button type="submit" class="btn btn-primary" [disabled]="!newHandle.form.valid || isLoading">
         <span *ngIf="isLoading" class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>
-        {{ 'epic-handle-table.new-handle.form-button-submit' | translate }}
+         {{  hasSuffix ? ('epic-handle-table.edit-handle.form-button-submit' | translate)   : ('epic-handle-table.new-handle.form-button-submit' | translate) }}
       </button>
       <button type="button" class="btn btn-secondary ml-2" (click)="onCancel()" [disabled]="isLoading">
-        {{ 'epic-handle-table.new-handle.form-button-cancel' | translate }}
+        {{  'epic-handle-table.new-handle.form-button-cancel' | translate }}
       </button>
     </div>
   </form>

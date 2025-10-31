@@ -6126,6 +6126,10 @@
 
   "epic-handle-table.new-handle.breadcrumbs": "New ePIC handle",
 
+  "epic-handle-table.new-handle.form-suffix-input-text": "Suffix  (Optional)",
+
+  "epic-handle-table.new-handle.form-suffix-input-placeholder": "Enter suffix (e.g., test)",
+
   "login.already-authenticated.header": "You're Already Logged In",
 
   "login.already-authenticated.message": "You are currently authenticated. Would you like to go to home page or your profile?",

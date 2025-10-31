@@ -16,6 +16,7 @@ import { EpicHandle } from 'src/app/core/epicHandle/models/epic-handle.model';
 })
 export class EpicHandleNewComponent implements OnInit {
   url: string;
+  suffix: string;
   subPrefix: string;
   subSuffix: string;
   prefix: string;
@@ -49,7 +50,32 @@ export class EpicHandleNewComponent implements OnInit {
 
     this.isLoading = true;
 
-    this.epicHandleService.create(
+    if(value.suffix) {
+      this.epicHandleService.update(this.prefix, value.suffix, value.url.trim()).pipe(getFirstCompletedRemoteData())
+      .subscribe((handleResponse) => {
+        this.isLoading = false;
+        if (isNull(handleResponse)) {
+          this.notificationService.error('', this.translateService.instant('epic-handle-table.edit-handle.notify.error'));
+          return;
+        }
+
+        if (handleResponse.hasSucceeded) {
+          this.notificationService.success('', this.translateService.instant('epic-handle-table.edit-handle.notify.successful'));
+          this.redirectBack();
+        } else if (handleResponse.hasFailed) {
+          const errorMsg = handleResponse.errorMessage ||
+            this.translateService.instant('epic-handle-table.edit-handle.notify.error');
+          this.notificationService.error('', errorMsg);
+        }
+      }, error => {
+        this.isLoading = false;
+        this.notificationService.error(
+          '',
+          this.translateService.instant('epic-handle-table.edit-handle.notify.error')
+        );
+      });
+    }else{
+      this.epicHandleService.create(
       this.prefix,
       value.url.trim(),
       value.subPrefix?.trim(),
@@ -75,6 +101,7 @@ export class EpicHandleNewComponent implements OnInit {
         this.isLoading = false;
         this.notificationService.error('', this.translateService.instant('epic-handle-table.new-handle.notify.error'));
       });
+    }
   }
 
   redirectBack() {
@@ -84,5 +111,25 @@ export class EpicHandleNewComponent implements OnInit {
 
   onCancel() {
     this.redirectBack();
+  }
+
+  get hasSuffix(): boolean {
+    return !!this.suffix?.trim();
+  }
+
+  get hasSubPrefix(): boolean {
+    return !!this.subPrefix?.trim();
+  }
+
+  get hasSubSuffix(): boolean {
+    return !!this.subSuffix?.trim();
+  }
+
+  get isSuffixDisabled(): boolean {
+    return this.isLoading || this.hasSubPrefix || this.hasSubSuffix;
+  }
+
+  get isSubValuesDisabled(): boolean {
+    return this.isLoading || this.hasSuffix;
   }
 }
