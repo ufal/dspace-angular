@@ -16,7 +16,16 @@ import { hasValue } from '../../../../../shared/empty.util';
 import { AuthorizationDataService } from '../../../../../core/data/feature-authorization/authorization-data.service';
 import { AuthService } from '../../../../../core/auth/auth.service';
 
-const allowedPreviewFormats = ['text/plain', 'text/html', 'application/zip', 'application/x-tar'];
+const allowedPreviewFormats = [
+  'text/plain',
+  'text/html',
+  'application/zip',
+  'application/gzip',
+  'application/x-tar',
+  'application/x-gtar',
+  'application/x-xz',
+  'application/x-7z-compressed'
+];
 @Component({
   selector: 'ds-file-description',
   templateUrl: './file-description.component.html',
@@ -202,7 +211,7 @@ export class FileDescriptionComponent implements OnInit, OnDestroy {
   }
 
   isArchive(format: string): boolean {
-    return format === 'application/zip' || format === 'application/x-tar';
+    return allowedPreviewFormats.includes(format, 2);
   }
 
   hasNoPreview() {
