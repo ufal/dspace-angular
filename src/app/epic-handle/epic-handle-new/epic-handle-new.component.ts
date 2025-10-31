@@ -50,7 +50,7 @@ export class EpicHandleNewComponent implements OnInit {
 
     this.isLoading = true;
 
-    if(value.suffix) {
+    if (value.suffix) {
       this.epicHandleService.update(this.prefix, value.suffix, value.url.trim()).pipe(getFirstCompletedRemoteData())
       .subscribe((handleResponse) => {
         this.isLoading = false;
@@ -74,7 +74,7 @@ export class EpicHandleNewComponent implements OnInit {
           this.translateService.instant('epic-handle-table.edit-handle.notify.error')
         );
       });
-    }else{
+    } else {
       this.epicHandleService.create(
       this.prefix,
       value.url.trim(),
