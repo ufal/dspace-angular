@@ -51,7 +51,7 @@ export class TruncatablePartComponent implements AfterViewChecked, OnInit, OnDes
    */
   @Input() showToggle = true;
 
-  @Output() truncated:EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() truncated: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   /**
    * The view on the truncatable part
@@ -122,21 +122,21 @@ export class TruncatablePartComponent implements AfterViewChecked, OnInit, OnDes
         if (entry.children.length > 0) {
           if (entry.children[entry.children.length - 1].offsetHeight > entry.offsetHeight) {
             entry.classList.add('truncated');
-            this.truncated.emit(true)
+            this.truncated.emit(true);
             entry.classList.remove('removeFaded');
           } else {
             entry.classList.remove('truncated');
-            this.truncated.emit(false)
+            this.truncated.emit(false);
             entry.classList.add('removeFaded');
           }
         } else {
           if (entry.innerText.length > 0) {
             entry.classList.add('truncated');
-            this.truncated.emit(true)
+            this.truncated.emit(true);
             entry.classList.remove('removeFaded');
           } else {
             entry.classList.remove('truncated');
-            this.truncated.emit(false)
+            this.truncated.emit(false);
             entry.classList.add('removeFaded');
           }
         }

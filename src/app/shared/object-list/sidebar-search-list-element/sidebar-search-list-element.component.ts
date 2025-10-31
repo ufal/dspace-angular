@@ -1,7 +1,7 @@
 import { SearchResult } from '../../search/models/search-result.model';
 import { DSpaceObject } from '../../../core/shared/dspace-object.model';
 import { SearchResultListElementComponent } from '../search-result-list-element/search-result-list-element.component';
-import { AfterViewInit, Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, QueryList, ViewChildren } from '@angular/core';
 import { hasValue, isNotEmpty } from '../../empty.util';
 import { Observable, of as observableOf } from 'rxjs';
 import { TruncatableService } from '../../truncatable/truncatable.service';
@@ -62,7 +62,7 @@ export class SidebarSearchListElementComponent<T extends SearchResult<K>, K exte
   ngAfterViewInit(): void {
     setTimeout(() => {
       this.checkExpandableState();
-    }, 100)
+    }, 100);
   }
 
   /**
@@ -210,7 +210,7 @@ export class SidebarSearchListElementComponent<T extends SearchResult<K>, K exte
   }
 
   toggleView(event: Event, shouldExpand) {
-    event.stopPropagation()
+    event.stopPropagation();
     this.expanded = shouldExpand;
      if (this.truncatableComponents) {
       this.truncatableComponents.forEach(cmp => {
@@ -253,7 +253,4 @@ export class SidebarSearchListElementComponent<T extends SearchResult<K>, K exte
       this.updateExpandableState();
     }
   }
-
-
-
 }
