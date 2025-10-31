@@ -55,7 +55,6 @@ export function createSidebarSearchListElementTests(
         }
         return new HALResource();
       });
-
       TestBed.configureTestingModule({
         declarations: [componentClass, VarDirective],
         imports: [TranslateModule.forRoot(), RouterTestingModule.withRoutes([])],
