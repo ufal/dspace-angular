@@ -154,12 +154,12 @@ describe('TruncatablePartComponent', () => {
 
   describe('noIdExpandable property', () => {
     it('should have default value of false', () => {
-      expect(comp.noIdExpandable).toBe(false)
+      expect(comp.noIdExpandable).toBe(false);
     });
 
     it('should accept true value for noIdExpandable', () => {
       comp.noIdExpandable = true;
-      expect(comp.noIdExpandable).toBe(true)
+      expect(comp.noIdExpandable).toBe(true);
     });
   });
 
@@ -172,7 +172,7 @@ describe('TruncatablePartComponent', () => {
       comp.toggleWithoutId(mockEvent, true);
 
       expect(comp.expand).toBe(true);
-      expect(comp.lines).toBe('-1')
+      expect(comp.lines).toBe('-1');
     });
 
     it('should set expand to false and lines to 1 when expand parameter is false', () => {

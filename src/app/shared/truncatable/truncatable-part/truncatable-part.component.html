@@ -1,4 +1,4 @@
-<div class="clamp-{{background}}-{{lines}} min-{{minLines}} {{type}} {{fixedHeight ? 'fixedHeight' : ''}} {{noIdExpandable ? 'position-relative' : ''}}">
+<div class="clamp-{{background}}-{{lines}} min-{{minLines}} {{type}} {{fixedHeight ? 'fixedHeight' : ''}}">
   <div #content class="flex row content dont-break-out preserve-line-breaks">
     <ng-content></ng-content>
   </div>
@@ -10,7 +10,4 @@
     <i class="fas fa-angle-up"></i>
     <span class="ml-1">{{ 'item.truncatable-part.show-less' | translate }}</span>
   </button>
-   <i  *ngIf="noIdExpandable && !expandable" (click)="toggleWithoutId($event, true)" style="position: absolute; right: 0; bottom: 0;"  class="fa fa-angle-down expandIcon" aria-hidden="true"></i>
-   <i  *ngIf="noIdExpandable && expandable" (click)="toggleWithoutId($event, false)" style="position: absolute; right: 0; bottom: 0;"  class="fa fa-angle-up collapseIcon" aria-hidden="true"></i>
-
 </div>

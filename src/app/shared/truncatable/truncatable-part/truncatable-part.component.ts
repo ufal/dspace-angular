@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { TruncatableService } from '../truncatable.service';
 import { hasValue } from '../../empty.util';
 
@@ -50,6 +50,8 @@ export class TruncatablePartComponent implements AfterViewChecked, OnInit, OnDes
    * This value must have the same value as the parent TruncatableComponent
    */
   @Input() showToggle = true;
+
+  @Output() truncated:EventEmitter<boolean> = new EventEmitter<boolean>();
 
   /**
    * The view on the truncatable part
@@ -120,17 +122,21 @@ export class TruncatablePartComponent implements AfterViewChecked, OnInit, OnDes
         if (entry.children.length > 0) {
           if (entry.children[entry.children.length - 1].offsetHeight > entry.offsetHeight) {
             entry.classList.add('truncated');
+            this.truncated.emit(true)
             entry.classList.remove('removeFaded');
           } else {
             entry.classList.remove('truncated');
+            this.truncated.emit(false)
             entry.classList.add('removeFaded');
           }
         } else {
           if (entry.innerText.length > 0) {
             entry.classList.add('truncated');
+            this.truncated.emit(true)
             entry.classList.remove('removeFaded');
           } else {
             entry.classList.remove('truncated');
+            this.truncated.emit(false)
             entry.classList.add('removeFaded');
           }
         }
@@ -146,11 +152,10 @@ export class TruncatablePartComponent implements AfterViewChecked, OnInit, OnDes
    * @param event
    * @param expand
    */
-  toggleWithoutId(event: Event, expand) {
-    event.stopPropagation();
+  toggleWithoutId(expand) {
     this.expand = expand;
-    this.lines = expand ? '-1' : "1";
-    this.expandable = !this.expandable
+    this.lines = expand ? '-1' : '1';
+    this.expandable = !this.expandable;
   }
 
   /**

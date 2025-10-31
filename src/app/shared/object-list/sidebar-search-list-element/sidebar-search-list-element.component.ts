@@ -1,17 +1,18 @@
 import { SearchResult } from '../../search/models/search-result.model';
 import { DSpaceObject } from '../../../core/shared/dspace-object.model';
 import { SearchResultListElementComponent } from '../search-result-list-element/search-result-list-element.component';
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { hasValue, isNotEmpty } from '../../empty.util';
 import { Observable, of as observableOf } from 'rxjs';
 import { TruncatableService } from '../../truncatable/truncatable.service';
 import { LinkService } from '../../../core/cache/builders/link.service';
-import { find, map } from 'rxjs/operators';
+import { catchError, find, map, switchMap } from 'rxjs/operators';
 import { ChildHALResource } from '../../../core/shared/child-hal-resource.model';
 import { followLink } from '../../utils/follow-link-config.model';
 import { RemoteData } from '../../../core/data/remote-data';
 import { Context } from '../../../core/shared/context.model';
 import { DSONameService } from '../../../core/breadcrumbs/dso-name.service';
+import { TruncatablePartComponent } from '../../truncatable/truncatable-part/truncatable-part.component';
 
 @Component({
   selector: 'ds-sidebar-search-list-element',
@@ -22,7 +23,7 @@ import { DSONameService } from '../../../core/breadcrumbs/dso-name.service';
  * It displays the name of the parent, title and description of the object. All of which are customizable in the child
  * component by overriding the relevant methods of this component
  */
-export class SidebarSearchListElementComponent<T extends SearchResult<K>, K extends DSpaceObject> extends SearchResultListElementComponent<T, K> {
+export class SidebarSearchListElementComponent<T extends SearchResult<K>, K extends DSpaceObject> extends SearchResultListElementComponent<T, K> implements AfterViewInit {
   /**
    * Observable for the title of the parent object (displayed above the object's title)
    */
@@ -33,6 +34,12 @@ export class SidebarSearchListElementComponent<T extends SearchResult<K>, K exte
    */
   description: string;
 
+  expandable = false;
+  expanded = false;
+  private truncatedStates: Map<number, boolean> = new Map();
+
+  @ViewChildren(TruncatablePartComponent) truncatableComponents: QueryList<TruncatablePartComponent>;
+
   public constructor(protected truncatableService: TruncatableService,
                      protected linkService: LinkService,
                      public dsoNameService: DSONameService,
@@ -40,15 +47,22 @@ export class SidebarSearchListElementComponent<T extends SearchResult<K>, K exte
     super(truncatableService, dsoNameService, null);
   }
 
+
   /**
    * Initialise the component variables
    */
   ngOnInit(): void {
     super.ngOnInit();
     if (hasValue(this.dso)) {
-      this.parentTitle$ = this.getParentTitle();
+      this.parentTitle$ = this.getParentHierarchyTitle();
       this.description = this.getDescription();
     }
+  }
+
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.checkExpandableState();
+    }, 100)
   }
 
   /**
@@ -59,8 +73,63 @@ export class SidebarSearchListElementComponent<T extends SearchResult<K>, K exte
   }
 
   /**
-   * Get the title of the object's parent
-   * Retrieve the parent by using the object's parent link and retrieving its 'dc.title' metadata
+   * Get the complete hierarchical parent chain as a formatted string
+   * Returns format: "Root > SubCommunity > Parent"
+   */
+  getParentHierarchyTitle(): Observable<string> {
+    return this.getAllParentsRecursive().pipe(
+      map((parentNames: string[]) => {
+        if (isNotEmpty(parentNames)) {
+          return parentNames.join(' > ');
+        }
+        return undefined;
+      })
+    );
+  }
+
+  /**
+   * Recursively fetch all parent objects up the hierarchy
+   * Returns an array of parent names from root to immediate parent
+   *
+   * @param currentObject - The object to fetch parents for (defaults to this.dso)
+   * @param accumulatedNames - Accumulated parent names during recursion
+   */
+  getAllParentsRecursive(
+    currentObject: DSpaceObject = this.dso,
+    accumulatedNames: string[] = []
+  ): Observable<string[]> {
+    if (typeof (currentObject as any).getParentLinkKey !== 'function') {
+      return observableOf(accumulatedNames);
+    }
+
+    const propertyName = (currentObject as any).getParentLinkKey();
+
+    return this.linkService.resolveLink(currentObject, followLink(propertyName))[propertyName].pipe(
+      find((parentRD: RemoteData<ChildHALResource & DSpaceObject>) =>
+        parentRD.hasSucceeded || parentRD.statusCode === 204
+      ),
+      switchMap((parentRD: RemoteData<DSpaceObject>) => {
+        if (!hasValue(parentRD) ||
+            !hasValue(parentRD.payload) ||
+            parentRD.statusCode === 204 ||
+            !parentRD.hasSucceeded) {
+          return observableOf(accumulatedNames);
+        }
+        const parentName = this.dsoNameService.getName(parentRD.payload);
+        const newAccumulatedNames = hasValue(parentName)
+          ? [parentName, ...accumulatedNames]
+          : accumulatedNames;
+        return this.getAllParentsRecursive(parentRD.payload, newAccumulatedNames);
+      }),
+      catchError(() => {
+        return observableOf(accumulatedNames);
+      })
+    );
+  }
+
+  /**
+   * DEPRECATED: Get the title of the immediate parent only
+   * Use getParentHierarchyTitle() instead for hierarchical display
    */
   getParentTitle(): Observable<string> {
     return this.getParent().pipe(
@@ -76,6 +145,7 @@ export class SidebarSearchListElementComponent<T extends SearchResult<K>, K exte
   getParent(): Observable<RemoteData<DSpaceObject>> {
     if (typeof (this.dso as any).getParentLinkKey === 'function') {
       const propertyName = (this.dso as any).getParentLinkKey();
+
       return this.linkService.resolveLink(this.dso, followLink(propertyName))[propertyName].pipe(
         find((parentRD: RemoteData<ChildHALResource & DSpaceObject>) => parentRD.hasSucceeded || parentRD.statusCode === 204)
       );
@@ -138,4 +208,52 @@ export class SidebarSearchListElementComponent<T extends SearchResult<K>, K exte
       return def;
     }
   }
+
+  toggleView(event: Event, shouldExpand) {
+    event.stopPropagation()
+    this.expanded = shouldExpand;
+     if (this.truncatableComponents) {
+      this.truncatableComponents.forEach(cmp => {
+        cmp.toggleWithoutId(shouldExpand);
+      });
+    }
+  }
+
+  /**
+   * Handle truncated state change from a specific child component
+   * @param index - The index of the truncatable component (0, 1, or 2)
+   * @param isTruncated - Whether the component is truncated
+   */
+  isTruncated(index: number, isTruncated: boolean): void {
+    this.truncatedStates.set(index, isTruncated);
+    this.updateExpandableState();
+  }
+
+  /**
+   * Update the expandable state based on truncated states
+   */
+  private updateExpandableState(): void {
+    const anyTruncated = Array.from(this.truncatedStates.values()).some(state => state === true);
+
+    if (this.expandable !== anyTruncated) {
+      this.expandable = anyTruncated;
+    }
+  }
+
+  /**
+   * Force check of expandable state (used on initial load)
+   */
+  private checkExpandableState(): void {
+    this.truncatedStates.clear();
+    if (this.truncatedStates.size === 0) {
+      setTimeout(() => {
+        this.updateExpandableState();
+      }, 50);
+    } else {
+      this.updateExpandableState();
+    }
+  }
+
+
+
 }
