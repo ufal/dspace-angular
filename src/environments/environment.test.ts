@@ -321,10 +321,5 @@ export const environment: BuildConfig = {
     hostUrl: 'http://localhost:8135/',
     siteId: '1',
     dimensionId: 1
-  },
-
-  statistics: {
-    baseUrl: 'http://localhost:8080/server/api/statistics',
-    endpoint: '/handle'
   }
 };

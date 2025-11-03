@@ -153,7 +153,7 @@ export class ChartDrawerService {
         const containerRect = containerElement.getBoundingClientRect();
         const mouseX = event.clientX - containerRect.left;
         const mouseY = event.clientY - containerRect.top;
-        
+
         tooltip.transition()
           .duration(200)
           .style('opacity', .9);

@@ -23,7 +23,6 @@ import { MarkdownConfig } from './markdown-config.interface';
 import { FilterVocabularyConfig } from './filter-vocabulary-config';
 import { DiscoverySortConfig } from './discovery-sort.config';
 import { MatomoConfig } from './matomo-config';
-import { StatisticsConfig } from './statistics-config';
 
 export class DefaultAppConfig implements AppConfig {
   production = false;
@@ -436,10 +435,5 @@ export class DefaultAppConfig implements AppConfig {
     hostUrl: 'http://localhost:8135/',
     siteId: '1',
     dimensionId: 1
-  };
-
-  statistics: StatisticsConfig = {
-    baseUrl: 'http://localhost:8080/server/api/statistics',
-    endpoint: '/handle'
   };
 }
