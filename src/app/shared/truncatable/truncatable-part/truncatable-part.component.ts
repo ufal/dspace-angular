@@ -154,7 +154,7 @@ export class TruncatablePartComponent implements AfterViewChecked, OnInit, OnDes
    */
   toggleWithoutId(expand) {
     this.expand = expand;
-    this.lines = expand ? '-1' : '1';
+    this.lines = expand ? 'none' : '1';
     this.expandable = !this.expandable;
   }
 

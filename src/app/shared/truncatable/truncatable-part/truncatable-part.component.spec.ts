@@ -169,7 +169,7 @@ describe('TruncatablePartComponent', () => {
       comp.expandable = false;
       comp.toggleWithoutId(true);
       expect(comp.expand).toBe(true);
-      expect(comp.lines).toBe('-1');
+      expect(comp.lines).toBe('none');
     });
 
     it('should set expand to false and lines to 1 when expand parameter is false', () => {

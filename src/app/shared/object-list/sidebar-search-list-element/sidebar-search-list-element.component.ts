@@ -108,8 +108,7 @@ export class SidebarSearchListElementComponent<T extends SearchResult<K>, K exte
         parentRD.hasSucceeded || parentRD.statusCode === 204
       ),
       switchMap((parentRD: RemoteData<DSpaceObject>) => {
-        if (!hasValue(parentRD) ||
-            !hasValue(parentRD.payload) ||
+        if (!hasValue(parentRD?.payload) ||
             parentRD.statusCode === 204 ||
             !parentRD.hasSucceeded) {
           return observableOf(accumulatedNames);
@@ -207,7 +206,7 @@ export class SidebarSearchListElementComponent<T extends SearchResult<K>, K exte
     }
   }
 
-  toggleView(event: Event, shouldExpand) {
+  toggleView(event: Event, shouldExpand: boolean) {
     event.stopPropagation();
     this.expanded = shouldExpand;
      if (this.truncatableComponents) {

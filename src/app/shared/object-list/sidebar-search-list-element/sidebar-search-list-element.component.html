@@ -17,10 +17,10 @@
      *ngIf="!expanded"
      class="fa fa-angle-down p-1"
      aria-hidden="true"
-     title="Expand all"></i>
+     [title]="'sidebar.expand.all' | translate"></i>
   <i (click)="toggleView($event, false)"
      *ngIf="expanded"
      class="fa fa-angle-up p-1"
      aria-hidden="true"
-     title="Collapse all"></i>
+     [title]="'sidebar.collapse.all' | translate"></i>
 </div>
