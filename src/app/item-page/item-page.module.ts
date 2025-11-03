@@ -93,6 +93,7 @@ import { ClarinFilesSectionComponent } from './clarin-files-section/clarin-files
 import { ViewsDownloadsStatisticsComponent } from './views-downloads-statistics/views-downloads-statistics.component';
 import { MatomoSubscriptionButtonComponent } from './matomo-subscription-button/matomo-subscription-button.component';
 import { MyDSpaceActionsModule } from '../shared/mydspace-actions/mydspace-actions.module';
+import { ViewsDownloadsStatisticsButtonComponent } from './views-downloads-statistics-button/views-downloads-statistics-button.component';
 
 const ENTRY_COMPONENTS = [
   // put only entry components that use custom decorator
@@ -159,6 +160,7 @@ const DECLARATIONS = [
   ClarinDescriptionItemFieldComponent,
   ClarinFilesSectionComponent,
   ViewsDownloadsStatisticsComponent,
+  ViewsDownloadsStatisticsButtonComponent,
   MatomoSubscriptionButtonComponent
 ];
 

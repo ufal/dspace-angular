@@ -1,9 +1,5 @@
 <div class="d-flex justify-content-between mb-1">
   <ds-themed-results-back-button *ngIf="showBackButton | async" [back]="back"></ds-themed-results-back-button>
-  <div class="d-flex flex-row gap-1 align-items-end" *ngIf="isAuthenticated$ | async">
-    <ds-matomo-subscription-button [item]="object"></ds-matomo-subscription-button>
-    <button class="btn btn-secondary" [routerLink]="['/items',object.id, 'views-downloads-statistics']"><i class="fa fa-bar-chart"></i> {{ 'statistics.views-downloads.view-button' | translate }}</button>
-  </div>
 </div>
 <div class="row" *ngIf="iiifEnabled">
   <div class="col-12">
@@ -18,6 +14,7 @@
 <div class="d-flex flex-row">
   <ds-themed-item-page-title-field [item]="object" class="mr-auto">
   </ds-themed-item-page-title-field>
+  <ds-views-downloads-statistics-button [object]="object"></ds-views-downloads-statistics-button>
   <ds-dso-edit-menu></ds-dso-edit-menu>
 </div>
 <div class="row">

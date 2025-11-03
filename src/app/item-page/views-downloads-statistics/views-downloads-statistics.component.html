@@ -3,7 +3,10 @@
     <div class="card-header">
       <div class="header-content">
         <div class="d-flex justify-content-between align-items-center mb-3">
-          <h2 class="card-title mb-0">{{ getTitle() }}</h2>
+          <div class="d-flex gap-2">
+            <h2 class="card-title mb-0">{{ getTitle() }}</h2>
+            <ds-matomo-subscription-button [item]="item"></ds-matomo-subscription-button>
+          </div>
           <button class="btn btn-outline-secondary btn-sm" (click)="backToItem()">
             <i class="fas fa-arrow-left"></i> {{ 'statistics.views-downloads.back-to-item' | translate }}
           </button>

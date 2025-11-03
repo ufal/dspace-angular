@@ -10,7 +10,7 @@
 </button>
 <button
   *ngIf="isSubscribed"
-  class="btn btn-outline-secondary btn-sm"
+  class="btn btn-secondary btn-sm"
   (click)="onUnsubscribe()"
   [disabled]="isLoading"
   [title]="'matomo.subscription.unsubscribe.tooltip' | translate">
