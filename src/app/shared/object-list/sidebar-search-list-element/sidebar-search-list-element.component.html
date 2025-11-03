@@ -12,7 +12,7 @@
        [ngClass]="isCurrent() ? 'text-light' : 'text-secondary'"
        [innerHTML]="description"></div>
 </ds-truncatable-part>
-<div *ngIf="expandable" class="position-absolute" style="top: 5px; right: 5px; cursor: pointer;">
+<div *ngIf="expandable" class="toggleIcons">
   <i (click)="toggleView($event, true)"
      *ngIf="!expanded"
      class="fa fa-angle-down p-1"
