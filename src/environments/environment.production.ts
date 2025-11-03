@@ -9,10 +9,5 @@ export const environment: Partial<BuildConfig> = {
     async: true,
     time: false,
     inlineCriticalCss: false,
-  },
-
-  statistics: {
-    baseUrl: 'https://lindat.mff.cuni.cz/statistics',
-    endpoint: '/handle'
   }
 };
