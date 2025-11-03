@@ -167,10 +167,7 @@ describe('TruncatablePartComponent', () => {
     it('should set expand to true and lines to -1 when expand parameter is true', () => {
       comp.expand = false;
       comp.expandable = false;
-
-      const mockEvent = jasmine.createSpyObj('Event', ['stopPropagation']);
       comp.toggleWithoutId(true);
-
       expect(comp.expand).toBe(true);
       expect(comp.lines).toBe('-1');
     });
@@ -178,17 +175,13 @@ describe('TruncatablePartComponent', () => {
     it('should set expand to false and lines to 1 when expand parameter is false', () => {
       comp.expand = true;
       comp.expandable = true;
-
-      const mockEvent = jasmine.createSpyObj('Event', ['stopPropagation']);
       comp.toggleWithoutId(false);
-
       expect(comp.expand).toBe(false);
       expect(comp.lines).toBe('1');
     });
 
     it('should toggle expandable from false to true', () => {
       comp.expandable = false;
-      const mockEvent = jasmine.createSpyObj('Event', ['stopPropagation']);
       comp.toggleWithoutId(true);
 
       expect(comp.expandable).toBe(true);
@@ -196,7 +189,6 @@ describe('TruncatablePartComponent', () => {
 
     it('should toggle expandable from true to false', () => {
       comp.expandable = true;
-      const mockEvent = jasmine.createSpyObj('Event', ['stopPropagation']);
       comp.toggleWithoutId(false);
 
       expect(comp.expandable).toBe(false);

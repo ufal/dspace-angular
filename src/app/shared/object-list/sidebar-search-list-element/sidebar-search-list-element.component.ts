@@ -219,7 +219,7 @@ export class SidebarSearchListElementComponent<T extends SearchResult<K>, K exte
 
   /**
    * Handle truncated state change from a specific child component
-   * @param index - The index of the truncatable component (0, 1, or 2)
+   * @param index - The index of the truncatable component (1, 2, or 3)
    * @param isTruncated - Whether the component is truncated
    */
   isTruncated(index: number, isTruncated: boolean): void {
