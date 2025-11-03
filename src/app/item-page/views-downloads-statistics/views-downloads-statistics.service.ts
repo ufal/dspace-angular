@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
+import { APP_CONFIG, AppConfig } from 'src/config/app-config.interface';
 
 export interface ApiResponse {
   response: {
@@ -42,10 +43,20 @@ export interface StatsData {
   providedIn: 'root'
 })
 export class ViewsDownloadsStatisticsService {
-  constructor(private http: HttpClient){}
+  private baseUrl: string;
+  private endpoint: string;
+
+  constructor(
+    private http: HttpClient,
+    @Inject(APP_CONFIG) private appConfig: AppConfig
+  ) {
+    console.log('Statistics Config:', this.appConfig.statistics);
+    this.baseUrl = this.appConfig.statistics?.baseUrl || 'http://localhost:8080/server/api/statistics';
+    this.endpoint = this.appConfig.statistics?.endpoint || '/handle';
+  }
 
   getStats(handle: string, year?: string, month?: string): Observable<StatsData>{
-    let url =  `statistics/handle?h=${handle}`;
+    let url =  `${this.baseUrl}${this.endpoint}?h=${handle}`;
     if (year) {
       url += `&date=${year}`;
       if (month){
