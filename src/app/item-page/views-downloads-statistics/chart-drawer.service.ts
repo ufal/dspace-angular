@@ -145,10 +145,15 @@ export class ChartDrawerService {
       .style('border', '1px solid #ddd')
       .style('padding', '10px')
       .style('border-radius', '4px')
-      .style('pointer-events', 'none');
+      .style('pointer-events', 'none')
+      .style('box-shadow', '0 2px 4px rgba(0,0,0,0.2)');
 
     svg.selectAll('circle')
       .on('mouseover', (event: any, d: ChartData) => {
+        const containerRect = containerElement.getBoundingClientRect();
+        const mouseX = event.clientX - containerRect.left;
+        const mouseY = event.clientY - containerRect.top;
+        
         tooltip.transition()
           .duration(200)
           .style('opacity', .9);
@@ -156,8 +161,8 @@ export class ChartDrawerService {
           <strong>${d.period}</strong><br/>
           ${activeMetric}: ${d[activeMetric]}
         `)
-          .style('left', (event.pageX + 10) + 'px')
-          .style('top', (event.pageY - 28) + 'px');
+          .style('left', (mouseX + 10) + 'px')
+          .style('top', (mouseY - 28) + 'px');
       })
       .on('mouseout', () => {
         tooltip.transition()
