@@ -42,9 +42,6 @@ export interface StatsData {
   providedIn: 'root'
 })
 export class ViewsDownloadsStatisticsService {
-  private baseUrl: string;
-  private endpoint: string;
-
   constructor(private http: HttpClient){}
 
   getStats(handle: string, year?: string, month?: string): Observable<StatsData>{
