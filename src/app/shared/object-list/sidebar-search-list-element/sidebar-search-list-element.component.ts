@@ -59,9 +59,7 @@ export class SidebarSearchListElementComponent<T extends SearchResult<K>, K exte
   }
 
   ngAfterViewInit(): void {
-    setTimeout(() => {
-      this.checkExpandableState();
-    }, 100);
+    this.checkExpandableState();
   }
 
   /**
@@ -77,12 +75,7 @@ export class SidebarSearchListElementComponent<T extends SearchResult<K>, K exte
    */
   getParentHierarchyTitle(): Observable<string> {
     return this.getAllParentsRecursive().pipe(
-      map((parentNames: string[]) => {
-        if (isNotEmpty(parentNames)) {
-          return parentNames.join(' > ');
-        }
-        return undefined;
-      })
+      map((parentNames: string[]) => parentNames.join(' > '))
     );
   }
 
@@ -123,31 +116,6 @@ export class SidebarSearchListElementComponent<T extends SearchResult<K>, K exte
         return observableOf(accumulatedNames);
       })
     );
-  }
-
-  /**
-   * DEPRECATED: Get the title of the immediate parent only
-   * Use getParentHierarchyTitle() instead for hierarchical display
-   */
-  getParentTitle(): Observable<string> {
-    return this.getParent().pipe(
-      map((parentRD: RemoteData<DSpaceObject>) => {
-        return hasValue(parentRD) && hasValue(parentRD.payload) ? this.dsoNameService.getName(parentRD.payload) : undefined;
-      })
-    );
-  }
-
-  /**
-   * Get the parent of the object
-   */
-  getParent(): Observable<RemoteData<DSpaceObject>> {
-    if (typeof (this.dso as any).getParentLinkKey === 'function') {
-      const propertyName = (this.dso as any).getParentLinkKey();
-      return this.linkService.resolveLink(this.dso, followLink(propertyName))[propertyName].pipe(
-        find((parentRD: RemoteData<ChildHALResource & DSpaceObject>) => parentRD.hasSucceeded || parentRD.statusCode === 204)
-      );
-    }
-    return observableOf(undefined);
   }
 
   /**
@@ -242,12 +210,6 @@ export class SidebarSearchListElementComponent<T extends SearchResult<K>, K exte
    */
   private checkExpandableState(): void {
     this.truncatedStates.clear();
-    if (this.truncatedStates.size === 0) {
-      setTimeout(() => {
-        this.updateExpandableState();
-      }, 50);
-    } else {
-      this.updateExpandableState();
-    }
+    this.updateExpandableState();
   }
 }
