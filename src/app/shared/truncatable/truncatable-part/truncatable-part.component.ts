@@ -116,7 +116,7 @@ export class TruncatablePartComponent implements AfterViewChecked, OnInit, OnDes
    * check for the truncate element
    */
   public truncateElement() {
-    if (this.showToggle) {
+    if (this.showToggle || this.noIdExpandable) {
       const entry = this.content.nativeElement;
       if (entry.scrollHeight > entry.offsetHeight) {
         if (entry.children.length > 0) {
