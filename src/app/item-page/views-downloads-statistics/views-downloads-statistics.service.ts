@@ -51,8 +51,8 @@ export class ViewsDownloadsStatisticsService {
     @Inject(APP_CONFIG) private appConfig: AppConfig
   ) {
     console.log('Statistics Config:', this.appConfig.statistics);
-    this.baseUrl = this.appConfig.statistics?.baseUrl || 'http://localhost:8080/server/api/statistics';
-    this.endpoint = this.appConfig.statistics?.endpoint || '/handle';
+    this.baseUrl = this.appConfig.statistics?.baseUrl;
+    this.endpoint = this.appConfig.statistics?.endpoint;
   }
 
   getStats(handle: string, year?: string, month?: string): Observable<StatsData>{
