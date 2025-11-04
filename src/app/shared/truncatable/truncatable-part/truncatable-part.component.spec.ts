@@ -154,12 +154,12 @@ describe('TruncatablePartComponent', () => {
 
   describe('noIdExpandable property', () => {
     it('should have default value of false', () => {
-      expect(comp.noIdExpandable).toBe(false);
+      expect(comp.externalToggle).toBe(false);
     });
 
     it('should accept true value for noIdExpandable', () => {
-      comp.noIdExpandable = true;
-      expect(comp.noIdExpandable).toBe(true);
+      comp.externalToggle = true;
+      expect(comp.externalToggle).toBe(true);
     });
   });
 
@@ -197,7 +197,7 @@ describe('TruncatablePartComponent', () => {
 
   describe('When noIdExpandable is false (default behavior)', () => {
     beforeEach(() => {
-      comp.noIdExpandable = false;
+      comp.externalToggle = false;
       comp.id = 'test-id-123';
       comp.minLines = 3;
       fixture.detectChanges();
@@ -221,7 +221,7 @@ describe('TruncatablePartComponent', () => {
 
   describe('When noIdExpandable is true', () => {
     beforeEach(() => {
-      comp.noIdExpandable = true;
+      comp.externalToggle = true;
       comp.minLines = 3;
       comp.expandable = false;
       fixture.detectChanges();

@@ -179,7 +179,7 @@ export class SidebarSearchListElementComponent<T extends SearchResult<K>, K exte
     this.expanded = shouldExpand;
      if (this.truncatableComponents) {
       this.truncatableComponents.forEach(cmp => {
-        cmp.toggleWithoutId(shouldExpand);
+        cmp.toggle(event, shouldExpand);
       });
     }
   }
@@ -189,7 +189,7 @@ export class SidebarSearchListElementComponent<T extends SearchResult<K>, K exte
    * @param index - The index of the truncatable component (1, 2, or 3)
    * @param isTruncated - Whether the component is truncated
    */
-  isTruncated(index: number, isTruncated: boolean): void {
+  onTruncatedStateChange(index: number, isTruncated: boolean): void {
     this.truncatedStates.set(index, isTruncated);
     this.updateExpandableState();
   }

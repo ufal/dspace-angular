@@ -19,9 +19,11 @@ export class TruncatablePartComponent implements AfterViewChecked, OnInit, OnDes
   @Input() minLines: number;
 
   /**
-   * A boolean value to expand the view when id is not available
+   * A boolean value for external control of the icon toggle state
+   * if true, the component will emit truncated state via an EventEmitter
+   * and will not show the toggle button internally if showToggle is true
    */
-  @Input() noIdExpandable = false;
+  @Input() externalToggle = false;
 
   /**
    * Number of lines shown when the part is expanded. -1 indicates no limit
@@ -106,38 +108,56 @@ export class TruncatablePartComponent implements AfterViewChecked, OnInit, OnDes
 
   /**
    * Expands the truncatable when it's collapsed, collapses it when it's expanded
+   * if no id is provided, it will use local expand/collapse
+   * @param event - The DOM event that triggered the toggle
+   * @param expand - Whether to expand (true) or collapse (false) the truncatable part
    */
-  public toggle() {
-    this.service.toggle(this.id);
-    this.expandable = !this.expandable;
+  public toggle(event?: Event, expand?: boolean) {
+    if (event) {
+      event.stopPropagation();
+    }
+    if (this.id){
+      this.service.toggle(this.id);
+      this.expandable = !this.expandable;
+    } else {
+      this.toggleWithoutId(expand);
+    }
   }
 
   /**
    * check for the truncate element
    */
   public truncateElement() {
-    if (this.showToggle || this.noIdExpandable) {
+    if (this.showToggle || this.externalToggle) {
       const entry = this.content.nativeElement;
       if (entry.scrollHeight > entry.offsetHeight) {
         if (entry.children.length > 0) {
           if (entry.children[entry.children.length - 1].offsetHeight > entry.offsetHeight) {
             entry.classList.add('truncated');
-            this.truncated.emit(true);
             entry.classList.remove('removeFaded');
+            if (this.externalToggle) {
+              this.truncated.emit(true);
+            }
           } else {
             entry.classList.remove('truncated');
-            this.truncated.emit(false);
             entry.classList.add('removeFaded');
+            if (this.externalToggle) {
+              this.truncated.emit(false);
+            }
           }
         } else {
           if (entry.innerText.length > 0) {
             entry.classList.add('truncated');
-            this.truncated.emit(true);
             entry.classList.remove('removeFaded');
+            if (this.externalToggle) {
+              this.truncated.emit(true);
+            }
           } else {
             entry.classList.remove('truncated');
-            this.truncated.emit(false);
             entry.classList.add('removeFaded');
+            if (this.externalToggle) {
+              this.truncated.emit(false);
+            }
           }
         }
       } else {
@@ -148,7 +168,7 @@ export class TruncatablePartComponent implements AfterViewChecked, OnInit, OnDes
   }
 
   /**
-   * Expand or collapse using the icons when no id available
+   * Expand or collapse using the external icons when no id available
    * @param event
    * @param expand
    */
