@@ -8700,7 +8700,7 @@
   // "matomo.subscription.unsubscribe.button": "Unsubscribe",
   "matomo.subscription.unsubscribe.button": "Odhlásit odběr",
 
-  // "matomo.subscription.subscribe.success.title": "Subscribed",
+  // "matomo.subscription.subscribe.success.title": "Subscribed!",
   "matomo.subscription.subscribe.success.title": "Přihlášeno k odběru",
 
   // "matomo.subscription.subscribe.success.message": "Subscribed successfully to item statistics!",

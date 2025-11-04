@@ -5,6 +5,7 @@ import { By } from '@angular/platform-browser';
 import { provideMockStore } from '@ngrx/store/testing';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { Observable, of as observableOf } from 'rxjs';
+import { APP_CONFIG } from '../../../../../config/app-config.interface';
 import { RemoteDataBuildService } from '../../../../core/cache/builders/remote-data-build.service';
 import { ObjectCacheService } from '../../../../core/cache/object-cache.service';
 import { BitstreamDataService } from '../../../../core/data/bitstream-data.service';
@@ -137,6 +138,7 @@ export function getItemPageFieldsTest(mockItem: Item, component) {
           { provide: AuthorizationDataService, useValue: authorizationService },
           { provide: ResearcherProfileDataService, useValue: {} },
           { provide: BrowseDefinitionDataService, useValue: BrowseDefinitionDataServiceStub },
+          { provide: APP_CONFIG, useValue: { statistics: { baseUrl: 'http://test.com', endpoint: '/test' } } },
         ],
 
         schemas: [NO_ERRORS_SCHEMA]
@@ -460,6 +462,7 @@ describe('ItemComponent', () => {
           { provide: RouteService, useValue: mockRouteService },
           { provide: AuthorizationDataService, useValue: {} },
           { provide: ResearcherProfileDataService, useValue: {} },
+          { provide: APP_CONFIG, useValue: { statistics: { baseUrl: 'http://test.com', endpoint: '/test' } } },
         ],
         schemas: [NO_ERRORS_SCHEMA]
       }).overrideComponent(ItemComponent, {
