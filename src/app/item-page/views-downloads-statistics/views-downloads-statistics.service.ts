@@ -115,10 +115,14 @@ export class ViewsDownloadsStatisticsService {
 
     const processTimePeriod = (periodData: any): Map<string, number> => {
       const fileMap = new Map<string, number>();
-      if (!periodData) {return fileMap;}
+      if (!periodData) {
+        return fileMap;
+      }
 
       const processRecursive = (data: any) => {
-        if (!data) {return;}
+        if (!data) {
+          return;
+        }
 
         Object.keys(data).forEach(key => {
           if (key === 'nb_hits' || key === 'nb_visits' || key === 'nb_uniq_visitors' || key === 'nb_uniq_pageviews') {

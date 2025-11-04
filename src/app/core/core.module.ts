@@ -334,7 +334,6 @@ const PROVIDERS = [
   BitstreamChecksumDataService,
   MatomoReportSubscriptionDataService,
   EpicHandleDataService
-
 ];
 
 /**

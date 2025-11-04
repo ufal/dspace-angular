@@ -150,6 +150,7 @@ describe('MatomoSubscriptionButtonComponent', () => {
       component.isLoading = false;
       component.isSubscribed = false;
       component.item = undefined as any;
+      component.subscriptions.forEach(sub => sub.unsubscribe());
       component.subscriptions = [];
     });
 

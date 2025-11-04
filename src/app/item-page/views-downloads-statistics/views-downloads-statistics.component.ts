@@ -150,10 +150,18 @@ export class ViewsDownloadsStatisticsComponent implements OnInit, OnDestroy {
     return '';
   }
 
+  /**
+   * Calculate total views from the current data array
+   * @returns The sum of all views in currentData
+   */
   getTotalViews(): number {
     return this.currentData.reduce((sum, d) => sum + d.views, 0);
   }
 
+  /**
+   * Calculates total downloads from the current data array
+   * @returns The sum of all downloads in currentData
+   */
   getTotalDownloads(): number {
     return this.currentData.reduce((sum, d) => sum + d.downloads, 0);
   }
