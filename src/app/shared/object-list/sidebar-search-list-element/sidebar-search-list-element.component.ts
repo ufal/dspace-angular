@@ -199,9 +199,8 @@ export class SidebarSearchListElementComponent<T extends SearchResult<K>, K exte
    */
   private updateExpandableState(): void {
     const anyTruncated = Array.from(this.truncatedStates.values()).some(state => state === true);
-
     if (this.expandable !== anyTruncated) {
-      this.expandable = anyTruncated;
+      setTimeout(() => this.expandable = anyTruncated, 0);
     }
   }
 
