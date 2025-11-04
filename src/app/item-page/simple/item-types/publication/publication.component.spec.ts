@@ -5,6 +5,7 @@ import { By } from '@angular/platform-browser';
 import { provideMockStore } from '@ngrx/store/testing';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { Observable, of } from 'rxjs';
+import { APP_CONFIG } from '../../../../../config/app-config.interface';
 import { RemoteDataBuildService } from '../../../../core/cache/builders/remote-data-build.service';
 import { ObjectCacheService } from '../../../../core/cache/object-cache.service';
 import { BitstreamDataService } from '../../../../core/data/bitstream-data.service';
@@ -98,6 +99,7 @@ describe('PublicationComponent', () => {
         { provide: SearchService, useValue: {} },
         { provide: RouteService, useValue: mockRouteService },
         { provide: BrowseDefinitionDataService, useValue: BrowseDefinitionDataServiceStub },
+        { provide: APP_CONFIG, useValue: { statistics: { baseUrl: 'http://test.com', endpoint: '/test' } } },
       ],
 
       schemas: [NO_ERRORS_SCHEMA]
