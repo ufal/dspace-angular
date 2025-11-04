@@ -169,12 +169,11 @@ export class TruncatablePartComponent implements AfterViewChecked, OnInit, OnDes
 
   /**
    * Expand or collapse using the external icons when no id available
-   * @param event
-   * @param expand
+   * @param expand - Whether to expand (true) or collapse (false) the truncatable part
    */
-  toggleWithoutId(expand) {
+  toggleWithoutId(expand: boolean) {
     this.expand = expand;
-    this.lines = expand ? 'none' : '1';
+    this.lines = expand ? 'none' : this.minLines.toString();
     this.expandable = !this.expandable;
   }
 
