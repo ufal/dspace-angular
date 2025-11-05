@@ -29,7 +29,7 @@ describe('DataciteBadgeComponent', () => {
     metadata: {
       'dc.identifier.doi': [
         {
-          lanaguage: null,
+          language: null,
           value: '10.1234/test-doi'
         }
       ]
@@ -241,7 +241,7 @@ describe('DataciteBadgeComponent', () => {
       }));
     });
 
-    describe('when ite has no DOI metadata', () => {
+    describe('when item has no DOI metadata', () => {
       it('should return null and not show the badge', fakeAsync(() => {
         (itemIdentifierService.prettifyIdentifier as jasmine.Spy).and.returnValue(Promise.resolve(null));
         component.item = mockItemWithoutDOI;

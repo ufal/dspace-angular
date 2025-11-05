@@ -110,9 +110,7 @@ export class DataciteBadgeComponent implements OnInit, AfterViewInit {
       await this.loadScript('https://unpkg.com/data-metrics-badge/dist/data-metrics-badge.min.js');
       this.scriptsLoaded = true;
     } catch (error) {
-      if (error) {
-        this.showBadge = false;
-      }
+      this.showBadge = false;
     }
   }
 
