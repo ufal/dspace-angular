@@ -4,11 +4,7 @@ import { DataciteBadgeComponent } from './datacite-badge.component';
 import { ItemIdentifierService } from 'src/app/shared/item-identifier.service';
 import { APP_CONFIG, AppConfig } from 'src/config/app-config.interface';
 import { Item } from 'src/app/core/shared/item.model';
-import { Metadata } from 'src/app/core/shared/metadata.utils';
-import { MetadataMap, MetadataValue } from 'src/app/core/shared/metadata.models';
-import { Data } from '@angular/router';
 import { NO_ERRORS_SCHEMA, PLATFORM_ID } from '@angular/core';
-import exp from 'constants';
 
 describe('DataciteBadgeComponent', () => {
   let component: DataciteBadgeComponent;
@@ -119,7 +115,7 @@ describe('DataciteBadgeComponent', () => {
       expect(component.showBadge).toBe(true);
       expect(component.doi).toBeNull();
       expect(component.displayMode).toBe('small');
-      expect(component['scriptsLoaded']).toBe(false);
+      expect(component.scriptsLoaded).toBe(false);
     });
 
     it('should set isBrowser to true when running in browser', () => {
@@ -371,7 +367,7 @@ describe('DataciteBadgeComponent', () => {
         component.loadDataCiteScripts();
         tick();
 
-        expect(component['scriptsLoaded']).toBe(true);
+        expect(component.scriptsLoaded).toBe(true);
       }));
 
       it('should not reload scripts if already loaded', fakeAsync(() => {
@@ -422,7 +418,7 @@ describe('DataciteBadgeComponent', () => {
           return script;
         });
 
-        component['loadScript']('https://example.com/script.js');
+        component.loadScript('https://example.com/script.js');
         tick();
 
         expect(document.createElement).toHaveBeenCalledWith('script');
@@ -437,7 +433,7 @@ describe('DataciteBadgeComponent', () => {
         });
 
         let resolved = false;
-        component['loadScript']('https://example.com/script.js').then(() => {
+        component.loadScript('https://example.com/script.js').then(() => {
           resolved = true;
         });
 
@@ -452,7 +448,7 @@ describe('DataciteBadgeComponent', () => {
         });
 
         let rejected = false;
-        component['loadScript']('https://example.com/script.js').catch(() => {
+        component.loadScript('https://example.com/script.js').catch(() => {
           rejected = true;
         });
 
@@ -468,7 +464,7 @@ describe('DataciteBadgeComponent', () => {
         spyOn(document.head, 'appendChild').and.callThrough();
 
         let resolved = false;
-        component['loadScript']('https://example.com/existing.js').then(() => {
+        component.loadScript('https://example.com/existing.js').then(() => {
           resolved = true;
         });
 
