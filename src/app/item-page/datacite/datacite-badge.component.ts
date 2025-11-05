@@ -34,7 +34,7 @@ export class DataciteBadgeComponent implements OnInit, AfterViewInit {
   /**
    * Flag tracking whether the external DataCite scripts have been loaded
    */
-  private scriptsLoaded = false;
+  scriptsLoaded = false;
 
   /**
    * Flag indicating whether the code is running in a browser environment
@@ -121,7 +121,7 @@ export class DataciteBadgeComponent implements OnInit, AfterViewInit {
    * @param src URL of the script to load
    * @returns A promise that resolves when the script is loaded or rejects on error
    */
-  private loadScript(src: string): Promise<void> {
+  public loadScript(src: string): Promise<void> {
     return new Promise((resolve, reject) => {
       const existingScript = document.querySelector(`script[src="${src}"]`);
       if (existingScript) {
