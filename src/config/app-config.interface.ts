@@ -51,6 +51,7 @@ interface AppConfig extends Config {
   comcolSelectionSort: DiscoverySortConfig;
   signpostingEnabled: boolean;
   matomo: MatomoConfig;
+  datacite?: string;
 }
 
 /**
