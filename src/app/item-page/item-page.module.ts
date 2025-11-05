@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { SharedModule } from '../shared/shared.module';
@@ -91,6 +91,7 @@ import { ClarinDateItemFieldComponent } from './simple/field-components/clarin-d
 import { ClarinDescriptionItemFieldComponent } from './simple/field-components/clarin-description-item-field/clarin-description-item-field.component';
 import { ClarinFilesSectionComponent } from './clarin-files-section/clarin-files-section.component';
 import { MyDSpaceActionsModule } from '../shared/mydspace-actions/mydspace-actions.module';
+import { DataciteBadgeComponent } from './datacite/datacite-badge.component';
 
 const ENTRY_COMPONENTS = [
   // put only entry components that use custom decorator
@@ -155,7 +156,8 @@ const DECLARATIONS = [
   ClarinIdentifierItemFieldComponent,
   ClarinDateItemFieldComponent,
   ClarinDescriptionItemFieldComponent,
-  ClarinFilesSectionComponent
+  ClarinFilesSectionComponent,
+  DataciteBadgeComponent
 ];
 
 @NgModule({
@@ -183,7 +185,8 @@ const DECLARATIONS = [
   ],
   exports: [
     ...DECLARATIONS,
-  ]
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class ItemPageModule {
   /**
