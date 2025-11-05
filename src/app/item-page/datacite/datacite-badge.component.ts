@@ -138,6 +138,6 @@ export class DataciteBadgeComponent implements OnInit, AfterViewInit {
         reject(error);
       };
       document.head.appendChild(script);
-    })
-  };
+    });
+  }
 }
