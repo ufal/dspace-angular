@@ -8,7 +8,6 @@ import { Metadata } from 'src/app/core/shared/metadata.utils';
 import { MetadataMap, MetadataValue } from 'src/app/core/shared/metadata.models';
 import { Data } from '@angular/router';
 import { NO_ERRORS_SCHEMA, PLATFORM_ID } from '@angular/core';
-import { before, create } from 'lodash';
 
 describe('DataciteBadgeComponent', () => {
   let component: DataciteBadgeComponent;
@@ -171,6 +170,43 @@ describe('DataciteBadgeComponent', () => {
         tick();
 
         expect(component.doi).toBeNull();
+      }));
+    });
+  });
+
+  describe('Item handling', () => {
+    beforeEach(waitForAsync(() => {
+      setupTestBed('browser', 'dc.identifier.doi');
+    }));
+
+    beforeEach(() => {
+      createComponent();
+    });
+
+    describe('when item is null', () => {
+      it('should exit early from ngOnInit', fakeAsync(() => {
+        component.item = null;
+        component.ngOnInit();
+        tick();
+
+        expect(itemIdentifierService.prettifyIdentifier).not.toHaveBeenCalled();
+      }));
+    });
+
+    describe('when item has no metadata', () => {
+      it('should handle gracefully', fakeAsync(() => {
+        const emptyItem: Object = Object.assign(new Item(), {
+          uuid: 'empty-item',
+          metadata: {}
+        });
+
+        (itemIdentifierService.prettifyIdentifier as jasmine.Spy).and.returnValue(Promise.resolve(null));
+        component.item = emptyItem as Item;
+        component.ngOnInit();
+        tick();
+
+        expect(component.doi).toBeNull();
+
       }));
     });
   });
