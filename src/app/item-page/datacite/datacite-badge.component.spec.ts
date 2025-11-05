@@ -280,4 +280,205 @@ describe('DataciteBadgeComponent', () => {
       }));
     });
   });
+
+
+  describe('Badge Visibility', () => {
+
+    beforeEach(waitForAsync(() => {
+      setupTestBed('browser', 'dc.identifier.doi');
+    }));
+
+    beforeEach(() => {
+      createComponent();
+    });
+
+    describe('when DOI is present', () => {
+      it('should show badge', fakeAsync(() => {
+        (itemIdentifierService.prettifyIdentifier as jasmine.Spy).and.returnValue(Promise.resolve('10.1234/test-doi'));
+
+        component.item = mockItemWithDOI;
+        component.ngOnInit();
+        tick();
+
+        expect(component.showBadge).toBe(true);
+      }));
+    });
+
+    describe('when DOI is not present', () => {
+      it('should keep default showBadge value', fakeAsync(() => {
+        (itemIdentifierService.prettifyIdentifier as jasmine.Spy).and.returnValue(Promise.resolve(null));
+
+        component.item = mockItemWithoutDOI;
+        component.ngOnInit();
+        tick();
+
+        expect(component.doi).toBeNull();
+      }));
+    });
+  });
+
+  describe('Script Loading', () => {
+
+    beforeEach(waitForAsync(() => {
+      setupTestBed('browser', 'dc.identifier.doi');
+    }));
+
+    beforeEach(() => {
+      createComponent();
+    });
+
+    describe('loadDataCiteScripts method', () => {
+
+      beforeEach(() => {
+        spyOn(document.head, 'appendChild').and.callFake((script: any) => {
+          setTimeout(() => script.onload(), 0);
+          return script;
+        });
+      });
+
+      it('should load all required scripts', fakeAsync(() => {
+        component.loadDataCiteScripts();
+        tick();
+
+        expect(document.head.appendChild).toHaveBeenCalledTimes(3);
+      }));
+
+      it('should load Vue.js script first', fakeAsync(() => {
+        component.loadDataCiteScripts();
+        tick();
+
+        const firstCall = (document.head.appendChild as jasmine.Spy).calls.argsFor(0)[0];
+        expect(decodeURI(firstCall.src)).toBe('https://unpkg.com/vue@^2/dist/vue.min.js');
+      }));
+
+      it('should load webcomponents loader script second', fakeAsync(() => {
+        component.loadDataCiteScripts();
+        tick();
+
+        const secondCall = (document.head.appendChild as jasmine.Spy).calls.argsFor(1)[0];
+        expect(secondCall.src).toBe('https://unpkg.com/@webcomponents/webcomponentsjs@2.0.0/webcomponents-loader.js');
+      }));
+
+      it('should load data-metrics-badge script third', fakeAsync(() => {
+        component.loadDataCiteScripts();
+        tick();
+
+        const thirdCall = (document.head.appendChild as jasmine.Spy).calls.argsFor(2)[0];
+        expect(thirdCall.src).toBe('https://unpkg.com/data-metrics-badge/dist/data-metrics-badge.min.js');
+      }));
+
+      it('should set scriptsLoaded flag to true after loading', fakeAsync(() => {
+        component.loadDataCiteScripts();
+        tick();
+
+        expect(component['scriptsLoaded']).toBe(true);
+      }));
+
+      it('should not reload scripts if already loaded', fakeAsync(() => {
+        component.loadDataCiteScripts();
+        tick();
+
+        (document.head.appendChild as jasmine.Spy).calls.reset();
+
+        component.loadDataCiteScripts();
+        tick();
+
+        expect(document.head.appendChild).not.toHaveBeenCalled();
+      }));
+
+      it('should handle script loading errors', fakeAsync(() => {
+        (document.head.appendChild as jasmine.Spy).and.callFake((script: any) => {
+          setTimeout(() => script.onerror(new Error('Script load failed')), 0);
+          return script;
+        });
+
+        component.loadDataCiteScripts();
+        tick();
+
+        expect(component.showBadge).toBe(false);
+      }));
+
+      it('should set showBadge to false on error', fakeAsync(() => {
+        (document.head.appendChild as jasmine.Spy).and.callFake((script: any) => {
+          setTimeout(() => script.onerror(new Error('Network error')), 0);
+          return script;
+        });
+
+        component.showBadge = true;
+        component.loadDataCiteScripts();
+        tick();
+
+        expect(component.showBadge).toBe(false);
+      }));
+    });
+
+    describe('loadScript method', () => {
+
+      it('should create script element with correct properties', fakeAsync(() => {
+        const mockScript = document.createElement('script');
+        spyOn(document, 'createElement').and.returnValue(mockScript);
+        spyOn(document.head, 'appendChild').and.callFake((script: any) => {
+          setTimeout(() => script.onload(), 0);
+          return script;
+        });
+
+        component['loadScript']('https://example.com/script.js');
+        tick();
+
+        expect(document.createElement).toHaveBeenCalledWith('script');
+        expect(mockScript.type).toBe('text/javascript');
+        expect(mockScript.src).toBe('https://example.com/script.js');
+      }));
+
+      it('should resolve promise on successful load', fakeAsync(() => {
+        spyOn(document.head, 'appendChild').and.callFake((script: any) => {
+          setTimeout(() => script.onload(), 0);
+          return script;
+        });
+
+        let resolved = false;
+        component['loadScript']('https://example.com/script.js').then(() => {
+          resolved = true;
+        });
+
+        tick();
+        expect(resolved).toBe(true);
+      }));
+
+      it('should reject promise on error', fakeAsync(() => {
+        spyOn(document.head, 'appendChild').and.callFake((script: any) => {
+          setTimeout(() => script.onerror(new Error('Load failed')), 0);
+          return script;
+        });
+
+        let rejected = false;
+        component['loadScript']('https://example.com/script.js').catch(() => {
+          rejected = true;
+        });
+
+        tick();
+        expect(rejected).toBe(true);
+      }));
+
+      it('should not load script if already exists in document', fakeAsync(() => {
+        const existingScript = document.createElement('script');
+        existingScript.src = 'https://example.com/existing.js';
+        document.head.appendChild(existingScript);
+
+        spyOn(document.head, 'appendChild').and.callThrough();
+
+        let resolved = false;
+        component['loadScript']('https://example.com/existing.js').then(() => {
+          resolved = true;
+        });
+
+        tick();
+
+        expect(resolved).toBe(true);
+        expect(document.head.appendChild).not.toHaveBeenCalled();
+
+        document.head.removeChild(existingScript);
+      }));
+    });
+  });
 });
