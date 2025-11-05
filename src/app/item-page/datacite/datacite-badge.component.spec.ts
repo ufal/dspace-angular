@@ -8,6 +8,7 @@ import { Metadata } from 'src/app/core/shared/metadata.utils';
 import { MetadataMap, MetadataValue } from 'src/app/core/shared/metadata.models';
 import { Data } from '@angular/router';
 import { NO_ERRORS_SCHEMA, PLATFORM_ID } from '@angular/core';
+import exp from 'constants';
 
 describe('DataciteBadgeComponent', () => {
   let component: DataciteBadgeComponent;
@@ -206,7 +207,76 @@ describe('DataciteBadgeComponent', () => {
         tick();
 
         expect(component.doi).toBeNull();
+      }));
+    });
+  });
 
+  describe('DOI Extraction', () => {
+    beforeEach(waitForAsync(() => {
+      setupTestBed('browser', 'dc.identifier.doi');
+    }));
+
+    beforeEach(() => {
+      createComponent();
+    });
+
+    describe('when item has valid DOI with resolver', () => {
+      it('should extract and prettify the DOI correctly', fakeAsync(() => {
+        (itemIdentifierService.prettifyIdentifier as jasmine.Spy).and.returnValue(Promise.resolve('10.1234/test-doi'));
+
+        component.item = mockItemWithDOI;
+        component.ngOnInit();
+        tick();
+
+        expect(component.doi).toBe('10.1234/test-doi');
+        expect(component.showBadge).toBe(true);
+      }));
+    });
+
+    describe('when item has clean DOI without resolver', () => {
+      it('should extract the DOI successfully', fakeAsync(() => {
+        (itemIdentifierService.prettifyIdentifier as jasmine.Spy).and.returnValue(Promise.resolve('10.1234/clean-doi'));
+        component.item = mockItemWithCleanDOI;
+        component.ngOnInit();
+        tick();
+
+        expect(component.doi).toBe('10.1234/clean-doi');
+        expect(component.showBadge).toBe(true);
+      }));
+    });
+
+    describe('when ite has no DOI metadata', () => {
+      it('should return null and not show the badge', fakeAsync(() => {
+        (itemIdentifierService.prettifyIdentifier as jasmine.Spy).and.returnValue(Promise.resolve(null));
+        component.item = mockItemWithoutDOI;
+        component.ngOnInit();
+        tick();
+
+        expect(component.doi).toBeNull();
+      }));
+    });
+
+    describe('when item has empty DOI value', () => {
+      it('should return null for empty string', fakeAsync(() => {
+        (itemIdentifierService.prettifyIdentifier as jasmine.Spy).and.returnValue(Promise.resolve(null));
+
+        component.item = mockItemWithEmptyDOI;
+        component.ngOnInit();
+        tick();
+
+        expect(component.doi).toBeNull();
+      }));
+    });
+
+    describe('when item has null DOI value', () => {
+      it('should return null', fakeAsync(() => {
+        (itemIdentifierService.prettifyIdentifier as jasmine.Spy).and.returnValue(Promise.resolve(null));
+
+        component.item = mockItemWithNullDOI;
+        component.ngOnInit();
+        tick();
+
+        expect(component.doi).toBeNull();
       }));
     });
   });
