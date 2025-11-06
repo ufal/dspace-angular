@@ -6164,4 +6164,8 @@
   "static.deposit.image.step-6-3": "Step 6.3 Open license selector image",
 
   "home.news.image.banner": "Home news banner image",
+
+  "submission.workflow.generic.curate": "Curate",
+
+  "submission.workflow.generic.curate-help": "Validate the item with the curation framework",
 }
