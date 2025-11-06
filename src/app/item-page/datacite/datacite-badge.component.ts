@@ -60,12 +60,12 @@ export class DataciteBadgeComponent implements OnInit, AfterViewInit {
     if (!this.isBrowser || !this.item) {
       return;
     }
-    const badgeEnabled = this.appConfig.datacite ? true : false;
+    const badgeEnabled = this.appConfig.dataciteBadgeField  ? true : false;
     if (!badgeEnabled) {
       return;
     }
 
-    this.metadataField = this.appConfig.datacite;
+    this.metadataField = this.appConfig.dataciteBadgeField ;
     this.doi = await this.extractDOI();
 
     if (isNotEmpty(this.doi)) {

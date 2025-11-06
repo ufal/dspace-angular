@@ -74,7 +74,7 @@ describe('DataciteBadgeComponent', () => {
 
   function setupTestBed(platformId: any, dataciteConfig?: string | null) {
     const mockAppConfig: AppConfig = {
-      datacite: dataciteConfig
+      dataciteBadgeField : dataciteConfig
     } as AppConfig;
 
     const mockItemIdentifierService = jasmine.createSpyObj('ItemIdentifierService', ['prettifyIdentifier']);
