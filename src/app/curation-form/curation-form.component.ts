@@ -55,7 +55,7 @@ export class CurationFormComponent implements OnDestroy, OnInit {
   ngOnInit(): void {
     this.subs.push(
       this.activateRoute.queryParams.subscribe(params => {
-        this.itemId = params['item_id'] || '';
+        this.itemId = params.item_id || '';
       })
     );
 
