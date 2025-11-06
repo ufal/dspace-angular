@@ -52,7 +52,7 @@ interface AppConfig extends Config {
   comcolSelectionSort: DiscoverySortConfig;
   signpostingEnabled: boolean;
   matomo: MatomoConfig;
-  dataciteBadgeField ?: string;
+  dataciteBadgeField?: string;
   statistics?: StatisticsConfig;
 }
 
