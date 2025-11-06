@@ -23,6 +23,7 @@ import { MarkdownConfig } from './markdown-config.interface';
 import { FilterVocabularyConfig } from './filter-vocabulary-config';
 import { DiscoverySortConfig } from './discovery-sort.config';
 import { MatomoConfig } from './matomo-config';
+import { StatisticsConfig } from './statistics-config';
 
 interface AppConfig extends Config {
   ui: UIServerConfig;
@@ -52,6 +53,7 @@ interface AppConfig extends Config {
   signpostingEnabled: boolean;
   matomo: MatomoConfig;
   dataciteBadgeField ?: string;
+  statistics?: StatisticsConfig;
 }
 
 /**
