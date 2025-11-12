@@ -8696,6 +8696,11 @@
 
   // "item.page.datacite.badge.label": "DataCite",
   "item.page.datacite.badge.label": "DataCite",
+  // "sidebar.expand.all": "Expand all",
+  "sidebar.expand.all": "Rozbalit vše",
+
+  // "sidebar.collapse.all": "Collapse all",
+  "sidebar.collapse.all": "Sbalit vše",
   // "matomo.subscription.subscribe.button": "Subscribe",
   "matomo.subscription.subscribe.button": "Přihlásit se k odběru",
 
