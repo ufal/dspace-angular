@@ -8696,6 +8696,12 @@
 
   // "item.page.datacite.badge.label": "DataCite",
   "item.page.datacite.badge.label": "DataCite",
+  // "submission.workflow.generic.curate": "Curate",
+  "submission.workflow.generic.curate": "Zkontrolovat",
+
+  // "submission.workflow.generic.curate-help": "Validate the item with the curation framework",
+  "submission.workflow.generic.curate-help": "Ověřit položku pomocí kurátorského frameworku",
+
   // "sidebar.expand.all": "Expand all",
   "sidebar.expand.all": "Rozbalit vše",
 
