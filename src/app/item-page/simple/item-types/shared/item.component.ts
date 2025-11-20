@@ -75,7 +75,7 @@ export class ItemComponent implements OnInit {
             if (url && this.previousRoute.test(url)) {
               this.router.navigateByUrl(url);
               return;
-            }else{
+            } else {
               window.history.back();
               return;
             }
