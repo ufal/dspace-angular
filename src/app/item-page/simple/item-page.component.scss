@@ -56,6 +56,6 @@ pre {
 }
 
 .item-page ::ng-deep a:focus-visible {
-  outline: 2px solid #1459c4 !important;
+  outline: 2px solid #{$primary} !important;
   outline-offset: 2px !important;
 }
