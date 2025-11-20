@@ -482,6 +482,7 @@ describe('ItemComponent', () => {
 
     it('should hide back button',() => {
       spyOn(mockRouteService, 'getPreviousUrl').and.returnValue(observableOf('/item'));
+      comp.ngOnInit();
       comp.showBackButton.subscribe((val) => {
         expect(val).toBeFalse();
       });

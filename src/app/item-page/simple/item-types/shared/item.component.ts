@@ -85,9 +85,8 @@ export class ItemComponent implements OnInit {
     this.itemPageRoute = getItemPageRoute(this.object);
     // hide/show the back button
     this.showBackButton = this.routeService.getPreviousUrl().pipe(
-      filter(url => this.previousRoute.test(url) || url === ''),
       take(1),
-      map(() => true)
+      map(url => this.previousRoute.test(url) || url === '')
     );
     // check to see if iiif viewer is required.
     this.iiifEnabled = isIiifEnabled(this.object);
