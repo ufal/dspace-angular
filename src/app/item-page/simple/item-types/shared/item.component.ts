@@ -5,7 +5,7 @@ import { getItemPageRoute } from '../../../item-page-routing-paths';
 import { RouteService } from '../../../../core/services/route.service';
 import { Observable } from 'rxjs';
 import { getDSpaceQuery, isIiifEnabled, isIiifSearchEnabled } from './item-iiif-utils';
-import { filter, map, take } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import { AppState } from 'src/app/app.reducer';
