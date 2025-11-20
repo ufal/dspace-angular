@@ -16,13 +16,13 @@
 }
 
 // WCAG 1.4.1: Links must be distinguishable by more than color alone
-.full-item-info ::ng-deep a:not(.btn):not(.fab):not(.fas):not(.far) {
+.full-item-info ::ng-deep a:not(.btn):not(.fab):not(.fas):not(.far):not(.badge):not(.nav-link):not(.dropdown-item) {
   font-weight: 600 !important;
   font-style: italic !important;
 }
 
-.full-item-info ::ng-deep a:not(.btn):not(.fab):not(.fas):not(.far):hover,
-.full-item-info ::ng-deep a:not(.btn):not(.fab):not(.fas):not(.far):focus {
+.full-item-info ::ng-deep a:not(.btn):not(.fab):not(.fas):not(.far):not(.badge):not(.nav-link):not(.dropdown-item):hover,
+.full-item-info ::ng-deep a:not(.btn):not(.fab):not(.fas):not(.far):not(.badge):not(.nav-link):not(.dropdown-item):focus {
   text-decoration-thickness: 0.08em !important;
 }
 
