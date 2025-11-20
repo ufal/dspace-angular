@@ -72,17 +72,22 @@ export class ItemComponent implements OnInit {
           take(1)
         ).subscribe(
           (url => {
-            this.router.navigateByUrl(url);
+            if (url && this.previousRoute.test(url)) {
+              this.router.navigateByUrl(url);
+              return;
+            }else{
+              window.history.back();
+              return;
+            }
           })
         );
   };
 
   ngOnInit(): void {
-
     this.itemPageRoute = getItemPageRoute(this.object);
     // hide/show the back button
     this.showBackButton = this.routeService.getPreviousUrl().pipe(
-      filter(url => this.previousRoute.test(url)),
+      filter(url => this.previousRoute.test(url) || url === ''),
       take(1),
       map(() => true)
     );
