@@ -211,8 +211,11 @@ describe('TruncatablePartComponent', () => {
   describe('When noIdExpandable is false (default behavior)', () => {
     beforeEach(() => {
       comp.externalToggle = false;
-      comp.id = 'test-id-123';
+      // use id '1' to simulate collapsed state from mock service
+      comp.id = '1';
       comp.minLines = 3;
+      // re-evaluate lines after changing id
+      (comp as any).setLines();
       fixture.detectChanges();
     });
 
