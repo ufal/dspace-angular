@@ -193,18 +193,18 @@ describe('TruncatablePartComponent', () => {
       expect(comp.lines).toBe('1');
     });
 
-    it('should toggle expandable from false to true', () => {
-      comp.expandable = false;
+    it('should toggle expand from false to true', () => {
+      comp.expand = false;
       comp.toggleWithoutId(true);
 
-      expect(comp.expandable).toBe(true);
+      expect(comp.expand).toBe(true);
     });
 
-    it('should toggle expandable from true to false', () => {
-      comp.expandable = true;
+    it('should toggle expand from true to false', () => {
+      comp.expand = true;
       comp.toggleWithoutId(false);
 
-      expect(comp.expandable).toBe(false);
+      expect(comp.expand).toBe(false);
     });
   });
 

@@ -159,8 +159,6 @@ export class TruncatablePartComponent implements AfterViewChecked, OnInit, OnDes
    */
   toggleWithoutId(expand: boolean) {
     this.expand = expand;
-    // keep expandable state in sync for components without an id (local toggle scenario)
-    this.expandable = expand;
     this.lines = expand ? 'none' : (this.minLines ? this.minLines.toString() : '1');
   }
 
