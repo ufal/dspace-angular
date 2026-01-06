@@ -23,6 +23,11 @@ export class ItemComponent implements OnInit {
   @Input() object: Item;
 
   /**
+   * Session storage key for storing the previous URL before entering item page
+   */
+  private readonly ITEM_PREVIOUS_URL_SESSION_KEY = 'item-previous-url';
+
+  /**
    * This regex matches previous routes. The button is shown
    * for matching paths and hidden in other cases.
    */
@@ -57,6 +62,11 @@ export class ItemComponent implements OnInit {
 
   isAuthenticated$: Observable<boolean>;
 
+  /**
+   * Stores the previous URL retrieved either from RouteService or sessionStorage
+   */
+  private storedPreviousUrl: string;
+
   constructor(protected routeService: RouteService,
               protected router: Router,
               private store: Store<AppState>,
@@ -66,19 +76,14 @@ export class ItemComponent implements OnInit {
 
   /**
    * The function used to return to list from the item.
+   * Uses stored previous URL if available, otherwise falls back to browser history.
    */
   back = () => {
-    this.routeService.getPreviousUrl().pipe(
-          take(1)
-        ).subscribe(
-          (url => {
-            if (url && this.previousRoute.test(url)) {
-              this.router.navigateByUrl(url);
-            } else {
-              window.history.back();
-            }
-          })
-        );
+    if (this.storedPreviousUrl && this.previousRoute.test(this.storedPreviousUrl)) {
+      this.router.navigateByUrl(this.storedPreviousUrl);
+    } else {
+      window.history.back();
+    }
   };
 
   ngOnInit(): void {
@@ -86,8 +91,25 @@ export class ItemComponent implements OnInit {
     // hide/show the back button
     this.showBackButton = this.routeService.getPreviousUrl().pipe(
       take(1),
-      map(url => this.previousRoute.test(url) || url === '')
+      map(url => {
+        const fromRoute = this.pickAllowedPrevious(url);
+
+        if (fromRoute) {
+          this.routeService.storeUrlInSession(this.ITEM_PREVIOUS_URL_SESSION_KEY, fromRoute);
+          this.storedPreviousUrl = fromRoute;
+          return true;
+        }
+
+        const storedUrl = this.routeService.getUrlFromSession(this.ITEM_PREVIOUS_URL_SESSION_KEY);
+        if (this.pickAllowedPrevious(storedUrl)) {
+          this.storedPreviousUrl = storedUrl;
+          return true;
+        }
+
+        return false;
+      })
     );
+
     // check to see if iiif viewer is required.
     this.iiifEnabled = isIiifEnabled(this.object);
     this.iiifSearchEnabled = isIiifSearchEnabled(this.object);
@@ -95,6 +117,13 @@ export class ItemComponent implements OnInit {
       this.iiifQuery$ = getDSpaceQuery(this.object, this.routeService);
     }
     this.isAuthenticated$ = this.store.pipe(select(isAuthenticated));
+  }
+
+  /**
+   * Helper to check if a URL is from an allowed previous route and return it, otherwise null
+   */
+  private pickAllowedPrevious(url?: string | null): string | null {
+    return url && this.previousRoute.test(url) ? url : null;
   }
 
   get hasConfiguredStatistics(): boolean {
