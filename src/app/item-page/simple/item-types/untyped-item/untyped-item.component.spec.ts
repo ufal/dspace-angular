@@ -159,6 +159,12 @@ describe('UntypedItemComponent', () => {
     const localMockRouteService = {
       getPreviousUrl(): Observable<string> {
         return of('/search?query=test%20query&fakeParam=true');
+      },
+      storeUrlInSession(key: string, url: string): void {
+        // no-op
+      },
+      getUrlFromSession(key: string): string | null {
+        return null;
       }
     };
     beforeEach(waitForAsync(() => {
@@ -190,6 +196,12 @@ describe('UntypedItemComponent', () => {
     const localMockRouteService = {
       getPreviousUrl(): Observable<string> {
         return of('/item');
+      },
+      storeUrlInSession(key: string, url: string): void {
+        // no-op
+      },
+      getUrlFromSession(key: string): string | null {
+        return null;
       }
     };
     beforeEach(waitForAsync(() => {
