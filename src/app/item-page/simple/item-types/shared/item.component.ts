@@ -79,11 +79,7 @@ export class ItemComponent implements OnInit {
    * Uses stored previous URL if available, otherwise falls back to browser history.
    */
   back = () => {
-    if (this.storedPreviousUrl && this.previousRoute.test(this.storedPreviousUrl)) {
-      this.router.navigateByUrl(this.storedPreviousUrl);
-    } else {
-      window.history.back();
-    }
+    this.router.navigateByUrl(this.storedPreviousUrl);
   };
 
   ngOnInit(): void {
