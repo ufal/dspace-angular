@@ -194,6 +194,14 @@ describe('Create a new submission', () => {
     defaultCommandTimeout: 10000
   },() => {
     createItemProcess.checkLicenseResourceStep();
+
+    cy.get('ds-uploader').trigger('dragover');
+    cy.intercept('POST', '/server/api/submission/workspaceitems/*').as('upload');
+    cy.get('div.ds-document-drop-zone').selectFile('src/assets/images/dspace-logo.png', {
+      action: 'drag-drop'
+    });
+    cy.wait('@upload');
+
     // check default value in the license dropdown selection
     createItemProcess.checkLicenseSelectionValue('Select a License ...');
     // check step status - it should be as warning
@@ -216,6 +224,14 @@ describe('Create a new submission', () => {
     defaultCommandTimeout: 10000
   },() => {
     createItemProcess.checkLicenseResourceStep();
+
+    cy.get('ds-uploader').trigger('dragover');
+    cy.intercept('POST', '/server/api/submission/workspaceitems/*').as('upload');
+    cy.get('div.ds-document-drop-zone').selectFile('src/assets/images/dspace-logo.png', {
+      action: 'drag-drop'
+    });
+    cy.wait('@upload');
+
     // check default value in the license dropdown selection
     createItemProcess.checkLicenseSelectionValue('Select a License ...');
     // check step status - it should be as warning
