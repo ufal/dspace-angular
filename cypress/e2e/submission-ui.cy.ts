@@ -270,7 +270,7 @@ describe('Create a new submission', () => {
     createItemProcess.checkResourceLicenseStatus('Valid');
   });
 
-  it.skip('should not show validation warnings when no file is uploaded (metadata-only)', {
+  it('should not show validation warnings when no file is uploaded (metadata-only)', {
     retries: {
       runMode: 6,
       openMode: 6,
@@ -283,17 +283,21 @@ describe('Create a new submission', () => {
     // DON'T upload any file - just check the license section is accessible
     createItemProcess.checkLicenseSelectionValue('Select a License ...');
 
-    // Verify warning icon does NOT exist (mirrors checkResourceLicenseStatus logic)
-    cy.get('ds-submission-section-clarin-license')
-      .closest('div[id^="section_"]')
+    // Verify warning and error icons do NOT exist
+    cy.get('div[id="section_clarin-license"]')
+      .find('.card-header')
       .find('.fa-exclamation-circle.text-warning')
       .should('not.exist');
 
-    // Also verify error icon doesn't exist
-    cy.get('ds-submission-section-clarin-license')
-      .closest('div[id^="section_"]')
+    cy.get('div[id="section_clarin-license"]')
+      .find('.card-header')
       .find('.fa-exclamation-circle.text-danger')
       .should('not.exist');
+
+    cy.get('div[id="section_clarin-license"]')
+      .find('.card-header')
+      .find('.fa-check-circle.text-success')
+      .should('be.visible');
   });
 
   it('The submission should not have the Notice Step', {
