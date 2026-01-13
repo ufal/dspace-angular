@@ -350,8 +350,8 @@ export const createItemProcess = {
       'Valid': '.fa-check-circle.text-success'
     };
     const iconSelector = iconMap[statusTitle];
-    cy.get('ds-submission-section-clarin-license')
-      .closest('div[id^="section_"]')
+    cy.get('div[id="section_clarin-license"]')
+      .find('.card-header')
       .find(iconSelector)
       .should('be.visible');
   },
