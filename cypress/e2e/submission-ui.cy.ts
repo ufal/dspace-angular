@@ -235,6 +235,63 @@ describe('Create a new submission', () => {
     createItemProcess.showErrorNotSupportedLicense();
   });
 
+  it('should require license validation when file is uploaded', {
+    retries: {
+      runMode: 6,
+      openMode: 6,
+    },
+    defaultCommandTimeout: 10000
+  }, () => {
+    // Navigate to license step
+    createItemProcess.checkLicenseResourceStep();
+
+    // Upload a file to trigger license requirement
+    cy.get('ds-uploader').trigger('dragover');
+    cy.intercept('POST', '/server/api/submission/workspaceitems/*').as('upload');
+    cy.get('div.ds-document-drop-zone').selectFile('src/assets/images/dspace-logo.png', {
+      action: 'drag-drop'
+    });
+    cy.wait('@upload');
+
+    // Now license is required - should see warnings
+    createItemProcess.checkLicenseSelectionValue('Select a License ...');
+    createItemProcess.checkResourceLicenseStatus('Warnings');
+
+    // Select a valid license
+    createItemProcess.clickOnLicenseSelectionButton();
+    createItemProcess.selectValueFromLicenseSelection(2); // GNU GPL v2
+    createItemProcess.checkLicenseSelectionValue('GNU General Public License, version 2');
+
+    // Status should change to Valid
+    createItemProcess.checkResourceLicenseStatus('Valid');
+  });
+
+  it.skip('should not show validation warnings when no file is uploaded (metadata-only)', {
+    retries: {
+      runMode: 6,
+      openMode: 6,
+    },
+    defaultCommandTimeout: 10000
+  }, () => {
+    // Navigate to license step
+    createItemProcess.checkLicenseResourceStep();
+
+    // DON'T upload any file - just check the license section is accessible
+    createItemProcess.checkLicenseSelectionValue('Select a License ...');
+
+    // Verify warning icon does NOT exist (mirrors checkResourceLicenseStatus logic)
+    cy.get('ds-submission-section-clarin-license')
+      .closest('div[id^="section_"]')
+      .find('.fa-exclamation-circle.text-warning')
+      .should('not.exist');
+
+    // Also verify error icon doesn't exist
+    cy.get('ds-submission-section-clarin-license')
+      .closest('div[id^="section_"]')
+      .find('.fa-exclamation-circle.text-danger')
+      .should('not.exist');
+  });
+
   it('The submission should not have the Notice Step', {
     retries: {
       runMode: 6,
