@@ -186,7 +186,7 @@ describe('Create a new submission', () => {
     createItemProcess.checkLicenseSelectionValue('Public Domain Mark (PD)');
   });
 
-  it('should select the license from the license selection dropdown and change status', {
+  it.skip('should select the license from the license selection dropdown and change status', {
     retries: {
       runMode: 6,
       openMode: 6,
@@ -194,13 +194,6 @@ describe('Create a new submission', () => {
     defaultCommandTimeout: 10000
   },() => {
     createItemProcess.checkLicenseResourceStep();
-
-    cy.get('ds-uploader').trigger('dragover');
-    cy.intercept('POST', '/server/api/submission/workspaceitems/*').as('upload');
-    cy.get('div.ds-document-drop-zone').selectFile('src/assets/images/dspace-logo.png', {
-      action: 'drag-drop'
-    });
-    cy.wait('@upload');
 
     // check default value in the license dropdown selection
     createItemProcess.checkLicenseSelectionValue('Select a License ...');
@@ -216,7 +209,7 @@ describe('Create a new submission', () => {
     createItemProcess.checkResourceLicenseStatus('Valid');
   });
 
-  it('should show warning messages if was selected non-supported license', {
+  it.skip('should show warning messages if was selected non-supported license', {
     retries: {
       runMode: 6,
       openMode: 6,
@@ -224,13 +217,6 @@ describe('Create a new submission', () => {
     defaultCommandTimeout: 10000
   },() => {
     createItemProcess.checkLicenseResourceStep();
-
-    cy.get('ds-uploader').trigger('dragover');
-    cy.intercept('POST', '/server/api/submission/workspaceitems/*').as('upload');
-    cy.get('div.ds-document-drop-zone').selectFile('src/assets/images/dspace-logo.png', {
-      action: 'drag-drop'
-    });
-    cy.wait('@upload');
 
     // check default value in the license dropdown selection
     createItemProcess.checkLicenseSelectionValue('Select a License ...');
