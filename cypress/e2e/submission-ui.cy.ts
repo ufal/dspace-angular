@@ -253,9 +253,13 @@ describe('Create a new submission', () => {
     });
     cy.wait('@upload');
 
+    // Allow frontend to propagate validation state to the header icon
+    cy.wait(1000);
+    cy.get('div[id="section_clarin-license"]').find('.card-header').should('be.visible');
+
     // Now license is required - should see warnings
     createItemProcess.checkLicenseSelectionValue('Select a License ...');
-    createItemProcess.checkResourceLicenseStatus('Warnings');
+    createItemProcess.checkResourceLicenseStatus('Errors');
 
     // Select a valid license
     createItemProcess.clickOnLicenseSelectionButton();
