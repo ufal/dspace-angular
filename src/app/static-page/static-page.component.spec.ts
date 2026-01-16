@@ -46,8 +46,9 @@ describe('StaticPageComponent', () => {
     return { fixture, component, htmlContentService };
   }
 
-  it('should create', () => {
-    expect(true).toBeTrue();
+  it('should create', async () => {
+    const { component } = await setupTest('<div>test</div>');
+    expect(component).toBeTruthy();
   });
 
   // Load `TEST MESSAGE`
