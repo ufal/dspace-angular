@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
 import { StaticPageComponent } from './static-page.component';
 import { HtmlContentService } from '../shared/html-content.service';
