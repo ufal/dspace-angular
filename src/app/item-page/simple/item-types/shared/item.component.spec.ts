@@ -74,6 +74,12 @@ export function getIIIFEnabled(enabled: boolean): MetadataValue {
 export const mockRouteService = {
   getPreviousUrl(): Observable<string> {
     return observableOf('');
+  },
+  storeUrlInSession(key: string, url: string): void {
+    // no-op
+  },
+  getUrlFromSession(key: string): string | null {
+    return null;
   }
 };
 
@@ -482,6 +488,7 @@ describe('ItemComponent', () => {
 
     it('should hide back button',() => {
       spyOn(mockRouteService, 'getPreviousUrl').and.returnValue(observableOf('/item'));
+      comp.ngOnInit();
       comp.showBackButton.subscribe((val) => {
         expect(val).toBeFalse();
       });
