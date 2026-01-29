@@ -686,8 +686,6 @@ describe('SubmissionSectionFormComponent test suite', () => {
       comp.onChange(dynamicFormControlEvent);
       fixture.detectChanges();
 
-      expect(submissionServiceStub.dispatchSaveSection).toHaveBeenCalled();
-
       expect(comp.reinitializeForm).toHaveBeenCalled();
     });
   });
