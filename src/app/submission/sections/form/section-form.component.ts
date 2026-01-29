@@ -452,7 +452,20 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
    * @param value
    */
   dispatchFormSaveAndReinitialize(metadata, value) {
-    this.submissionService.dispatchSaveSection(this.submissionId, this.sectionData.id);
+    // NOTE: Section-level save (dispatchSaveSection) is intentionally NOT used here.
+    //
+    // Why section-level save is excluded from onChange:
+    // - SaveSubmissionSectionFormAction returns ALL sections data from backend (not just the target section)
+    // - parseSaveResponse() then dispatches UpdateSectionDataAction for every section
+    // - This cascades change detection across unrelated sections simultaneously (multiple detectChanges() calls)
+    // - In Firefox, this synchronized DOM update causes unexpected scroll jumps to License section
+    //
+    // Why it's safe to exclude:
+    // - Sponsor/Author metadata values are already persisted via:
+    //   * Full form save on section blur (sections.directive.ts line 140)
+    //   * SaveSubmissionFormAction covers all metadata when sections deactivate
+    // - Data integrity is guaranteed through established save flows
+    // - Section-level save on onChange is redundant and harmful for UX
     this.reinitializeForm(metadata, value);
   }
 
