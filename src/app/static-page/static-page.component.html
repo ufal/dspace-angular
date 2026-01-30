@@ -1,3 +1,16 @@
-<div class="container" >
+<!-- Show static page content when loaded -->
+<div class="container" *ngIf="contentLoaded">
   <div [innerHTML]="(htmlContent | async) | dsSafeHtml" (click)="processLinks($event)"></div>
+</div>
+
+<!-- Show 404 error when content not found (matches PageNotFoundComponent design) -->
+<div class="container page-not-found" *ngIf="!contentLoaded">
+  <h1>404</h1>
+  <h2><small>{{"static-page.404.page-not-found" | translate}}</small></h2>
+  <br/>
+  <p>{{"static-page.404.help" | translate}}</p>
+  <br/>
+  <p class="text-center">
+    <a routerLink="/home" class="btn btn-primary">{{"static-page.404.link.home-page" | translate}}</a>
+  </p>
 </div>

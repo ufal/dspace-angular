@@ -1,10 +1,11 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { HtmlContentService } from '../shared/html-content.service';
-import { BehaviorSubject, firstValueFrom } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 import { isEmpty, isNotEmpty } from '../shared/empty.util';
-import { STATIC_FILES_DEFAULT_ERROR_PAGE_PATH, STATIC_PAGE_PATH } from './static-page-routing-paths';
+import { STATIC_PAGE_PATH } from './static-page-routing-paths';
 import { APP_CONFIG, AppConfig } from '../../config/app-config.interface';
+import { ServerResponseService } from '../core/services/server-response.service';
 
 /**
  * Component which load and show static files from the `static-files` folder.
@@ -19,9 +20,11 @@ export class StaticPageComponent implements OnInit {
   static readonly no_static: string = 'no_static_';
   htmlContent: BehaviorSubject<string> = new BehaviorSubject<string>('');
   htmlFileName: string;
+  contentLoaded = false;
 
   constructor(private htmlContentService: HtmlContentService,
               private router: Router,
+              private responseService: ServerResponseService,
               @Inject(APP_CONFIG) protected appConfig?: AppConfig) { }
 
   async ngOnInit(): Promise<void> {
@@ -35,11 +38,13 @@ export class StaticPageComponent implements OnInit {
       htmlContent = htmlContent.replace(/href="\/server\/oai/gi, 'href="' + oaiUrl);
 
       this.htmlContent.next(htmlContent);
+      this.contentLoaded = true;
       return;
     }
 
-    // Show error page
-    await this.loadErrorPage();
+    // Content not found - set 404 status for SSR and show inline error
+    this.responseService.setNotFound();
+    this.contentLoaded = false;
   }
 
   /**
@@ -123,24 +128,10 @@ export class StaticPageComponent implements OnInit {
     urlInList = urlInList.filter(n => n);
     // if length is 1 - html file name wasn't defined.
     if (isEmpty(urlInList) || urlInList.length === 1) {
-      void this.loadErrorPage();
       return null;
     }
 
     // If the url is too long take just the first string after `/static` prefix.
     return urlInList[1]?.split('#')?.[0];
-  }
-
-  /**
-   * Load `static-files/error.html`
-   * @private
-   */
-  private async loadErrorPage() {
-    let errorPage = await firstValueFrom(this.htmlContentService.fetchHtmlContent(STATIC_FILES_DEFAULT_ERROR_PAGE_PATH));
-    if (isEmpty(errorPage)) {
-      console.error('Cannot load error page from the path: ' + STATIC_FILES_DEFAULT_ERROR_PAGE_PATH);
-      return;
-    }
-    this.htmlContent.next(errorPage);
   }
 }

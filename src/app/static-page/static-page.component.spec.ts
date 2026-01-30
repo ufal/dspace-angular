@@ -9,12 +9,17 @@ import { of } from 'rxjs';
 import { APP_CONFIG } from '../../config/app-config.interface';
 import { environment } from '../../environments/environment';
 import { ClarinSafeHtmlPipe } from '../shared/utils/clarin-safehtml.pipe';
+import { ServerResponseService } from '../core/services/server-response.service';
 
 describe('StaticPageComponent', () => {
   async function setupTest(html: string, restBase?: string) {
     const htmlContentService = jasmine.createSpyObj('htmlContentService', {
       fetchHtmlContent: of(html),
       getHmtlContentByPathAndLocale: Promise.resolve(html)
+    });
+
+    const responseService = jasmine.createSpyObj('responseService', {
+      setNotFound: null
     });
 
     const appConfig = {
@@ -37,6 +42,7 @@ describe('StaticPageComponent', () => {
       providers: [
         { provide: HtmlContentService, useValue: htmlContentService },
         { provide: Router, useValue: new RouterMock() },
+        { provide: ServerResponseService, useValue: responseService },
         { provide: APP_CONFIG, useValue: appConfig }
       ]
     }).compileComponents();
