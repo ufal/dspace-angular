@@ -57,7 +57,6 @@ describe('StaticPageComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // Load `TEST MESSAGE`
   it('should load html file content', async () => {
     const { component } = await setupTest('<div id="idShouldNotBeRemoved">TEST MESSAGE</div>');
     await component.ngOnInit();
@@ -106,5 +105,100 @@ describe('StaticPageComponent', () => {
     fixture.detectChanges();
 
     expect(component.htmlContent.value).toBe(otherHtml);
+  });
+
+  describe('contentState behavior', () => {
+    it('should initialize contentState to "loading"', async () => {
+      const { component } = await setupTest('<div>test</div>');
+      expect(component.contentState).toBe('loading');
+    });
+
+    it('should set contentState to "found" when content loads successfully', async () => {
+      const { component } = await setupTest('<div>Test Content</div>');
+      await component.ngOnInit();
+      expect(component.contentState).toBe('found');
+    });
+
+    it('should set contentState to "not-found" when content is undefined', async () => {
+      const htmlContentService = jasmine.createSpyObj('htmlContentService', {
+        getHmtlContentByPathAndLocale: Promise.resolve(undefined)
+      });
+
+      const responseService = jasmine.createSpyObj('responseService', {
+        setNotFound: null
+      });
+
+      const appConfig = {
+        ...environment,
+        ui: { ...(environment as any).ui, namespace: 'testNamespace' },
+        rest: { ...(environment as any).rest }
+      };
+
+      await TestBed.configureTestingModule({
+        declarations: [ StaticPageComponent, ClarinSafeHtmlPipe ],
+        imports: [ TranslateModule.forRoot() ],
+        providers: [
+          { provide: HtmlContentService, useValue: htmlContentService },
+          { provide: Router, useValue: new RouterMock() },
+          { provide: ServerResponseService, useValue: responseService },
+          { provide: APP_CONFIG, useValue: appConfig }
+        ]
+      }).compileComponents();
+
+      const fixture = TestBed.createComponent(StaticPageComponent);
+      const component = fixture.componentInstance;
+
+      await component.ngOnInit();
+
+      expect(component.contentState).toBe('not-found');
+      expect(responseService.setNotFound).toHaveBeenCalled();
+    });
+  });
+
+  describe('change detection', () => {
+    it('should call changeDetector.detectChanges() after successful content load', async () => {
+      const { component } = await setupTest('<div>test</div>');
+      spyOn(component['changeDetector'], 'detectChanges');
+
+      await component.ngOnInit();
+
+      expect(component['changeDetector'].detectChanges).toHaveBeenCalled();
+    });
+
+    it('should call changeDetector.detectChanges() when content not found', async () => {
+      const htmlContentService = jasmine.createSpyObj('htmlContentService', {
+        getHmtlContentByPathAndLocale: Promise.resolve(undefined)
+      });
+
+      const responseService = jasmine.createSpyObj('responseService', {
+        setNotFound: null
+      });
+
+      const appConfig = {
+        ...environment,
+        ui: { ...(environment as any).ui, namespace: 'testNamespace' },
+        rest: { ...(environment as any).rest }
+      };
+
+      await TestBed.configureTestingModule({
+        declarations: [ StaticPageComponent, ClarinSafeHtmlPipe ],
+        imports: [ TranslateModule.forRoot() ],
+        providers: [
+          { provide: HtmlContentService, useValue: htmlContentService },
+          { provide: Router, useValue: new RouterMock() },
+          { provide: ServerResponseService, useValue: responseService },
+          { provide: APP_CONFIG, useValue: appConfig }
+        ]
+      }).compileComponents();
+
+      const fixture = TestBed.createComponent(StaticPageComponent);
+      const component = fixture.componentInstance;
+
+      spyOn(component['changeDetector'], 'detectChanges');
+
+      await component.ngOnInit();
+
+      expect(component['changeDetector'].detectChanges).toHaveBeenCalled();
+    });
   });
 });

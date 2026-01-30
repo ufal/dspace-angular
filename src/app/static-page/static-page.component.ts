@@ -1,8 +1,8 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
 import { HtmlContentService } from '../shared/html-content.service';
 import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
-import { isEmpty, isNotEmpty } from '../shared/empty.util';
+import { isEmpty } from '../shared/empty.util';
 import { STATIC_PAGE_PATH } from './static-page-routing-paths';
 import { APP_CONFIG, AppConfig } from '../../config/app-config.interface';
 import { ServerResponseService } from '../core/services/server-response.service';
@@ -20,31 +20,40 @@ export class StaticPageComponent implements OnInit {
   static readonly no_static: string = 'no_static_';
   htmlContent: BehaviorSubject<string> = new BehaviorSubject<string>('');
   htmlFileName: string;
-  contentLoaded = false;
+  contentState: 'loading' | 'found' | 'not-found' = 'loading';
 
   constructor(private htmlContentService: HtmlContentService,
               private router: Router,
               private responseService: ServerResponseService,
+              private changeDetector: ChangeDetectorRef,
               @Inject(APP_CONFIG) protected appConfig?: AppConfig) { }
 
   async ngOnInit(): Promise<void> {
-    // Fetch html file name from the url path. `static/some_file.html`
-    this.htmlFileName = this.getHtmlFileName();
+    try {
+      // Fetch html file name from the url path. `static/some_file.html`
+      this.htmlFileName = this.getHtmlFileName();
 
-    let htmlContent = await this.htmlContentService.getHmtlContentByPathAndLocale(this.htmlFileName);
-    if (isNotEmpty(htmlContent)) {
-      const restBase = this.appConfig?.rest?.baseUrl;
-      const oaiUrl = restBase ? new URL('/server/oai', restBase).href : '/server/oai';
-      htmlContent = htmlContent.replace(/href="\/server\/oai/gi, 'href="' + oaiUrl);
+      let htmlContent = await this.htmlContentService.getHmtlContentByPathAndLocale(this.htmlFileName);
+      if (htmlContent !== undefined) {
+        const restBase = this.appConfig?.rest?.baseUrl;
+        const oaiUrl = restBase ? new URL('/server/oai', restBase).href : '/server/oai';
+        htmlContent = htmlContent.replace(/href="\/server\/oai/gi, 'href="' + oaiUrl);
 
-      this.htmlContent.next(htmlContent);
-      this.contentLoaded = true;
-      return;
+        this.htmlContent.next(htmlContent);
+        this.contentState = 'found';
+        this.changeDetector.detectChanges();
+        return;
+      }
+
+      // Content not found - set 404 status for SSR and show inline error
+      this.responseService.setNotFound();
+      this.contentState = 'not-found';
+      this.changeDetector.detectChanges();
+    } catch {
+      this.responseService.setNotFound();
+      this.contentState = 'not-found';
+      this.changeDetector.detectChanges();
     }
-
-    // Content not found - set 404 status for SSR and show inline error
-    this.responseService.setNotFound();
-    this.contentLoaded = false;
   }
 
   /**
