@@ -663,7 +663,7 @@ describe('SubmissionSectionFormComponent test suite', () => {
       compAsAny = null;
     });
 
-    it('onChange on `local.sponsor` complex input field should refresh formModel', () => {
+    it('onChange on `local.sponsor` complex input field should skip reinitialize', () => {
       const sectionData = {};
       formOperationsService.getFieldPathSegmentedFromChangeEvent.and.returnValue('local.sponsor');
       formOperationsService.getFieldValueFromChangeEvent.and.returnValue({ value: EU_SPONSOR });
@@ -686,7 +686,7 @@ describe('SubmissionSectionFormComponent test suite', () => {
       comp.onChange(dynamicFormControlEvent);
       fixture.detectChanges();
 
-      expect(comp.reinitializeForm).toHaveBeenCalled();
+      expect(comp.reinitializeForm).not.toHaveBeenCalled();
     });
   });
 });
