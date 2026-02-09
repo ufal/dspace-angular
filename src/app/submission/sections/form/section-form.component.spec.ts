@@ -663,7 +663,7 @@ describe('SubmissionSectionFormComponent test suite', () => {
       compAsAny = null;
     });
 
-    it('onChange on `local.sponsor` complex input field should skip reinitialize', () => {
+    it('onChange on `local.sponsor` complex input field should trigger reinitialize', () => {
       const sectionData = {};
       formOperationsService.getFieldPathSegmentedFromChangeEvent.and.returnValue('local.sponsor');
       formOperationsService.getFieldValueFromChangeEvent.and.returnValue({ value: EU_SPONSOR });
@@ -677,6 +677,7 @@ describe('SubmissionSectionFormComponent test suite', () => {
       spyOn(comp, 'initForm');
       spyOn(comp, 'subscriptions');
       spyOn(comp, 'reinitializeForm');
+      spyOn(submissionServiceStub, 'dispatchSaveSection');
 
       const wi = new WorkspaceItem();
       wi.item = createSuccessfulRemoteDataObject$(mockItemWithMetadataFieldsAndValue(['local.sponsor'], EU_SPONSOR));
@@ -686,7 +687,9 @@ describe('SubmissionSectionFormComponent test suite', () => {
       comp.onChange(dynamicFormControlEvent);
       fixture.detectChanges();
 
-      expect(comp.reinitializeForm).not.toHaveBeenCalled();
+      // The onChange method calls dispatchFormSaveAndReinitialize for sponsor fields
+      expect(submissionServiceStub.dispatchSaveSection).toHaveBeenCalledWith(comp.submissionId, comp.sectionData.id);
+      expect(comp.reinitializeForm).toHaveBeenCalledWith('local.sponsor', { value: EU_SPONSOR });
     });
   });
 });

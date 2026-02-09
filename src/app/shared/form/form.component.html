@@ -13,22 +13,34 @@
       (ngbEvent)="onCustomEvent($event)">
       <ng-template modelType="ARRAY" let-group let-index="index" let-context="context">
         <!--Array with repeatable items-->
-        <div *ngIf="(!context.notRepeatable) && !isVirtual(context, index) && group.context.groups.length !== 1 && !isItemReadOnly(context, index)"
+         <div *ngIf="shouldShowDeleteButton(context, index)"
              class="col-xs-2 d-flex flex-column justify-content-sm-start align-items-end">
             <button type="button" class="btn btn-secondary" role="button"
                     title="{{'form.remove' | translate}}"
                     attr.aria-label="{{'form.remove' | translate}}"
-                    (click)="removeItem($event, context, index)">
+                    (click)="handleItemDelete($event, context, index)">
               <span><i class="fas fa-trash" aria-hidden="true"></i></span>
             </button>
         </div>
-        <div *ngIf="(!context.notRepeatable) && index === (group.context.groups.length - 1) && !isItemReadOnly(context, index)" class="clearfix pl-4 w-100">
+        <div *ngIf="(!context.notRepeatable) && index === (group.context.groups.length - 1) && !isItemReadOnly(context, index) && !shouldShowEmptyStateAddButton(context, index)" class="clearfix pl-4 w-100">
           <div class="btn-group" role="group">
             <button type="button" role="button" class="ds-form-add-more btn btn-link"
                     title="{{'form.add' | translate}}"
                     attr.aria-label="{{'form.add' | translate}}"
                     (click)="insertItem($event, group.context, group.context.groups.length)">
               <span><i class="fas fa-plus"></i> {{'form.add' | translate}}</span>
+            </button>
+          </div>
+        </div>
+
+        <div *ngIf="shouldShowEmptyStateAddButton(context, index)"
+            class="clearfix w-100">
+          <div class="btn-group" role="group">
+            <button type="button" role="button" class="ds-form-add-more btn btn-link"
+                    title="{{'form.add' | translate}}"
+                    attr.aria-label="{{'form.add' | translate}}"
+                    (click)="revealFirstGroup($event, group.context)">
+              <span><i class="fas fa-plus"></i> {{'form.add-single' | translate}}</span>
             </button>
           </div>
         </div>

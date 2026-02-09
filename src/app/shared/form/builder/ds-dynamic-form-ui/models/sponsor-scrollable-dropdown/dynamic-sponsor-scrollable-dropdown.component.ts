@@ -110,12 +110,6 @@ export class DsDynamicSponsorScrollableDropdownComponent extends DsDynamicScroll
         case DYNAMIC_INPUT_TYPE:
           (input as DsDynamicInputModel).value = '';
           break;
-        case DYNAMIC_FORM_CONTROL_TYPE_SCROLLABLE_DROPDOWN:
-          // Remove it only if the funding type is `N/A`
-          if (this.fundingTypeIsNotApplicable(fundingTypeValue)) {
-            (input as DynamicScrollableDropdownModel).value = '';
-          }
-          break;
         default:
           break;
       }

@@ -18,6 +18,8 @@ export interface DynamicRowArrayModelConfig extends DynamicFormArrayModelConfig 
   hasSelectableMetadata: boolean;
   isDraggable: boolean;
   showButtons: boolean;
+  hideGroupsWhenEmpty?: boolean;
+  allowDeleteOnSingleItem?: boolean;
   typeBindRelations?: DynamicFormControlRelation[];
   isInlineGroupArray?: boolean;
 }
@@ -32,6 +34,8 @@ export class DynamicRowArrayModel extends DynamicFormArrayModel {
   @serializable() hasSelectableMetadata: boolean;
   @serializable() isDraggable: boolean;
   @serializable() showButtons = true;
+  @serializable() hideGroupsWhenEmpty = false;
+  @serializable() allowDeleteOnSingleItem = false;
   @serializable() typeBindRelations: DynamicFormControlRelation[];
   isRowArray = true;
   isInlineGroupArray = false;
@@ -46,6 +50,12 @@ export class DynamicRowArrayModel extends DynamicFormArrayModel {
     }
     if (hasValue(config.showButtons)) {
       this.showButtons = config.showButtons;
+    }
+    if (hasValue(config.hideGroupsWhenEmpty)) {
+      this.hideGroupsWhenEmpty = config.hideGroupsWhenEmpty;
+    }
+    if (hasValue(config.allowDeleteOnSingleItem)) {
+      this.allowDeleteOnSingleItem = config.allowDeleteOnSingleItem;
     }
     this.submissionId = config.submissionId;
     this.relationshipConfig = config.relationshipConfig;

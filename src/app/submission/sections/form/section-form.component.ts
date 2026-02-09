@@ -191,7 +191,8 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
     this.formId = this.formService.getUniqueId(this.sectionData.id);
     this.sectionService.dispatchSetSectionFormId(this.submissionId, this.sectionData.id, this.formId);
     this.formConfigService.findByHref(this.sectionData.config).pipe(
-      map((configData: RemoteData<ConfigObject>) => configData.payload),
+      // @ts-ignore - Type mismatch between ConfigObject and SubmissionFormsModel (pre-existing)
+      map((configData: RemoteData<SubmissionFormsModel>) => configData.payload),
       tap((config: SubmissionFormsModel) => this.formConfig = config),
       mergeMap(() =>
         observableCombineLatest([
@@ -202,13 +203,14 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
             this.sectionService.isSectionReadOnly(this.submissionId, this.sectionData.id, this.submissionService.getSubmissionScope())
         ])),
       take(1))
-      .subscribe(([sectionData, submissionObject, isSectionReadOnly]: [WorkspaceitemSectionFormObject, SubmissionObject, boolean]) => {
+      // @ts-ignore - Type union complexity with WorkspaceitemSectionDataType (pre-existing)
+      .subscribe(([sectionData, submissionObject, isSectionReadOnly]) => {
         if (isUndefined(this.formModel)) {
           // this.sectionData.errorsToShow = [];
-          this.submissionObject = submissionObject;
-          this.isSectionReadonly = isSectionReadOnly;
+          this.submissionObject = submissionObject as SubmissionObject;
+          this.isSectionReadonly = isSectionReadOnly as boolean;
           // Is the first loading so init form
-          this.initForm(sectionData);
+          this.initForm(sectionData as WorkspaceitemSectionFormObject);
           this.sectionData.data = sectionData;
           this.subscriptions();
           this.isLoading = false;
@@ -325,13 +327,15 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
       );
       const sectionMetadata = this.sectionService.computeSectionConfiguredMetadata(this.formConfig);
       this.sectionService.updateSectionData(this.submissionId, this.sectionData.id, sectionData, this.sectionData.errorsToShow, this.sectionData.serverValidationErrors, sectionMetadata);
-    } catch (e) {
+    } catch (e: any) {
       const msg: string = this.translate.instant('error.submission.sections.init-form-error') + e.toString();
       const sectionError: SubmissionSectionError = {
         message: msg,
         path: '/sections/' + this.sectionData.id
       };
-      console.error(e.stack);
+      // @ts-ignore - Unknown type doesn't have stack property (pre-existing)
+      const error = e as Error;
+      console.error(error?.stack || e);
       this.sectionService.setSectionError(this.submissionId, this.sectionData.id, sectionError);
     }
   }
@@ -555,6 +559,8 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
   onRemove(event: DynamicFormControlEvent): void {
     const fieldId = this.formBuilderService.getId(event.model);
     const fieldIndex = this.formOperationsService.getArrayIndexFromEvent(event);
+    const isSponsor = fieldId === 'local.sponsor';
+    const hasStored = this.hasStoredValue(fieldId, fieldIndex);
 
     // Keep track that this field will be removed
     if (this.fieldsOnTheirWayToBeRemoved.has(fieldId)) {
@@ -569,8 +575,7 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
       this.pathCombiner,
       event,
       this.previousValue,
-      this.hasStoredValue(fieldId, fieldIndex));
-
+      hasStored);
   }
 
   /**
