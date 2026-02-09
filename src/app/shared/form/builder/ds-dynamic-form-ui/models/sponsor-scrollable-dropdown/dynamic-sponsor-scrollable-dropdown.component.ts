@@ -9,7 +9,6 @@ import { VocabularyService } from '../../../../../../core/submission/vocabularie
 import { FormFieldMetadataValueObject } from '../../../models/form-field-metadata-value.model';
 import { DsDynamicScrollableDropdownComponent } from '../scrollable-dropdown/dynamic-scrollable-dropdown.component';
 import {
-  DYNAMIC_FORM_CONTROL_TYPE_SCROLLABLE_DROPDOWN,
   DynamicScrollableDropdownModel
 } from '../scrollable-dropdown/dynamic-scrollable-dropdown.model';
 import {

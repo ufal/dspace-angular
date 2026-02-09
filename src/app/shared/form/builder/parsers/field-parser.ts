@@ -258,9 +258,7 @@ export abstract class FieldParser {
         const result = 1;
         return result;
       }
-    }
-
-    else if (isNotEmpty(this.initFormValues) && isNotNull(fieldIds) && fieldIds.length > 1) {
+    } else if (isNotEmpty(this.initFormValues) && isNotNull(fieldIds) && fieldIds.length > 1) {
       let counter = 0;
       fieldIds.forEach((id) => {
         if (this.initFormValues.hasOwnProperty(id)) {
@@ -269,9 +267,7 @@ export abstract class FieldParser {
       });
       const result = counter === 0 ? 1 : counter;
       return result;
-    }
-
-    else {
+    } else {
       const result = 1;
       return result;
     }

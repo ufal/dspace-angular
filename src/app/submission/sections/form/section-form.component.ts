@@ -32,7 +32,6 @@ import { ObjectCacheService } from '../../../core/cache/object-cache.service';
 import { RequestService } from '../../../core/data/request.service';
 import { followLink } from '../../../shared/utils/follow-link-config.model';
 import { environment } from '../../../../environments/environment';
-import { ConfigObject } from '../../../core/config/models/config.model';
 import { RemoteData } from '../../../core/data/remote-data';
 import { SubmissionScopeType } from '../../../core/submission/submission-scope-type';
 import { WorkflowItem } from '../../../core/submission/models/workflowitem.model';

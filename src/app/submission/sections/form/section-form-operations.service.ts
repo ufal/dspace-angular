@@ -535,7 +535,7 @@ export class SectionFormOperationsService {
 
     const isClearLastItem = (event as any).isClearLastItem === true;
 
-    const shouldRemoveField = isRemoveEvent && hasStoredValue && isClearLastItem
+    const shouldRemoveField = isRemoveEvent && hasStoredValue && isClearLastItem;
 
     if (shouldRemoveField) {
       this.operationsBuilder.remove(pathCombiner.getPath(segmentedPath));
