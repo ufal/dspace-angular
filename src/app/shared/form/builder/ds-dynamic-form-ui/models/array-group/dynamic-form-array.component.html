@@ -41,7 +41,7 @@
           <ng-container *ngTemplateOutlet="endTemplate?.templateRef; context: groupModel"></ng-container>
         </div>
       </div>
-      <div *ngIf="model.hideGroupsWhenEmpty && model.groups.length === 1 && isGroupEmpty(0)"
+      <div *ngIf="model.hideGroupsWhenEmpty && model.groups.length === 1 && shouldHideGroup(0)"
            class="clearfix w-100">
         <ng-container *ngTemplateOutlet="endTemplate?.templateRef; context: model.groups[0]"></ng-container>
       </div>

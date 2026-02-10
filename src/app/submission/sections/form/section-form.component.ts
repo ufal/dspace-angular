@@ -1,4 +1,5 @@
-import { ChangeDetectorRef, Component, Inject, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, ViewChild, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { DynamicFormControlEvent, DynamicFormControlModel } from '@ng-dynamic-forms/core';
 
 import { combineLatest as observableCombineLatest, Observable, Subscription } from 'rxjs';
@@ -41,6 +42,7 @@ import { SubmissionSectionError } from '../../objects/submission-section-error.m
 import { FormRowModel } from '../../../core/config/models/config-submission-form.model';
 import { SPONSOR_METADATA_NAME } from '../../../shared/form/builder/ds-dynamic-form-ui/models/ds-dynamic-complex.model';
 import { AUTHOR_METADATA_FIELD_NAME } from 'src/app/shared/form/builder/ds-dynamic-form-ui/models/clarin-name.model';
+import { NativeWindowRef, NativeWindowService } from '../../../core/services/window.service';
 
 /**
  * This component represents a section that contains a Form.
@@ -177,7 +179,9 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
               protected requestService: RequestService,
               @Inject('collectionIdProvider') public injectedCollectionId: string,
               @Inject('sectionDataProvider') public injectedSectionData: SectionDataObject,
-              @Inject('submissionIdProvider') public injectedSubmissionId: string) {
+              @Inject('submissionIdProvider') public injectedSubmissionId: string,
+              @Inject(NativeWindowService) private _window: NativeWindowRef,
+              @Inject(PLATFORM_ID) private platformId: any) {
     super(injectedCollectionId, injectedSectionData, injectedSubmissionId);
     this.typeFields = new Map();
   }
@@ -194,22 +198,21 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
       map((configData: RemoteData<SubmissionFormsModel>) => configData.payload),
       tap((config: SubmissionFormsModel) => this.formConfig = config),
       mergeMap(() =>
-        observableCombineLatest([
-          this.sectionService.getSectionData(this.submissionId, this.sectionData.id, this.sectionData.sectionType),
+        observableCombineLatest<[WorkspaceitemSectionFormObject, SubmissionObject, boolean]>([
+          this.sectionService.getSectionData(this.submissionId, this.sectionData.id, this.sectionData.sectionType) as Observable<WorkspaceitemSectionFormObject>,
           this.submissionObjectService.findById(this.submissionId, true, false, followLink('item')).pipe(
             getFirstSucceededRemoteData(),
             getRemoteDataPayload()),
             this.sectionService.isSectionReadOnly(this.submissionId, this.sectionData.id, this.submissionService.getSubmissionScope())
         ])),
       take(1))
-      // @ts-ignore - Type union complexity with WorkspaceitemSectionDataType (pre-existing)
       .subscribe(([sectionData, submissionObject, isSectionReadOnly]) => {
         if (isUndefined(this.formModel)) {
           // this.sectionData.errorsToShow = [];
-          this.submissionObject = submissionObject as SubmissionObject;
-          this.isSectionReadonly = isSectionReadOnly as boolean;
+          this.submissionObject = submissionObject;
+          this.isSectionReadonly = isSectionReadOnly;
           // Is the first loading so init form
-          this.initForm(sectionData as WorkspaceitemSectionFormObject);
+          this.initForm(sectionData);
           this.sectionData.data = sectionData;
           this.subscriptions();
           this.isLoading = false;
@@ -352,7 +355,11 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
     if (isNotEmpty(sectionData) && !isEqual(sectionData, this.sectionData.data)) {
       this.sectionData.data = sectionData;
       if (this.hasMetadataEnrichment(sectionData)) {
-        const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+        // Only preserve scroll position in browser environment (SSR safe)
+        let scrollPosition = 0;
+        if (isPlatformBrowser(this.platformId)) {
+          scrollPosition = this._window.nativeWindow.pageYOffset || this._window.nativeWindow.document.documentElement.scrollTop;
+        }
         this.isUpdating = true;
         this.formModel = null;
         this.cdr.detectChanges();
@@ -360,7 +367,10 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
         this.checksForErrors(errors);
         this.isUpdating = false;
         this.cdr.detectChanges();
-        window.scrollTo(0, scrollPosition);
+        // Restore scroll position only in browser environment
+        if (isPlatformBrowser(this.platformId)) {
+          this._window.nativeWindow.scrollTo(0, scrollPosition);
+        }
       } else if (isNotEmpty(errors) || isNotEmpty(this.sectionData.errorsToShow)) {
         this.checksForErrors(errors);
       }
@@ -497,13 +507,18 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
           // @ts-ignore
           if (metadataValueFromDB[index].value === newMetadataValue.value) {
             // update form
-            // Preserve scroll position to prevent unwanted scroll behavior
-            const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+            // Preserve scroll position to prevent unwanted scroll behavior (SSR safe)
+            let scrollPosition = 0;
+            if (isPlatformBrowser(this.platformId)) {
+              scrollPosition = this._window.nativeWindow.pageYOffset || this._window.nativeWindow.document.documentElement.scrollTop;
+            }
             this.formModel = undefined;
             this.cdr.detectChanges();
             this.ngOnInit();
-            // Restore scroll position after form rebuild
-            window.scrollTo(0, scrollPosition);
+            // Restore scroll position after form rebuild (browser-only)
+            if (isPlatformBrowser(this.platformId)) {
+              this._window.nativeWindow.scrollTo(0, scrollPosition);
+            }
             clearInterval(interval);
             this.isUpdating = false;
           }

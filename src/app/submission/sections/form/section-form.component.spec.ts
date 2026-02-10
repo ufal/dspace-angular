@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, NO_ERRORS_SCHEMA } from '@angular/core';
+import { ChangeDetectorRef, Component, NO_ERRORS_SCHEMA, PLATFORM_ID } from '@angular/core';
 import {ComponentFixture, inject, TestBed, waitForAsync} from '@angular/core/testing';
 
 import { of as observableOf } from 'rxjs';
@@ -47,6 +47,7 @@ import { SubmissionSectionError } from '../../objects/submission-section-error.m
 import {
   mockItemWithMetadataFieldsAndValue
 } from '../../../item-page/simple/field-components/specific-field/item-page-field.component.spec';
+import { NativeWindowRef, NativeWindowService } from '../../../core/services/window.service';
 
 function getMockSubmissionFormsConfigService(): SubmissionFormsConfigDataService {
   return jasmine.createSpyObj('FormOperationsService', {
@@ -195,6 +196,8 @@ describe('SubmissionSectionFormComponent test suite', () => {
         { provide: 'sectionDataProvider', useValue: Object.assign({}, sectionObject) },
         { provide: 'submissionIdProvider', useValue: submissionId },
         { provide: SubmissionObjectDataService, useValue: submissionObjectDataService },
+        { provide: NativeWindowService, useClass: NativeWindowRef },
+        { provide: PLATFORM_ID, useValue: 'browser' },
         ChangeDetectorRef,
         SubmissionSectionFormComponent
       ],
