@@ -16,6 +16,7 @@ import findIndex from 'lodash/findIndex';
 import { FormBuilderService } from './builder/form-builder.service';
 import { hasValue, isNotEmpty, isNotNull, isNull } from '../empty.util';
 import { FormService } from './form.service';
+import { isFormGroupEmpty } from './utils/form-group-empty.util';
 import { FormEntry, FormError } from './form.reducer';
 import { FormFieldMetadataValueObject } from './builder/models/form-field-metadata-value.model';
 
@@ -471,6 +472,7 @@ export class FormComponent implements OnDestroy, OnInit {
   /**
    * Check if the first group in an array is visually empty (all controls have no meaningful values).
    * This is used to determine visual-empty state independent of structural state (FormArray always has 1 group minimum).
+   * Delegates to shared utility function for consistent empty detection.
    *
    * @param arrayContext The array model context
    * @returns true if first group exists and all its controls are empty/null
@@ -489,52 +491,12 @@ export class FormComponent implements OnDestroy, OnInit {
 
     // Get first group's FormGroup
     const firstGroupControl = formArrayControl.at(0) as UntypedFormGroup;
-    if (!firstGroupControl || !firstGroupControl.controls) {
+    if (!firstGroupControl) {
       return false;
     }
 
-    // Check all controls in the first group - if ANY has a value, not empty
-    const controlNames = Object.keys(firstGroupControl.controls);
-
-    for (const controlName of controlNames) {
-      const control = firstGroupControl.get(controlName);
-      if (control) {
-        const value = control.value;
-        // Check for non-empty values (handle strings, objects, arrays)
-        if (hasValue(value)) {
-          if (typeof value === 'string' && value.trim() !== '') {
-            return false; // Has string value
-          } else if (typeof value === 'object' && value !== null) {
-            // Check if object has meaningful properties
-            if (Array.isArray(value)) {
-              if (value.length > 0) {
-                return false; // Has array values
-              }
-            } else if (value.hasOwnProperty('value') && value.value && value.value !== '') {
-              return false; // Has FormFieldMetadataValueObject with value
-            } else {
-              // Check if object has any non-null properties
-              const objKeys = Object.keys(value);
-              const hasNonNullProperty = objKeys.some(key => {
-                const propValue = value[key];
-                // Check if value is non-empty (excluding empty arrays)
-                const isNonNull = propValue !== null &&
-                                  propValue !== undefined &&
-                                  propValue !== '' &&
-                                  !(Array.isArray(propValue) && propValue.length === 0);
-                return isNonNull;
-              });
-              if (hasNonNullProperty) {
-                return false;
-              }
-            }
-          } else if (typeof value === 'number' || typeof value === 'boolean') {
-            return false; // Has numeric or boolean value
-          }
-        }
-      }
-    }
-    return true; // All controls are empty
+    // Use shared utility to check if the form group is empty
+    return isFormGroupEmpty(firstGroupControl);
   }
 
   protected getEvent($event: any, arrayContext: DynamicFormArrayModel, index: number, type: string): DynamicFormControlEvent {
