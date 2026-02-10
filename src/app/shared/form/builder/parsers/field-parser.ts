@@ -25,6 +25,7 @@ import { VocabularyOptions } from '../../../../core/submission/vocabularies/mode
 import { ParserType } from './parser-type';
 import { isNgbDateStruct } from '../../../date.util';
 import { SubmissionScopeType } from '../../../../core/submission/submission-scope-type';
+import { SPONSOR_METADATA_NAME } from '../ds-dynamic-form-ui/models/ds-dynamic-complex.model';
 
 export const SUBMISSION_ID: InjectionToken<string> = new InjectionToken<string>('submissionId');
 export const CONFIG_DATA: InjectionToken<FormFieldModel> = new InjectionToken<FormFieldModel>('configData');
@@ -87,9 +88,9 @@ export abstract class FieldParser {
         hasSelectableMetadata: isNotEmpty(this.configData.selectableMetadata),
         isDraggable,
         hideGroupsWhenEmpty: this.configData.input.type === ParserType.Complex &&
-                       metadataKey === 'local.sponsor',
+                       metadataKey === SPONSOR_METADATA_NAME,
         allowDeleteOnSingleItem: this.configData.input.type === ParserType.Complex &&
-                           metadataKey === 'local.sponsor',
+                           metadataKey === SPONSOR_METADATA_NAME,
         typeBindRelations: isNotEmpty(this.configData.typeBind) ? this.getTypeBindRelations(this.configData.typeBind,
           this.parserOptions.typeField) : null,
         groupFactory: () => {

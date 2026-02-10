@@ -35,6 +35,13 @@ export class FormComponent implements OnDestroy, OnInit {
   private formValid: boolean;
 
   /**
+   * Cache for isFirstGroupEmpty results to optimize change detection.
+   * Cleared automatically on form value changes to prevent stale data.
+   * Key: arrayContext.id, Value: boolean (isEmpty result)
+   */
+  private emptyStateCache: Map<string, boolean> = new Map();
+
+  /**
    * A boolean that indicate if to display form's submit button
    */
   @Input() displaySubmit = true;
@@ -167,6 +174,12 @@ export class FormComponent implements OnDestroy, OnInit {
         this.formService.setStatusChanged(this.formId, this.getFormGroupValidStatus());
         this.formValid = this.getFormGroupValidStatus();
       }));
+
+    // Clear empty state cache on form value changes to ensure fresh calculations
+    // This prevents stale cache while avoiding repeated expensive computations during change detection
+    this.subs.push(this.formGroup.valueChanges.subscribe(() => {
+      this.emptyStateCache.clear();
+    }));
 
     this.subs.push(
       this.formService.getForm(this.formId).pipe(
@@ -471,29 +484,45 @@ export class FormComponent implements OnDestroy, OnInit {
    * This is used to determine visual-empty state independent of structural state (FormArray always has 1 group minimum).
    * Delegates to shared utility function for consistent empty detection.
    *
+   * Uses memoization to optimize performance during change detection. Cache is cleared on form value changes.
+   *
    * @param arrayContext The array model context
    * @returns true if first group exists and all its controls are empty/null
    */
   isFirstGroupEmpty(arrayContext: DynamicFormArrayModel): boolean {
+    // Check cache first to avoid repeated expensive computations during change detection
+    const cacheKey = arrayContext.id;
+    if (this.emptyStateCache.has(cacheKey)) {
+      return this.emptyStateCache.get(cacheKey);
+    }
+
     // Must have at least one group
     if (!arrayContext.groups || arrayContext.groups.length === 0) {
+      this.emptyStateCache.set(cacheKey, false);
       return false;
     }
 
     // Get the FormArray control
     const formArrayControl = this.formGroup.get(this.formBuilderService.getPath(arrayContext)) as UntypedFormArray;
     if (!formArrayControl || formArrayControl.length === 0) {
+      this.emptyStateCache.set(cacheKey, false);
       return false;
     }
 
     // Get first group's FormGroup
     const firstGroupControl = formArrayControl.at(0) as UntypedFormGroup;
     if (!firstGroupControl) {
+      this.emptyStateCache.set(cacheKey, false);
       return false;
     }
 
-    // Use shared utility to check if the form group is empty
-    return isFormGroupEmpty(firstGroupControl);
+    // Use shared utility to check if the form group is empty (expensive operation)
+    const isEmpty = isFormGroupEmpty(firstGroupControl);
+
+    // Cache the result for subsequent calls during this change detection cycle
+    this.emptyStateCache.set(cacheKey, isEmpty);
+
+    return isEmpty;
   }
 
   protected getEvent($event: any, arrayContext: DynamicFormArrayModel, index: number, type: string): DynamicFormControlEvent {
