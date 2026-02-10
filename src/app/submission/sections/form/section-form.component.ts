@@ -335,9 +335,7 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
         message: msg,
         path: '/sections/' + this.sectionData.id
       };
-      // @ts-ignore - Unknown type doesn't have stack property (pre-existing)
-      const error = e as Error;
-      console.error(error?.stack || e);
+      console.error(e?.stack || e);
       this.sectionService.setSectionError(this.submissionId, this.sectionData.id, sectionError);
     }
   }
