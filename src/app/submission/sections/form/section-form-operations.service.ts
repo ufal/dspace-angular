@@ -60,9 +60,6 @@ export class SectionFormOperationsService {
                                      event: DynamicFormControlEvent,
                                      previousValue: FormFieldPreviousValueObject,
                                      hasStoredValue: boolean): void {
-    const fieldId = this.formBuilder.getId(event.model);
-    const isSponsor = fieldId === 'local.sponsor';
-
     switch (event.type) {
       case 'remove':
         this.dispatchOperationsFromRemoveEvent(pathCombiner, event, previousValue, hasStoredValue);
@@ -304,10 +301,6 @@ export class SectionFormOperationsService {
                                               event: DynamicFormControlEvent,
                                               previousValue: FormFieldPreviousValueObject,
                                               hasStoredValue: boolean): void {
-
-    const fieldId = this.formBuilder.getId(event.model);
-    const isSponsor = fieldId === 'local.sponsor';
-
     const path = this.getFieldPathFromEvent(event);
     const value = this.getFieldValueFromChangeEvent(event);
 
@@ -527,9 +520,6 @@ export class SectionFormOperationsService {
                                 previousValue: FormFieldPreviousValueObject,
                                 isRemoveEvent: boolean = false,
                                 hasStoredValue: boolean = false) {
-    const fieldId = model.metadataKey || this.formBuilder.getId(event.model);
-    const isSponsor = fieldId === 'local.sponsor';
-
     const arrayValue = this.formBuilder.getValueFromModel([model]);
     const segmentedPath = this.getFieldPathSegmentedFromChangeEvent(event);
 
