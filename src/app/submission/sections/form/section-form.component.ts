@@ -573,7 +573,6 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
   onRemove(event: DynamicFormControlEvent): void {
     const fieldId = this.formBuilderService.getId(event.model);
     const fieldIndex = this.formOperationsService.getArrayIndexFromEvent(event);
-    const isSponsor = fieldId === 'local.sponsor';
     const hasStored = this.hasStoredValue(fieldId, fieldIndex);
 
     // Keep track that this field will be removed

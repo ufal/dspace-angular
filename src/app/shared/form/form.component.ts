@@ -361,9 +361,6 @@ export class FormComponent implements OnDestroy, OnInit {
    * @param index The index of the group to clear
    */
   clearItemValues($event: any, arrayContext: DynamicFormArrayModel, index: number): void {
-    const metadataKey = (arrayContext as any).metadataKey;
-    const isSponsor = metadataKey === 'local.sponsor';
-
     // Get the form control BEFORE emitting/resetting to log values
     const formArrayControl = this.formGroup.get(this.formBuilderService.getPath(arrayContext)) as UntypedFormArray;
     const groupControl = formArrayControl.at(index);
