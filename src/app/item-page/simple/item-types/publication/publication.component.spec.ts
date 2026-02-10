@@ -41,6 +41,8 @@ import { BrowseDefinitionDataService } from '../../../../core/browse/browse-defi
 import {
   BrowseDefinitionDataServiceStub
 } from '../../../../shared/testing/browse-definition-data-service.stub';
+import { BrowseService } from '../../../../core/browse/browse.service';
+import { BrowseServiceStub } from '../../../../shared/testing/browse-service.stub';
 
 const noMetadata = new MetadataMap();
 
@@ -99,6 +101,7 @@ describe('PublicationComponent', () => {
         { provide: SearchService, useValue: {} },
         { provide: RouteService, useValue: mockRouteService },
         { provide: BrowseDefinitionDataService, useValue: BrowseDefinitionDataServiceStub },
+        { provide: BrowseService, useValue: BrowseServiceStub },
         { provide: APP_CONFIG, useValue: { statistics: { baseUrl: 'http://test.com', endpoint: '/test' } } },
       ],
 

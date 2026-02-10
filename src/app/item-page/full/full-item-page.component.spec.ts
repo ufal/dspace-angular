@@ -15,7 +15,6 @@ import { BehaviorSubject, of, of as observableOf } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { createFailedRemoteDataObject, createSuccessfulRemoteDataObject, createSuccessfulRemoteDataObject$ } from '../../shared/remote-data.utils';
-import { AuthService } from '../../core/auth/auth.service';
 import { createPaginatedList } from '../../shared/testing/utils.test';
 import { AuthorizationDataService } from '../../core/data/feature-authorization/authorization-data.service';
 import { createRelationshipsObservable } from '../simple/item-types/shared/item.component.spec';
@@ -93,7 +92,6 @@ describe('FullItemPageComponent', () => {
   let fixture: ComponentFixture<FullItemPageComponent>;
   let registryService: RegistryService;
   let translateService: TranslateService;
-  let authService: AuthService;
   let routeStub: ActivatedRouteStub;
   let routeData;
   let authorizationDataService: AuthorizationDataService;
@@ -117,11 +115,6 @@ describe('FullItemPageComponent', () => {
   };
 
   beforeEach(waitForAsync(() => {
-    authService = jasmine.createSpyObj('authService', {
-      isAuthenticated: observableOf(true),
-      setRedirectUrl: {}
-    });
-
     routeData = {
       dso: createSuccessfulRemoteDataObject(mockItem),
     };
@@ -194,7 +187,6 @@ describe('FullItemPageComponent', () => {
         { provide: ActivatedRoute, useValue: routeStub },
         { provide: ItemDataService, useValue: {} },
         { provide: MetadataService, useValue: metadataServiceStub },
-        { provide: AuthService, useValue: authService },
         { provide: AuthorizationDataService, useValue: authorizationDataService },
         { provide: ServerResponseService, useValue: serverResponseService },
         { provide: SignpostingDataService, useValue: signpostingDataService },

@@ -40,6 +40,8 @@ import {
   BrowseDefinitionDataServiceStub
 } from '../../../../shared/testing/browse-definition-data-service.stub';
 import { BrowseDefinitionDataService } from '../../../../core/browse/browse-definition-data.service';
+import { BrowseService } from '../../../../core/browse/browse.service';
+import { BrowseServiceStub } from '../../../../shared/testing/browse-service.stub';
 
 let comp: JournalComponent;
 let fixture: ComponentFixture<JournalComponent>;
@@ -112,6 +114,7 @@ describe('JournalComponent', () => {
         { provide: SearchService, useValue: {} },
         { provide: RouteService, useValue: mockRouteService },
         { provide: BrowseDefinitionDataService, useValue: BrowseDefinitionDataServiceStub },
+        { provide: BrowseService, useValue: BrowseServiceStub },
         { provide: APP_CONFIG, useValue: { statistics: { baseUrl: 'http://test.com', endpoint: '/test' } } },
       ],
 

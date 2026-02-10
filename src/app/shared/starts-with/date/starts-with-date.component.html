@@ -30,7 +30,7 @@
       <label for="startsWith + 'input'" class="sr-only">{{'browse.startsWith.type_date.label' |translate}}</label>
       <input [id]="startsWith + 'input'" class="form-control" placeholder="{{'browse.startsWith.type_date' | translate}}" [attr.aria-label]="'browse.startsWith.type_date.label' |translate" type="text" name="startsWith" formControlName="startsWith" [value]="getStartsWith() ? getStartsWith() : ''" />
       <span class="input-group-append">
-        <button class="btn btn-primary" type="submit"><i class="fas fa-book-open"></i> {{'browse.startsWith.submit' | translate}}</button>
+        <button class="btn btn-primary" type="submit" role="button" tabindex="0"><i class="fas fa-book-open"></i> {{'browse.startsWith.submit' | translate}}</button>
       </span>
     </div>
   </div>

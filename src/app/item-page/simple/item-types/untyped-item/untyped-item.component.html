@@ -117,14 +117,14 @@
       [iconName]="'fa-sitemap'"
       [separator]="'<br />'">
     </ds-clarin-collections-item-field>
+    <ds-clarin-item-versions-field
+      [item]="object"
+      [iconName]="'fa-history'">
+    </ds-clarin-item-versions-field>
     <div class="clarin-item-page-field">
       <a [routerLink]="[itemPageRoute + '/full']">
         {{"item.page.link.full" | translate}}
       </a>
     </div>
-    <!--    <ds-clarin-files-item-field [item]="object"-->
-    <!--                                [iconName]="'fa-paperclip'"-->
-    <!--                                [separator]="'<br />'">-->
-    <!--    </ds-clarin-files-item-field>-->
   </div>
 </div>

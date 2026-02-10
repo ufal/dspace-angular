@@ -11,7 +11,6 @@
       </div>
       <ds-themed-item-alerts [item]="item"></ds-themed-item-alerts>
       <ds-item-versions-notice [item]="item"></ds-item-versions-notice>
-      <ds-view-tracker [object]="item"></ds-view-tracker>
       <ng-template #workflowActions>
         <ng-container *ngIf="(item$ | async) && (workflowitem$ | async)">
           <div class="mb-3 text-right" *ngIf="(claimedTask$ | async) as claimedTaskRD">
