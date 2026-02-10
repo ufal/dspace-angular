@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/c
 import { ComponentFixture, inject, TestBed, waitForAsync, } from '@angular/core/testing';
 import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule, ReactiveFormsModule, UntypedFormArray } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   DynamicFormArrayModel,
   DynamicFormControlEvent,
