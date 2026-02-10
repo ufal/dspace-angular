@@ -194,8 +194,7 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
     this.formId = this.formService.getUniqueId(this.sectionData.id);
     this.sectionService.dispatchSetSectionFormId(this.submissionId, this.sectionData.id, this.formId);
     this.formConfigService.findByHref(this.sectionData.config).pipe(
-      // @ts-ignore - Type mismatch between ConfigObject and SubmissionFormsModel (pre-existing)
-      map((configData: RemoteData<SubmissionFormsModel>) => configData.payload),
+      map((configData) => configData.payload as SubmissionFormsModel),
       tap((config: SubmissionFormsModel) => this.formConfig = config),
       mergeMap(() =>
         observableCombineLatest<[WorkspaceitemSectionFormObject, SubmissionObject, boolean]>([
