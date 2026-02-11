@@ -158,11 +158,11 @@ describe('StaticPageComponent', () => {
   describe('change detection', () => {
     it('should call changeDetector.detectChanges() after successful content load', async () => {
       const { component } = await setupTest('<div>test</div>');
-      spyOn(component['changeDetector'], 'detectChanges');
+      spyOn((component as any).changeDetector, 'detectChanges');
 
       await component.ngOnInit();
 
-      expect(component['changeDetector'].detectChanges).toHaveBeenCalled();
+      expect((component as any).changeDetector.detectChanges).toHaveBeenCalled();
     });
 
     it('should call changeDetector.detectChanges() when content not found', async () => {
@@ -194,11 +194,11 @@ describe('StaticPageComponent', () => {
       const fixture = TestBed.createComponent(StaticPageComponent);
       const component = fixture.componentInstance;
 
-      spyOn(component['changeDetector'], 'detectChanges');
+      spyOn((component as any).changeDetector, 'detectChanges');
 
       await component.ngOnInit();
 
-      expect(component['changeDetector'].detectChanges).toHaveBeenCalled();
+      expect((component as any).changeDetector.detectChanges).toHaveBeenCalled();
     });
   });
 });
