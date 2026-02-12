@@ -54,15 +54,6 @@ export class HtmlContentService {
       }
     }
     if (response.status === 200) {
-      if (isEmpty(response.body)) {
-        const refreshed = await firstValueFrom(this.fetchHtmlContent(this.appendCacheBust(url)));
-        if (refreshed.status === 404) {
-          return undefined;
-        }
-        if (refreshed.status === 200) {
-          return refreshed.body ?? '';
-        }
-      }
       return response.body ?? '';
     }
     if (response.status === 304) {

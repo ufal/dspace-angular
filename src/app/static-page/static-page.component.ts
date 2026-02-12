@@ -49,7 +49,12 @@ export class StaticPageComponent implements OnInit {
       this.responseService.setNotFound();
       this.contentState = 'not-found';
       this.changeDetector.detectChanges();
-    } catch {
+    } catch (error) {
+      console.error('Static page load error:', {
+        fileName: this.htmlFileName,
+        url: this.router.url,
+        error: error
+      });
       this.responseService.setNotFound();
       this.contentState = 'not-found';
       this.changeDetector.detectChanges();

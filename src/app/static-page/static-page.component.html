@@ -1,3 +1,7 @@
+<div class="container text-center my-5" *ngIf="contentState === 'loading'">
+  <ds-themed-loading [spinner]="true" [showMessage]="false"></ds-themed-loading>
+</div>
+
 <!-- Show static page content when found -->
 <div class="container" *ngIf="contentState === 'found'">
   <div [innerHTML]="(htmlContent | async) | dsSafeHtml" (click)="processLinks($event)"></div>
