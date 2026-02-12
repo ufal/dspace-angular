@@ -25,11 +25,17 @@ export class HtmlContentService {
 
   /**
    * Append a cache-busting query parameter to force a fresh response.
+    * Uses a deterministic value to remain SSR-safe and cache-friendly.
    * @param url file location
    */
   private appendCacheBust(url: string): string {
+    const cacheBustParam = 'cacheBust=';
+    if (url.includes(cacheBustParam)) {
+      return url;
+    }
     const separator = url.includes('?') ? '&' : '?';
-    return `${url}${separator}cacheBust=${Date.now()}`;
+    const cacheBustValue = '1';
+    return `${url}${separator}${cacheBustParam}${cacheBustValue}`;
   }
 
   /**

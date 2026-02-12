@@ -12,7 +12,7 @@ import { ClarinSafeHtmlPipe } from '../shared/utils/clarin-safehtml.pipe';
 import { ServerResponseService } from '../core/services/server-response.service';
 
 describe('StaticPageComponent', () => {
-  async function setupTest(html: string, restBase?: string) {
+  async function setupTest(html: string | undefined, restBase?: string) {
     const htmlContentService = jasmine.createSpyObj('htmlContentService', {
       fetchHtmlContent: of(html),
       getHmtlContentByPathAndLocale: Promise.resolve(html)
@@ -49,7 +49,7 @@ describe('StaticPageComponent', () => {
 
     const fixture = TestBed.createComponent(StaticPageComponent);
     const component = fixture.componentInstance;
-    return { fixture, component, htmlContentService };
+    return { fixture, component, htmlContentService, responseService };
   }
 
   it('should create', async () => {
@@ -120,33 +120,7 @@ describe('StaticPageComponent', () => {
     });
 
     it('should set contentState to "not-found" when content is undefined', async () => {
-      const htmlContentService = jasmine.createSpyObj('htmlContentService', {
-        getHmtlContentByPathAndLocale: Promise.resolve(undefined)
-      });
-
-      const responseService = jasmine.createSpyObj('responseService', {
-        setNotFound: null
-      });
-
-      const appConfig = {
-        ...environment,
-        ui: { ...(environment as any).ui, namespace: 'testNamespace' },
-        rest: { ...(environment as any).rest }
-      };
-
-      await TestBed.configureTestingModule({
-        declarations: [ StaticPageComponent, ClarinSafeHtmlPipe ],
-        imports: [ TranslateModule.forRoot() ],
-        providers: [
-          { provide: HtmlContentService, useValue: htmlContentService },
-          { provide: Router, useValue: new RouterMock() },
-          { provide: ServerResponseService, useValue: responseService },
-          { provide: APP_CONFIG, useValue: appConfig }
-        ]
-      }).compileComponents();
-
-      const fixture = TestBed.createComponent(StaticPageComponent);
-      const component = fixture.componentInstance;
+      const { component, responseService } = await setupTest(undefined);
 
       await component.ngOnInit();
 
@@ -166,33 +140,7 @@ describe('StaticPageComponent', () => {
     });
 
     it('should call changeDetector.detectChanges() when content not found', async () => {
-      const htmlContentService = jasmine.createSpyObj('htmlContentService', {
-        getHmtlContentByPathAndLocale: Promise.resolve(undefined)
-      });
-
-      const responseService = jasmine.createSpyObj('responseService', {
-        setNotFound: null
-      });
-
-      const appConfig = {
-        ...environment,
-        ui: { ...(environment as any).ui, namespace: 'testNamespace' },
-        rest: { ...(environment as any).rest }
-      };
-
-      await TestBed.configureTestingModule({
-        declarations: [ StaticPageComponent, ClarinSafeHtmlPipe ],
-        imports: [ TranslateModule.forRoot() ],
-        providers: [
-          { provide: HtmlContentService, useValue: htmlContentService },
-          { provide: Router, useValue: new RouterMock() },
-          { provide: ServerResponseService, useValue: responseService },
-          { provide: APP_CONFIG, useValue: appConfig }
-        ]
-      }).compileComponents();
-
-      const fixture = TestBed.createComponent(StaticPageComponent);
-      const component = fixture.componentInstance;
+      const { component } = await setupTest(undefined);
 
       spyOn((component as any).changeDetector, 'detectChanges');
 
