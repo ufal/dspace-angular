@@ -6,7 +6,7 @@ import { IdleModalComponent } from './idle-modal.component';
 import { AuthService } from '../../core/auth/auth.service';
 import { By } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
-import { LogOutAction } from '../../core/auth/auth.actions';
+import { LogOutAction, RefreshTokenAction } from '../../core/auth/auth.actions';
 
 describe('IdleModalComponent', () => {
   let component: IdleModalComponent;
@@ -19,7 +19,8 @@ describe('IdleModalComponent', () => {
 
   beforeEach(waitForAsync(() => {
     modalStub = jasmine.createSpyObj('modalStub', ['close']);
-    authServiceStub = jasmine.createSpyObj('authService', ['setIdle']);
+    authServiceStub = jasmine.createSpyObj('authService', ['setIdle', 'getToken']);
+    authServiceStub.getToken.and.returnValue({ access_token: 'test-token' });
     storeStub = jasmine.createSpyObj('store', ['dispatch']);
     TestBed.configureTestingModule({
       imports: [TranslateModule.forRoot()],
@@ -49,6 +50,9 @@ describe('IdleModalComponent', () => {
       spyOn(component.response, 'emit');
       component.extendSessionPressed();
     }));
+    it('should dispatch RefreshTokenAction', () => {
+      expect(storeStub.dispatch).toHaveBeenCalledWith(jasmine.any(RefreshTokenAction));
+    });
     it('should set idle to false', () => {
       expect(authServiceStub.setIdle).toHaveBeenCalledWith(false);
     });
@@ -77,6 +81,9 @@ describe('IdleModalComponent', () => {
       spyOn(component.response, 'emit');
       component.closePressed();
     }));
+    it('should dispatch RefreshTokenAction', () => {
+      expect(storeStub.dispatch).toHaveBeenCalledWith(jasmine.any(RefreshTokenAction));
+    });
     it('should set idle to false', () => {
       expect(authServiceStub.setIdle).toHaveBeenCalledWith(false);
     });

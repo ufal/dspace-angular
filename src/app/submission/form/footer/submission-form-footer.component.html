@@ -36,28 +36,29 @@
         </button>
       </span>
       <!-- Save & Exit button: saves progress and exits the form -->
-      <button type="button"
-              [class.btn-primary]="!(showDepositAndDiscard | async)"
-              [class.btn-secondary]="(showDepositAndDiscard | async)"
-              class="btn"
-              id="saveAndExit"
-              [attr.data-test]="'save-and-exit' | dsBrowserOnly"
-              [dsBtnDisabled]="(processingSaveStatus | async) || (processingDepositStatus | async)"
-              [title]="'submission.buttons.save-exit.tooltip' | translate"
-              (click)="saveLater($event)">
-        <span><i class="fas fa-door-open"></i> {{'submission.general.save-and-exit' | translate}}</span>
-      </button>
+      <span [ngbTooltip]="'submission.buttons.save-exit.tooltip' | translate">
+        <button type="button"
+                [class.btn-primary]="!(showDepositAndDiscard | async)"
+                [class.btn-secondary]="(showDepositAndDiscard | async)"
+                class="btn"
+                id="saveAndExit"
+                [attr.data-test]="'save-and-exit' | dsBrowserOnly"
+                [dsBtnDisabled]="(processingSaveStatus | async) || (processingDepositStatus | async)"
+                (click)="saveLater($event)">
+          <span><i class="fas fa-door-open"></i> {{'submission.general.save-and-exit' | translate}}</span>
+        </button>
+      </span>
       <!-- Submit for Review button: sends entry to editor for review -->
-      <button *ngIf="(showDepositAndDiscard | async)"
-              type="button"
-              id="deposit"
-              [attr.data-test]="'deposit' | dsBrowserOnly"
-              class="btn btn-success"
-              [dsBtnDisabled]="(processingSaveStatus | async) || (processingDepositStatus | async)"
-              [title]="'submission.buttons.submit.tooltip' | translate"
-              (click)="deposit($event)">
-        <span><i class="fas fa-check"></i> {{'submission.general.submit-review' | translate}}</span>
-      </button>
+      <span *ngIf="(showDepositAndDiscard | async)" [ngbTooltip]="'submission.buttons.submit.tooltip' | translate">
+        <button type="button"
+                id="deposit"
+                [attr.data-test]="'deposit' | dsBrowserOnly"
+                class="btn btn-success"
+                [dsBtnDisabled]="(processingSaveStatus | async) || (processingDepositStatus | async)"
+                (click)="deposit($event)">
+          <span><i class="fas fa-check"></i> {{'submission.general.submit-review' | translate}}</span>
+        </button>
+      </span>
     </div>
   </div>
 </div>

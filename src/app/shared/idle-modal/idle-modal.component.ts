@@ -5,7 +5,7 @@ import { AuthService } from '../../core/auth/auth.service';
 import { hasValue } from '../empty.util';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../app.reducer';
-import { LogOutAction } from '../../core/auth/auth.actions';
+import { LogOutAction, RefreshTokenAction } from '../../core/auth/auth.actions';
 
 @Component({
   selector: 'ds-idle-modal',
@@ -73,6 +73,11 @@ export class IdleModalComponent implements OnInit {
   extendSessionAndCloseModal() {
     if (hasValue(this.graceTimer)) {
       clearTimeout(this.graceTimer);
+    }
+    // Refresh the token to extend session
+    const token = this.authService.getToken();
+    if (hasValue(token)) {
+      this.store.dispatch(new RefreshTokenAction(token));
     }
     this.authService.setIdle(false);
     this.closeModal();
