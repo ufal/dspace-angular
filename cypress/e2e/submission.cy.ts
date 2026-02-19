@@ -87,7 +87,7 @@ describe('New Submission page', () => {
             const id = subpaths[2];
 
             // Even though form is incomplete, the "Save for Later" button should still work
-            cy.get('button#saveForLater').click();
+            cy.get('button#saveAndExit').click();
 
             // "Save for Later" should send us to MyDSpace
             cy.url().should('include', '/mydspace');
