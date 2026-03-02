@@ -242,14 +242,18 @@ describe('SubmissionSectionCcLicensesComponent', () => {
         fixture.detectChanges();
       });
 
-      it('should call the submission cc licenses data service getCcLicenseLink method', () => {
-        expect(submissionCcLicenseUrlDataService.getCcLicenseLink).toHaveBeenCalledWith(
-          ccLicence,
-          new Map([
-            [ccLicence.fields[0], ccLicence.fields[0].enums[1]],
-            [ccLicence.fields[1], ccLicence.fields[1].enums[0]],
-          ])
-        );
+      it('should call the submission cc licenses data service getCcLicenseLink method', (done) => {
+        setTimeout(() => {
+          fixture.detectChanges();
+          expect(submissionCcLicenseUrlDataService.getCcLicenseLink).toHaveBeenCalledWith(
+            ccLicence,
+            new Map([
+              [ccLicence.fields[0], ccLicence.fields[0].enums[1]],
+              [ccLicence.fields[1], ccLicence.fields[1].enums[0]],
+            ])
+          );
+          done();
+        }, 350);
       });
 
       it('should display a cc license link', (done) => {
