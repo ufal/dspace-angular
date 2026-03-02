@@ -1,12 +1,11 @@
 {
-
   // "401.help": "You're not authorized to access this page. You can use the button below to get back to the home page.",
   "401.help": "Bạn không có quyền truy cập trang này. Bạn có thể sử dụng nút chức năng phía dưới để quay lại trang chủ.",
 
   // "401.link.home-page": "Take me to the home page",
   "401.link.home-page": "Đi tới trang chủ",
 
-  // "401.unauthorized": "unauthorized",
+  // "401.unauthorized": "Unauthorized",
   "401.unauthorized": "không có quyền truy cập",
 
   // "403.help": "You don't have permission to access this page. You can use the button below to get back to the home page.",
@@ -15,10 +14,10 @@
   // "403.link.home-page": "Take me to the home page",
   "403.link.home-page": "Đi tới trang chủ",
 
-  // "403.forbidden": "forbidden",
+  // "403.forbidden": "Forbidden",
   "403.forbidden": "không được phép truy cập",
 
-  // "500.page-internal-server-error": "Service Unavailable",
+  // "500.page-internal-server-error": "Service unavailable",
   "500.page-internal-server-error": "Dịch vụ không sẵn sàng",
 
   // "500.help": "The server is temporarily unable to service your request due to maintenance downtime or capacity problems. Please try again later.",
@@ -33,23 +32,27 @@
   // "404.link.home-page": "Take me to the home page",
   "404.link.home-page": "Đi tới trang chủ",
 
-  // "404.page-not-found": "page not found",
+  // "404.page-not-found": "Page not found",
   "404.page-not-found": "không tìm thấy trang",
 
-  // "error-page.description.401": "unauthorized",
+  // "error-page.description.401": "Unauthorized",
   "error-page.description.401": "không có quyền truy cập",
 
-  // "error-page.description.403": "forbidden",
+  // "error-page.description.403": "Forbidden",
   "error-page.description.403": "không được phép truy cập",
 
-  // "error-page.description.500": "Service Unavailable",
+  // "error-page.description.500": "Service unavailable",
   "error-page.description.500": "Dịch vụ không sẵn sàng",
 
-  // "error-page.description.404": "page not found",
+  // "error-page.description.404": "Page not found",
   "error-page.description.404": "không tìm thấy trang",
 
   // "error-page.orcid.generic-error": "An error occurred during login via ORCID. Make sure you have shared your ORCID account email address with DSpace. If the error persists, contact the administrator",
   "error-page.orcid.generic-error": "Đã xảy ra lỗi khi đăng nhập qua ORCID. Make sure you have shared your ORCID account email address with DSpace. If the error persists contact the administrator",
+
+  // "listelement.badge.access-status": "Access status:",
+  // TODO New key - Add a translation
+  "listelement.badge.access-status": "Access status:",
 
   // "access-status.embargo.listelement.badge": "Embargo",
   "access-status.embargo.listelement.badge": "Ngăn chặn",
@@ -87,7 +90,7 @@
   // "admin.registries.bitstream-formats.create.failure.head": "Failure",
   "admin.registries.bitstream-formats.create.failure.head": "Không thành công",
 
-  // "admin.registries.bitstream-formats.create.head": "Create Bitstream format",
+  // "admin.registries.bitstream-formats.create.head": "Create bitstream format",
   "admin.registries.bitstream-formats.create.head": "Tạo định dạng tệp tin",
 
   // "admin.registries.bitstream-formats.create.new": "Add a new bitstream format",
@@ -194,6 +197,10 @@
   // "admin.registries.bitstream-formats.table.name": "Name",
   "admin.registries.bitstream-formats.table.name": "Tên",
 
+  // "admin.registries.bitstream-formats.table.selected": "Selected bitstream formats",
+  // TODO New key - Add a translation
+  "admin.registries.bitstream-formats.table.selected": "Selected bitstream formats",
+
   // "admin.registries.bitstream-formats.table.id": "ID",
   "admin.registries.bitstream-formats.table.id": "ID",
 
@@ -214,6 +221,14 @@
 
   // "admin.registries.bitstream-formats.title": "Bitstream Format Registry",
   "admin.registries.bitstream-formats.title": "Tạo định dạng tệp tin số",
+
+  // "admin.registries.bitstream-formats.select": "Select",
+  // TODO New key - Add a translation
+  "admin.registries.bitstream-formats.select": "Select",
+
+  // "admin.registries.bitstream-formats.deselect": "Deselect",
+  // TODO New key - Add a translation
+  "admin.registries.bitstream-formats.deselect": "Deselect",
 
   // "admin.registries.metadata.breadcrumbs": "Metadata registry",
   "admin.registries.metadata.breadcrumbs": "Mẫu nhập liệu",
@@ -239,8 +254,20 @@
   // "admin.registries.metadata.schemas.no-items": "No metadata schemas to show.",
   "admin.registries.metadata.schemas.no-items": "Không có lược đồ thông tin mô tả nào để hiển thị.",
 
+  // "admin.registries.metadata.schemas.select": "Select",
+  // TODO New key - Add a translation
+  "admin.registries.metadata.schemas.select": "Select",
+
+  // "admin.registries.metadata.schemas.deselect": "Deselect",
+  // TODO New key - Add a translation
+  "admin.registries.metadata.schemas.deselect": "Deselect",
+
   // "admin.registries.metadata.schemas.table.delete": "Delete selected",
   "admin.registries.metadata.schemas.table.delete": "Xóa các mục đã chọn",
+
+  // "admin.registries.metadata.schemas.table.selected": "Selected schemas",
+  // TODO New key - Add a translation
+  "admin.registries.metadata.schemas.table.selected": "Selected schemas",
 
   // "admin.registries.metadata.schemas.table.id": "ID",
   "admin.registries.metadata.schemas.table.id": "ID",
@@ -260,6 +287,14 @@
   // "admin.registries.schema.description": "This is the metadata schema for \"{{namespace}}\".",
   "admin.registries.schema.description": "Đây là lược đồ thông tin mô tả cho \"{{namespace}}\".",
 
+  // "admin.registries.schema.fields.select": "Select",
+  // TODO New key - Add a translation
+  "admin.registries.schema.fields.select": "Select",
+
+  // "admin.registries.schema.fields.deselect": "Deselect",
+  // TODO New key - Add a translation
+  "admin.registries.schema.fields.deselect": "Deselect",
+
   // "admin.registries.schema.fields.head": "Schema metadata fields",
   "admin.registries.schema.fields.head": "Lược đồ các trường thông tin mô tả",
 
@@ -271,6 +306,10 @@
 
   // "admin.registries.schema.fields.table.field": "Field",
   "admin.registries.schema.fields.table.field": "Trường",
+
+  // "admin.registries.schema.fields.table.selected": "Selected metadata fields",
+  // TODO New key - Add a translation
+  "admin.registries.schema.fields.table.selected": "Selected metadata fields",
 
   // "admin.registries.schema.fields.table.id": "ID",
   "admin.registries.schema.fields.table.id": "ID",
@@ -410,7 +449,7 @@
   // "admin.access-control.epeople.search.scope.metadata": "Metadata",
   "admin.access-control.epeople.search.scope.metadata": "Siêu dữ liệu",
 
-  // "admin.access-control.epeople.search.scope.email": "E-mail (exact)",
+  // "admin.access-control.epeople.search.scope.email": "Email (exact)",
   "admin.access-control.epeople.search.scope.email": "E-mail (chính xác)",
 
   // "admin.access-control.epeople.search.button": "Search",
@@ -428,7 +467,7 @@
   // "admin.access-control.epeople.table.name": "Name",
   "admin.access-control.epeople.table.name": "Tên",
 
-  // "admin.access-control.epeople.table.email": "E-mail (exact)",
+  // "admin.access-control.epeople.table.email": "Email (exact)",
   "admin.access-control.epeople.table.email": "E-mail (chính xác)",
 
   // "admin.access-control.epeople.table.edit": "Edit",
@@ -458,10 +497,10 @@
   // "admin.access-control.epeople.form.lastName": "Last name",
   "admin.access-control.epeople.form.lastName": "Họ",
 
-  // "admin.access-control.epeople.form.email": "E-mail",
+  // "admin.access-control.epeople.form.email": "Email",
   "admin.access-control.epeople.form.email": "E-mail",
 
-  // "admin.access-control.epeople.form.emailHint": "Must be valid e-mail address",
+  // "admin.access-control.epeople.form.emailHint": "Must be a valid email address",
   "admin.access-control.epeople.form.emailHint": "Phải là địa chỉ e-mail hợp lệ",
 
   // "admin.access-control.epeople.form.canLogIn": "Can log in",
@@ -915,11 +954,11 @@
   // "admin.metadata-import.page.error.addFile": "Select file first!",
   "admin.metadata-import.page.error.addFile": "Lựa chọn tệp trước!",
 
-  // "admin.metadata-import.page.error.addFileUrl": "Insert file url first!",
+  // "admin.metadata-import.page.error.addFileUrl": "Insert file URL first!",
   // TODO New key - Add a translation
-  "admin.metadata-import.page.error.addFileUrl": "Insert file url first!",
+  "admin.metadata-import.page.error.addFileUrl": "Insert file URL first!",
 
-  // "admin.batch-import.page.error.addFile": "Select Zip file first!",
+  // "admin.batch-import.page.error.addFile": "Select ZIP file first!",
   "admin.batch-import.page.error.addFile": "Chọn file Zip đầu tiên!",
 
   // "admin.metadata-import.page.toggle.upload": "Upload",
@@ -1049,139 +1088,8 @@
   // "bitstream.download.page": "Now downloading {{bitstream}}...",
   "bitstream.download.page": "Đang tải xuống {{bitstream}}... ",
 
-  // "clarin.license.agreement.breadcrumbs": "License Agreement",
-  // TODO New key - Add a translation
-  "clarin.license.agreement.breadcrumbs": "License Agreement",
-
-  // "clarin.license.agreement.title": "License Agreement",
-  // TODO New key - Add a translation
-  "clarin.license.agreement.title": "License Agreement",
-
-  // "clarin.license.agreement.header.info": "The requested content is distributed under one or more licence(s). You have to agree to the licence(s) below before you can obtain the content. Please, view the licence(s) by clicking on the button(s) and read it carefully. The data filled below might be shared with the submitter of the item and/or for creating statistics.",
-  // TODO New key - Add a translation
-  "clarin.license.agreement.header.info": "The requested content is distributed under one or more licence(s). You have to agree to the licence(s) below before you can obtain the content. Please, view the licence(s) by clicking on the button(s) and read it carefully. The data filled below might be shared with the submitter of the item and/or for creating statistics.",
-
-  // "clarin.license.agreement.signer.header.info": ["The information below identifies you, the SIGNER. If the information is incorrect, please contact our", "Help Desk.", "This information will be stored as part of the electronic signatures."],
-  // TODO New key - Add a translation
-  "clarin.license.agreement.signer.header.info": ["The information below identifies you, the SIGNER. If the information is incorrect, please contact our", "Help Desk.", "This information will be stored as part of the electronic signatures."],
-
-  // "clarin.license.agreement.item.handle": "Item handle",
-  // TODO New key - Add a translation
-  "clarin.license.agreement.item.handle": "Item handle",
-
-  // "clarin.license.agreement.bitstream.name": "Bitstream",
-  // TODO New key - Add a translation
-  "clarin.license.agreement.bitstream.name": "Bitstream",
-
-  // "clarin.license.agreement.signer.name": "Signer",
-  // TODO New key - Add a translation
-  "clarin.license.agreement.signer.name": "Signer",
-
-  // "clarin.license.agreement.signer.id": "User ID",
-  // TODO New key - Add a translation
-  "clarin.license.agreement.signer.id": "User ID",
-
-  // "clarin.license.agreement.token.info": "You will receive an email with download instructions.",
-  // TODO New key - Add a translation
-  "clarin.license.agreement.token.info": "You will receive an email with download instructions.",
-
-  // "clarin.license.agreement.signer.ip.address": "Ip Address",
-  // TODO New key - Add a translation
-  "clarin.license.agreement.signer.ip.address": "Ip Address",
-
-  // "clarin.license.agreement.signer.SEND_TOKEN": "E-mail",
-  // TODO New key - Add a translation
-  "clarin.license.agreement.signer.SEND_TOKEN": "E-mail",
-
-  // "clarin.license.agreement.signer.NAME": "Name (given name and surname)",
-  // TODO New key - Add a translation
-  "clarin.license.agreement.signer.NAME": "Name (given name and surname)",
-
-  // "clarin.license.agreement.signer.DOB": "Date of birth",
-  // TODO New key - Add a translation
-  "clarin.license.agreement.signer.DOB": "Date of birth",
-
-  // "clarin.license.agreement.signer.ADDRESS": "Address",
-  // TODO New key - Add a translation
-  "clarin.license.agreement.signer.ADDRESS": "Address",
-
-  // "clarin.license.agreement.signer.COUNTRY": "Country",
-  // TODO New key - Add a translation
-  "clarin.license.agreement.signer.COUNTRY": "Country",
-
-  // "clarin.license.agreement.signer.EXTRA_EMAIL": "E-mail",
-  // TODO New key - Add a translation
-  "clarin.license.agreement.signer.EXTRA_EMAIL": "E-mail",
-
-  // "clarin.license.agreement.signer.ORGANIZATION": "Organization",
-  // TODO New key - Add a translation
-  "clarin.license.agreement.signer.ORGANIZATION": "Organization",
-
-  // "clarin.license.agreement.signer.REQUIRED_ORGANIZATION": "Organization",
-  // TODO New key - Add a translation
-  "clarin.license.agreement.signer.REQUIRED_ORGANIZATION": "Organization",
-
-  // "clarin.license.agreement.signer.INTENDED_USE": "Intended use",
-  // TODO New key - Add a translation
-  "clarin.license.agreement.signer.INTENDED_USE": "Intended use",
-
-  // "clarin.license.agreement.signer.ACA_ORG_NAME_AND_SEAT": "Name and seat (address) of your academic institution",
-  // TODO New key - Add a translation
-  "clarin.license.agreement.signer.ACA_ORG_NAME_AND_SEAT": "Name and seat (address) of your academic institution",
-
-  // "clarin.license.agreement.button.agree": "I AGREE",
-  // TODO New key - Add a translation
-  "clarin.license.agreement.button.agree": "I AGREE",
-
-  // "clarin.license.agreement.warning": "By clicking on the button below I, SIGNER with the above ID, agree to the LICENCE(s) restricting the usage of requested BITSTREAM(s).",
-  // TODO New key - Add a translation
-  "clarin.license.agreement.warning": "By clicking on the button below I, SIGNER with the above ID, agree to the LICENCE(s) restricting the usage of requested BITSTREAM(s).",
-
-  // "clarin.license.agreement.notification.error.required.info": "You must fill in required info.",
-  // TODO New key - Add a translation
-  "clarin.license.agreement.notification.error.required.info": "You must fill in required info.",
-
-  // "clarin.license.agreement.error.message.cannot.download": ["Something went wrong and you cannot download this bitstream, please contact", " Help Desk."],
-  // TODO New key - Add a translation
-  "clarin.license.agreement.error.message.cannot.download": ["Something went wrong and you cannot download this bitstream, please contact", " Help Desk."],
-
-  // "clarin.license.agreement.notification.check.email": "You will receive email with download link.",
-  // TODO New key - Add a translation
-  "clarin.license.agreement.notification.check.email": "You will receive email with download link.",
-
-  // "clarin.license.agreement.notification.cannot.send.email": "Error: cannot send the email.",
-  // TODO New key - Add a translation
-  "clarin.license.agreement.notification.cannot.send.email": "Error: cannot send the email.",
-
-  // "clarin.bitstream.expired.dtoken.message": "The download token is expired, you will be redirected to the download page.",
-  // TODO New key - Add a translation
-  "clarin.bitstream.expired.dtoken.message": "The download token is expired, you will be redirected to the download page.",
-
-  // "bitstream.download.page.back": "Back" ,
+  // "bitstream.download.page.back": "Back",
   "bitstream.download.page.back": "Quay lại",
-
-
-  // "clarin.license.all-page.title": "Available Licenses",
-  // TODO New key - Add a translation
-  "clarin.license.all-page.title": "Available Licenses",
-
-  // "clarin.license.all-page.source": "Source:",
-  // TODO New key - Add a translation
-  "clarin.license.all-page.source": "Source:",
-
-  // "clarin.license.all-page.labels": "Labels:",
-  // TODO New key - Add a translation
-  "clarin.license.all-page.labels": "Labels:",
-
-  // "clarin.license.all-page.extra-information": "Extra information required:",
-  // TODO New key - Add a translation
-  "clarin.license.all-page.extra-information": "Extra information required:",
-
-  // "clarin.license.all-page.extra-information.default": "NONE",
-  // TODO New key - Add a translation
-  "clarin.license.all-page.extra-information.default": "NONE",
-
-
 
   // "bitstream.edit.authorizations.link": "Edit bitstream's Policies",
   "bitstream.edit.authorizations.link": "Chỉnh sửa chính sách của tệp tin",
@@ -1298,7 +1206,7 @@
   // "bitstream-request-a-copy.name.error": "The name is required",
   "bitstream-request-a-copy.name.error": "Tên là bắt buộc",
 
-  // "bitstream-request-a-copy.email.label": "Your e-mail address *",
+  // "bitstream-request-a-copy.email.label": "Your email address *",
   "bitstream-request-a-copy.email.label": "Địa chỉ email của bạn *",
 
   // "bitstream-request-a-copy.email.hint": "This email address is used for sending the file.",
@@ -1354,10 +1262,6 @@
   // "browse.comcol.by.title": "By Title",
   "browse.comcol.by.title": "Nhan đề",
 
-  // "browse.comcol.by.language": "By Language",
-  // TODO New key - Add a translation
-  "browse.comcol.by.language": "By Language",
-
   // "browse.comcol.head": "Browse",
   "browse.comcol.head": "Duyệt",
 
@@ -1375,14 +1279,6 @@
 
   // "browse.metadata.title": "Title",
   "browse.metadata.title": "Nhan đề",
-
-  // "browse.metadata.language": "Language",
-  // TODO New key - Add a translation
-  "browse.metadata.language": "Language",
-
-  // "browse.metadata.language.breadcrumbs": "Browse by Language",
-  // TODO New key - Add a translation
-  "browse.metadata.language.breadcrumbs": "Browse by Language",
 
   // "browse.metadata.author.breadcrumbs": "Browse by Author",
   "browse.metadata.author.breadcrumbs": "Duyệt theo tác giả",
@@ -1412,6 +1308,10 @@
 
   // "pagination.next.button.disabled.tooltip": "No more pages of results",
   "pagination.next.button.disabled.tooltip": "Không còn trang kết quả khác",
+
+  // "pagination.page-number-bar": "Control bar for page navigation, relative to element with ID: ",
+  // TODO New key - Add a translation
+  "pagination.page-number-bar": "Control bar for page navigation, relative to element with ID: ",
 
   // "browse.startsWith": ", starting with {{ startsWith }}",
   // TODO New key - Add a translation
@@ -1488,6 +1388,10 @@
   // TODO New key - Add a translation
   "browse.startsWith.input": "Filter",
 
+  // "browse.taxonomy_srsc.title": "Browsing by Subject Category",
+  // TODO New key - Add a translation
+  "browse.taxonomy_srsc.title": "Browsing by Subject Category",
+
   // "browse.taxonomy.button": "Browse",
   // TODO New key - Add a translation
   "browse.taxonomy.button": "Browse",
@@ -1513,29 +1417,13 @@
   // "claimed-declined-task-search-result-list-element.title": "Declined, sent back to Review Manager's workflow",
   "claimed-declined-task-search-result-list-element.title": "Bị từ chối, đã gửi lại tới người quản lý kiểm duyệt",
 
-  // "contact-us.breadcrumbs": "Contact Us",
+  // "collection.create.breadcrumbs": "Create collection",
   // TODO New key - Add a translation
-  "contact-us.breadcrumbs": "Contact Us",
+  "collection.create.breadcrumbs": "Create collection",
 
-  // "contact-us.title": "Contact Us",
+  // "collection.browse.logo": "Browse for a collection logo",
   // TODO New key - Add a translation
-  "contact-us.title": "Contact Us",
-
-  // "contact-us.description": "DSpace administrators may be contacted at:",
-  // TODO New key - Add a translation
-  "contact-us.description": "DSpace administrators may be contacted at:",
-
-  // "contact-us.form": "On-line form: ",
-  // TODO New key - Add a translation
-  "contact-us.form": "On-line form: ",
-
-  // "contact-us.feedback": "Feedback",
-  // TODO New key - Add a translation
-  "contact-us.feedback": "Feedback",
-
-  // "contact-us.email": "Email: ",
-  // TODO New key - Add a translation
-  "contact-us.email": "Email: ",
+  "collection.browse.logo": "Browse for a collection logo",
 
   // "collection.create.head": "Create a Collection",
   "collection.create.head": "Tạo một Bộ sưu tập",
@@ -1835,6 +1723,10 @@
   // "collection.listelement.badge": "Collection",
   "collection.listelement.badge": "Bộ sưu tập",
 
+  // "collection.logo": "Collection logo",
+  // TODO New key - Add a translation
+  "collection.logo": "Collection logo",
+
   // "collection.page.browse.recent.head": "Recent Submissions",
   "collection.page.browse.recent.head": "Những tài liệu tải lên gần đây",
 
@@ -1858,6 +1750,18 @@
 
   // "collection.select.empty": "No collections to show",
   "collection.select.empty": "Không có bộ sưu tập nào để hiển thị",
+
+  // "collection.select.table.selected": "Selected collections",
+  // TODO New key - Add a translation
+  "collection.select.table.selected": "Selected collections",
+
+  // "collection.select.table.select": "Select collection",
+  // TODO New key - Add a translation
+  "collection.select.table.select": "Select collection",
+
+  // "collection.select.table.deselect": "Deselect collection",
+  // TODO New key - Add a translation
+  "collection.select.table.deselect": "Deselect collection",
 
   // "collection.select.table.title": "Title",
   "collection.select.table.title": "Nhan đề",
@@ -1903,6 +1807,7 @@
 
   // "collection.source.controls.reset.submit.error": "Something went wrong with initiating the reset and reimport",
   "collection.source.controls.reset.submit.error": "Đã xảy ra lỗi khi bắt đầu thiết lập và nhập lại dữ liệu",
+
   // "collection.source.controls.reset.failed": "An error occurred during the reset and reimport",
   "collection.source.controls.reset.failed": "Xảy ra sự cố trong quá trình thiết lập và nhập lại dữ liệu",
 
@@ -1951,6 +1856,22 @@
 
   // "communityList.showMore": "Show More",
   "communityList.showMore": "Hiển thị thêm",
+
+  // "communityList.expand": "Expand {{ name }}",
+  // TODO New key - Add a translation
+  "communityList.expand": "Expand {{ name }}",
+
+  // "communityList.collapse": "Collapse {{ name }}",
+  // TODO New key - Add a translation
+  "communityList.collapse": "Collapse {{ name }}",
+
+  // "community.browse.logo": "Browse for a community logo",
+  // TODO New key - Add a translation
+  "community.browse.logo": "Browse for a community logo",
+
+  // "community.create.breadcrumbs": "Create Community",
+  // TODO New key - Add a translation
+  "community.create.breadcrumbs": "Create Community",
 
   // "community.create.head": "Create a Community",
   "community.create.head": "Tạo đơn vị",
@@ -2004,10 +1925,10 @@
   // "community.edit.logo.label": "Community logo",
   "community.edit.logo.label": "Logo đơn vị",
 
-  // "community.edit.logo.notifications.add.error": "Uploading Community logo failed. Please verify the content before retrying.",
+  // "community.edit.logo.notifications.add.error": "Uploading community logo failed. Please verify the content before retrying.",
   "community.edit.logo.notifications.add.error": "Tải lên không thành công thành công logo đơn vị. Vui lòng kiểm tra lại nội dung trước khi tải lại.",
 
-  // "community.edit.logo.notifications.add.success": "Upload Community logo successful.",
+  // "community.edit.logo.notifications.add.success": "Upload community logo successful.",
   "community.edit.logo.notifications.add.success": "Tài lên thành công logo đơn vị.",
 
   // "community.edit.logo.notifications.delete.success.title": "Logo deleted",
@@ -2019,7 +1940,7 @@
   // "community.edit.logo.notifications.delete.error.title": "Error deleting logo",
   "community.edit.logo.notifications.delete.error.title": "Lỗi khi xóa logo",
 
-  // "community.edit.logo.upload": "Drop a Community Logo to upload",
+  // "community.edit.logo.upload": "Drop a community logo to upload",
   "community.edit.logo.upload": "Thả một logo đơn vị để tải lên",
 
   // "community.edit.notifications.success": "Successfully edited the Community",
@@ -2028,7 +1949,7 @@
   // "community.edit.notifications.unauthorized": "You do not have privileges to make this change",
   "community.edit.notifications.unauthorized": "Bạn không có quyền để thực hiện thay đổi này",
 
-  // "community.edit.notifications.error": "An error occured while editing the Community",
+  // "community.edit.notifications.error": "An error occurred while editing the community",
   "community.edit.notifications.error": "Đã xảy ra lỗi khi chỉnh sửa đơn vị",
 
   // "community.edit.return": "Back",
@@ -2068,6 +1989,10 @@
 
   // "community.listelement.badge": "Community",
   "community.listelement.badge": "Đơn vị",
+
+  // "community.logo": "Community logo",
+  // TODO New key - Add a translation
+  "community.logo": "Community logo",
 
   // "comcol-role.edit.no-group": "None",
   "comcol-role.edit.no-group": "Trống",
@@ -2117,7 +2042,7 @@
   // "comcol-role.edit.bitstream_read.name": "Default bitstream read access",
   "comcol-role.edit.bitstream_read.name": "Quyền đọc tệp tin mặc định",
 
-  // "comcol-role.edit.bitstream_read.description": "Community administrators can create sub-communities or collections, and manage or assign management for those sub-communities or collections. In addition, they decide who can submit items to any sub-collections, edit item metadata (after submission), and add (map) existing items from other collections (subject to authorization).",
+  // "comcol-role.edit.bitstream_read.description": "E-People and Groups that can read new bitstreams submitted to this collection. Changes to this role are not retroactive. Existing bitstreams in the system will still be viewable by those who had read access at the time of their addition.",
   "comcol-role.edit.bitstream_read.description": "Người có quyền đọc tệp tin có khả năng tải các tệp tin về máy tính cá nhân để sử dụng",
 
   // "comcol-role.edit.bitstream_read.anonymous-group": "Default read for incoming bitstreams is currently set to Anonymous.",
@@ -2264,6 +2189,14 @@
   // "cookies.consent.content-modal.service": "service",
   "cookies.consent.content-modal.service": "dịch vụ",
 
+  // "cookies.consent.app.title.accessibility": "Accessibility Settings",
+  // TODO New key - Add a translation
+  "cookies.consent.app.title.accessibility": "Accessibility Settings",
+
+  // "cookies.consent.app.description.accessibility": "Required for saving your accessibility settings locally",
+  // TODO New key - Add a translation
+  "cookies.consent.app.description.accessibility": "Required for saving your accessibility settings locally",
+
   // "cookies.consent.app.title.authentication": "Authentication",
   "cookies.consent.app.title.authentication": "Xác thực",
 
@@ -2309,10 +2242,6 @@
   // "curation-task.task.citationpage.label": "Generate Citation Page",
   "curation-task.task.citationpage.label": "Tạo trang trích dẫn",
 
-  // "curation-task.task.checkhandles.label": "Check Item Handles",
-  // TODO New key - Add a translation
-  "curation-task.task.checkhandles.label": "Check Item Handles",
-
   // "curation-task.task.checklinks.label": "Check Links in Metadata",
   "curation-task.task.checklinks.label": "\"Kiểm tra các link trong thông tin mô tả\"",
 
@@ -2350,7 +2279,7 @@
   // "curation.form.submit.error.head": "Running the curation task failed",
   "curation.form.submit.error.head": "Việc chạy tác vụ kiểm tra đã thất bại",
 
-  // "curation.form.submit.error.content": "An error occured when trying to start the curation task.",
+  // "curation.form.submit.error.content": "An error occurred when trying to start the curation task.",
   "curation.form.submit.error.content": "Đã có lỗi xảy ra khi cố gắng khởi động tác vụ kiểm tra.",
 
   // "curation.form.submit.error.invalid-handle": "Couldn't determine the handle for this object",
@@ -2381,6 +2310,18 @@
 
   // "deny-request-copy.success": "Successfully denied item request",
   "deny-request-copy.success": "Từ chối thành công yêu cầu tài liệu",
+
+  // "dynamic-list.load-more": "Load more",
+  // TODO New key - Add a translation
+  "dynamic-list.load-more": "Load more",
+
+  // "dropdown.clear": "Clear selection",
+  // TODO New key - Add a translation
+  "dropdown.clear": "Clear selection",
+
+  // "dropdown.clear.tooltip": "Clear the selected option",
+  // TODO New key - Add a translation
+  "dropdown.clear.tooltip": "Clear the selected option",
 
   // "dso.name.untitled": "Untitled",
   "dso.name.untitled": "Không có nhan đề",
@@ -2609,6 +2550,10 @@
   // "error.recent-submissions": "Error fetching recent submissions",
   "error.recent-submissions": "Lỗi tìm kiếm các tài liệu biên mục gần đây",
 
+  // "error.profile-groups": "Error retrieving profile groups",
+  // TODO New key - Add a translation
+  "error.profile-groups": "Error retrieving profile groups",
+
   // "error.search-results": "Error fetching search results",
   "error.search-results": "Lỗi tìm kiếm các kết quả tìm",
 
@@ -2632,10 +2577,6 @@
   // "error.validation.license.notgranted": "You must grant this license to complete your submission. If you are unable to grant this license at this time you may save your work and return later or remove the submission.",
   "error.validation.license.notgranted": "Bạn phải đồng ý với giấy phép này để hoàn thành tài liệu biên mục của mình. Nếu hiện tại bạn không thể đồng ý giấy phép này bạn có thể lưu tài liệu biên mục của mình và quay lại sau hoặc xóa nội dung đã biên mục.",
 
-  // "error.validation.clarin-license.notgranted": "You must choose one of the resource licenses.",
-  // TODO New key - Add a translation
-  "error.validation.clarin-license.notgranted": "You must choose one of the resource licenses.",
-
   // "error.validation.pattern": "This input is restricted by the current pattern: {{ pattern }}.",
   // TODO New key - Add a translation
   "error.validation.pattern": "This input is restricted by the current pattern: {{ pattern }}.",
@@ -2646,10 +2587,10 @@
   // "error.validation.required": "This field is required",
   "error.validation.required": "Đây là trường bắt buộc",
 
-  // "error.validation.NotValidEmail": "This E-mail is not a valid email",
+  // "error.validation.NotValidEmail": "This is not a valid email",
   "error.validation.NotValidEmail": "Email này không hợp lệ",
 
-  // "error.validation.emailTaken": "This E-mail is already taken",
+  // "error.validation.emailTaken": "This email is already taken",
   "error.validation.emailTaken": "Email này đã được sử dụng",
 
   // "error.validation.groupExists": "This group already exists",
@@ -2683,14 +2624,22 @@
   // TODO New key - Add a translation
   "error.validation.metadata.qualifier.max-length": "This field may not contain more than 64 characters",
 
-  // "feed.description": "RSS feed",
+  // "feed.description": "Syndication feed",
   "feed.description": "Nguồn cấp dữ liệu tổng hợp",
+
+  // "file-download-link.restricted": "Restricted bitstream",
+  // TODO New key - Add a translation
+  "file-download-link.restricted": "Restricted bitstream",
 
   // "file-section.error.header": "Error obtaining files for this item",
   "file-section.error.header": "Lỗi khi lấy tệp cho tài liệu này",
 
   // "footer.copyright": "copyright © 2002-{{ year }}",
   "footer.copyright": "bản quyền © 2002-{{ year }}",
+
+  // "footer.link.accessibility": "Accessibility settings",
+  // TODO New key - Add a translation
+  "footer.link.accessibility": "Accessibility settings",
 
   // "footer.link.dspace": "DSpace software",
   "footer.link.dspace": "Phần mềm thư viện số",
@@ -2709,10 +2658,6 @@
 
   // "footer.link.feedback": "Send Feedback",
   "footer.link.feedback": "Gửi phản hồi",
-
-  // "footer.link.contact-us": "Contact us",
-  // TODO New key - Add a translation
-  "footer.link.contact-us": "Contact us",
 
   // "forgot-email.form.header": "Forgot Password",
   "forgot-email.form.header": "Quên mật khẩu",
@@ -2745,9 +2690,9 @@
   // "forgot-email.form.error.head": "Error when trying to reset password",
   "forgot-email.form.error.head": "Đã xảy ra lỗi khi đăng kí email",
 
-  // "forgot-email.form.error.content": "An error occured when attempting to reset the password for the account associated with the following email address: {{ email }}",
+  // "forgot-email.form.error.content": "An error occurred when attempting to reset the password for the account associated with the following email address: {{ email }}",
   // TODO New key - Add a translation
-  "forgot-email.form.error.content": "An error occured when attempting to reset the password for the account associated with the following email address: {{ email }}",
+  "forgot-email.form.error.content": "An error occurred when attempting to reset the password for the account associated with the following email address: {{ email }}",
 
   // "forgot-password.title": "Forgot Password",
   "forgot-password.title": "Quên mật khẩu",
@@ -2774,7 +2719,7 @@
   // "forgot-password.form.label.passwordrepeat": "Retype to confirm",
   "forgot-password.form.label.passwordrepeat": "Nhập lại mật khẩu mới",
 
-  // "forgot-password.form.error.empty-password": "Please enter a password in the box below.",
+  // "forgot-password.form.error.empty-password": "Please enter a password in the boxes above.",
   "forgot-password.form.error.empty-password": "Vui lòng nhập mật khẩu mới trong ô dưới đây.",
 
   // "forgot-password.form.error.matching-passwords": "The passwords do not match.",
@@ -2876,14 +2821,6 @@
   // TODO New key - Add a translation
   "form.other-information.orcid": "ORCID",
 
-  // "form.other-information.credit-name": "Credit Name",
-  // TODO New key - Add a translation
-  "form.other-information.credit-name": "Credit Name",
-
-  // "form.other-information.other-names": "Other Names",
-  // TODO New key - Add a translation
-  "form.other-information.other-names": "Other Names",
-
   // "form.remove": "Remove",
   "form.remove": "Xóa",
 
@@ -2908,6 +2845,26 @@
 
   // "form.repeatable.sort.tip": "Drop the item in the new position",
   "form.repeatable.sort.tip": "Thả tài liệu vào vị trí mới",
+
+  // "form.number-picker.decrement": "Decrement {{field}}",
+  // TODO New key - Add a translation
+  "form.number-picker.decrement": "Decrement {{field}}",
+
+  // "form.number-picker.increment": "Increment {{field}}",
+  // TODO New key - Add a translation
+  "form.number-picker.increment": "Increment {{field}}",
+
+  // "form.date-picker.placeholder.year": "Year",
+  // TODO New key - Add a translation
+  "form.date-picker.placeholder.year": "Year",
+
+  // "form.date-picker.placeholder.month": "Month",
+  // TODO New key - Add a translation
+  "form.date-picker.placeholder.month": "Month",
+
+  // "form.date-picker.placeholder.day": "Day",
+  // TODO New key - Add a translation
+  "form.date-picker.placeholder.day": "Day",
 
   // "grant-deny-request-copy.deny": "Don't send copy",
   "grant-deny-request-copy.deny": "Không gửi bản sao",
@@ -3029,7 +2986,7 @@
   // "health-page.section.no-issues": "No issues detected",
   "health-page.section.no-issues": "Không có vấn đề được phát hiện",
 
-  // "home.description": "DSpace is a digital service that collects, preserves, and distributes digital material. Repositories are important tools for preserving an organization's legacy; they facilitate digital preservation and scholarly communication.",
+  // "home.description": "",
   "home.description": "",
 
   // "home.breadcrumbs": "Home",
@@ -3047,300 +3004,81 @@
   // "home.top-level-communities.help": "Select a community to browse its collections.",
   "home.top-level-communities.help": "Chọn một đơn vị để xem các bộ sưu tập của nó.",
 
-
-  // "home-page.carousel.ldata.info": "Linguistic Data and NLP Tools",
-  // TODO New key - Add a translation
-  "home-page.carousel.ldata.info": "Linguistic Data and NLP Tools",
-
-  // "home-page.carousel.ldata.find": "Find",
-  // TODO New key - Add a translation
-  "home-page.carousel.ldata.find": "Find",
-
-  // "home-page.carousel.ldata.citation-support": "Citation Support (with Persistent IDs)",
-  // TODO New key - Add a translation
-  "home-page.carousel.ldata.citation-support": "Citation Support (with Persistent IDs)",
-
-  // "home-page.carousel.deposit.header": "Deposit Free and Safe",
-  // TODO New key - Add a translation
-  "home-page.carousel.deposit.header": "Deposit Free and Safe",
-
-  // "home-page.carousel.deposit.info": "License of your Choice (Open licenses encouraged)",
-  // TODO New key - Add a translation
-  "home-page.carousel.deposit.info": "License of your Choice (Open licenses encouraged)",
-
-  // "home-page.carousel.deposit.find": "Easy to Find",
-  // TODO New key - Add a translation
-  "home-page.carousel.deposit.find": "Easy to Find",
-
-  // "home-page.carousel.deposit.cite": "Easy to Cite",
-  // TODO New key - Add a translation
-  "home-page.carousel.deposit.cite": "Easy to Cite",
-
-  // "home-page.carousel.deposit.citation": "“There ought to be only one grand dépôt of art in the world, to\n                        which the artist might repair with his works, and on presenting them\n                        receive what he required... ”",
-  // TODO New key - Add a translation
-  "home-page.carousel.deposit.citation": "“There ought to be only one grand dépôt of art in the world, to\n                        which the artist might repair with his works, and on presenting them\n                        receive what he required... ”",
-
-  // "home-page.carousel.deposit.small": "Ludwig van Beethoven, 1801",
-  // TODO New key - Add a translation
-  "home-page.carousel.deposit.small": "Ludwig van Beethoven, 1801",
-
-  // "home-page.search": "Search",
-  // TODO New key - Add a translation
-  "home-page.search": "Search",
-
-  // "home-page.advanced-search": "Advanced Search",
-  // TODO New key - Add a translation
-  "home-page.advanced-search": "Advanced Search",
-
-  // "home-page.hyperlink.author.message": "Author",
-  // TODO New key - Add a translation
-  "home-page.hyperlink.author.message": "Author",
-
-  // "home-page.hyperlink.subject.message": "Subject",
-  // TODO New key - Add a translation
-  "home-page.hyperlink.subject.message": "Subject",
-
-  // "home-page.hyperlink.language.message": "Language (ISO)",
-  // TODO New key - Add a translation
-  "home-page.hyperlink.language.message": "Language (ISO)",
-
-  // "home-page.hyperlink.view-more.message": "... View More",
-  // TODO New key - Add a translation
-  "home-page.hyperlink.view-more.message": "... View More",
-
-  // "home-page.whats-new.message": "What's New",
-  // TODO New key - Add a translation
-  "home-page.whats-new.message": "What's New",
-
-  // "home-page.new-items.message": "Most Viewed Items - Last Month",
-  // TODO New key - Add a translation
-  "home-page.new-items.message": "Most Viewed Items - Last Month",
-
-
-
-  // "handle-table.breadcrumbs": "Handles",
-  // TODO New key - Add a translation
-  "handle-table.breadcrumbs": "Handles",
-
-  // "handle-table.new-handle.breadcrumbs": "New Handle",
-  // TODO New key - Add a translation
-  "handle-table.new-handle.breadcrumbs": "New Handle",
-
-  // "handle-table.edit-handle.breadcrumbs": "Edit Handle",
-  // TODO New key - Add a translation
-  "handle-table.edit-handle.breadcrumbs": "Edit Handle",
-
-  // "handle-table.global-actions.breadcrumbs": "Global Actions",
-  // TODO New key - Add a translation
-  "handle-table.global-actions.breadcrumbs": "Global Actions",
-
-
-  // "handle-table.new-handle.form-handle-input-text": "Handle",
-  // TODO New key - Add a translation
-  "handle-table.new-handle.form-handle-input-text": "Handle",
-
-  // "handle-table.new-handle.form-handle-input-placeholder": "Enter handle",
-  // TODO New key - Add a translation
-  "handle-table.new-handle.form-handle-input-placeholder": "Enter handle",
-
-  // "handle-table.new-handle.form-url-input-text": "URL",
-  // TODO New key - Add a translation
-  "handle-table.new-handle.form-url-input-text": "URL",
-
-  // "handle-table.new-handle.form-url-input-placeholder": "Enter URL",
-  // TODO New key - Add a translation
-  "handle-table.new-handle.form-url-input-placeholder": "Enter URL",
-
-  // "handle-table.new-handle.form-button-submit": "Submit",
-  // TODO New key - Add a translation
-  "handle-table.new-handle.form-button-submit": "Submit",
-
-
-  // "handle-table.new-handle.notify.error": "Server Error - Cannot create new handle",
-  // TODO New key - Add a translation
-  "handle-table.new-handle.notify.error": "Server Error - Cannot create new handle",
-
-  // "handle-table.new-handle.notify.successful": "The new handle was created!",
-  // TODO New key - Add a translation
-  "handle-table.new-handle.notify.successful": "The new handle was created!",
-
-
-  // "handle-table.edit-handle.notify.error": "Server Error - Cannot edit this handle",
-  // TODO New key - Add a translation
-  "handle-table.edit-handle.notify.error": "Server Error - Cannot edit this handle",
-
-  // "handle-table.edit-handle.notify.successful": "The handle was edited!",
-  // TODO New key - Add a translation
-  "handle-table.edit-handle.notify.successful": "The handle was edited!",
-
-
-  // "handle-table.delete-handle.notify.error": "Server Error - Cannot delete this handle",
-  // TODO New key - Add a translation
-  "handle-table.delete-handle.notify.error": "Server Error - Cannot delete this handle",
-
-  // "handle-table.delete-handle.notify.successful": "The handle was deleted!",
-  // TODO New key - Add a translation
-  "handle-table.delete-handle.notify.successful": "The handle was deleted!",
-
-
-
-  // "handle-table.edit-handle.form-handle-input-text": "Handle",
-  // TODO New key - Add a translation
-  "handle-table.edit-handle.form-handle-input-text": "Handle",
-
-  // "handle-table.edit-handle.form-handle-input-placeholder": "Enter new handle",
-  // TODO New key - Add a translation
-  "handle-table.edit-handle.form-handle-input-placeholder": "Enter new handle",
-
-  // "handle-table.edit-handle.form-url-input-text": "URL",
-  // TODO New key - Add a translation
-  "handle-table.edit-handle.form-url-input-text": "URL",
-
-  // "handle-table.edit-handle.form-url-input-placeholder": "Enter new URL",
-  // TODO New key - Add a translation
-  "handle-table.edit-handle.form-url-input-placeholder": "Enter new URL",
-
-  // "handle-table.edit-handle.form-archive-input-check": "Archive old handle?",
-  // TODO New key - Add a translation
-  "handle-table.edit-handle.form-archive-input-check": "Archive old handle?",
-
-  // "handle-table.edit-handle.form-button-submit": "Submit",
-  // TODO New key - Add a translation
-  "handle-table.edit-handle.form-button-submit": "Submit",
-
-  // "handle-table.edit-handle.form-id-input-text": "ID",
-  // TODO New key - Add a translation
-  "handle-table.edit-handle.form-id-input-text": "ID",
-
-  // "handle-table.edit-handle.form-id-input-placeholder": "...",
+  // "info.accessibility-settings.breadcrumbs": "Accessibility settings",
   // TODO New key - Add a translation
-  "handle-table.edit-handle.form-id-input-placeholder": "...",
+  "info.accessibility-settings.breadcrumbs": "Accessibility settings",
 
-  // "handle-page.title": "Handles",
+  // "info.accessibility-settings.cookie-warning": "Saving the accessibility settings is currently not possible. Either log in to save the settings in user data, or accept the 'Accessibility Settings' cookie using the 'Cookie Settings' menu at the bottom of the page. Once the cookie has been accepted, you can reload the page to remove this message.",
   // TODO New key - Add a translation
-  "handle-page.title": "Handles",
+  "info.accessibility-settings.cookie-warning": "Saving the accessibility settings is currently not possible. Either log in to save the settings in user data, or accept the 'Accessibility Settings' cookie using the 'Cookie Settings' menu at the bottom of the page. Once the cookie has been accepted, you can reload the page to remove this message.",
 
-  // "handle-table.title": "Handle List",
+  // "info.accessibility-settings.disableNotificationTimeOut.label": "Automatically close notifications after time out",
   // TODO New key - Add a translation
-  "handle-table.title": "Handle List",
+  "info.accessibility-settings.disableNotificationTimeOut.label": "Automatically close notifications after time out",
 
-  // "handle-table.table.handle": "Handle",
+  // "info.accessibility-settings.disableNotificationTimeOut.hint": "When this toggle is activated, notifications will close automatically after the time out passes. When deactivated, notifications will remain open untill manually closed.",
   // TODO New key - Add a translation
-  "handle-table.table.handle": "Handle",
+  "info.accessibility-settings.disableNotificationTimeOut.hint": "When this toggle is activated, notifications will close automatically after the time out passes. When deactivated, notifications will remain open untill manually closed.",
 
-  // "handle-table.table.internal": "Is Internal",
+  // "info.accessibility-settings.failed-notification": "Failed to save accessibility settings",
   // TODO New key - Add a translation
-  "handle-table.table.internal": "Is Internal",
+  "info.accessibility-settings.failed-notification": "Failed to save accessibility settings",
 
-  // "handle-table.table.is-internal": "Yes",
+  // "info.accessibility-settings.invalid-form-notification": "Did not save. The form contains invalid values.",
   // TODO New key - Add a translation
-  "handle-table.table.is-internal": "Yes",
+  "info.accessibility-settings.invalid-form-notification": "Did not save. The form contains invalid values.",
 
-  // "handle-table.table.not-internal": "No",
+  // "info.accessibility-settings.liveRegionTimeOut.label": "ARIA Live region time out (in seconds)",
   // TODO New key - Add a translation
-  "handle-table.table.not-internal": "No",
+  "info.accessibility-settings.liveRegionTimeOut.label": "ARIA Live region time out (in seconds)",
 
-  // "handle-table.table.url": "URL",
+  // "info.accessibility-settings.liveRegionTimeOut.hint": "The duration after which a message in the ARIA live region disappears. ARIA live regions are not visible on the page, but provide announcements of notifications (or other actions) to screen readers.",
   // TODO New key - Add a translation
-  "handle-table.table.url": "URL",
+  "info.accessibility-settings.liveRegionTimeOut.hint": "The duration after which a message in the ARIA live region disappears. ARIA live regions are not visible on the page, but provide announcements of notifications (or other actions) to screen readers.",
 
-  // "handle-table.table.resource-type": "Resource type",
+  // "info.accessibility-settings.liveRegionTimeOut.invalid": "Live region time out must be greater than 0",
   // TODO New key - Add a translation
-  "handle-table.table.resource-type": "Resource type",
+  "info.accessibility-settings.liveRegionTimeOut.invalid": "Live region time out must be greater than 0",
 
-  // "handle-table.table.resource-id": "Resource id",
+  // "info.accessibility-settings.notificationTimeOut.label": "Notification time out (in seconds)",
   // TODO New key - Add a translation
-  "handle-table.table.resource-id": "Resource id",
+  "info.accessibility-settings.notificationTimeOut.label": "Notification time out (in seconds)",
 
-  // "handle-table.button.new-handle": "New external handle",
+  // "info.accessibility-settings.notificationTimeOut.hint": "The duration after which a notification disappears.",
   // TODO New key - Add a translation
-  "handle-table.button.new-handle": "New external handle",
+  "info.accessibility-settings.notificationTimeOut.hint": "The duration after which a notification disappears.",
 
-  // "handle-table.button.edit-handle": "Edit handle",
+  // "info.accessibility-settings.notificationTimeOut.invalid": "Notification time out must be greater than 0",
   // TODO New key - Add a translation
-  "handle-table.button.edit-handle": "Edit handle",
+  "info.accessibility-settings.notificationTimeOut.invalid": "Notification time out must be greater than 0",
 
-  // "handle-table.button.delete-handle": "Delete handle",
+  // "info.accessibility-settings.save-notification.cookie": "Successfully saved settings locally.",
   // TODO New key - Add a translation
-  "handle-table.button.delete-handle": "Delete handle",
+  "info.accessibility-settings.save-notification.cookie": "Successfully saved settings locally.",
 
-  // "handle-table.dropdown.search-option": "Search option",
+  // "info.accessibility-settings.save-notification.metadata": "Successfully saved settings on the user profile.",
   // TODO New key - Add a translation
-  "handle-table.dropdown.search-option": "Search option",
+  "info.accessibility-settings.save-notification.metadata": "Successfully saved settings on the user profile.",
 
-  // "handle-table.dropdown.search-button": "Search",
+  // "info.accessibility-settings.reset-failed": "Failed to reset. Either log in or accept the 'Accessibility Settings' cookie.",
   // TODO New key - Add a translation
-  "handle-table.dropdown.search-button": "Search",
+  "info.accessibility-settings.reset-failed": "Failed to reset. Either log in or accept the 'Accessibility Settings' cookie.",
 
-
-
-  // "handle-table.global-actions.title": "Global Actions",
-  // TODO New key - Add a translation
-  "handle-table.global-actions.title": "Global Actions",
-
-  // "handle-table.global-actions.actions-list-message": "This is the list of available global actions.",
-  // TODO New key - Add a translation
-  "handle-table.global-actions.actions-list-message": "This is the list of available global actions.",
-
-  // "handle-table.global-actions.button.change-prefix": "Change handle prefix",
-  // TODO New key - Add a translation
-  "handle-table.global-actions.button.change-prefix": "Change handle prefix",
-
-  // "handle-table.change-handle-prefix.form-old-prefix-input-text": "Old prefix",
-  // TODO New key - Add a translation
-  "handle-table.change-handle-prefix.form-old-prefix-input-text": "Old prefix",
-
-  // "handle-table.change-handle-prefix.form-old-prefix-input-error": "Valid old prefix is required",
-  // TODO New key - Add a translation
-  "handle-table.change-handle-prefix.form-old-prefix-input-error": "Valid old prefix is required",
-
-  // "handle-table.change-handle-prefix.form-old-prefix-input-placeholder": "Enter old prefix",
-  // TODO New key - Add a translation
-  "handle-table.change-handle-prefix.form-old-prefix-input-placeholder": "Enter old prefix",
-
-  // "handle-table.change-handle-prefix.form-new-prefix-input-text": "New prefix",
-  // TODO New key - Add a translation
-  "handle-table.change-handle-prefix.form-new-prefix-input-text": "New prefix",
-
-  // "handle-table.change-handle-prefix.form-new-prefix-input-placeholder": "Enter new prefix",
-  // TODO New key - Add a translation
-  "handle-table.change-handle-prefix.form-new-prefix-input-placeholder": "Enter new prefix",
-
-  // "handle-table.change-handle-prefix.form-new-prefix-input-error": "Valid new prefix is required",
-  // TODO New key - Add a translation
-  "handle-table.change-handle-prefix.form-new-prefix-input-error": "Valid new prefix is required",
-
-  // "handle-table.change-handle-prefix.form-archive-input-check": "Archive old handles?",
-  // TODO New key - Add a translation
-  "handle-table.change-handle-prefix.form-archive-input-check": "Archive old handles?",
-
-  // "handle-table.change-handle-prefix.notify.started": "Changing of the prefix has been started, it will take some time.",
+  // "info.accessibility-settings.reset-notification": "Successfully reset settings.",
   // TODO New key - Add a translation
-  "handle-table.change-handle-prefix.notify.started": "Changing of the prefix has been started, it will take some time.",
+  "info.accessibility-settings.reset-notification": "Successfully reset settings.",
 
-  // "handle-table.change-handle-prefix.notify.successful": "The global prefix was changed!",
+  // "info.accessibility-settings.reset": "Reset accessibility settings",
   // TODO New key - Add a translation
-  "handle-table.change-handle-prefix.notify.successful": "The global prefix was changed!",
+  "info.accessibility-settings.reset": "Reset accessibility settings",
 
-  // "handle-table.change-handle-prefix.notify.error": "Server Error - Cannot change the global prefix",
+  // "info.accessibility-settings.submit": "Save accessibility settings",
   // TODO New key - Add a translation
-  "handle-table.change-handle-prefix.notify.error": "Server Error - Cannot change the global prefix",
+  "info.accessibility-settings.submit": "Save accessibility settings",
 
-  // "handle-table.change-handle-prefix.notify.error.empty-table": "Server Error - Cannot change the global prefix because no Handle exist.",
+  // "info.accessibility-settings.title": "Accessibility settings",
   // TODO New key - Add a translation
-  "handle-table.change-handle-prefix.notify.error.empty-table": "Server Error - Cannot change the global prefix because no Handle exist.",
-
-
-
-  // "licenses.manage-table.breadcrumbs": "License administration",
-  // TODO New key - Add a translation
-  "licenses.manage-table.breadcrumbs": "License administration",
-
-  // "licenses.breadcrumbs": "Licenses",
-  // TODO New key - Add a translation
-  "licenses.breadcrumbs": "Licenses",
-
-
+  "info.accessibility-settings.title": "Accessibility settings",
 
   // "info.end-user-agreement.accept": "I have read and I agree to the End User Agreement",
   "info.end-user-agreement.accept": "Tôi đã đọc và đồng ý với Thỏa thuận bạn đọc",
@@ -3415,7 +3153,7 @@
   // "info.feedback.page-label": "Page",
   "info.feedback.page-label": "Trang",
 
-  // "info.feedback.page_help": "Tha page related to your feedback",
+  // "info.feedback.page_help": "The page related to your feedback",
   "info.feedback.page_help": "Trang liên kết với các phản hồi của bạn",
 
   // "item.alerts.private": "This item is non-discoverable",
@@ -3430,6 +3168,10 @@
 
   // "item.edit.authorizations.title": "Edit item's Policies",
   "item.edit.authorizations.title": "Chỉnh sửa chính sách phân quyền của tài liệu",
+
+  // "item.badge.status": "Item status:",
+  // TODO New key - Add a translation
+  "item.badge.status": "Item status:",
 
   // "item.badge.private": "Non-discoverable",
   "item.badge.private": "Cá nhân",
@@ -3487,6 +3229,14 @@
   // TODO New key - Add a translation
   "item.edit.bitstreams.bundle.name": "BUNDLE: {{ name }}",
 
+  // "item.edit.bitstreams.bundle.table.aria-label": "Bitstreams in the  {{ bundle }} Bundle",
+  // TODO New key - Add a translation
+  "item.edit.bitstreams.bundle.table.aria-label": "Bitstreams in the  {{ bundle }} Bundle",
+
+  // "item.edit.bitstreams.bundle.tooltip": "You can move a bitstream to a different page by dropping it on the page number.",
+  // TODO New key - Add a translation
+  "item.edit.bitstreams.bundle.tooltip": "You can move a bitstream to a different page by dropping it on the page number.",
+
   // "item.edit.bitstreams.discard-button": "Discard",
   "item.edit.bitstreams.discard-button": "Hủy bỏ",
 
@@ -3505,12 +3255,32 @@
   // "item.edit.bitstreams.edit.buttons.undo": "Undo changes",
   "item.edit.bitstreams.edit.buttons.undo": "Hoàn tác",
 
+  // "item.edit.bitstreams.edit.live.cancel": "{{ bitstream }} was returned to position {{ toIndex }} and is no longer selected.",
+  // TODO New key - Add a translation
+  "item.edit.bitstreams.edit.live.cancel": "{{ bitstream }} was returned to position {{ toIndex }} and is no longer selected.",
+
+  // "item.edit.bitstreams.edit.live.clear": "{{ bitstream }} is no longer selected.",
+  // TODO New key - Add a translation
+  "item.edit.bitstreams.edit.live.clear": "{{ bitstream }} is no longer selected.",
+
+  // "item.edit.bitstreams.edit.live.loading": "Waiting for move to complete.",
+  // TODO New key - Add a translation
+  "item.edit.bitstreams.edit.live.loading": "Waiting for move to complete.",
+
+  // "item.edit.bitstreams.edit.live.select": "{{ bitstream }} is selected.",
+  // TODO New key - Add a translation
+  "item.edit.bitstreams.edit.live.select": "{{ bitstream }} is selected.",
+
+  // "item.edit.bitstreams.edit.live.move": "{{ bitstream }} is now in position {{ toIndex }}.",
+  // TODO New key - Add a translation
+  "item.edit.bitstreams.edit.live.move": "{{ bitstream }} is now in position {{ toIndex }}.",
+
   // "item.edit.bitstreams.empty": "This item doesn't contain any bitstreams. Click the upload button to create one.",
   "item.edit.bitstreams.empty": "Tài liệu này không chứa tệp tin nào. Hãy nhập vào nút tải lên để tải tệp tin.",
 
-  // "item.edit.bitstreams.headers.synchronized": "Sync | Checksum",
+  // "item.edit.bitstreams.info-alert": "Bitstreams can be reordered within their bundles by holding the drag handle and moving the mouse. Alternatively, bitstreams can be moved using the keyboard in the following way: Select the bitstream by pressing enter when the bitstream's drag handle is in focus. Move the bitstream up or down using the arrow keys. Press enter again to confirm the current position of the bitstream.",
   // TODO New key - Add a translation
-  "item.edit.bitstreams.headers.synchronized": "Sync | Checksum",
+  "item.edit.bitstreams.info-alert": "Bitstreams can be reordered within their bundles by holding the drag handle and moving the mouse. Alternatively, bitstreams can be moved using the keyboard in the following way: Select the bitstream by pressing enter when the bitstream's drag handle is in focus. Move the bitstream up or down using the arrow keys. Press enter again to confirm the current position of the bitstream.",
 
   // "item.edit.bitstreams.headers.actions": "Actions",
   "item.edit.bitstreams.headers.actions": "Hành động",
@@ -3566,38 +3336,9 @@
   // "item.edit.bitstreams.upload-button": "Upload",
   "item.edit.bitstreams.upload-button": "Tải lên",
 
-  // "item.edit.bitstreams.checksum.algorithm": "Algorithm: ",
+  // "item.edit.bitstreams.load-more.link": "Load more",
   // TODO New key - Add a translation
-  "item.edit.bitstreams.checksum.algorithm": "Algorithm: ",
-
-  // "item.edit.bitstreams.checksum.value": "Value: ",
-  // TODO New key - Add a translation
-  "item.edit.bitstreams.checksum.value": "Value: ",
-
-  // "item.edit.bitstreams.checksum.database": "DB",
-  // TODO New key - Add a translation
-  "item.edit.bitstreams.checksum.database": "DB",
-
-  // "item.edit.bitstreams.checksum.active-store": "Active store",
-  // TODO New key - Add a translation
-  "item.edit.bitstreams.checksum.active-store": "Active store",
-
-  // "item.edit.bitstreams.checksum.sync-store": "Sync store",
-  // TODO New key - Add a translation
-  "item.edit.bitstreams.checksum.sync-store": "Sync store",
-
-  // "item.edit.bitstreams.checksum.popover.warning.header": "Warning:",
-  // TODO New key - Add a translation
-  "item.edit.bitstreams.checksum.popover.warning.header": "Warning:",
-
-  // "item.edit.bitstreams.checksum.popover.warning.body": "The file must be downloaded for the checksum to be computed.:",
-  // TODO New key - Add a translation
-  "item.edit.bitstreams.checksum.popover.warning.body": "The file must be downloaded for the checksum to be computed.:",
-
-  // "item.edit.bitstreams.checksum.popover.info.body": "Download the file and compute the checksum.:",
-  // TODO New key - Add a translation
-  "item.edit.bitstreams.checksum.popover.info.body": "Download the file and compute the checksum.:",
-
+  "item.edit.bitstreams.load-more.link": "Load more",
 
   // "item.edit.delete.cancel": "Cancel",
   "item.edit.delete.cancel": "Hủy",
@@ -3779,6 +3520,14 @@
   // "item.edit.metadata.discard-button": "Discard",
   "item.edit.metadata.discard-button": "Hủy bỏ",
 
+  // "item.edit.metadata.edit.language": "Edit language",
+  // TODO New key - Add a translation
+  "item.edit.metadata.edit.language": "Edit language",
+
+  // "item.edit.metadata.edit.value": "Edit value",
+  // TODO New key - Add a translation
+  "item.edit.metadata.edit.value": "Edit value",
+
   // "item.edit.metadata.edit.buttons.confirm": "Confirm",
   // TODO New key - Add a translation
   "item.edit.metadata.edit.buttons.confirm": "Confirm",
@@ -3817,6 +3566,10 @@
 
   // "item.edit.metadata.headers.value": "Value",
   "item.edit.metadata.headers.value": "Giá trị",
+
+  // "item.edit.metadata.metadatafield": "Edit field",
+  // TODO New key - Add a translation
+  "item.edit.metadata.metadatafield": "Edit field",
 
   // "item.edit.metadata.metadatafield.error": "An error occurred validating the metadata field",
   // TODO New key - Add a translation
@@ -4162,50 +3915,6 @@
   // "item.edit.withdraw.success": "The item was withdrawn successfully",
   "item.edit.withdraw.success": "Tài liệu này đã được ẩn thành công",
 
-  // "item.edit.tabs.license.head": "License",
-  // TODO New key - Add a translation
-  "item.edit.tabs.license.head": "License",
-
-  // "item.edit.license.head": "Current License",
-  // TODO New key - Add a translation
-  "item.edit.license.head": "Current License",
-
-  // "item.edit.license.select.license.initial-value.message": "-Select License-",
-  // TODO New key - Add a translation
-  "item.edit.license.select.license.initial-value.message": "-Select License-",
-
-  // "item.edit.license.select.license.select.message": "Select a license",
-  // TODO New key - Add a translation
-  "item.edit.license.select.license.select.message": "Select a license",
-
-  // "item.edit.license.select.license.info": "If you want to change the license, select a new license from the list and press update.",
-  // TODO New key - Add a translation
-  "item.edit.license.select.license.info": "If you want to change the license, select a new license from the list and press update.",
-
-  // "item.edit.license.define.license.message": "Define a new license",
-  // TODO New key - Add a translation
-  "item.edit.license.define.license.message": "Define a new license",
-
-  // "item.edit.license.button.name.update": "Update",
-  // TODO New key - Add a translation
-  "item.edit.license.button.name.update": "Update",
-
-  // "item.edit.license.button.name.return": "Return",
-  // TODO New key - Add a translation
-  "item.edit.license.button.name.return": "Return",
-
-  // "item.edit.license.remove.license.message": "Remove License",
-  // TODO New key - Add a translation
-  "item.edit.license.remove.license.message": "Remove License",
-
-  // "item.edit.license.update.success": "License updated successfully",
-  // TODO New key - Add a translation
-  "item.edit.license.update.success": "License updated successfully",
-
-  // "item.edit.license.update.error": "Error: cannot update license",
-  // TODO New key - Add a translation
-  "item.edit.license.update.error": "Error: cannot update license",
-
   // "item.orcid.return": "Back",
   "item.orcid.return": "Quay lại",
 
@@ -4275,34 +3984,6 @@
   // TODO New key - Add a translation
   "workflow-item.search.result.list.element.supervised.remove-tooltip": "Remove supervision group",
 
-  // "item.page.project-url": "Project URL",
-  // TODO New key - Add a translation
-  "item.page.project-url": "Project URL",
-
-  // "item.page.demo.uri": "Demo URL",
-  // TODO New key - Add a translation
-  "item.page.demo.uri": "Demo URL",
-
-  // "item.page.referenced-by": "Referenced by",
-  // TODO New key - Add a translation
-  "item.page.referenced-by": "Referenced by",
-
-  // "item.page.type": "Type",
-  // TODO New key - Add a translation
-  "item.page.type": "Type",
-
-  // "item.page.size-info": "Size",
-  // TODO New key - Add a translation
-  "item.page.size-info": "Size",
-
-  // "item.page.language": "Language(s)",
-  // TODO New key - Add a translation
-  "item.page.language": "Language(s)",
-
-  // "item.page.sponsor": "Acknowledgement",
-  // TODO New key - Add a translation
-  "item.page.sponsor": "Acknowledgement",
-
   // "item.page.abstract": "Abstract",
   "item.page.abstract": "Tóm tắt",
 
@@ -4321,15 +4002,11 @@
   // "item.page.collections.load-more": "Load more",
   "item.page.collections.load-more": "Xem thêm",
 
-  // "item.page.date": "Date issued",
+  // "item.page.date": "Date",
   "item.page.date": "Năm xuất bản",
 
   // "item.page.edit": "Edit this item",
   "item.page.edit": "Chỉnh sửa tài liệu này",
-
-  // "item.page.statistics": "Show item statistics",
-  // TODO New key - Add a translation
-  "item.page.statistics": "Show item statistics",
 
   // "item.page.files": "Files",
   "item.page.files": "Tệp tin",
@@ -4356,21 +4033,11 @@
   // "item.page.journal.search.title": "Articles in this journal",
   "item.page.journal.search.title": "Bài viết trong tạp chí này",
 
-  // "item.page.link.full": "Show full item record",
+  // "item.page.link.full": "Full item page",
   "item.page.link.full": "Hiển thị chi tiết",
 
-  // "item.page.link.simple": "Show simple item record",
+  // "item.page.link.simple": "Simple item page",
   "item.page.link.simple": "Hiển thị đơn giản",
-
-  // "item.page.users.note": "User's note:",
-  // TODO New key - Add a translation
-  "item.page.users.note": "User's note:",
-
-  // "item.page.orcid.title": "ORCID",
-  "item.page.orcid.title": "ORCID",
-
-  // "item.page.orcid.tooltip": "Open ORCID setting page",
-  "item.page.orcid.tooltip": "Mở trang cài đặt ORCID",
 
   // "item.page.orcid.title": "ORCID",
   "item.page.orcid.title": "ORCID",
@@ -4399,15 +4066,11 @@
   // "item.page.relationships.isOrgUnitOfProject": "Research Projects",
   "item.page.relationships.isOrgUnitOfProject": "Dự án nghiên cứu",
 
-  // "item.page.subject": "Subject(s)",
+  // "item.page.subject": "Keywords",
   "item.page.subject": "Từ khóa chủ đề",
 
-  // "item.page.uri": "Item identifier",
+  // "item.page.uri": "URI",
   "item.page.uri": "URL",
-
-  // "item.page.doi": "DOI",
-  // TODO New key - Add a translation
-  "item.page.doi": "DOI",
 
   // "item.page.bitstreams.view-more": "Show more",
   "item.page.bitstreams.view-more": "Hiển thị thêm",
@@ -4435,34 +4098,6 @@
 
   // "item.page.claim.tooltip": "Claim this item as profile",
   "item.page.claim.tooltip": "Nhận nhiệm vụ tài liệu này",
-
-  // "item.page.license.message": ["This item is", "and licensed under:"],
-  // TODO New key - Add a translation
-  "item.page.license.message": ["This item is", "and licensed under:"],
-
-  // "item.page.matomo-statistics.views.button": "Views",
-  // TODO New key - Add a translation
-  "item.page.matomo-statistics.views.button": "Views",
-
-  // "item.page.matomo-statistics.downloads.button": "Downloads",
-  // TODO New key - Add a translation
-  "item.page.matomo-statistics.downloads.button": "Downloads",
-
-  // "item.page.acknowledgement.project-name": "Project name:",
-  // TODO New key - Add a translation
-  "item.page.acknowledgement.project-name": "Project name:",
-
-  // "item.page.acknowledgement.project-code": "Project code:",
-  // TODO New key - Add a translation
-  "item.page.acknowledgement.project-code": "Project code:",
-
-  // "item.page.date.cca.message": "The exact date is unknown",
-  // TODO New key - Add a translation
-  "item.page.date.cca.message": "The exact date is unknown",
-
-  // "item.page.date.composed.message": "This item is composed of parts issued in",
-  // TODO New key - Add a translation
-  "item.page.date.composed.message": "This item is composed of parts issued in",
 
   // "item.preview.dc.identifier.uri": "Identifier:",
   // TODO New key - Add a translation
@@ -4505,6 +4140,21 @@
 
   // "item.preview.oaire.citation.volume": "Volume",
   "item.preview.oaire.citation.volume": "Tập",
+
+  // "item.preview.dc.relation.hasversion": "Has version",
+  // TODO New key - Add a translation
+  "item.preview.dc.relation.hasversion": "Has version",
+
+  // "item.preview.dc.relation.ispartofseries": "Is part of series",
+  // TODO New key - Add a translation
+  "item.preview.dc.relation.ispartofseries": "Is part of series",
+
+  // "item.preview.dc.rights": "Rights",
+  // TODO New key - Add a translation
+  "item.preview.dc.rights": "Rights",
+
+  // "item.preview.dc.identifier.other": "Other Identifier",
+  "item.preview.dc.identifier.other": "Định danh khác:",
 
   // "item.preview.dc.relation.issn": "ISSN",
   "item.preview.dc.relation.issn": "ISSN",
@@ -4561,143 +4211,23 @@
   // TODO New key - Add a translation
   "item.preview.oaire.fundingStream": "Funding Stream:",
 
-  // "item.preview.authors.show.everyone": "Show everyone",
-  // TODO New key - Add a translation
-  "item.preview.authors.show.everyone": "Show everyone",
-
-  // "item.preview.authors.et.al": " ; et al.",
-  // TODO New key - Add a translation
-  "item.preview.authors.et.al": " ; et al.",
-
-  // "item.preview.loading-files": "Loading files... This may take a few seconds as file previews are being generated. If the process takes too long, please contact the system administrator",
-  // TODO New key - Add a translation
-  "item.preview.loading-files": "Loading files... This may take a few seconds as file previews are being generated. If the process takes too long, please contact the system administrator",
-
-  // "item.preview.no-preview": "The file preview has not been generated yet. Please try again later or contact the system administrator",
-  // TODO New key - Add a translation
-  "item.preview.no-preview": "The file preview has not been generated yet. Please try again later or contact the system administrator",
-
-  // "item.refbox.modal.copy.instruction": ["Press", "ctrl + c", "to copy"],
-  // TODO New key - Add a translation
-  "item.refbox.modal.copy.instruction": ["Press", "ctrl + c", "to copy"],
-
-  // "item.refbox.modal.submit": "Ok",
-  // TODO New key - Add a translation
-  "item.refbox.modal.submit": "Ok",
-
-  // "item.refbox.citation.featured-service.message": "Please use the following text to cite this item or export to a predefined format:",
-  // TODO New key - Add a translation
-  "item.refbox.citation.featured-service.message": "Please use the following text to cite this item or export to a predefined format:",
-
-  // "item.refbox.citation.bibtex.button": "bibtex",
-  // TODO New key - Add a translation
-  "item.refbox.citation.bibtex.button": "bibtex",
-
-  // "item.refbox.citation.cmdi.button": "cmdi",
-  // TODO New key - Add a translation
-  "item.refbox.citation.cmdi.button": "cmdi",
-
-  // "item.refbox.featured-service.heading": "This resource is also integrated in following services:",
-  // TODO New key - Add a translation
-  "item.refbox.featured-service.heading": "This resource is also integrated in following services:",
-
-  // "item.refbox.featured-service.share.message": "Share",
-  // TODO New key - Add a translation
-  "item.refbox.featured-service.share.message": "Share",
-
-  // "item.matomo-statistics.info.message": "Click on a data point to summarize by year / month.",
-  // TODO New key - Add a translation
-  "item.matomo-statistics.info.message": "Click on a data point to summarize by year / month.",
-
-
-  // "item.view.box.author.message": "Author(s):",
-  // TODO New key - Add a translation
-  "item.view.box.author.message": "Author(s):",
-
-  // "item.view.box.publisher.message": "Publisher:",
-  // TODO New key - Add a translation
-  "item.view.box.publisher.message": "Publisher:",
-
-  // "item.view.box.files.message": ["This item contains", "files"],
-  // TODO New key - Add a translation
-  "item.view.box.files.message": ["This item contains", "files"],
-
-  // "item.view.box.one.file.message": "This item contains 1 file",
-  // TODO New key - Add a translation
-  "item.view.box.one.file.message": "This item contains 1 file",
-
-  // "item.view.box.no-files.message": "This item contains no files.",
-  // TODO New key - Add a translation
-  "item.view.box.no-files.message": "This item contains no files.",
-
-  // "item.view.box.description.message": "Description:",
-  // TODO New key - Add a translation
-  "item.view.box.description.message": "Description:",
-
-
-  // "item.view.box.author.preview.and": "and",
-  // TODO New key - Add a translation
-  "item.view.box.author.preview.and": "and",
-
-  // "item.view.box.author.preview.show-everyone": "show everyone",
-  // TODO New key - Add a translation
-  "item.view.box.author.preview.show-everyone": "show everyone",
-
-
-  // "item.file.description.not.supported.video": "Your browser does not support the video tag.",
-  // TODO New key - Add a translation
-  "item.file.description.not.supported.video": "Your browser does not support the video tag.",
-
-  // "item.file.description.name": "Name",
-  // TODO New key - Add a translation
-  "item.file.description.name": "Name",
-
-  // "item.file.description.size": "Size",
-  // TODO New key - Add a translation
-  "item.file.description.size": "Size",
-
-  // "item.file.description.format": "Format",
-  // TODO New key - Add a translation
-  "item.file.description.format": "Format",
-
-  // "item.file.description.description": "Description",
-  // TODO New key - Add a translation
-  "item.file.description.description": "Description",
-
-  // "item.file.description.checksum": "MD5",
-  // TODO New key - Add a translation
-  "item.file.description.checksum": "MD5",
-
-  // "item.file.description.download.file": "Download file",
-  // TODO New key - Add a translation
-  "item.file.description.download.file": "Download file",
-
-  // "item.file.description.preview": "Preview",
-  // TODO New key - Add a translation
-  "item.file.description.preview": "Preview",
-
-  // "item.file.description.file.preview": "File Preview",
-  // TODO New key - Add a translation
-  "item.file.description.file.preview": "File Preview",
-
-  // "item.page.files.head": "Files in this item",
-  // TODO New key - Add a translation
-  "item.page.files.head": "Files in this item",
-
-  // "item.page.download.button.command.line": "Download instructions for command line",
-  // TODO New key - Add a translation
-  "item.page.download.button.command.line": "Download instructions for command line",
-
-  // "item.page.download.button.all.files.zip": "Download all files in item",
-  // TODO New key - Add a translation
-  "item.page.download.button.all.files.zip": "Download all files in item",
-
-
   // "item.select.confirm": "Confirm selected",
   "item.select.confirm": "Xác nhận cái đã chọn",
 
   // "item.select.empty": "No items to show",
   "item.select.empty": "Không có tài liệu để hiển thị",
+
+  // "item.select.table.selected": "Selected items",
+  // TODO New key - Add a translation
+  "item.select.table.selected": "Selected items",
+
+  // "item.select.table.select": "Select item",
+  // TODO New key - Add a translation
+  "item.select.table.select": "Select item",
+
+  // "item.select.table.deselect": "Deselect item",
+  // TODO New key - Add a translation
+  "item.select.table.deselect": "Deselect item",
 
   // "item.select.table.author": "Author",
   "item.select.table.author": "Tác giả",
@@ -4725,14 +4255,6 @@
 
   // "item.version.history.table.version": "Version",
   "item.version.history.table.version": "Phiên bản",
-
-  // "item.version.history.table.name": "Name",
-  // TODO New key - Add a translation
-  "item.version.history.table.name": "Name",
-
-  // "item.version.history.table.handle": "Handle",
-  // TODO New key - Add a translation
-  "item.version.history.table.handle": "Handle",
 
   // "item.version.history.table.item": "Item",
   "item.version.history.table.item": "Tài liệu",
@@ -4857,43 +4379,19 @@
   // "itemtemplate.edit.metadata.discard-button": "Discard",
   "itemtemplate.edit.metadata.discard-button": "Discard",
 
+  // "itemtemplate.edit.metadata.edit.language": "Edit language",
+  // TODO New key - Add a translation
+  "itemtemplate.edit.metadata.edit.language": "Edit language",
+
+  // "itemtemplate.edit.metadata.edit.value": "Edit value",
+  // TODO New key - Add a translation
+  "itemtemplate.edit.metadata.edit.value": "Edit value",
+
   // "itemtemplate.edit.metadata.edit.buttons.confirm": "Confirm",
   "itemtemplate.edit.metadata.edit.buttons.confirm": "Confirm",
 
   // "itemtemplate.edit.metadata.edit.buttons.drag": "Drag to reorder",
   "itemtemplate.edit.metadata.edit.buttons.drag": "Drag to reorder",
-
-  // "item.tombstone.withdrawn.message": "This item is withdrawn",
-  // TODO New key - Add a translation
-  "item.tombstone.withdrawn.message": "This item is withdrawn",
-
-  // "item.tombstone.no.available.message": "The selected item is withdrawn and is no longer available.",
-  // TODO New key - Add a translation
-  "item.tombstone.no.available.message": "The selected item is withdrawn and is no longer available.",
-
-  // "item.tombstone.withdrawal.reason.message": "The reason for withdrawal:",
-  // TODO New key - Add a translation
-  "item.tombstone.withdrawal.reason.message": "The reason for withdrawal:",
-
-  // "item.tombstone.withdrawal.reason.default.value": "The reason wasn't specified.",
-  // TODO New key - Add a translation
-  "item.tombstone.withdrawal.reason.default.value": "The reason wasn't specified.",
-
-  // "item.tombstone.restricted.contact.help": ["Your user account does not have the credentials to view this item. Please contact the", "Help Desk", "if you have any questions."],
-  // TODO New key - Add a translation
-  "item.tombstone.restricted.contact.help": ["Your user account does not have the credentials to view this item. Please contact the", "Help Desk", "if you have any questions."],
-
-  // "item.tombstone.replaced.another-repository.message": "This item is managed by another repository",
-  // TODO New key - Add a translation
-  "item.tombstone.replaced.another-repository.message": "This item is managed by another repository",
-
-  // "item.tombstone.replaced.locations.message": "You will find this item at the following location(s):",
-  // TODO New key - Add a translation
-  "item.tombstone.replaced.locations.message": "You will find this item at the following location(s):",
-
-  // "item.tombstone.replaced.help-desk.message": ["The author(s) asked us to hide this submission.", "We still keep all the data and metadata of the original submission but the submission", "is now located at the above url(s). If you need the contents of the original submission, contact us at our", "Help Desk."],
-  // TODO New key - Add a translation
-  "item.tombstone.replaced.help-desk.message": ["The author(s) asked us to hide this submission.", "We still keep all the data and metadata of the original submission but the submission", "is now located at the above url(s). If you need the contents of the original submission, contact us at our", "Help Desk."],
 
   // "itemtemplate.edit.metadata.edit.buttons.edit": "Edit",
   "itemtemplate.edit.metadata.edit.buttons.edit": "Edit",
@@ -4921,6 +4419,10 @@
 
   // "itemtemplate.edit.metadata.headers.value": "Value",
   "itemtemplate.edit.metadata.headers.value": "Value",
+
+  // "itemtemplate.edit.metadata.metadatafield": "Edit field",
+  // TODO New key - Add a translation
+  "itemtemplate.edit.metadata.metadatafield": "Edit field",
 
   // "itemtemplate.edit.metadata.metadatafield.error": "An error occurred validating the metadata field",
   "itemtemplate.edit.metadata.metadatafield.error": "An error occurred validating the metadata field",
@@ -5164,17 +4666,6 @@
   // "login.form.submit": "Log in",
   "login.form.submit": "Đăng nhập",
 
-  // "login.form.or-divider": "or",
-  "login.form.or-divider": "hoặc",
-
-  // "login.auth.failed.shibboleth.title": "Shibboleth authentication failed",
-  // TODO New key - Add a translation
-  "login.auth.failed.shibboleth.title": "Shibboleth authentication failed",
-
-  // "login.auth.failed.shibboleth.message": "Authentication failed because your IDP did not send the required Shibboleth headers. Please contact the Help Desk by email: {{ email }} .",
-  // TODO New key - Add a translation
-  "login.auth.failed.shibboleth.message": "Authentication failed because your IDP did not send the required Shibboleth headers. Please contact the Help Desk by email: {{ email }} .",
-
   // "login.title": "Login",
   "login.title": "Đăng nhập",
 
@@ -5190,132 +4681,9 @@
   // "logout.title": "Logout",
   "logout.title": "Đăng xuất",
 
-
-  // "clarin.help-desk.name": "Help Desk",
+  // "menu.header.nav.description": "Admin navigation bar",
   // TODO New key - Add a translation
-  "clarin.help-desk.name": "Help Desk",
-
-  // "clarin.auth-failed.error.message": "Authentication Failed",
-  // TODO New key - Add a translation
-  "clarin.auth-failed.error.message": "Authentication Failed",
-
-  // "clarin.auth-failed.warning.reason.message": "Reason!",
-  // TODO New key - Add a translation
-  "clarin.auth-failed.warning.reason.message": "Reason!",
-
-  // "clarin.auth-failed.warning.important.message": "Important!",
-  // TODO New key - Add a translation
-  "clarin.auth-failed.warning.important.message": "Important!",
-
-  // "clarin.auth-failed.warning.no-email.message": ["Your IDP (home organization) has not provided your email address. Please fill and verify your email in order to submit new items to the repository, to download restricted items and optionally to subscribe to advanced statistics and/or collection updates.", "If you have any question contact the ","Help Desk."],
-  // TODO New key - Add a translation
-  "clarin.auth-failed.warning.no-email.message": ["Your IDP (home organization) has not provided your email address. Please fill and verify your email in order to submit new items to the repository, to download restricted items and optionally to subscribe to advanced statistics and/or collection updates.", "If you have any question contact the ","Help Desk."],
-
-  // "clarin.auth-failed.warning.email-info": "This address will be verified and remembered until your IDP provides a different one. You will still sign in through your IDP.",
-  // TODO New key - Add a translation
-  "clarin.auth-failed.warning.email-info": "This address will be verified and remembered until your IDP provides a different one. You will still sign in through your IDP.",
-
-  // "clarin.auth-failed.warning.has-email.message": ["Your IDP (home organization) has not provided your email address.", "You are registered by the e-mail: ", ". Try to login with that e-mail.", " If you have any login issues contact the ", "Help Desk."],
-  // TODO New key - Add a translation
-  "clarin.auth-failed.warning.has-email.message": ["Your IDP (home organization) has not provided your email address.", "You are registered by the e-mail: ", ". Try to login with that e-mail.", " If you have any login issues contact the ", "Help Desk."],
-
-  // "clarin.auth-failed.netid": "netid",
-  // TODO New key - Add a translation
-  "clarin.auth-failed.netid": "netid",
-
-  // "clarin.auth-failed.fname": "First Name",
-  // TODO New key - Add a translation
-  "clarin.auth-failed.fname": "First Name",
-
-  // "clarin.auth-failed.lname": "Last Name",
-  // TODO New key - Add a translation
-  "clarin.auth-failed.lname": "Last Name",
-
-  // "clarin.auth-failed.email": "Email",
-  // TODO New key - Add a translation
-  "clarin.auth-failed.email": "Email",
-
-  // "clarin.auth-failed.button.submit": "Submit",
-  // TODO New key - Add a translation
-  "clarin.auth-failed.button.submit": "Submit",
-
-  // "clarin.auth-failed.button.login": "Redirect to login",
-  // TODO New key - Add a translation
-  "clarin.auth-failed.button.login": "Redirect to login",
-
-  // "clarin.auth-failed.send-email.successful.message": "Verification email was sent successfully",
-  // TODO New key - Add a translation
-  "clarin.auth-failed.send-email.successful.message": "Verification email was sent successfully",
-
-  // "clarin.auth-failed.send-email.error.message": "Error: cannot sent verification email.",
-  // TODO New key - Add a translation
-  "clarin.auth-failed.send-email.error.message": "Error: cannot sent verification email.",
-
-
-
-  // "clarin.auth-failed.duplicate-user.header.message": "Authentication Failed",
-  // TODO New key - Add a translation
-  "clarin.auth-failed.duplicate-user.header.message": "Authentication Failed",
-
-  // "clarin.auth-failed.duplicate-user.error.message": ["Your email", "is already associated with a different user. It is also possible that you used a different identity provider to before. For more information please contact our", "Help Desk"],
-  // TODO New key - Add a translation
-  "clarin.auth-failed.duplicate-user.error.message": ["Your email", "is already associated with a different user. It is also possible that you used a different identity provider to before. For more information please contact our", "Help Desk"],
-
-
-
-  // "clarin.missing-headers.error.message": "Your IDP (home organization) has not provided required headers, we cannot allow you to login to our repository without required information.",
-  // TODO New key - Add a translation
-  "clarin.missing-headers.error.message": "Your IDP (home organization) has not provided required headers, we cannot allow you to login to our repository without required information.",
-
-  // "clarin.missing-headers.contact-us.message": "If you have any questions you can contact the ",
-  // TODO New key - Add a translation
-  "clarin.missing-headers.contact-us.message": "If you have any questions you can contact the ",
-
-
-  // "clarin.autoregistration.successful.message": "You have been successfully registered.",
-  // TODO New key - Add a translation
-  "clarin.autoregistration.successful.message": "You have been successfully registered.",
-
-  // "clarin.autoregistration.error.message": "Error: registration failed.",
-  // TODO New key - Add a translation
-  "clarin.autoregistration.error.message": "Error: registration failed.",
-
-  // "clarin.autoregistration.welcome.message": "Welcome to",
-  // TODO New key - Add a translation
-  "clarin.autoregistration.welcome.message": "Welcome to",
-
-  // "clarin.autoregistration.privacy.statement": "Privacy statement",
-  // TODO New key - Add a translation
-  "clarin.autoregistration.privacy.statement": "Privacy statement",
-
-  // "clarin.autoregistration.information.released.by.idp.message": "The information released by your IdP (home organisation) is shown below.",
-  // TODO New key - Add a translation
-  "clarin.autoregistration.information.released.by.idp.message": "The information released by your IdP (home organisation) is shown below.",
-
-  // "clarin.autoregistration.table.header": "Header",
-  // TODO New key - Add a translation
-  "clarin.autoregistration.table.header": "Header",
-
-  // "clarin.autoregistration.table.value": "Value",
-  // TODO New key - Add a translation
-  "clarin.autoregistration.table.value": "Value",
-
-  // "clarin.autoregistration.repository.policy.message": ["We use only the required attributes as stated in","However we may log the attributes and keep them for a time period."],
-  // TODO New key - Add a translation
-  "clarin.autoregistration.repository.policy.message": ["We use only the required attributes as stated in","However we may log the attributes and keep them for a time period."],
-
-  // "clarin.autoregistration.button.continue.to.login": "Continue to login",
-  // TODO New key - Add a translation
-  "clarin.autoregistration.button.continue.to.login": "Continue to login",
-
-  // "clarin.autoregistration.token.not.valid.message": "Verification token is not valid.",
-  // TODO New key - Add a translation
-  "clarin.autoregistration.token.not.valid.message": "Verification token is not valid.",
-
-  // "clarin.autologin.error.message": "Something went wrong, the user cannot be signed in automatically.",
-  // TODO New key - Add a translation
-  "clarin.autologin.error.message": "Something went wrong, the user cannot be signed in automatically.",
-
+  "menu.header.nav.description": "Admin navigation bar",
 
   // "menu.header.admin": "Management",
   "menu.header.admin": "Quản trị",
@@ -5379,10 +4747,6 @@
 
   // "menu.section.browse_global_by_title": "By Title",
   "menu.section.browse_global_by_title": "Nhan đề",
-
-  // "menu.section.browse_global_by_language": "By Language",
-  // TODO New key - Add a translation
-  "menu.section.browse_global_by_language": "By Language",
 
   // "menu.section.browse_global_communities_and_collections": "Communities & Collections",
   "menu.section.browse_global_communities_and_collections": "Đơn vị & Bộ sưu tập",
@@ -5464,14 +4828,6 @@
 
   // "menu.section.icon.statistics_task": "Statistics Task menu section",
   "menu.section.icon.statistics_task": "Phần menu của mục Nhiệm vụ báo cáo thống kê",
-
-  // "menu.section.icon.statistics": "Show site statistics",
-  // TODO New key - Add a translation
-  "menu.section.icon.statistics": "Show site statistics",
-
-  // "menu.section.icon.submissions": "Show my submissions",
-  // TODO New key - Add a translation
-  "menu.section.icon.submissions": "Show my submissions",
 
   // "menu.section.icon.workflow": "Administer workflow menu section",
   "menu.section.icon.workflow": "Phần menu của mục Quản trị luồng công việc",
@@ -5566,18 +4922,6 @@
   // "menu.section.workflow": "Administer Workflow",
   "menu.section.workflow": "Quản trị dòng công việc",
 
-  // "menu.section.handle": "Manage Handles",
-  // TODO New key - Add a translation
-  "menu.section.handle": "Manage Handles",
-
-  // "menu.section.licenses": "License Administration",
-  // TODO New key - Add a translation
-  "menu.section.licenses": "License Administration",
-
-  // "menu.section.submissions": "Submissions",
-  // TODO New key - Add a translation
-  "menu.section.submissions": "Submissions",
-
   // "metadata-export-search.tooltip": "Export search results as CSV",
   "metadata-export-search.tooltip": "Xuất kết quả tìm kiếm ra CSV",
 
@@ -5586,30 +4930,6 @@
 
   // "metadata-export-search.submit.error": "Starting the export has failed",
   "metadata-export-search.submit.error": "Xảy ra lỗi trong quá trình xuất dữ liệu",
-
-  // "autocomplete.suggestion.sponsor.funding-code": "Funding code",
-  // TODO New key - Add a translation
-  "autocomplete.suggestion.sponsor.funding-code": "Funding code",
-
-  // "autocomplete.suggestion.sponsor.project-name": "Project name",
-  // TODO New key - Add a translation
-  "autocomplete.suggestion.sponsor.project-name": "Project name",
-
-  // "autocomplete.suggestion.language.iso": "ISO",
-  // TODO New key - Add a translation
-  "autocomplete.suggestion.language.iso": "ISO",
-
-  // "autocomplete.suggestion.language.title": "Language",
-  // TODO New key - Add a translation
-  "autocomplete.suggestion.language.title": "Language",
-
-  // "autocomplete.suggestion.sponsor.empty": "N/A",
-  // TODO New key - Add a translation
-  "autocomplete.suggestion.sponsor.empty": "N/A",
-
-  // "autocomplete.suggestion.sponsor.eu": "EU",
-  // TODO New key - Add a translation
-  "autocomplete.suggestion.sponsor.eu": "EU",
 
   // "mydspace.breadcrumbs": "MyDSpace",
   "mydspace.breadcrumbs": "Trang cá nhân",
@@ -5690,21 +5010,25 @@
   // "mydspace.results.no-title": "No title",
   "mydspace.results.no-title": "Không có nhan đề",
 
-  // "mydspace.results.no-uri": "No Uri",
+  // "mydspace.results.no-uri": "No URI",
   "mydspace.results.no-uri": "Không có URL",
 
-  // "mydspace.search-form.placeholder": "Search in mydspace...",
+  // "mydspace.search-form.placeholder": "Search in MyDSpace...",
   "mydspace.search-form.placeholder": "Tìm kiếm trong trang cá nhân của tôi...",
 
   // "mydspace.show.workflow": "Workflow tasks",
   "mydspace.show.workflow": "Tất cả nhiệm vụ",
 
-  // "mydspace.show.workspace": "Your Submissions",
+  // "mydspace.show.workspace": "Your submissions",
   "mydspace.show.workspace": "Tài liệu của tôi",
 
   // "mydspace.show.supervisedWorkspace": "Supervised items",
   // TODO New key - Add a translation
   "mydspace.show.supervisedWorkspace": "Supervised items",
+
+  // "mydspace.status": "My DSpace status:",
+  // TODO New key - Add a translation
+  "mydspace.status": "My DSpace status:",
 
   // "mydspace.status.mydspaceArchived": "Archived",
   "mydspace.status.mydspaceArchived": "Đã lưu trữ",
@@ -5712,7 +5036,7 @@
   // "mydspace.status.mydspaceValidation": "Validation",
   "mydspace.status.mydspaceValidation": "Đang kiểm tra",
 
-  // "mydspace.status.mydspaceWaitingController": "Waiting for controller",
+  // "mydspace.status.mydspaceWaitingController": "Waiting for reviewer",
   "mydspace.status.mydspaceWaitingController": "Đợi nhận nhiệm vụ",
 
   // "mydspace.status.mydspaceWorkflow": "Workflow",
@@ -5739,6 +5063,10 @@
   // "mydspace.view-btn": "View",
   "mydspace.view-btn": "Xem chi tiết",
 
+  // "nav.expandable-navbar-section-suffix": "(submenu)",
+  // TODO New key - Add a translation
+  "nav.expandable-navbar-section-suffix": "(submenu)",
+
   // "nav.browse.header": "All of DSpace",
   "nav.browse.header": "Tất cả DSpace",
 
@@ -5755,7 +5083,7 @@
   // "nav.login": "Log In",
   "nav.login": "Đăng nhập",
 
-  // "nav.user-profile-menu-and-logout": "User profile menu and Log Out",
+  // "nav.user-profile-menu-and-logout": "User profile menu and log out",
   "nav.user-profile-menu-and-logout": "Trình đơn Hồ sơ cá nhân và Đăng xuất",
 
   // "nav.logout": "Log Out",
@@ -5793,6 +5121,10 @@
   // "nav.user.description": "User profile bar",
   "nav.user.description": "Thanh hồ sơ người dùng",
 
+  // "listelement.badge.dso-type": "Item type:",
+  // TODO New key - Add a translation
+  "listelement.badge.dso-type": "Item type:",
+
   // "none.listelement.badge": "Item",
   "none.listelement.badge": "Tài liệu",
 
@@ -5824,16 +5156,20 @@
   // TODO New key - Add a translation
   "orgunit.page.titleprefix": "Organizational Unit: ",
 
+  // "orgunit.search.results.head": "Organizational Unit Search Results",
+  // TODO New key - Add a translation
+  "orgunit.search.results.head": "Organizational Unit Search Results",
+
   // "pagination.options.description": "Pagination options",
   "pagination.options.description": "Tùy chọn Phân trang",
 
   // "pagination.results-per-page": "Results Per Page",
   "pagination.results-per-page": "Số kết quả/trang",
 
-  // "pagination.showing.detail": "{{ range }} out of {{ total }} results",
+  // "pagination.showing.detail": "{{ range }} of {{ total }}",
   "pagination.showing.detail": "{{ range }} của tổng số {{ total }} kết quả",
 
-  // "pagination.showing.label": "Showing ",
+  // "pagination.showing.label": "Now showing ",
   "pagination.showing.label": "Đang hiển thị ",
 
   // "pagination.sort-direction": "Sort Options",
@@ -5890,6 +5226,22 @@
 
   // "process.new.select-parameters": "Parameters",
   "process.new.select-parameters": "Tham số",
+
+  // "process.new.select-parameter": "Select parameter",
+  // TODO New key - Add a translation
+  "process.new.select-parameter": "Select parameter",
+
+  // "process.new.add-parameter": "Add a parameter...",
+  // TODO New key - Add a translation
+  "process.new.add-parameter": "Add a parameter...",
+
+  // "process.new.delete-parameter": "Delete parameter",
+  // TODO New key - Add a translation
+  "process.new.delete-parameter": "Delete parameter",
+
+  // "process.new.parameter.label": "Parameter value",
+  // TODO New key - Add a translation
+  "process.new.parameter.label": "Parameter value",
 
   // "process.new.cancel": "Cancel",
   "process.new.cancel": "Hủy",
@@ -6053,6 +5405,10 @@
   // "process.overview.delete": "Delete {{count}} processes",
   "process.overview.delete": "Xóa {{count}} tiến trình",
 
+  // "process.overview.delete-process": "Delete process",
+  // TODO New key - Add a translation
+  "process.overview.delete-process": "Delete process",
+
   // "process.overview.delete.clear": "Clear delete selection",
   "process.overview.delete.clear": "Xóa các tiến trình đã chọn",
 
@@ -6079,6 +5435,18 @@
   // "profile.breadcrumbs": "Update Profile",
   "profile.breadcrumbs": "Cập nhật hồ sơ",
 
+  // "profile.card.accessibility.content": "Accessibility settings can be configured on the accessibility settings page.",
+  // TODO New key - Add a translation
+  "profile.card.accessibility.content": "Accessibility settings can be configured on the accessibility settings page.",
+
+  // "profile.card.accessibility.header": "Accessibility",
+  // TODO New key - Add a translation
+  "profile.card.accessibility.header": "Accessibility",
+
+  // "profile.card.accessibility.link": "Go to Accessibility Settings Page",
+  // TODO New key - Add a translation
+  "profile.card.accessibility.link": "Go to Accessibility Settings Page",
+
   // "profile.card.identify": "Identify",
   "profile.card.identify": "Hồ sơ định danh",
 
@@ -6093,9 +5461,6 @@
 
   // "profile.special.groups.head": "Authorization special groups you belong to",
   "profile.special.groups.head": "Phân quyền cho các nhóm đặc biệt mà bạn thuộc về",
-
-  // "profile.head": "Update Profile",
-  "profile.head": "Cập nhật hồ sơ",
 
   // "profile.metadata.form.error.firstname.required": "First Name is required",
   "profile.metadata.form.error.firstname.required": "Yêu cầu nhập Tên của người dùng",
@@ -6347,9 +5712,9 @@
   // "register-page.registration.error.head": "Error when trying to register email",
   "register-page.registration.error.head": "Lỗi khi đăng ký email",
 
-  // "register-page.registration.error.content": "An error occured when registering the following email address: {{ email }}",
+  // "register-page.registration.error.content": "An error occurred when registering the following email address: {{ email }}",
   // TODO New key - Add a translation
-  "register-page.registration.error.content": "An error occured when registering the following email address: {{ email }}",
+  "register-page.registration.error.content": "An error occurred when registering the following email address: {{ email }}",
 
   // "register-page.registration.error.recaptcha": "Error when trying to authenticate with recaptcha",
   "register-page.registration.error.recaptcha": "Lỗi khi thực hiện xác minh bằng recaptcha",
@@ -6447,11 +5812,9 @@
   // TODO New key - Add a translation
   "repository.title": "DSpace Repository",
 
-  // "repository.title.prefix": "LINDAT/CLARIAH-CZ Repository ",
-  "repository.title.prefix": "Digital Library ::",
-
-  // "repository.title.prefixDSpace": "DSpace",
-  "repository.title.prefixDSpace": "Digital Library ::",
+  // "repository.title.prefix": "DSpace Repository :: ",
+  // TODO New key - Add a translation
+  "repository.title.prefix": "DSpace Repository :: ",
 
   // "resource-policies.add.button": "Add",
   "resource-policies.add.button": "Thêm",
@@ -6571,6 +5934,10 @@
   // "resource-policies.form.name.label": "Name",
   "resource-policies.form.name.label": "Tên",
 
+  // "resource-policies.form.name.hint": "Max 30 characters",
+  // TODO New key - Add a translation
+  "resource-policies.form.name.hint": "Max 30 characters",
+
   // "resource-policies.form.policy-type.label": "Select the policy type",
   "resource-policies.form.policy-type.label": "Lựa chọn kiểu chính sách",
 
@@ -6601,6 +5968,22 @@
   // "resource-policies.table.headers.group": "Group",
   "resource-policies.table.headers.group": "Nhóm",
 
+  // "resource-policies.table.headers.select-all": "Select all",
+  // TODO New key - Add a translation
+  "resource-policies.table.headers.select-all": "Select all",
+
+  // "resource-policies.table.headers.deselect-all": "Deselect all",
+  // TODO New key - Add a translation
+  "resource-policies.table.headers.deselect-all": "Deselect all",
+
+  // "resource-policies.table.headers.select": "Select",
+  // TODO New key - Add a translation
+  "resource-policies.table.headers.select": "Select",
+
+  // "resource-policies.table.headers.deselect": "Deselect",
+  // TODO New key - Add a translation
+  "resource-policies.table.headers.deselect": "Deselect",
+
   // "resource-policies.table.headers.id": "ID",
   "resource-policies.table.headers.id": "ID",
 
@@ -6629,151 +6012,6 @@
   // TODO New key - Add a translation
   "root.skip-to-content": "Skip to main content",
 
-  // "clarin-license-table.title": "License Administration",
-  // TODO New key - Add a translation
-  "clarin-license-table.title": "License Administration",
-
-  // "clarin-license.table.name": "License Name",
-  // TODO New key - Add a translation
-  "clarin-license.table.name": "License Name",
-
-  // "clarin-license.table.definition": "Definition (URL)",
-  // TODO New key - Add a translation
-  "clarin-license.table.definition": "Definition (URL)",
-
-  // "clarin-license.table.confirmation": "Confirmation",
-  // TODO New key - Add a translation
-  "clarin-license.table.confirmation": "Confirmation",
-
-  // "clarin-license.table.required-user-info": "Required user info",
-  // TODO New key - Add a translation
-  "clarin-license.table.required-user-info": "Required user info",
-
-  // "clarin-license.table.label": "License Label",
-  // TODO New key - Add a translation
-  "clarin-license.table.label": "License Label",
-
-  // "clarin-license.table.extended-labels": "Extended Labels",
-  // TODO New key - Add a translation
-  "clarin-license.table.extended-labels": "Extended Labels",
-
-  // "clarin-license.table.bitstreams": "Used by Bitstreams",
-  // TODO New key - Add a translation
-  "clarin-license.table.bitstreams": "Used by Bitstreams",
-
-  // "clarin-license.button.define": "Define",
-  // TODO New key - Add a translation
-  "clarin-license.button.define": "Define",
-
-  // "clarin-license.button.define-license": "Define License",
-  // TODO New key - Add a translation
-  "clarin-license.button.define-license": "Define License",
-
-  // "clarin-license.button.define-license-label": "Define License Label",
-  // TODO New key - Add a translation
-  "clarin-license.button.define-license-label": "Define License Label",
-
-  // "clarin-license.button.edit-license": "Edit License",
-  // TODO New key - Add a translation
-  "clarin-license.button.edit-license": "Edit License",
-
-  // "clarin-license.button.delete-license": "Delete License",
-  // TODO New key - Add a translation
-  "clarin-license.button.delete-license": "Delete License",
-
-  // "clarin-license.button.search": "Search",
-  // TODO New key - Add a translation
-  "clarin-license.button.search": "Search",
-
-  // "clarin-license.button.search.placeholder": "Search by the license name ...",
-  // TODO New key - Add a translation
-  "clarin-license.button.search.placeholder": "Search by the license name ...",
-
-
-  // "clarin-license.define-license-form.form-name": "Define new license",
-  // TODO New key - Add a translation
-  "clarin-license.define-license-form.form-name": "Define new license",
-
-  // "clarin-license.define-license-form.input-name": "License name",
-  // TODO New key - Add a translation
-  "clarin-license.define-license-form.input-name": "License name",
-
-  // "clarin-license.define-license-form.input-definition-url": "License Definition URL",
-  // TODO New key - Add a translation
-  "clarin-license.define-license-form.input-definition-url": "License Definition URL",
-
-  // "clarin-license.define-license-form.input-confirmation": "License requires confirmation",
-  // TODO New key - Add a translation
-  "clarin-license.define-license-form.input-confirmation": "License requires confirmation",
-
-  // "clarin-license.define-license-form.license-labels": "License Labels",
-  // TODO New key - Add a translation
-  "clarin-license.define-license-form.license-labels": "License Labels",
-
-  // "clarin-license.define-license-form.extended-license-labels": "Extended License Labels",
-  // TODO New key - Add a translation
-  "clarin-license.define-license-form.extended-license-labels": "Extended License Labels",
-
-  // "clarin-license.define-license-form.required-info": "Additional required user info",
-  // TODO New key - Add a translation
-  "clarin-license.define-license-form.required-info": "Additional required user info",
-
-  // "clarin-license.define-license-form.submit-button": "Save",
-  // TODO New key - Add a translation
-  "clarin-license.define-license-form.submit-button": "Save",
-
-  // "clarin-license.define-license.notification.successful-content": "License was defined successfully",
-  // TODO New key - Add a translation
-  "clarin-license.define-license.notification.successful-content": "License was defined successfully",
-
-  // "clarin-license.define-license.notification.error-content": "Error: cannot define new License",
-  // TODO New key - Add a translation
-  "clarin-license.define-license.notification.error-content": "Error: cannot define new License",
-
-  // "clarin-license.edit-license.notification.successful-content": "License was updated successfully",
-  // TODO New key - Add a translation
-  "clarin-license.edit-license.notification.successful-content": "License was updated successfully",
-
-  // "clarin-license.edit-license.notification.error-content": "Error: cannot edit the License",
-  // TODO New key - Add a translation
-  "clarin-license.edit-license.notification.error-content": "Error: cannot edit the License",
-
-  // "clarin-license.delete-license.notification.successful-content": "License was deleted successfully",
-  // TODO New key - Add a translation
-  "clarin-license.delete-license.notification.successful-content": "License was deleted successfully",
-
-  // "clarin-license.delete-license.notification.error-content": "Error: cannot delete License",
-  // TODO New key - Add a translation
-  "clarin-license.delete-license.notification.error-content": "Error: cannot delete License",
-
-
-
-  // "clarin-license-label.define-license-label.input-label": "Short Label (max 5. chars)",
-  // TODO New key - Add a translation
-  "clarin-license-label.define-license-label.input-label": "Short Label (max 5. chars)",
-
-  // "clarin-license-label.define-license-label.input-title": "Label Title",
-  // TODO New key - Add a translation
-  "clarin-license-label.define-license-label.input-title": "Label Title",
-
-  // "clarin-license-label.define-license-label.input-is-extended": "Is extended",
-  // TODO New key - Add a translation
-  "clarin-license-label.define-license-label.input-is-extended": "Is extended",
-
-  // "clarin-license-label.define-license-label.input-icon": "Icon",
-  // TODO New key - Add a translation
-  "clarin-license-label.define-license-label.input-icon": "Icon",
-
-  // "clarin-license-label.define-license-label.notification.successful-content": "License Label was defined successfully",
-  // TODO New key - Add a translation
-  "clarin-license-label.define-license-label.notification.successful-content": "License Label was defined successfully",
-
-  // "clarin-license-label.define-license-label.notification.error-content": "Error: cannot define new License Label",
-  // TODO New key - Add a translation
-  "clarin-license-label.define-license-label.notification.error-content": "Error: cannot define new License Label",
-
-
-
   // "search.description": "",
   // TODO New key - Add a translation
   "search.description": "",
@@ -6789,6 +6027,10 @@
 
   // "search.search-form.placeholder": "Search the repository ...",
   "search.search-form.placeholder": "Từ khóa tìm kiếm",
+
+  // "search.filters.remove": "Remove filter of type {{ type }} with value {{ value }}",
+  // TODO New key - Add a translation
+  "search.filters.remove": "Remove filter of type {{ type }} with value {{ value }}",
 
   // "search.filters.applied.f.author": "Author",
   "search.filters.applied.f.author": "Tác giả",
@@ -6808,22 +6050,17 @@
   // "search.filters.applied.f.entityType": "Item Type",
   "search.filters.applied.f.entityType": "Kiểu tài liệu",
 
-  // "search.filters.applied.f.has_content_in_original_bundle": "Contain Files",
+  // "search.filters.applied.f.has_content_in_original_bundle": "Has files",
   "search.filters.applied.f.has_content_in_original_bundle": "Có tệp",
 
-  // "search.filters.applied.f.type": "Type",
-  // TODO New key - Add a translation
-  "search.filters.applied.f.type": "Type",
+  // "search.filters.applied.f.itemtype": "Type",
+  "search.filters.applied.f.itemtype": "Kiểu",
 
   // "search.filters.applied.f.namedresourcetype": "Status",
   "search.filters.applied.f.namedresourcetype": "Trạng thái",
 
   // "search.filters.applied.f.subject": "Subject",
   "search.filters.applied.f.subject": "Chủ đề",
-
-  // "search.filters.applied.f.subjectFirstValue": "Subject",
-  // TODO New key - Add a translation
-  "search.filters.applied.f.subjectFirstValue": "Subject",
 
   // "search.filters.applied.f.submitter": "Submitter",
   "search.filters.applied.f.submitter": "Người gửi",
@@ -6843,22 +6080,6 @@
 
   // "search.filters.applied.f.withdrawn": "Withdrawn",
   "search.filters.applied.f.withdrawn": "Tài liệu ẩn",
-
-  // "search.filters.applied.f.rights": "Rights",
-  // TODO New key - Add a translation
-  "search.filters.applied.f.rights": "Rights",
-
-  // "search.filters.applied.f.language": "Language (ISO)",
-  // TODO New key - Add a translation
-  "search.filters.applied.f.language": "Language (ISO)",
-
-  // "search.filters.applied.f.items_owning_community": "Community",
-  // TODO New key - Add a translation
-  "search.filters.applied.f.items_owning_community": "Community",
-
-  // "search.filters.applied.f.publisher": "Publisher",
-  // TODO New key - Add a translation
-  "search.filters.applied.f.publisher": "Publisher",
 
   // "search.filters.filter.author.head": "Author",
   "search.filters.filter.author.head": "Tác giả",
@@ -6889,6 +6110,14 @@
 
   // "search.filters.filter.creativeDatePublished.label": "Search date published",
   "search.filters.filter.creativeDatePublished.label": "Tìm kiếm ngày xuất bản",
+
+  // "search.filters.filter.creativeDatePublished.min.label": "Start",
+  // TODO New key - Add a translation
+  "search.filters.filter.creativeDatePublished.min.label": "Start",
+
+  // "search.filters.filter.creativeDatePublished.max.label": "End",
+  // TODO New key - Add a translation
+  "search.filters.filter.creativeDatePublished.max.label": "End",
 
   // "search.filters.filter.creativeWorkEditor.head": "Editor",
   "search.filters.filter.creativeWorkEditor.head": "Người biên tập",
@@ -6959,20 +6188,17 @@
   // "search.filters.filter.expand": "Expand filter",
   "search.filters.filter.expand": "Mở rộng bộ lọc",
 
-  // "search.filters.filter.has_content_in_original_bundle.head": "Contain Files",
+  // "search.filters.filter.has_content_in_original_bundle.head": "Has files",
   "search.filters.filter.has_content_in_original_bundle.head": "Có tệp",
 
-  // "search.filters.filter.type.head": "Type",
-  // TODO New key - Add a translation
-  "search.filters.filter.type.head": "Type",
+  // "search.filters.filter.itemtype.head": "Type",
+  "search.filters.filter.itemtype.head": "Kiểu tài liệu",
 
-  // "search.filters.filter.type.placeholder": "Type",
-  // TODO New key - Add a translation
-  "search.filters.filter.type.placeholder": "Type",
+  // "search.filters.filter.itemtype.placeholder": "Type",
+  "search.filters.filter.itemtype.placeholder": "Kiểu tài liệu",
 
-  // "search.filters.filter.type.label": "Search type",
-  // TODO New key - Add a translation
-  "search.filters.filter.type.label": "Search type",
+  // "search.filters.filter.itemtype.label": "Search type",
+  "search.filters.filter.itemtype.label": "Tìm kiếm kiểu tài liệu",
 
   // "search.filters.filter.jobTitle.head": "Job Title",
   "search.filters.filter.jobTitle.head": "Chức danh",
@@ -7077,18 +6303,6 @@
   // TODO New key - Add a translation
   "search.filters.filter.supervisedBy.head": "Supervised By",
 
-  // "search.filters.filter.rights.head": "Rights",
-  // TODO New key - Add a translation
-  "search.filters.filter.rights.head": "Rights",
-
-  // "search.filters.filter.language.head": "Language (ISO)",
-  // TODO New key - Add a translation
-  "search.filters.filter.language.head": "Language (ISO)",
-
-  // "search.filters.filter.items_owning_community.head": "Community",
-  // TODO New key - Add a translation
-  "search.filters.filter.items_owning_community.head": "Community",
-
   // "search.filters.filter.supervisedBy.placeholder": "Supervised By",
   // TODO New key - Add a translation
   "search.filters.filter.supervisedBy.placeholder": "Supervised By",
@@ -7096,22 +6310,6 @@
   // "search.filters.filter.supervisedBy.label": "Search Supervised By",
   // TODO New key - Add a translation
   "search.filters.filter.supervisedBy.label": "Search Supervised By",
-
-  // "search.filters.filter.rights.label": "Search rights",
-  // TODO New key - Add a translation
-  "search.filters.filter.rights.label": "Search rights",
-
-  // "search.filters.filter.rights.placeholder": "Rights",
-  // TODO New key - Add a translation
-  "search.filters.filter.rights.placeholder": "Rights",
-
-  // "search.filters.filter.items_owning_community.label": "Search community",
-  // TODO New key - Add a translation
-  "search.filters.filter.items_owning_community.label": "Search community",
-
-  // "search.filters.filter.items_owning_community.placeholder": "Community",
-  // TODO New key - Add a translation
-  "search.filters.filter.items_owning_community.placeholder": "Community",
 
   // "search.filters.entityType.JournalIssue": "Journal Issue",
   "search.filters.entityType.JournalIssue": "Kỳ của tạp chí",
@@ -7142,9 +6340,9 @@
   // TODO New key - Add a translation
   "search.filters.namedresourcetype.Validation": "Validation",
 
-  // "search.filters.namedresourcetype.Waiting for Controller": "Waiting for Controller",
+  // "search.filters.namedresourcetype.Waiting for Controller": "Waiting for reviewer",
   // TODO New key - Add a translation
-  "search.filters.namedresourcetype.Waiting for Controller": "Waiting for Controller",
+  "search.filters.namedresourcetype.Waiting for Controller": "Waiting for reviewer",
 
   // "search.filters.namedresourcetype.Workflow": "Workflow",
   // TODO New key - Add a translation
@@ -7160,15 +6358,7 @@
   // "search.filters.withdrawn.false": "No",
   "search.filters.withdrawn.false": "Không",
 
-  // "search.filters.filter.language.label": "Search language",
-  // TODO New key - Add a translation
-  "search.filters.filter.language.label": "Search language",
-
-  // "search.filters.filter.language.placeholder": "Language",
-  // TODO New key - Add a translation
-  "search.filters.filter.language.placeholder": "Language",
-
-  // "search.filters.head": "Limit your search",
+  // "search.filters.head": "Filters",
   "search.filters.head": "Bộ lọc",
 
   // "search.filters.reset": "Reset filters",
@@ -7242,16 +6432,24 @@
   // "search.view-switch.show-list": "Show as list",
   "search.view-switch.show-list": "Hiển thị dưới dạng danh sách",
 
+  // "selectable-list-item-control.deselect": "Deselect item",
+  // TODO New key - Add a translation
+  "selectable-list-item-control.deselect": "Deselect item",
+
+  // "selectable-list-item-control.select": "Select item",
+  // TODO New key - Add a translation
+  "selectable-list-item-control.select": "Select item",
+
   // "sorting.ASC": "Ascending",
   "sorting.ASC": "Tăng dần",
 
   // "sorting.DESC": "Descending",
   "sorting.DESC": "Giảm dần",
 
-  // "sorting.dc.title.ASC": "Title Asc",
+  // "sorting.dc.title.ASC": "Title Ascending",
   "sorting.dc.title.ASC": "Tăng dần theo nhan đề",
 
-  // "sorting.dc.title.DESC": "Title Desc",
+  // "sorting.dc.title.DESC": "Title Descending",
   "sorting.dc.title.DESC": "Giảm dần theo nhan đề",
 
   // "sorting.score.ASC": "Least Relevant",
@@ -7260,10 +6458,10 @@
   // "sorting.score.DESC": "Most Relevant",
   "sorting.score.DESC": "Liên quan nhiều nhất",
 
-  // "sorting.dc.date.issued.ASC": "Date Issued Asc",
+  // "sorting.dc.date.issued.ASC": "Date Issued Ascending",
   "sorting.dc.date.issued.ASC": "Tăng dần theo ngày",
 
-  // "sorting.dc.date.issued.DESC": "Date Issued Desc",
+  // "sorting.dc.date.issued.DESC": "Date Issued Descending",
   "sorting.dc.date.issued.DESC": "Giảm dần theo ngày",
 
   // "sorting.dc.date.accessioned.ASC": "Accessioned Date Ascending",
@@ -7277,6 +6475,30 @@
 
   // "sorting.lastModified.DESC": "Last modified Descending",
   "sorting.lastModified.DESC": "Giảm dần theo lần chỉnh sửa cuối cùng",
+
+  // "sorting.person.familyName.ASC": "Surname Ascending",
+  // TODO New key - Add a translation
+  "sorting.person.familyName.ASC": "Surname Ascending",
+
+  // "sorting.person.familyName.DESC": "Surname Descending",
+  // TODO New key - Add a translation
+  "sorting.person.familyName.DESC": "Surname Descending",
+
+  // "sorting.person.givenName.ASC": "Name Ascending",
+  // TODO New key - Add a translation
+  "sorting.person.givenName.ASC": "Name Ascending",
+
+  // "sorting.person.givenName.DESC": "Name Descending",
+  // TODO New key - Add a translation
+  "sorting.person.givenName.DESC": "Name Descending",
+
+  // "sorting.person.birthDate.ASC": "Birth Date Ascending",
+  // TODO New key - Add a translation
+  "sorting.person.birthDate.ASC": "Birth Date Ascending",
+
+  // "sorting.person.birthDate.DESC": "Birth Date Descending",
+  // TODO New key - Add a translation
+  "sorting.person.birthDate.DESC": "Birth Date Descending",
 
   // "statistics.title": "Statistics",
   "statistics.title": "Thống kê",
@@ -7414,8 +6636,8 @@
   // "submission.import-external.source.cinii": "CiNii",
   "submission.import-external.source.cinii": "CiNii",
 
-  // "submission.import-external.source.crossref": "CrossRef",
-  "submission.import-external.source.crossref": "CrossRef",
+  // "submission.import-external.source.crossref": "Crossref",
+  "submission.import-external.source.crossref": "Crossref",
 
   // "submission.import-external.source.datacite": "DataCite",
   "submission.import-external.source.datacite": "submission.import-external.source.datacite",
@@ -7705,6 +6927,10 @@
   // "submission.sections.describe.relationship-lookup.search-tab.tab-title.JournalIssue": "Local Journal Issues ({{ count }})",
   "submission.sections.describe.relationship-lookup.search-tab.tab-title.JournalIssue": "Số kỳ của tạp chsi nội bộ ({{ count }})",
 
+  // "submission.sections.describe.relationship-lookup.search-tab.tab-title.isJournalVolumeOfIssue": "Local Journal Volumes ({{ count }})",
+  // TODO New key - Add a translation
+  "submission.sections.describe.relationship-lookup.search-tab.tab-title.isJournalVolumeOfIssue": "Local Journal Volumes ({{ count }})",
+
   // "submission.sections.describe.relationship-lookup.search-tab.tab-title.isJournalVolumeOfPublication": "Local Journal Volumes ({{ count }})",
   "submission.sections.describe.relationship-lookup.search-tab.tab-title.isJournalVolumeOfPublication": "Số tập của tạp chí nội bộ ({{ count }})",
 
@@ -7774,6 +7000,10 @@
   // "submission.sections.describe.relationship-lookup.title.JournalIssue": "Journal Issues",
   "submission.sections.describe.relationship-lookup.title.JournalIssue": "Số kỳ của tạp chí",
 
+  // "submission.sections.describe.relationship-lookup.title.isJournalVolumeOfIssue": "Journal Volumes",
+  // TODO New key - Add a translation
+  "submission.sections.describe.relationship-lookup.title.isJournalVolumeOfIssue": "Journal Volumes",
+
   // "submission.sections.describe.relationship-lookup.title.isJournalVolumeOfPublication": "Journal Volumes",
   "submission.sections.describe.relationship-lookup.title.isJournalVolumeOfPublication": "Số tập cảu tạp chí",
 
@@ -7834,6 +7064,10 @@
 
   // "submission.sections.describe.relationship-lookup.selection-tab.title.isJournalOfPublication": "Selected Journals",
   "submission.sections.describe.relationship-lookup.selection-tab.title.isJournalOfPublication": "Lựa chọn tạp chí",
+
+  // "submission.sections.describe.relationship-lookup.selection-tab.title.isJournalVolumeOfIssue": "Selected Journal Volume",
+  // TODO New key - Add a translation
+  "submission.sections.describe.relationship-lookup.selection-tab.title.isJournalVolumeOfIssue": "Selected Journal Volume",
 
   // "submission.sections.describe.relationship-lookup.selection-tab.title.isJournalVolumeOfPublication": "Selected Journal Volume",
   "submission.sections.describe.relationship-lookup.selection-tab.title.isJournalVolumeOfPublication": "Lựa chọn số tập của tạp chí",
@@ -7977,6 +7211,10 @@
   // "submission.sections.general.no-collection": "No collection found",
   "submission.sections.general.no-collection": "Không tìm thấy bộ sưu tập",
 
+  // "submission.sections.general.no-entity": "No entity types found",
+  // TODO New key - Add a translation
+  "submission.sections.general.no-entity": "No entity types found",
+
   // "submission.sections.general.no-sections": "No options available",
   "submission.sections.general.no-sections": "Không có tùy chọn",
 
@@ -8034,18 +7272,6 @@
   // "submission.sections.submit.progressbar.describe.steptwo": "Describe",
   "submission.sections.submit.progressbar.describe.steptwo": "Mô tả",
 
-  // "submission.sections.submit.progressbar.describe.dataciterequired": "Required Properties",
-  // TODO New key - Add a translation
-  "submission.sections.submit.progressbar.describe.dataciterequired": "Required Properties",
-
-  // "submission.sections.submit.progressbar.describe.dataciterecommended": "Recommended Properties",
-  // TODO New key - Add a translation
-  "submission.sections.submit.progressbar.describe.dataciterecommended": "Recommended Properties",
-
-  // "submission.sections.submit.progressbar.describe.dataciteoptional": "Optional Properties",
-  // TODO New key - Add a translation
-  "submission.sections.submit.progressbar.describe.dataciteoptional": "Optional Properties",
-
   // "submission.sections.submit.progressbar.detect-duplicate": "Potential duplicates",
   "submission.sections.submit.progressbar.detect-duplicate": "Các trùng lặp xảy ra",
 
@@ -8059,19 +7285,11 @@
   // "submission.sections.submit.progressbar.sherpapolicy": "Sherpa policies",
   "submission.sections.submit.progressbar.sherpapolicy": "Chính sách",
 
-  // "submission.sections.submit.progressbar.clarin-license": "Pick license",
-  // TODO New key - Add a translation
-  "submission.sections.submit.progressbar.clarin-license": "Pick license",
-
   // "submission.sections.submit.progressbar.upload": "Upload files",
   "submission.sections.submit.progressbar.upload": "Tải tệp lên",
 
   // "submission.sections.submit.progressbar.sherpaPolicies": "Publisher open access policy information",
   "submission.sections.submit.progressbar.sherpaPolicies": "Chính sách truy cập mở của nhà xuất bản",
-
-  // "submission.sections.submit.progressbar.clarin-notice": "Notice",
-  // TODO New key - Add a translation
-  "submission.sections.submit.progressbar.clarin-notice": "Notice",
 
   // "submission.sections.sherpa-policy.title-empty": "No publisher policy information available. If your work has an associated ISSN, please enter it above to see any related publisher open access policies.",
   "submission.sections.sherpa-policy.title-empty": "Không có chính sách của nhà xuất bản. Nếu tác phẩm của bạn có ISSN liên quan vui lòng nhập nó ở trên để xem các chính sách truy cập mở của nhà xuất bản (nếu có)",
@@ -8203,10 +7421,6 @@
 
   // "submission.sections.upload.upload-successful": "Upload successful",
   "submission.sections.upload.upload-successful": "Tải lên thành công",
-
-  // "submission.sections.upload.upload-failed.size-limit-exceeded": "File size exceeds the maximum upload size",
-  // TODO New key - Add a translation
-  "submission.sections.upload.upload-failed.size-limit-exceeded": "File size exceeds the maximum upload size",
 
   // "submission.sections.accesses.form.discoverable-description": "When checked, this item will be discoverable in search/browse. When unchecked, the item will only be available via a direct link and will never appear in search/browse.",
   "submission.sections.accesses.form.discoverable-description": "Khi được chọn biểu ghi này sẽ có thể được tìm thấy trong các chức năng tìm kiếm/duyệt. Khi bỏ chọn biểu ghi sẽ chỉ có sẵn qua đường dẫn trực tiếp và sẽ không bao giờ xuất hiện trong tìm kiếm/duyệt.",
@@ -8341,114 +7555,6 @@
   // "submission.sections.sherpa.error.message": "There was an error retrieving sherpa informations",
   "submission.sections.sherpa.error.message": "Đã xảy ra lỗi trong quá trình truy xuất thông tin",
 
-  // "contract.breadcrumbs": "Distribution License Agreement",
-  // TODO New key - Add a translation
-  "contract.breadcrumbs": "Distribution License Agreement",
-
-  // "contract.message.distribution-license-agreement": "Distribution License Agreement",
-  // TODO New key - Add a translation
-  "contract.message.distribution-license-agreement": "Distribution License Agreement",
-
-  // "submission.sections.clarin-license.head.read-accept": "Read and accept the ",
-  // TODO New key - Add a translation
-  "submission.sections.clarin-license.head.read-accept": "Read and accept the ",
-
-  // "submission.sections.clarin-license.head.license-agreement": "Distribution License Agreement",
-  // TODO New key - Add a translation
-  "submission.sections.clarin-license.head.license-agreement": "Distribution License Agreement",
-
-  // "submission.sections.clarin-license.head.license-decision-message": "By checking this box, you agree to the Distribution License Agreement for this repository to reproduce, translate and distribute your submissions worldwide.",
-  // TODO New key - Add a translation
-  "submission.sections.clarin-license.head.license-decision-message": "By checking this box, you agree to the Distribution License Agreement for this repository to reproduce, translate and distribute your submissions worldwide.",
-
-  // "submission.sections.clarin-license.head.license-question-help-desk": ["If you have questions regarding this licence please contact the", "Help Desk"],
-  // TODO New key - Add a translation
-  "submission.sections.clarin-license.head.license-question-help-desk": ["If you have questions regarding this licence please contact the", "Help Desk"],
-
-  // "submission.sections.clarin-license.head.license-select-resource": "Select the resource license",
-  // TODO New key - Add a translation
-  "submission.sections.clarin-license.head.license-select-resource": "Select the resource license",
-
-  // "submission.sections.clarin-license.head.license-select-providing": ["The License Selector will provide you visual assistance to select the most appropriate license for your data or software. For the list of all supported licenses and their details visit ", "License List Page", "."],
-  // TODO New key - Add a translation
-  "submission.sections.clarin-license.head.license-select-providing": ["The License Selector will provide you visual assistance to select the most appropriate license for your data or software. For the list of all supported licenses and their details visit ", "License List Page", "."],
-
-  // "submission.sections.clarin-license.head.license-open-selector": "OPEN License Selector",
-  // TODO New key - Add a translation
-  "submission.sections.clarin-license.head.license-open-selector": "OPEN License Selector",
-
-  // "submission.sections.clarin-license.head.license-select-or": "- OR -",
-  // TODO New key - Add a translation
-  "submission.sections.clarin-license.head.license-select-or": "- OR -",
-
-  // "submission.sections.clarin-license.head.license-dropdown-info": "If you already know under which license you want to distribute your work, please select from the dropdown below.",
-  // TODO New key - Add a translation
-  "submission.sections.clarin-license.head.license-dropdown-info": "If you already know under which license you want to distribute your work, please select from the dropdown below.",
-
-  // "submission.sections.clarin-license.head.license-not-supported-message": "The selected license is not supported at the moment. Please follow the procedure described under section \"None of these licenses suits your needs\".",
-  // TODO New key - Add a translation
-  "submission.sections.clarin-license.head.license-not-supported-message": "The selected license is not supported at the moment. Please follow the procedure described under section \"None of these licenses suits your needs\".",
-
-  // "submission.sections.clarin-license.head.license-select-default-value": "Select a License ...",
-  // TODO New key - Add a translation
-  "submission.sections.clarin-license.head.license-select-default-value": "Select a License ...",
-
-  // "submission.sections.clarin-license.head.license-more-details": "See more details for the licenses",
-  // TODO New key - Add a translation
-  "submission.sections.clarin-license.head.license-more-details": "See more details for the licenses",
-
-  // "submission.sections.clarin-license.head.license-do-not-suits-needs": "None of these licenses suits your needs",
-  // TODO New key - Add a translation
-  "submission.sections.clarin-license.head.license-do-not-suits-needs": "None of these licenses suits your needs",
-
-  // "submission.sections.clarin-license.head.license-not-offer-proceeds": "If you need to use a license we currently do not offer, proceed as follows:",
-  // TODO New key - Add a translation
-  "submission.sections.clarin-license.head.license-not-offer-proceeds": "If you need to use a license we currently do not offer, proceed as follows:",
-
-  // "submission.sections.clarin-license.head.license-not-offer-proceed-link": "Obtain a link (or a copy) to the license.",
-  // TODO New key - Add a translation
-  "submission.sections.clarin-license.head.license-not-offer-proceed-link": "Obtain a link (or a copy) to the license.",
-
-  // "submission.sections.clarin-license.head.license-not-offer-proceed-email": ["Send an email to", "Help Desk", "with the license details."],
-  // TODO New key - Add a translation
-  "submission.sections.clarin-license.head.license-not-offer-proceed-email": ["Send an email to", "Help Desk", "with the license details."],
-
-  // "submission.sections.clarin-license.head.license-not-offer-proceed-wait": "Save the unfinished submission and wait. We will add the license to the selection list and contact you.",
-  // TODO New key - Add a translation
-  "submission.sections.clarin-license.head.license-not-offer-proceed-wait": "Save the unfinished submission and wait. We will add the license to the selection list and contact you.",
-
-  // "submission.sections.clarin-license.head.license-not-offer-proceed-continue": "You will be able to continue the submission afterwards.",
-  // TODO New key - Add a translation
-  "submission.sections.clarin-license.head.license-not-offer-proceed-continue": "You will be able to continue the submission afterwards.",
-
-  // "submission.sections.clarin-license.toggle.off-text": "Click to accept",
-  // TODO New key - Add a translation
-  "submission.sections.clarin-license.toggle.off-text": "Click to accept",
-
-  // "submission.sections.clarin-license.toggle.on-text": "Accepted",
-  // TODO New key - Add a translation
-  "submission.sections.clarin-license.toggle.on-text": "Accepted",
-
-  // "submission.sections.clarin-notice.message": ["The submission process for this collection (\"","\") is still being fine-tuned. If you find yourself unable to continue the submission because you can't provide the required information, because the required format for a field is too strict, because there's no appropriate field for your information, or for any other reason", "let us know"],
-  // TODO New key - Add a translation
-  "submission.sections.clarin-notice.message": ["The submission process for this collection (\"","\") is still being fine-tuned. If you find yourself unable to continue the submission because you can't provide the required information, because the required format for a field is too strict, because there's no appropriate field for your information, or for any other reason", "let us know"],
-
-  // "submission.sections.clarin-notice.toggle.on-text": "Confirmed",
-  // TODO New key - Add a translation
-  "submission.sections.clarin-notice.toggle.on-text": "Confirmed",
-
-  // "submission.sections.clarin-notice.toggle.off-text": "Click to confirm",
-  // TODO New key - Add a translation
-  "submission.sections.clarin-notice.toggle.off-text": "Click to confirm",
-
-  // "submission.sections.clarin-notice.toggle.message": "By checking this box, you confirm that you read the text above and that you understand it.",
-  // TODO New key - Add a translation
-  "submission.sections.clarin-notice.toggle.message": "By checking this box, you confirm that you read the text above and that you understand it.",
-
-  // "submission.sections.clarin-notice.error": "Please confirm that you have read the Notice.",
-  // TODO New key - Add a translation
-  "submission.sections.clarin-notice.error": "Please confirm that you have read the Notice.",
-
   // "submission.submit.breadcrumbs": "New submission",
   "submission.submit.breadcrumbs": "Gửi mới",
 
@@ -8488,22 +7594,6 @@
   // "submission.workflow.generic.submit_score-help": "",
   // TODO New key - Add a translation
   "submission.workflow.generic.submit_score-help": "",
-
-  // "submission.workflow.generic.share-submission": "Share submission",
-  // TODO New key - Add a translation
-  "submission.workflow.generic.share-submission": "Share submission",
-
-  // "submission.workflow.generic.share-submission.tooltip": "Share submission",
-  // TODO New key - Add a translation
-  "submission.workflow.generic.share-submission.tooltip": "Share submission",
-
-  // "submission.workflow.share-submission.email.successful": "The email with the share link has been sent successfully",
-  // TODO New key - Add a translation
-  "submission.workflow.share-submission.email.successful": "The email with the share link has been sent successfully",
-
-  // "submission.workflow.share-submission.email.error": "Cannot send the email with share link",
-  // TODO New key - Add a translation
-  "submission.workflow.share-submission.email.error": "Cannot send the email with share link",
 
   // "submission.workflow.tasks.claimed.approve": "Approve",
   "submission.workflow.tasks.claimed.approve": "Chấp nhận",
@@ -8622,6 +7712,10 @@
   // "subscriptions.tooltip": "Subscribe",
   // TODO New key - Add a translation
   "subscriptions.tooltip": "Subscribe",
+
+  // "subscriptions.unsubscribe": "Unsubscribe",
+  // TODO New key - Add a translation
+  "subscriptions.unsubscribe": "Unsubscribe",
 
   // "subscriptions.modal.title": "Subscriptions",
   // TODO New key - Add a translation
@@ -8761,6 +7855,10 @@
 
   // "vocabulary-treeview.search.form.search": "Search",
   "vocabulary-treeview.search.form.search": "Tìm kiếm",
+
+  // "vocabulary-treeview.search.form.search-placeholder": "Filter results by typing the first few letters",
+  // TODO New key - Add a translation
+  "vocabulary-treeview.search.form.search-placeholder": "Filter results by typing the first few letters",
 
   // "vocabulary-treeview.search.no-result": "There were no items to show",
   "vocabulary-treeview.search.no-result": "Không có tài liệu nào hiển thị",
@@ -8989,18 +8087,6 @@
 
   // "idle-modal.log-out": "Log out",
   "idle-modal.log-out": "Đăng xuất",
-
-  // "language.english": "English",
-  // TODO New key - Add a translation
-  "language.english": "English",
-
-  // "language.czech": "Czech",
-  // TODO New key - Add a translation
-  "language.czech": "Czech",
-
-  // "repository.policy.page": "Change me: policy page",
-  // TODO New key - Add a translation
-  "repository.policy.page": "Change me: policy page",
 
   // "idle-modal.extend-session": "Extend session",
   "idle-modal.extend-session": "Gia hạn phiên",
@@ -9378,6 +8464,14 @@
   // "person.orcid.registry.auth": "ORCID Authorizations",
   "person.orcid.registry.auth": "Được phép qua ORCID ",
 
+  // "person.orcid-tooltip.authenticated": "{{orcid}}",
+  // TODO New key - Add a translation
+  "person.orcid-tooltip.authenticated": "{{orcid}}",
+
+  // "person.orcid-tooltip.not-authenticated": "{{orcid}} (unconfirmed)",
+  // TODO New key - Add a translation
+  "person.orcid-tooltip.not-authenticated": "{{orcid}} (unconfirmed)",
+
   // "home.recent-submissions.head": "Recent Submissions",
   "home.recent-submissions.head": "Các tài liệu tải lên gần đây",
 
@@ -9434,6 +8528,10 @@
   // TODO New key - Add a translation
   "system-wide-alert.form.label.countdownTo.hint": "Hint: Set a countdown timer. When enabled, a date can be set in the future and the system-wide alert banner will perform a countdown to the set date. When this timer ends, it will disappear from the alert. The server will NOT be automatically stopped.",
 
+  // "system-wide-alert-form.select-date-by-calendar": "Select date using calendar",
+  // TODO New key - Add a translation
+  "system-wide-alert-form.select-date-by-calendar": "Select date using calendar",
+
   // "system-wide-alert.form.label.preview": "System-wide alert preview",
   "system-wide-alert.form.label.preview": "Xem trước cảnh báo toàn hệ thống",
 
@@ -9471,9 +8569,25 @@
   // TODO New key - Add a translation
   "access-control-item-header-toggle": "Item's Metadata",
 
+  // "access-control-item-toggle.enable": "Enable option to perform changes on the item's metadata",
+  // TODO New key - Add a translation
+  "access-control-item-toggle.enable": "Enable option to perform changes on the item's metadata",
+
+  // "access-control-item-toggle.disable": "Disable option to perform changes on the item's metadata",
+  // TODO New key - Add a translation
+  "access-control-item-toggle.disable": "Disable option to perform changes on the item's metadata",
+
   // "access-control-bitstream-header-toggle": "Bitstreams",
   // TODO New key - Add a translation
   "access-control-bitstream-header-toggle": "Bitstreams",
+
+  // "access-control-bitstream-toggle.enable": "Enable option to perform changes on the bitstreams",
+  // TODO New key - Add a translation
+  "access-control-bitstream-toggle.enable": "Enable option to perform changes on the bitstreams",
+
+  // "access-control-bitstream-toggle.disable": "Disable option to perform changes on the bitstreams",
+  // TODO New key - Add a translation
+  "access-control-bitstream-toggle.disable": "Disable option to perform changes on the bitstreams",
 
   // "access-control-mode": "Mode",
   // TODO New key - Add a translation
@@ -9507,6 +8621,10 @@
   // TODO New key - Add a translation
   "access-control-bitstreams-selected": "bitstreams selected",
 
+  // "access-control-bitstreams-select": "Select bitstreams",
+  // TODO New key - Add a translation
+  "access-control-bitstreams-select": "Select bitstreams",
+
   // "access-control-cancel": "Cancel",
   // TODO New key - Add a translation
   "access-control-cancel": "Cancel",
@@ -9518,6 +8636,10 @@
   // "access-control-add-more": "Add more",
   // TODO New key - Add a translation
   "access-control-add-more": "Add more",
+
+  // "access-control-remove": "Remove access condition",
+  // TODO New key - Add a translation
+  "access-control-remove": "Remove access condition",
 
   // "access-control-select-bitstreams-modal.title": "Select bitstreams",
   // TODO New key - Add a translation
@@ -9559,114 +8681,53 @@
   // TODO New key - Add a translation
   "vocabulary-treeview.search.form.add": "Add",
 
-
-  // "navbar.repository": "Repository",
+  // "process.overview.unknown.user": "Unknown",
   // TODO New key - Add a translation
-  "navbar.repository": "Repository",
+  "process.overview.unknown.user": "Unknown",
 
-  // "navbar.community-list": "Catalog",
+  // "browse.search-form.placeholder": "Search the repository",
   // TODO New key - Add a translation
-  "navbar.community-list": "Catalog",
+  "browse.search-form.placeholder": "Search the repository",
 
-  // "navbar.education": "Education",
+  // "file-download-link.download": "Download ",
   // TODO New key - Add a translation
-  "navbar.education": "Education",
+  "file-download-link.download": "Download ",
 
-  // "navbar.project": "Projects",
+  // "register-page.registration.aria.label": "Enter your e-mail address",
   // TODO New key - Add a translation
-  "navbar.project": "Projects",
+  "register-page.registration.aria.label": "Enter your e-mail address",
 
-  // "navbar.tools": "Tools",
+  // "forgot-email.form.aria.label": "Enter your e-mail address",
   // TODO New key - Add a translation
-  "navbar.tools": "Tools",
+  "forgot-email.form.aria.label": "Enter your e-mail address",
 
-  // "navbar.services": "Services",
+  // "search-facet-option.update.announcement": "The page will be reloaded. Filter {{ filter }} is selected.",
   // TODO New key - Add a translation
-  "navbar.services": "Services",
+  "search-facet-option.update.announcement": "The page will be reloaded. Filter {{ filter }} is selected.",
 
-  // "navbar.about": "About",
+  // "live-region.ordering.instructions": "Press spacebar to reorder {{ itemName }}.",
   // TODO New key - Add a translation
-  "navbar.about": "About",
+  "live-region.ordering.instructions": "Press spacebar to reorder {{ itemName }}.",
 
-  // "navbar.about.partners": "Partners",
+  // "live-region.ordering.status": "{{ itemName }}, grabbed. Current position in list: {{ index }} of  {{ length }}. Press up and down arrow keys to change position, SpaceBar to drop, Escape to cancel.",
   // TODO New key - Add a translation
-  "navbar.about.partners": "Partners",
+  "live-region.ordering.status": "{{ itemName }}, grabbed. Current position in list: {{ index }} of  {{ length }}. Press up and down arrow keys to change position, SpaceBar to drop, Escape to cancel.",
 
-  // "navbar.about.mission-statement": "Mission Statement",
+  // "live-region.ordering.moved": "{{ itemName }}, moved to position {{ index }} of {{ length }}. Press up and down arrow keys to change position, SpaceBar to drop, Escape to cancel.",
   // TODO New key - Add a translation
-  "navbar.about.mission-statement": "Mission Statement",
+  "live-region.ordering.moved": "{{ itemName }}, moved to position {{ index }} of {{ length }}. Press up and down arrow keys to change position, SpaceBar to drop, Escape to cancel.",
 
-  // "navbar.about.clarin": "CLARIN",
+  // "live-region.ordering.dropped": "{{ itemName }}, dropped at position {{ index }} of {{ length }}.",
   // TODO New key - Add a translation
-  "navbar.about.clarin": "CLARIN",
+  "live-region.ordering.dropped": "{{ itemName }}, dropped at position {{ index }} of {{ length }}.",
 
-  // "navbar.about.dariah": "DARIAH",
+  // "dynamic-form-array.sortable-list.label": "Sortable list",
   // TODO New key - Add a translation
-  "navbar.about.dariah": "DARIAH",
+  "dynamic-form-array.sortable-list.label": "Sortable list",
 
-  // "navbar.about.service-integrations": "Service integrations",
+  // "metadata-export-search.submit.error.limit-exceeded": "Only the first {{limit}} items will be exported",
   // TODO New key - Add a translation
-  "navbar.about.service-integrations": "Service integrations",
-
-  // "navbar.about.project-partnership": "Project partnerships",
-  // TODO New key - Add a translation
-  "navbar.about.project-partnership": "Project partnerships",
-
-  // "share.submission.breadcrumbs": "Share submission",
-  // TODO New key - Add a translation
-  "share.submission.breadcrumbs": "Share submission",
-
-  // "share.submission.page.title": "Share link",
-  // TODO New key - Add a translation
-  "share.submission.page.title": "Share link",
-
-  // "share.submission.page.share-link.message.start": "To pass your submission to another user give them the following link: ",
-  // TODO New key - Add a translation
-  "share.submission.page.share-link.message.start": "To pass your submission to another user give them the following link: ",
-
-  // "share.submission.page.share-link.message.end": ". You will also receive an email with this link.",
-  // TODO New key - Add a translation
-  "share.submission.page.share-link.message.end": ". You will also receive an email with this link.",
-
-  // "change.submitter.breadcrumbs": "Change submitter",
-  // TODO New key - Add a translation
-  "change.submitter.breadcrumbs": "Change submitter",
-
-  // "change.submitter.page.title": "Change submitter",
-  // TODO New key - Add a translation
-  "change.submitter.page.title": "Change submitter",
-
-  // "change.submitter.page.message": "This items currently belongs to: ",
-  // TODO New key - Add a translation
-  "change.submitter.page.message": "This items currently belongs to: ",
-
-  // "change.submitter.page.button.take-it": "Take it",
-  // TODO New key - Add a translation
-  "change.submitter.page.button.take-it": "Take it",
-
-  // "change.submitter.page.changed-successfully": "The submitter has been successfully changed",
-  // TODO New key - Add a translation
-  "change.submitter.page.changed-successfully": "The submitter has been successfully changed",
-
-  // "change.submitter.page.changed-error": "An error occurred while changing the submitter",
-  // TODO New key - Add a translation
-  "change.submitter.page.changed-error": "An error occurred while changing the submitter",
-
-  // "change.submitter.page.cannot.see.submitter.message": "You do not have permission to see submitter information.",
-  // TODO New key - Add a translation
-  "change.submitter.page.cannot.see.submitter.message": "You do not have permission to see submitter information.",
-
-  // "change.submitter.page.items.handle.message": "Item's handle: ",
-  // TODO New key - Add a translation
-  "change.submitter.page.items.handle.message": "Item's handle: ",
-
-  // "change.submitter.page.items.name.message": "Item's name: ",
-  // TODO New key - Add a translation
-  "change.submitter.page.items.name.message": "Item's name: ",
-
-  // "clarin-license-agreement-page.download-error": "An error occurred while downloading the file. Please try again later.",
-  // TODO New key - Add a translation
-  "clarin-license-agreement-page.download-error": "An error occurred while downloading the file. Please try again later.",
+  "metadata-export-search.submit.error.limit-exceeded": "Only the first {{limit}} items will be exported",
 
 
 }

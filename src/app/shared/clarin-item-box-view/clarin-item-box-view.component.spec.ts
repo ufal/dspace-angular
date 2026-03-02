@@ -23,7 +23,6 @@ describe('ClarinItemBoxViewComponent', () => {
   let fixture: ComponentFixture<ClarinItemBoxViewComponent>;
   let sanitizerStub: DomSanitizer;
 
-  const restEndpoint = 'fake-rest-endpoint';
   const initialState = {
     core: { auth: { loading: false } },
   };
