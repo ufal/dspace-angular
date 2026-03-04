@@ -13,6 +13,7 @@ import { getItemPageRoute } from '../../../item-page/item-page-routing-paths';
 import { DSONameService } from '../../../core/breadcrumbs/dso-name.service';
 import { EMPTY } from 'rxjs/internal/observable/empty';
 import { APP_CONFIG, AppConfig } from '../../../../config/app-config.interface';
+import { MARKDOWN_DESCRIPTION_METADATA_ALLOW_LIST } from '../../../shared/form/builder/constants/markdown-description-metadata-allow-list';
 
 @Component({
   selector: 'ds-dso-edit-metadata-value',
@@ -23,11 +24,7 @@ import { APP_CONFIG, AppConfig } from '../../../../config/app-config.interface';
  * Component displaying a single editable row for a metadata value
  */
 export class DsoEditMetadataValueComponent implements OnInit {
-  protected readonly markdownDescriptionMetadataAllowList: string[] = [
-    'description',
-    'dc.description',
-    'dc.description.abstract'
-  ];
+  protected readonly markdownDescriptionMetadataAllowList: string[] = MARKDOWN_DESCRIPTION_METADATA_ALLOW_LIST;
 
   /**
    * The parent {@link DSpaceObject} to display a metadata form for

@@ -12,16 +12,21 @@
   <div [ngClass]="{'form-row': model.hasLanguages || isRelationship,
                       'd-none': value?.isVirtual && (model.hasSelectableMetadata || context?.index > 0)}">
     <div [ngClass]="getClass('grid', 'control')">
-      <div *ngIf="markdownToggleVisible" class="markdown-preview-toggle btn-group btn-group-sm mb-2" role="group" aria-label="markdown-preview-toggle">
+      <div *ngIf="markdownToggleVisible"
+           class="markdown-preview-toggle btn-group btn-group-sm mb-2"
+           role="group"
+           [attr.aria-label]="('submission.form.markdown.toggle.edit' | translate) + ' / ' + ('submission.form.markdown.toggle.preview' | translate)">
         <button type="button"
                 class="btn btn-outline-secondary"
                 [class.active]="!isMarkdownPreviewMode"
+                [attr.aria-pressed]="!isMarkdownPreviewMode"
                 (click)="setMarkdownPreviewMode(false)">
           {{ 'submission.form.markdown.toggle.edit' | translate }}
         </button>
         <button type="button"
                 class="btn btn-outline-secondary"
                 [class.active]="isMarkdownPreviewMode"
+                [attr.aria-pressed]="isMarkdownPreviewMode"
                 (click)="setMarkdownPreviewMode(true)">
           {{ 'submission.form.markdown.toggle.preview' | translate }}
         </button>

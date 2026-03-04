@@ -126,6 +126,7 @@ import { DsDynamicSponsorAutocompleteComponent } from './models/sponsor-autocomp
 import { SPONSOR_METADATA_NAME } from './models/ds-dynamic-complex.model';
 import { DsDynamicSponsorScrollableDropdownComponent } from './models/sponsor-scrollable-dropdown/dynamic-sponsor-scrollable-dropdown.component';
 import { DsDynamicTextAreaModel } from './models/ds-dynamic-textarea.model';
+import { MARKDOWN_DESCRIPTION_METADATA_ALLOW_LIST } from '../constants/markdown-description-metadata-allow-list';
 
 export function dsDynamicFormControlMapFn(model: DynamicFormControlModel): Type<DynamicFormControl> | null {
   switch (model.type) {
@@ -211,11 +212,7 @@ export function dsDynamicFormControlMapFn(model: DynamicFormControlModel): Type<
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class DsDynamicFormControlContainerComponent extends DynamicFormControlContainerComponent implements OnInit, OnChanges, OnDestroy {
-  protected readonly markdownDescriptionMetadataAllowList: string[] = [
-    'description',
-    'dc.description',
-    'dc.description.abstract'
-  ];
+  protected readonly markdownDescriptionMetadataAllowList: string[] = MARKDOWN_DESCRIPTION_METADATA_ALLOW_LIST;
 
   @ContentChildren(DynamicTemplateDirective) contentTemplateList: QueryList<DynamicTemplateDirective>;
   // eslint-disable-next-line @angular-eslint/no-input-rename
@@ -639,6 +636,11 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
   }
 
   private setupMarkdownToggleVisibilityBinding(): void {
+    if (!this.shouldBindMarkdownToggleVisibility()) {
+      this.clearMarkdownToggleVisibilityBinding();
+      return;
+    }
+
     const useMarkdownControl = this.resolveLocalDescriptionUseMarkdownControl();
     const hasSameUseMarkdownControl = useMarkdownControl === this.localDescriptionUseMarkdownControl;
 
@@ -661,6 +663,32 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
     this.localDescriptionUseMarkdownSubscription = useMarkdownControl.valueChanges
       .pipe(startWith(useMarkdownControl.value))
       .subscribe(() => this.refreshMarkdownToggleVisibility());
+  }
+
+  private shouldBindMarkdownToggleVisibility(): boolean {
+    if (!this.appConfig?.markdown?.enabled) {
+      return false;
+    }
+
+    if (this.model?.type !== DYNAMIC_FORM_CONTROL_TYPE_TEXTAREA) {
+      return false;
+    }
+
+    if (this.model?.readOnly) {
+      return false;
+    }
+
+    return this.isDescriptionTextareaField();
+  }
+
+  private clearMarkdownToggleVisibilityBinding(): void {
+    this.markdownToggleVisible = false;
+    this.localDescriptionUseMarkdownControl = null;
+
+    if (hasValue(this.localDescriptionUseMarkdownSubscription)) {
+      this.localDescriptionUseMarkdownSubscription.unsubscribe();
+      this.localDescriptionUseMarkdownSubscription = null;
+    }
   }
 
   private resolveLocalDescriptionUseMarkdownControl(): AbstractControl {

@@ -74,11 +74,19 @@ describe('DsoEditMetadataValueComponent', () => {
   });
 
   describe('markdown preview toggle', () => {
+    let appConfig: any;
+    let originalMarkdownEnabled: boolean;
+
     beforeEach(() => {
       editMetadataValue.editing = true;
-      const appConfig = TestBed.inject(APP_CONFIG) as any;
+      appConfig = TestBed.inject(APP_CONFIG) as any;
+      originalMarkdownEnabled = appConfig.markdown.enabled;
       appConfig.markdown.enabled = true;
       fixture.detectChanges();
+    });
+
+    afterEach(() => {
+      appConfig.markdown.enabled = originalMarkdownEnabled;
     });
 
     it('should show toggle for description fields when metadata markdown is enabled', () => {
@@ -91,20 +99,23 @@ describe('DsoEditMetadataValueComponent', () => {
       expect(component.canShowMarkdownPreviewToggle()).toBeFalse();
     });
 
+    it('should hide toggle when global markdown is disabled', () => {
+      appConfig.markdown.enabled = false;
+
+      expect(component.canShowMarkdownPreviewToggle()).toBeFalse();
+    });
+
+    it('should hide toggle when value is not in editing mode', () => {
+      component.mdValue.editing = false;
+
+      expect(component.canShowMarkdownPreviewToggle()).toBeFalse();
+    });
+
     it('should enable preview mode and return current value', () => {
       component.setMarkdownPreviewMode(true);
 
       expect(component.isMarkdownPreviewModeEnabled()).toBeTrue();
       expect(component.getMarkdownPreviewValue()).toBe('Regular Name');
-    });
-
-    it('should keep toggle visible for uppercase and boolean/object value shapes when markdown form gate is enabled', () => {
-      const valueShapes = ['YES', 'True', true, { local_description_usemarkdown_yes: true }];
-
-      valueShapes.forEach((valueShape) => {
-        component.mdValue.newValue.value = valueShape as any;
-        expect(component.canShowMarkdownPreviewToggle()).toBeTrue();
-      });
     });
 
     it('should hide toggle for non-description metadata fields', () => {

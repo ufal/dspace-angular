@@ -6,13 +6,10 @@ import {
   DsDynamicTextAreaModelConfig
 } from '../ds-dynamic-form-ui/models/ds-dynamic-textarea.model';
 import { environment } from '../../../../../environments/environment';
+import { MARKDOWN_DESCRIPTION_METADATA_ALLOW_LIST } from '../constants/markdown-description-metadata-allow-list';
 
 export class TextareaFieldParser extends FieldParser {
-  protected readonly markdownDescriptionMetadataAllowList: string[] = [
-    'description',
-    'dc.description',
-    'dc.description.abstract'
-  ];
+  protected readonly markdownDescriptionMetadataAllowList: string[] = MARKDOWN_DESCRIPTION_METADATA_ALLOW_LIST;
 
   public modelFactory(fieldValue?: FormFieldMetadataValueObject | any, label?: boolean): any {
     const textAreaModelConfig: DsDynamicTextAreaModelConfig = this.initModel(null, label);
