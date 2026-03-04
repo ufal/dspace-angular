@@ -266,6 +266,21 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
    */
   isMarkdownPreviewMode = false;
 
+  /**
+   * Cached visibility flag for markdown preview toggle.
+   */
+  markdownToggleVisible = false;
+
+  /**
+   * Cached control reference for local.description.usemarkdown.
+   */
+  private localDescriptionUseMarkdownControl: AbstractControl;
+
+  /**
+   * Subscription to local.description.usemarkdown control value changes.
+   */
+  private localDescriptionUseMarkdownSubscription: Subscription;
+
   get componentType(): Type<DynamicFormControl> | null {
     return dsDynamicFormControlMapFn(this.model);
   }
@@ -380,7 +395,7 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes && !this.isRelationship && hasValue(this.group.get(this.model.id))) {
+    if (changes && !this.isRelationship && hasValue(this.group) && hasValue(this.model) && hasValue(this.group.get(this.model.id))) {
       super.ngOnChanges(changes);
       if (this.model && this.model.placeholder) {
         this.model.placeholder = this.translateService.instant(this.model.placeholder);
@@ -389,6 +404,8 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
         this.subscriptions.push(...this.typeBindRelationService.subscribeRelations(this.model, this.control));
       }
     }
+
+    this.setupMarkdownToggleVisibilityBinding();
   }
 
   ngDoCheck() {
@@ -514,6 +531,11 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
    * Unsubscribe from all subscriptions
    */
   ngOnDestroy(): void {
+    if (hasValue(this.localDescriptionUseMarkdownSubscription)) {
+      this.localDescriptionUseMarkdownSubscription.unsubscribe();
+      this.localDescriptionUseMarkdownSubscription = null;
+    }
+
     this.subs
       .filter((sub) => hasValue(sub))
       .forEach((sub) => sub.unsubscribe());
@@ -527,14 +549,14 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
    * Checks if markdown preview toggle can be shown for this control.
    */
   canShowMarkdownPreviewToggle(): boolean {
-    return this.isMarkdownPreviewSupported() && !this.model.readOnly;
+    return this.markdownToggleVisible;
   }
 
   /**
    * Checks if markdown preview should be displayed.
    */
   isMarkdownPreviewModeEnabled(): boolean {
-    return this.canShowMarkdownPreviewToggle() && this.isMarkdownPreviewMode;
+    return this.markdownToggleVisible && this.isMarkdownPreviewMode;
   }
 
   /**
@@ -605,12 +627,8 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
    * Check if local.description.usemarkdown exists in form state and enables markdown rendering.
    */
   protected isLocalDescriptionUseMarkdownEnabled(): boolean {
-    const useMarkdownControl = this.group?.root?.get('local_description_usemarkdown')
-      || this.formGroup?.root?.get('local_description_usemarkdown')
-      || this.group?.get('local_description_usemarkdown')
-      || this.findNestedControlByKey(this.group?.root, 'local_description_usemarkdown')
-      || this.findNestedControlByKey(this.formGroup?.root, 'local_description_usemarkdown')
-      || this.findNestedControlByKey(this.group, 'local_description_usemarkdown');
+    const useMarkdownControl = this.localDescriptionUseMarkdownControl || this.resolveLocalDescriptionUseMarkdownControl();
+    this.localDescriptionUseMarkdownControl = useMarkdownControl;
 
     if (!hasValue(useMarkdownControl)) {
       return false;
@@ -618,6 +636,44 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
 
     const rawValue = useMarkdownControl.value?.value ?? useMarkdownControl.value;
     return this.isUseMarkdownValueEnabled(rawValue);
+  }
+
+  private setupMarkdownToggleVisibilityBinding(): void {
+    const useMarkdownControl = this.resolveLocalDescriptionUseMarkdownControl();
+    const hasSameUseMarkdownControl = useMarkdownControl === this.localDescriptionUseMarkdownControl;
+
+    this.localDescriptionUseMarkdownControl = useMarkdownControl;
+    this.refreshMarkdownToggleVisibility();
+
+    if (hasSameUseMarkdownControl) {
+      return;
+    }
+
+    if (hasValue(this.localDescriptionUseMarkdownSubscription)) {
+      this.localDescriptionUseMarkdownSubscription.unsubscribe();
+      this.localDescriptionUseMarkdownSubscription = null;
+    }
+
+    if (!hasValue(useMarkdownControl)) {
+      return;
+    }
+
+    this.localDescriptionUseMarkdownSubscription = useMarkdownControl.valueChanges
+      .pipe(startWith(useMarkdownControl.value))
+      .subscribe(() => this.refreshMarkdownToggleVisibility());
+  }
+
+  private resolveLocalDescriptionUseMarkdownControl(): AbstractControl {
+    return this.group?.root?.get('local_description_usemarkdown')
+      || this.formGroup?.root?.get('local_description_usemarkdown')
+      || this.group?.get('local_description_usemarkdown')
+      || this.findNestedControlByKey(this.group?.root, 'local_description_usemarkdown')
+      || this.findNestedControlByKey(this.formGroup?.root, 'local_description_usemarkdown')
+      || this.findNestedControlByKey(this.group, 'local_description_usemarkdown');
+  }
+
+  private refreshMarkdownToggleVisibility(): void {
+    this.markdownToggleVisible = this.isMarkdownPreviewSupported() && !this.model?.readOnly;
   }
 
   private findNestedControlByKey(control: AbstractControl, key: string): AbstractControl {
@@ -671,11 +727,6 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
     }
 
     if (typeof value === 'object') {
-      const yesOption = value.local_description_usemarkdown_yes;
-      if (hasValue(yesOption)) {
-        return this.isUseMarkdownValueEnabled(yesOption);
-      }
-
       return Object.values(value).some((entry) => this.isUseMarkdownValueEnabled(entry));
     }
 

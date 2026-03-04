@@ -126,6 +126,92 @@ describe('DsoEditMetadataFieldValuesComponent', () => {
 
       expect(component.isLocalDescriptionUseMarkdownEnabled()).toBeTrue();
     });
+
+    it('should return true when local.description.usemarkdown is YES', () => {
+      form = new DsoEditMetadataForm({
+        ...dso.metadata,
+        'local.description.usemarkdown': [
+          Object.assign(new MetadataValue(), {
+            value: 'YES',
+            language: 'en',
+            place: 0,
+          }),
+        ],
+      });
+      component.form = form;
+
+      expect(component.isLocalDescriptionUseMarkdownEnabled()).toBeTrue();
+    });
+
+    it('should return true when local.description.usemarkdown is True', () => {
+      form = new DsoEditMetadataForm({
+        ...dso.metadata,
+        'local.description.usemarkdown': [
+          Object.assign(new MetadataValue(), {
+            value: 'True',
+            language: 'en',
+            place: 0,
+          }),
+        ],
+      });
+      component.form = form;
+
+      expect(component.isLocalDescriptionUseMarkdownEnabled()).toBeTrue();
+    });
+
+    it('should return true when local.description.usemarkdown is boolean true', () => {
+      form = new DsoEditMetadataForm({
+        ...dso.metadata,
+        'local.description.usemarkdown': [
+          Object.assign(new MetadataValue(), {
+            value: true,
+            language: 'en',
+            place: 0,
+          }),
+        ],
+      });
+      component.form = form;
+
+      expect(component.isLocalDescriptionUseMarkdownEnabled()).toBeTrue();
+    });
+
+    it('should return true when local.description.usemarkdown is object map with truthy entry', () => {
+      form = new DsoEditMetadataForm({
+        ...dso.metadata,
+        'local.description.usemarkdown': [
+          Object.assign(new MetadataValue(), {
+            value: {
+              local_description_usemarkdown_yes: false,
+              another_option: true,
+            },
+            language: 'en',
+            place: 0,
+          }),
+        ],
+      });
+      component.form = form;
+
+      expect(component.isLocalDescriptionUseMarkdownEnabled()).toBeTrue();
+    });
+
+    it('should return false when local.description.usemarkdown object map is fully falsy', () => {
+      form = new DsoEditMetadataForm({
+        ...dso.metadata,
+        'local.description.usemarkdown': [
+          Object.assign(new MetadataValue(), {
+            value: {
+              local_description_usemarkdown_yes: false,
+              another_option: false,
+            },
+            language: 'en',
+            place: 0,
+          }),
+        ],
+      });
+      component.form = form;
+
+      expect(component.isLocalDescriptionUseMarkdownEnabled()).toBeFalse();
+    });
   });
 
   describe('dropping a value on a different index', () => {

@@ -97,6 +97,21 @@ describe('DsoEditMetadataValueComponent', () => {
       expect(component.isMarkdownPreviewModeEnabled()).toBeTrue();
       expect(component.getMarkdownPreviewValue()).toBe('Regular Name');
     });
+
+    it('should keep toggle visible for uppercase and boolean/object value shapes when markdown form gate is enabled', () => {
+      const valueShapes = ['YES', 'True', true, { local_description_usemarkdown_yes: true }];
+
+      valueShapes.forEach((valueShape) => {
+        component.mdValue.newValue.value = valueShape as any;
+        expect(component.canShowMarkdownPreviewToggle()).toBeTrue();
+      });
+    });
+
+    it('should hide toggle for non-description metadata fields', () => {
+      component.mdField = 'dc.title';
+
+      expect(component.canShowMarkdownPreviewToggle()).toBeFalse();
+    });
   });
 
   it('should not show a badge', () => {

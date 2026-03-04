@@ -71,18 +71,33 @@ export class DsoEditMetadataFieldValuesComponent {
 
     return useMarkdownValues.some((metadataValue: DsoEditMetadataValue) => {
       const value = metadataValue?.newValue?.value;
-
-      if (typeof value === 'boolean') {
-        return value;
-      }
-
-      if (typeof value === 'string') {
-        const normalizedValue = value.toLowerCase();
-        return normalizedValue === 'yes' || normalizedValue === 'true';
-      }
-
-      return value === true;
+      return this.isUseMarkdownValueEnabled(value);
     });
+  }
+
+  private isUseMarkdownValueEnabled(value: any): boolean {
+    if (value === null || value === undefined) {
+      return false;
+    }
+
+    if (typeof value === 'boolean') {
+      return value;
+    }
+
+    if (typeof value === 'string') {
+      const normalizedValue = value.toLowerCase();
+      return normalizedValue === 'yes' || normalizedValue === 'true';
+    }
+
+    if (Array.isArray(value)) {
+      return value.some((entry) => this.isUseMarkdownValueEnabled(entry));
+    }
+
+    if (typeof value === 'object') {
+      return Object.values(value).some((entry) => this.isUseMarkdownValueEnabled(entry));
+    }
+
+    return false;
   }
 
   /**

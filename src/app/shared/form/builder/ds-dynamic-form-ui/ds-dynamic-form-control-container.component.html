@@ -12,7 +12,7 @@
   <div [ngClass]="{'form-row': model.hasLanguages || isRelationship,
                       'd-none': value?.isVirtual && (model.hasSelectableMetadata || context?.index > 0)}">
     <div [ngClass]="getClass('grid', 'control')">
-      <div *ngIf="canShowMarkdownPreviewToggle()" class="markdown-preview-toggle btn-group btn-group-sm mb-2" role="group" aria-label="markdown-preview-toggle">
+      <div *ngIf="markdownToggleVisible" class="markdown-preview-toggle btn-group btn-group-sm mb-2" role="group" aria-label="markdown-preview-toggle">
         <button type="button"
                 class="btn btn-outline-secondary"
                 [class.active]="!isMarkdownPreviewMode"
