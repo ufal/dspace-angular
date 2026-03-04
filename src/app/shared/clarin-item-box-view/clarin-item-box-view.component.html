@@ -38,7 +38,7 @@
           </div>
           <div *ngIf="!renderMarkdown" class="clarin-item-description pr-3">{{itemDescription}}</div>
         </div>
-        <div class="in collapse" id="description_{{ item.id }}" style="height: auto" >
+        <div *ngIf="isSearchResult === false && itemDescription != null && renderMarkdown" class="collapse" id="description_{{ item.id }}" style="height: auto" >
           <div style="margin: 1px 1px 1px 1px" class="panel panel-info">
             <div [style]="'border: 0.5px solid lightgrey; max-height: 500px; padding: 10px; margin: 0px; overflow: scroll'" class="panel-body">
                   <div [innerHTML]="itemDescription | dsMarkdown | async"></div>
