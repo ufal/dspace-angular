@@ -1455,6 +1455,8 @@
 
   "curation-task.task.registerdoi.label": "Register DOI",
 
+  "curation-task.task.metadataqa.label": "Metadata QA",
+
   "curation.form.task-select.label": "Task:",
 
   "curation.form.submit": "Start",
@@ -6026,10 +6028,6 @@
 
   "item.page.license.message": ["This item is", "and licensed under:"],
 
-  "item.page.matomo-statistics.views.button": "Views",
-
-  "item.page.matomo-statistics.downloads.button": "Downloads",
-
   "item.page.acknowledgement.project-name": "Project name:",
 
   "item.page.acknowledgement.project-code": "Project code:",
@@ -6059,8 +6057,6 @@
   "item.refbox.featured-service.heading": "This resource is also integrated in following services:",
 
   "item.refbox.featured-service.share.message": "Share",
-
-  "item.matomo-statistics.info.message": "Click on a data point to summarize by year / month.",
 
   "item.view.box.author.message": "Author(s):",
 

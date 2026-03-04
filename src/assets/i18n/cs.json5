@@ -2183,6 +2183,9 @@
   // "curation-task.task.registerdoi.label": "Register DOI",
   "curation-task.task.registerdoi.label": "Zaregistrujte DOI",
 
+  // "curation-task.task.metadataqa.label": "Metadata QA",
+  "curation-task.task.metadataqa.label": "Metadata QA",
+
   // "curation.form.task-select.label": "Task:",
   "curation.form.task-select.label": "Úloha:",
 
@@ -3664,10 +3667,10 @@
   "item.edit.tabs.status.buttons.unauthorized": "Nejste oprávněni provést tuto akci",
 
   // "item.edit.tabs.status.buttons.withdraw.button": "Withdraw this item",
-  "item.edit.tabs.status.buttons.withdraw.button": "Odstranit...",
+  "item.edit.tabs.status.buttons.withdraw.button": "Stáhnout...",
 
   // "item.edit.tabs.status.buttons.withdraw.label": "Withdraw item from the repository",
-  "item.edit.tabs.status.buttons.withdraw.label": "Odstranit záznam z repozitáře",
+  "item.edit.tabs.status.buttons.withdraw.label": "Stáhnout záznam z repozitáře",
 
   // "item.edit.tabs.status.description": "Welcome to the item management page. From here you can withdraw, reinstate, move or delete the item. You may also update or add new metadata / bitstreams on the other tabs.",
   "item.edit.tabs.status.description": "Vítejte na stránce pro správu záznamů. Odtud můžete záznam stáhnout, obnovit, přesunout nebo odstranit. Na ostatních záložkách můžete také aktualizovat nebo přidávat nová metadata / bitové toky.",
@@ -3712,16 +3715,16 @@
   "item.edit.withdraw.confirm": "Potvrdit",
 
   // "item.edit.withdraw.description": "Are you sure this item should be withdrawn from the archive?",
-  "item.edit.withdraw.description": "Jste si jisti, že by tento záznam měl být odebrán z archivu?",
+  "item.edit.withdraw.description": "Jste si jisti, že by tento záznam měl být stažen z archivu?",
 
   // "item.edit.withdraw.error": "An error occurred while withdrawing the item",
-  "item.edit.withdraw.error": "Při odebírání záznamu došlo k chybě",
+  "item.edit.withdraw.error": "Při stahování záznamu došlo k chybě",
 
   // "item.edit.withdraw.header": "Withdraw item: {{ id }}",
-  "item.edit.withdraw.header": "Odebrat záznam: {{ id }}",
+  "item.edit.withdraw.header": "Stáhnout záznam: {{ id }}",
 
   // "item.edit.withdraw.success": "The item was withdrawn successfully",
-  "item.edit.withdraw.success": "Záznam byl úspěšně odebrán",
+  "item.edit.withdraw.success": "Záznam byl úspěšně stažen",
 
   // "item.orcid.return": "Back",
   "item.orcid.return": "Zpět",
@@ -9091,12 +9094,6 @@
   // "item.page.license.message": ["This item is", "and licensed under:"],
   "item.page.license.message": ["Tento záznam je", "a je licencován pod licencí:"],
 
-  // "item.page.matomo-statistics.views.button": "Views",
-  "item.page.matomo-statistics.views.button": "Zobrazení",
-
-  // "item.page.matomo-statistics.downloads.button": "Downloads",
-  "item.page.matomo-statistics.downloads.button": "Stažené",
-
   // "item.page.acknowledgement.project-name": "Project name:",
   "item.page.acknowledgement.project-name": "Jméno projektu:",
 
@@ -9141,9 +9138,6 @@
 
   // "item.refbox.featured-service.share.message": "Share",
   "item.refbox.featured-service.share.message": "Sdílet",
-
-  // "item.matomo-statistics.info.message": "Click on a data point to summarize by year / month.",
-  "item.matomo-statistics.info.message": "Kliknutím na datový bod provedete shrnutí podle roku/měsíce.",
 
   // "item.view.box.author.message": "Author(s):",
   "item.view.box.author.message": "Autoři:",

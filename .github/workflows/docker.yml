@@ -45,7 +45,7 @@ jobs:
   #############################################################
   dspace-angular-dist:
     # Ensure this job never runs on forked repos. It's only executed for 'ufal/dspace-angular'
-    if: github.repository == 'ufal/dspace-angular' && false # not used for now
+    if: github.repository == 'ufal/dspace-angular'
     # Use the reusable-docker-build.yml script from DSpace/DSpace repo to build our Docker image
     uses: ufal/clarin-dspace/.github/workflows/reusable-docker-build.yml@clarin-v7
     with:
@@ -62,11 +62,11 @@ jobs:
       REDEPLOY_SANDBOX_URL:  ${{ secrets.REDEPLOY_SANDBOX_URL }}
       REDEPLOY_DEMO_URL:  ${{ secrets.REDEPLOY_DEMO_URL }}
 
-  deploy:
-    needs: dspace-angular
-    uses: ufal/dspace-angular/.github/workflows/deploy.yml@clarin-v7
-    if: ${{ github.event_name != 'pull_request' }}
-    with:
-      INSTANCE: '5'
-      IMPORT: false
-    secrets: inherit
+      #  deploy:
+      #    needs: dspace-angular
+      #    uses: ufal/dspace-angular/.github/workflows/deploy.yml@clarin-v7
+      #    if: ${{ github.event_name != 'pull_request' }}
+      #    with:
+      #      INSTANCE: '5'
+      #      IMPORT: false
+      #    secrets: inherit
