@@ -174,4 +174,4 @@ languages:
 
 markdown:
   enabled: true
-  mathjax: true
+  mathjax: false
