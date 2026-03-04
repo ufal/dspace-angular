@@ -17,7 +17,7 @@ import {
   ViewChild,
   ViewContainerRef
 } from '@angular/core';
-import { UntypedFormArray, UntypedFormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormArray, UntypedFormGroup } from '@angular/forms';
 
 import {
   DYNAMIC_FORM_CONTROL_TYPE_ARRAY,
@@ -585,7 +585,6 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
     if (!this.isDescriptionTextareaField()) {
       return false;
     }
-
     return this.isLocalDescriptionUseMarkdownEnabled();
   }
 
@@ -608,13 +607,52 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
   protected isLocalDescriptionUseMarkdownEnabled(): boolean {
     const useMarkdownControl = this.group?.root?.get('local_description_usemarkdown')
       || this.formGroup?.root?.get('local_description_usemarkdown')
-      || this.group?.get('local_description_usemarkdown');
+      || this.group?.get('local_description_usemarkdown')
+      || this.findNestedControlByKey(this.group?.root, 'local_description_usemarkdown')
+      || this.findNestedControlByKey(this.formGroup?.root, 'local_description_usemarkdown')
+      || this.findNestedControlByKey(this.group, 'local_description_usemarkdown');
 
     if (!hasValue(useMarkdownControl)) {
       return false;
     }
 
-    const value = useMarkdownControl.value?.value ?? useMarkdownControl.value;
+    const rawValue = useMarkdownControl.value?.value ?? useMarkdownControl.value;
+    return this.isUseMarkdownValueEnabled(rawValue);
+  }
+
+  private findNestedControlByKey(control: AbstractControl, key: string): AbstractControl {
+    if (!hasValue(control)) {
+      return null;
+    }
+
+    if (control instanceof UntypedFormGroup) {
+      if (hasValue(control.controls[key])) {
+        return control.controls[key];
+      }
+
+      for (const childControl of Object.values(control.controls)) {
+        const matchingControl = this.findNestedControlByKey(childControl, key);
+        if (hasValue(matchingControl)) {
+          return matchingControl;
+        }
+      }
+
+      return null;
+    }
+
+    if (control instanceof UntypedFormArray) {
+      for (const childControl of control.controls) {
+        const matchingControl = this.findNestedControlByKey(childControl, key);
+        if (hasValue(matchingControl)) {
+          return matchingControl;
+        }
+      }
+    }
+
+    return null;
+  }
+
+  private isUseMarkdownValueEnabled(value: any): boolean {
     if (!hasValue(value)) {
       return false;
     }
@@ -626,6 +664,19 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
     if (typeof value === 'string') {
       const normalizedValue = value.toLowerCase();
       return normalizedValue === 'yes' || normalizedValue === 'true';
+    }
+
+    if (Array.isArray(value)) {
+      return value.some((entry) => this.isUseMarkdownValueEnabled(entry));
+    }
+
+    if (typeof value === 'object') {
+      const yesOption = value.local_description_usemarkdown_yes;
+      if (hasValue(yesOption)) {
+        return this.isUseMarkdownValueEnabled(yesOption);
+      }
+
+      return Object.values(value).some((entry) => this.isUseMarkdownValueEnabled(entry));
     }
 
     return false;

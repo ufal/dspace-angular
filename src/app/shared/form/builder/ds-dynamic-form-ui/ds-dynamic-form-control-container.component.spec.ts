@@ -494,4 +494,37 @@ describe('DsDynamicFormControlContainerComponent test suite', () => {
     appConfig.markdown.enabled = previousMarkdownEnabled;
   });
 
+  it('should show markdown preview toggle when usemarkdown is in a sibling row-group with object value', () => {
+    const appConfig = TestBed.inject(APP_CONFIG) as any;
+    const previousMarkdownEnabled = appConfig.markdown.enabled;
+    appConfig.markdown.enabled = true;
+
+    const textareaModel: any = new DynamicTextAreaModel({ id: 'dc_description' });
+    textareaModel.supportsMarkdownPreview = true;
+    textareaModel.metadataFields = ['dc.description'];
+
+    const descriptionGroup = new UntypedFormGroup({
+      dc_description: new UntypedFormControl('# something')
+    });
+    const markdownGroup = new UntypedFormGroup({
+      local_description_usemarkdown: new UntypedFormControl({ local_description_usemarkdown_yes: true })
+    });
+    const rootFormGroup = new UntypedFormGroup({
+      'df-row-group-config-22': descriptionGroup,
+      'df-row-group-config-23': markdownGroup
+    });
+
+    component.model = textareaModel;
+    component.group = descriptionGroup;
+    component.formGroup = rootFormGroup;
+    component.ngOnChanges({
+      group: new SimpleChange(null, component.group, false),
+      model: new SimpleChange(null, component.model, false)
+    });
+
+    expect(component.canShowMarkdownPreviewToggle()).toBe(true);
+
+    appConfig.markdown.enabled = previousMarkdownEnabled;
+  });
+
 });
