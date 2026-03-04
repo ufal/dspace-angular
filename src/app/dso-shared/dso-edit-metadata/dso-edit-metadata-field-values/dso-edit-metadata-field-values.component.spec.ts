@@ -106,6 +106,28 @@ describe('DsoEditMetadataFieldValuesComponent', () => {
     });
   });
 
+  describe('isLocalDescriptionUseMarkdownEnabled', () => {
+    it('should return false when local.description.usemarkdown is missing', () => {
+      expect(component.isLocalDescriptionUseMarkdownEnabled()).toBeFalse();
+    });
+
+    it('should return true when local.description.usemarkdown is yes', () => {
+      form = new DsoEditMetadataForm({
+        ...dso.metadata,
+        'local.description.usemarkdown': [
+          Object.assign(new MetadataValue(), {
+            value: 'yes',
+            language: 'en',
+            place: 0,
+          }),
+        ],
+      });
+      component.form = form;
+
+      expect(component.isLocalDescriptionUseMarkdownEnabled()).toBeTrue();
+    });
+  });
+
   describe('dropping a value on a different index', () => {
     beforeEach(() => {
       component.drop(Object.assign({

@@ -12,9 +12,26 @@
   <div [ngClass]="{'form-row': model.hasLanguages || isRelationship,
                       'd-none': value?.isVirtual && (model.hasSelectableMetadata || context?.index > 0)}">
     <div [ngClass]="getClass('grid', 'control')">
-      <div>
+      <div *ngIf="canShowMarkdownPreviewToggle()" class="markdown-preview-toggle btn-group btn-group-sm mb-2" role="group" aria-label="markdown-preview-toggle">
+        <button type="button"
+                class="btn btn-outline-secondary"
+                [class.active]="!isMarkdownPreviewMode"
+                (click)="setMarkdownPreviewMode(false)">
+          {{ 'submission.form.markdown.toggle.edit' | translate }}
+        </button>
+        <button type="button"
+                class="btn btn-outline-secondary"
+                [class.active]="isMarkdownPreviewMode"
+                (click)="setMarkdownPreviewMode(true)">
+          {{ 'submission.form.markdown.toggle.preview' | translate }}
+        </button>
+      </div>
+
+      <div [ngClass]="{'d-none': isMarkdownPreviewModeEnabled()}">
         <ng-container #componentViewContainer></ng-container>
       </div>
+
+      <div *ngIf="isMarkdownPreviewModeEnabled()" class="markdown-preview-box border" [innerHTML]="getMarkdownPreviewValue() | dsMarkdown | async"></div>
 
       <small *ngIf="hasHint && (formBuilderService.hasArrayGroupValue(model) || (!model.repeatable && (isRelationship === false || value?.value === null)) || (model.repeatable === true && context?.index === context?.context?.groups?.length - 1)) && (!showErrorMessages || errorMessages.length === 0)"
              class="text-muted ds-hint" [innerHTML]="model.hint | translate" [ngClass]="getClass('element', 'hint')"></small>

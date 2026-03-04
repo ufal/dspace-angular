@@ -1771,6 +1771,10 @@
 
   "form.edit": "Edit",
 
+  "submission.form.markdown.toggle.edit": "Edit",
+
+  "submission.form.markdown.toggle.preview": "Preview",
+
   "form.edit-help": "Click here to edit the selected value",
 
   "form.first-name": "First name",

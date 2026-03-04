@@ -125,6 +125,7 @@ import { DYNAMIC_FORM_CONTROL_TYPE_AUTOCOMPLETE } from './models/autocomplete/ds
 import { DsDynamicSponsorAutocompleteComponent } from './models/sponsor-autocomplete/ds-dynamic-sponsor-autocomplete.component';
 import { SPONSOR_METADATA_NAME } from './models/ds-dynamic-complex.model';
 import { DsDynamicSponsorScrollableDropdownComponent } from './models/sponsor-scrollable-dropdown/dynamic-sponsor-scrollable-dropdown.component';
+import { DsDynamicTextAreaModel } from './models/ds-dynamic-textarea.model';
 
 export function dsDynamicFormControlMapFn(model: DynamicFormControlModel): Type<DynamicFormControl> | null {
   switch (model.type) {
@@ -210,6 +211,12 @@ export function dsDynamicFormControlMapFn(model: DynamicFormControlModel): Type<
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class DsDynamicFormControlContainerComponent extends DynamicFormControlContainerComponent implements OnInit, OnChanges, OnDestroy {
+  protected readonly markdownDescriptionMetadataAllowList: string[] = [
+    'description',
+    'dc.description',
+    'dc.description.abstract'
+  ];
+
   @ContentChildren(DynamicTemplateDirective) contentTemplateList: QueryList<DynamicTemplateDirective>;
   // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input('templates') inputTemplateList: QueryList<DynamicTemplateDirective>;
@@ -253,6 +260,11 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
    * Determines whether to request embedded thumbnail.
    */
   fetchThumbnail: boolean;
+
+  /**
+   * Whether markdown preview mode is enabled for the current control.
+   */
+  isMarkdownPreviewMode = false;
 
   get componentType(): Type<DynamicFormControl> | null {
     return dsDynamicFormControlMapFn(this.model);
@@ -509,6 +521,114 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
 
   get hasHint(): boolean {
     return isNotEmpty(this.model.hint) && this.model.hint !== '&nbsp;';
+  }
+
+  /**
+   * Checks if markdown preview toggle can be shown for this control.
+   */
+  canShowMarkdownPreviewToggle(): boolean {
+    return this.isMarkdownPreviewSupported() && !this.model.readOnly;
+  }
+
+  /**
+   * Checks if markdown preview should be displayed.
+   */
+  isMarkdownPreviewModeEnabled(): boolean {
+    return this.canShowMarkdownPreviewToggle() && this.isMarkdownPreviewMode;
+  }
+
+  /**
+   * Enable/disable markdown preview mode.
+   */
+  setMarkdownPreviewMode(enabled: boolean): void {
+    this.isMarkdownPreviewMode = enabled;
+  }
+
+  /**
+   * Returns current control value as a string for markdown rendering.
+   */
+  getMarkdownPreviewValue(): string {
+    const value = this.control?.value ?? this.model?.value;
+    if (typeof value === 'string') {
+      return value;
+    }
+    if (hasValue(value?.value) && typeof value.value === 'string') {
+      return value.value;
+    }
+    if (Array.isArray(value) && value.length > 0) {
+      return value
+        .map((entry) => {
+          if (typeof entry === 'string') {
+            return entry;
+          }
+          if (hasValue(entry?.value) && typeof entry.value === 'string') {
+            return entry.value;
+          }
+          return '';
+        })
+        .filter((entry: string) => isNotEmpty(entry))
+        .join('\n');
+    }
+    return '';
+  }
+
+  /**
+   * Checks if the current control is an eligible textarea for markdown preview.
+   */
+  protected isMarkdownPreviewSupported(): boolean {
+    if (this.model?.type !== DYNAMIC_FORM_CONTROL_TYPE_TEXTAREA) {
+      return false;
+    }
+    if (!this.appConfig?.markdown?.enabled) {
+      return false;
+    }
+    if (!this.isDescriptionTextareaField()) {
+      return false;
+    }
+
+    return this.isLocalDescriptionUseMarkdownEnabled();
+  }
+
+  /**
+   * Check whether this textarea is configured for one of the known description metadata fields.
+   */
+  protected isDescriptionTextareaField(): boolean {
+    const textareaModel = this.model as DsDynamicTextAreaModel;
+    if (textareaModel?.supportsMarkdownPreview === true) {
+      return true;
+    }
+
+    const metadataFields = this.model?.metadataFields || [];
+    return metadataFields.some((metadataField: string) => this.markdownDescriptionMetadataAllowList.includes(metadataField));
+  }
+
+  /**
+   * Check if local.description.usemarkdown exists in form state and enables markdown rendering.
+   */
+  protected isLocalDescriptionUseMarkdownEnabled(): boolean {
+    const useMarkdownControl = this.group?.root?.get('local_description_usemarkdown')
+      || this.formGroup?.root?.get('local_description_usemarkdown')
+      || this.group?.get('local_description_usemarkdown');
+
+    if (!hasValue(useMarkdownControl)) {
+      return false;
+    }
+
+    const value = useMarkdownControl.value?.value ?? useMarkdownControl.value;
+    if (!hasValue(value)) {
+      return false;
+    }
+
+    if (typeof value === 'boolean') {
+      return value;
+    }
+
+    if (typeof value === 'string') {
+      const normalizedValue = value.toLowerCase();
+      return normalizedValue === 'yes' || normalizedValue === 'true';
+    }
+
+    return false;
   }
 
   /**

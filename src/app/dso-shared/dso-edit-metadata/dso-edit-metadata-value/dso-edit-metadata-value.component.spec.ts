@@ -12,6 +12,8 @@ import { MetadataValue, VIRTUAL_METADATA_PREFIX } from '../../../core/shared/met
 import { DsoEditMetadataChangeType, DsoEditMetadataValue } from '../dso-edit-metadata-form';
 import { By } from '@angular/platform-browser';
 import {BtnDisabledDirective} from '../../../shared/btn-disabled.directive';
+import { APP_CONFIG } from '../../../../config/app-config.interface';
+import { environment } from '../../../../environments/environment';
 
 const EDIT_BTN = 'edit';
 const CONFIRM_BTN = 'confirm';
@@ -55,6 +57,7 @@ describe('DsoEditMetadataValueComponent', () => {
       providers: [
         { provide: RelationshipDataService, useValue: relationshipService },
         { provide: DSONameService, useValue: dsoNameService },
+        { provide: APP_CONFIG, useValue: environment },
       ],
       schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
@@ -64,8 +67,36 @@ describe('DsoEditMetadataValueComponent', () => {
     fixture = TestBed.createComponent(DsoEditMetadataValueComponent);
     component = fixture.componentInstance;
     component.mdValue = editMetadataValue;
+    component.mdField = 'dc.description';
+    component.markdownEnabledForForm = true;
     component.saving$ = of(false);
     fixture.detectChanges();
+  });
+
+  describe('markdown preview toggle', () => {
+    beforeEach(() => {
+      editMetadataValue.editing = true;
+      const appConfig = TestBed.inject(APP_CONFIG) as any;
+      appConfig.markdown.enabled = true;
+      fixture.detectChanges();
+    });
+
+    it('should show toggle for description fields when metadata markdown is enabled', () => {
+      expect(component.canShowMarkdownPreviewToggle()).toBeTrue();
+    });
+
+    it('should hide toggle when markdown metadata gate is disabled', () => {
+      component.markdownEnabledForForm = false;
+
+      expect(component.canShowMarkdownPreviewToggle()).toBeFalse();
+    });
+
+    it('should enable preview mode and return current value', () => {
+      component.setMarkdownPreviewMode(true);
+
+      expect(component.isMarkdownPreviewModeEnabled()).toBeTrue();
+      expect(component.getMarkdownPreviewValue()).toBe('Regular Name');
+    });
   });
 
   it('should not show a badge', () => {

@@ -2657,6 +2657,12 @@
   // "form.edit": "Edit",
   "form.edit": "Upravit",
 
+  // "submission.form.markdown.toggle.edit": "Edit",
+  "submission.form.markdown.toggle.edit": "Upravit",
+
+  // "submission.form.markdown.toggle.preview": "Preview",
+  "submission.form.markdown.toggle.preview": "Náhled",
+
   // "form.edit-help": "Click here to edit the selected value",
   "form.edit-help": "Klikněte zde pro úpravu vybrané hodnoty",
 
