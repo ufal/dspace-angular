@@ -30,6 +30,9 @@ export class StaticPageComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     try {
+      this.contentState = 'loading';
+      this.htmlContent.next('');
+
       // Fetch html file name from the url path. `static/some_file.html`
       this.htmlFileName = this.getHtmlFileName();
 

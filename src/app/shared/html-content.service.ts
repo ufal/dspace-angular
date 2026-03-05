@@ -24,34 +24,11 @@ export class HtmlContentService {
   }
 
   /**
-   * Append a cache-busting query parameter to force a fresh response.
-   * @param url file location
-   */
-  private appendCacheBust(url: string): string {
-    const cacheBustParam = 'cacheBust=';
-    if (url.includes(cacheBustParam)) {
-      return url;
-    }
-    const separator = url.includes('?') ? '&' : '?';
-    const cacheBustValue = Math.floor(Date.now() / 3600000).toString();
-    return `${url}${separator}${cacheBustParam}${cacheBustValue}`;
-  }
-
-  /**
-   * Load HTML content and handle cached 304 responses.
+   * Load HTML content for a single URL attempt and handle cached 304 responses.
    * @param url file location
    */
   private async loadHtmlContent(url: string): Promise<string | undefined> {
     const response = await firstValueFrom(this.fetchHtmlContent(url));
-    if (response.status === 404) {
-      const refreshed = await firstValueFrom(this.fetchHtmlContent(this.appendCacheBust(url)));
-      if (refreshed.status === 404) {
-        return undefined;
-      }
-      if (refreshed.status === 200) {
-        return refreshed.body ?? '';
-      }
-    }
     if (response.status === 200) {
       return response.body ?? '';
     }

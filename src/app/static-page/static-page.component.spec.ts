@@ -12,10 +12,20 @@ import { ClarinSafeHtmlPipe } from '../shared/utils/clarin-safehtml.pipe';
 import { ServerResponseService } from '../core/services/server-response.service';
 
 describe('StaticPageComponent', () => {
-  async function setupTest(html: string | undefined, restBase?: string) {
+  function createDeferred<T>() {
+    let resolve: (value: T) => void;
+    let reject: (reason?: any) => void;
+    const promise = new Promise<T>((res, rej) => {
+      resolve = res;
+      reject = rej;
+    });
+    return { promise, resolve: resolve!, reject: reject! };
+  }
+
+  async function setupTest(html: string | undefined, restBase?: string, contentPromise?: Promise<string | undefined>) {
     const htmlContentService = jasmine.createSpyObj('htmlContentService', {
       fetchHtmlContent: of(html),
-      getHmtlContentByPathAndLocale: Promise.resolve(html)
+      getHmtlContentByPathAndLocale: contentPromise ?? Promise.resolve(html)
     });
 
     const responseService = jasmine.createSpyObj('responseService', {
@@ -67,7 +77,8 @@ describe('StaticPageComponent', () => {
     const oaiHtml = '<a href="/server/oai/request?verb=ListSets">OAI</a>';
     const { fixture, component } = await setupTest(oaiHtml, 'https://api.example.org/rest');
 
-    await component.ngOnInit();
+    fixture.detectChanges();
+    await fixture.whenStable();
     fixture.detectChanges();
 
     const rewritten = 'https://api.example.org/server/oai/request?verb=ListSets';
@@ -80,7 +91,8 @@ describe('StaticPageComponent', () => {
     const oaiHtml = '<a href="/server/oai/request?verb=Identify">OAI</a>';
     const { fixture, component } = await setupTest(oaiHtml, undefined);
 
-    await component.ngOnInit();
+    fixture.detectChanges();
+    await fixture.whenStable();
     fixture.detectChanges();
 
     expect(component.htmlContent.value).toContain('/server/oai/request?verb=Identify');
@@ -90,7 +102,8 @@ describe('StaticPageComponent', () => {
     const oaiHtml = '<a href="/server/oai/request?verb=ListRecords">OAI</a>';
     const { fixture, component } = await setupTest(oaiHtml, 'https://api.example.org/rest/');
 
-    await component.ngOnInit();
+    fixture.detectChanges();
+    await fixture.whenStable();
     fixture.detectChanges();
 
     expect(component.htmlContent.value).toContain('https://api.example.org/server/oai/request?verb=ListRecords');
@@ -101,7 +114,8 @@ describe('StaticPageComponent', () => {
     const otherHtml = '<a href="/server/other">Other</a>';
     const { fixture, component } = await setupTest(otherHtml, 'https://api.example.org/rest');
 
-    await component.ngOnInit();
+    fixture.detectChanges();
+    await fixture.whenStable();
     fixture.detectChanges();
 
     expect(component.htmlContent.value).toBe(otherHtml);
@@ -126,6 +140,43 @@ describe('StaticPageComponent', () => {
 
       expect(component.contentState).toBe('not-found');
       expect(responseService.setNotFound).toHaveBeenCalled();
+    });
+
+    it('should keep loading state and not render 404 before content promise resolves', async () => {
+      const deferred = createDeferred<string | undefined>();
+      const { fixture, component } = await setupTest(undefined, undefined, deferred.promise);
+
+      const initPromise = component.ngOnInit();
+      fixture.detectChanges();
+
+      expect(component.contentState).toBe('loading');
+      expect(component.htmlContent.value).toBe('');
+      expect(fixture.nativeElement.querySelector('.page-not-found')).toBeNull();
+
+      deferred.resolve('<div>Loaded later</div>');
+      await initPromise;
+      fixture.detectChanges();
+
+      expect(component.contentState).toBe('found');
+      expect(fixture.nativeElement.querySelector('.page-not-found')).toBeNull();
+    });
+
+    it('should reset stale not-found state to loading on init', async () => {
+      const deferred = createDeferred<string | undefined>();
+      const { component } = await setupTest(undefined, undefined, deferred.promise);
+
+      component.contentState = 'not-found';
+      component.htmlContent.next('<div>stale</div>');
+
+      const initPromise = component.ngOnInit();
+
+      expect(component.contentState).toBe('loading');
+      expect(component.htmlContent.value).toBe('');
+
+      deferred.resolve('<div>fresh</div>');
+      await initPromise;
+
+      expect(component.contentState).toBe('found');
     });
   });
 

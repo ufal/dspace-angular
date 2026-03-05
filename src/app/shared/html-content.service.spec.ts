@@ -39,14 +39,14 @@ describe('HtmlContentService', () => {
 
       httpClient.get.and.returnValues(
         of(czechContent404),
-        of(czechContent404),
         of(englishContent200)
       );
 
       const result = await service.getHmtlContentByPathAndLocale('license');
 
       expect(result).toBe('<div>English Content</div>');
-      expect(httpClient.get).toHaveBeenCalledTimes(3);
+      expect(httpClient.get).toHaveBeenCalledTimes(2);
+      expect(httpClient.get.calls.allArgs().map(args => args[0]).join(' ')).not.toContain('cacheBust=');
     });
 
     it('should return localized content when translation exists (200)', async () => {
@@ -82,12 +82,12 @@ describe('HtmlContentService', () => {
 
       const content404 = new HttpResponse({ status: 404, body: '' });
 
-      httpClient.get.and.returnValue(of(content404));
+      httpClient.get.and.returnValues(of(content404), of(content404));
 
       const result = await service.getHmtlContentByPathAndLocale('nonexistent');
 
       expect(result).toBeUndefined();
-      expect(httpClient.get).toHaveBeenCalledTimes(4);
+      expect(httpClient.get).toHaveBeenCalledTimes(2);
     });
   });
 });

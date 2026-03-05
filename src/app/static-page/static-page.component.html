@@ -8,7 +8,7 @@
 </div>
 
 <!-- Show 404 error when content not found (matches PageNotFoundComponent design) -->
-<div class="container page-not-found" *ngIf="contentState === 'not-found'">
+<div class="container page-not-found" *ngIf="contentState === 'not-found' && !(htmlContent | async)">
   <h1>404</h1>
   <h2><small>{{"static-page.404.page-not-found" | translate}}</small></h2>
   <br/>
