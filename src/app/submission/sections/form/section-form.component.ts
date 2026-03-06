@@ -586,6 +586,8 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
       event,
       this.previousValue,
       hasStored);
+
+    this.submissionService.dispatchSave(this.submissionId);
   }
 
   /**

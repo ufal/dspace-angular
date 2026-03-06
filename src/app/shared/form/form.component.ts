@@ -414,9 +414,9 @@ export class FormComponent implements OnDestroy, OnInit {
    * @param index The index of the group to delete
    */
   handleItemDelete($event: any, arrayContext: DynamicFormArrayModel, index: number): void {
-    const hideWhenEmpty = (arrayContext as any).hideGroupsWhenEmpty;
+    const allowDeleteSingle = (arrayContext as any).allowDeleteOnSingleItem;
     const isSingleGroup = arrayContext.groups.length === 1;
-    const shouldClear = hideWhenEmpty && isSingleGroup;
+    const shouldClear = allowDeleteSingle && isSingleGroup;
 
     // For single-item arrays with hideGroupsWhenEmpty: clear instead of remove
     if (shouldClear) {

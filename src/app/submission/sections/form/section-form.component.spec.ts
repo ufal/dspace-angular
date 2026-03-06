@@ -636,6 +636,7 @@ describe('SubmissionSectionFormComponent test suite', () => {
       comp.onRemove(dynamicFormControlEvent);
 
       expect(formOperationsService.dispatchOperationsFromEvent).toHaveBeenCalled();
+      expect(submissionServiceStub.dispatchSave).toHaveBeenCalledWith(submissionId);
 
     });
 
@@ -685,7 +686,7 @@ describe('SubmissionSectionFormComponent test suite', () => {
       spyOn(comp, 'initForm');
       spyOn(comp, 'subscriptions');
       spyOn(comp, 'reinitializeForm');
-      spyOn(submissionServiceStub, 'dispatchSaveSection');
+      submissionServiceStub.dispatchSaveSection.calls.reset();
 
       const wi = new WorkspaceItem();
       wi.item = createSuccessfulRemoteDataObject$(mockItemWithMetadataFieldsAndValue(['local.sponsor'], EU_SPONSOR));

@@ -472,6 +472,24 @@ describe('FormComponent test suite', () => {
 
       const arrayModel = formComp.formModel[0] as DynamicFormArrayModel;
       (arrayModel as any).hideGroupsWhenEmpty = true;
+      (arrayModel as any).allowDeleteOnSingleItem = true;
+      while (arrayModel.groups.length > 1) {
+        arrayModel.groups.pop();
+      }
+
+      formComp.handleItemDelete(new Event('click'), arrayModel, 0);
+
+      expect(formComp.clearItemValues).toHaveBeenCalledWith(jasmine.any(Event), arrayModel, 0);
+      expect(formComp.removeItem).not.toHaveBeenCalled();
+    }));
+
+    it('handleItemDelete should call clearItemValues for single-item allowDeleteOnSingleItem array when hideGroupsWhenEmpty is false', inject([FormBuilderService], (service: FormBuilderService) => {
+      spyOn(formComp, 'clearItemValues');
+      spyOn(formComp, 'removeItem');
+
+      const arrayModel = formComp.formModel[0] as DynamicFormArrayModel;
+      (arrayModel as any).allowDeleteOnSingleItem = true;
+      (arrayModel as any).hideGroupsWhenEmpty = false;
       while (arrayModel.groups.length > 1) {
         arrayModel.groups.pop();
       }
