@@ -1,93 +1,126 @@
-import { TestBed } from '@angular/core/testing';
-import { HttpClient, HttpResponse } from '@angular/common/http';
-import { of } from 'rxjs';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { firstValueFrom } from 'rxjs';
+
 import { HtmlContentService } from './html-content.service';
 import { LocaleService } from '../core/locale/locale.service';
+import { APP_CONFIG } from '../../config/app-config.interface';
+
+class LocaleServiceStub {
+  languageCode = 'en';
+
+  getCurrentLanguageCode(): string {
+    return this.languageCode;
+  }
+}
 
 describe('HtmlContentService', () => {
   let service: HtmlContentService;
-  let httpClient: jasmine.SpyObj<HttpClient>;
-  let localeService: jasmine.SpyObj<LocaleService>;
+  let httpMock: HttpTestingController;
+  let localeService: LocaleServiceStub;
 
-  beforeEach(() => {
-    const httpSpy = jasmine.createSpyObj('HttpClient', ['get']);
-    const localeSpy = jasmine.createSpyObj('LocaleService', ['getCurrentLanguageCode']);
-
+  function setup(nameSpace: string): void {
     TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
       providers: [
         HtmlContentService,
-        { provide: HttpClient, useValue: httpSpy },
-        { provide: LocaleService, useValue: localeSpy }
-      ]
+        { provide: LocaleService, useClass: LocaleServiceStub },
+        {
+          provide: APP_CONFIG,
+          useValue: {
+            ui: { nameSpace },
+          },
+        },
+      ],
     });
 
     service = TestBed.inject(HtmlContentService);
-    httpClient = TestBed.inject(HttpClient) as jasmine.SpyObj<HttpClient>;
-    localeService = TestBed.inject(LocaleService) as jasmine.SpyObj<LocaleService>;
+    httpMock = TestBed.inject(HttpTestingController);
+    localeService = TestBed.inject(LocaleService) as any;
+  }
+
+  afterEach(() => {
+    if (httpMock) {
+      httpMock.verify();
+    }
   });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
+  it('should request root namespaced URL for default locale', async () => {
+    setup('/');
+    localeService.languageCode = 'en';
+
+    const promise = service.getHmtlContentByPathAndLocale('license-ud-1.0');
+
+    const request = httpMock.expectOne('/static-files/license-ud-1.0.html');
+    expect(request.request.method).toBe('GET');
+    request.flush('Universal Dependencies 1.0 License Set');
+
+    const content = await promise;
+    expect(content).toBe('Universal Dependencies 1.0 License Set');
   });
 
-  describe('getHmtlContentByPathAndLocale - fallback mechanism', () => {
-    it('should return English fallback when Czech translation not found (404)', async () => {
-      localeService.getCurrentLanguageCode.and.returnValue('cs');
+  it('should request locale-specific namespaced URL for non-default locale', async () => {
+    setup('/repository');
+    localeService.languageCode = 'cs';
 
-      const czechContent404 = new HttpResponse({ status: 404, body: '' });
-      const englishContent200 = new HttpResponse({ status: 200, body: '<div>English Content</div>' });
+    const promise = service.getHmtlContentByPathAndLocale('license-ud-1.0');
 
-      httpClient.get.and.returnValues(
-        of(czechContent404),
-        of(englishContent200)
-      );
+    const request = httpMock.expectOne('/repository/static-files/cs/license-ud-1.0.html');
+    expect(request.request.method).toBe('GET');
+    request.flush('Localized content');
 
-      const result = await service.getHmtlContentByPathAndLocale('license');
+    const content = await promise;
+    expect(content).toBe('Localized content');
+  });
 
-      expect(result).toBe('<div>English Content</div>');
-      expect(httpClient.get).toHaveBeenCalledTimes(2);
-      expect(httpClient.get.calls.allArgs().map(args => args[0]).join(' ')).not.toContain('cacheBust=');
+  it('should fallback from locale-specific to default namespaced URL when localized content is missing', fakeAsync(() => {
+    setup('/repository/');
+    localeService.languageCode = 'cs';
+
+    let content: string | undefined;
+    service.getHmtlContentByPathAndLocale('license-ud-1.0').then((result) => {
+      content = result;
     });
 
-    it('should return localized content when translation exists (200)', async () => {
-      localeService.getCurrentLanguageCode.and.returnValue('cs');
+    const localizedRequest = httpMock.expectOne('/repository/static-files/cs/license-ud-1.0.html');
+    localizedRequest.flush('Not Found', { status: 404, statusText: 'Not Found' });
+    tick();
 
-      const czechContent200 = new HttpResponse({ status: 200, body: '<div>Czech Content</div>' });
+    const fallbackRequest = httpMock.expectOne('/repository/static-files/license-ud-1.0.html');
+    fallbackRequest.flush('Fallback content');
+    tick();
 
-      httpClient.get.and.returnValue(of(czechContent200));
+    expect(content).toBe('Fallback content');
+  }));
 
-      const result = await service.getHmtlContentByPathAndLocale('license');
+  it('should fallback from locale-specific to default URL when locale returns 404', fakeAsync(() => {
+    setup('/');
+    localeService.languageCode = 'cs';
 
-      expect(result).toBe('<div>Czech Content</div>');
-      expect(httpClient.get).toHaveBeenCalledTimes(1);
+    let content: string | undefined;
+    service.getHmtlContentByPathAndLocale('license').then((result) => {
+      content = result;
     });
 
-    it('should return English content directly when language is "en"', async () => {
-      localeService.getCurrentLanguageCode.and.returnValue('en');
+    httpMock.expectOne('/static-files/cs/license.html')
+      .flush('Not Found', { status: 404, statusText: 'Not Found' });
+    tick();
 
-      const englishContent200 = new HttpResponse({ status: 200, body: '<div>English Content</div>' });
+    httpMock.expectOne('/static-files/license.html').flush('<div>English Content</div>');
+    tick();
 
-      httpClient.get.and.returnValue(of(englishContent200));
+    expect(content).toBe('<div>English Content</div>');
+  }));
 
-      const result = await service.getHmtlContentByPathAndLocale('license');
+  it('should return empty string from getHtmlContent when request fails', async () => {
+    setup('/repository');
 
-      expect(result).toBe('<div>English Content</div>');
-      expect(httpClient.get).toHaveBeenCalledTimes(1);
-      expect(httpClient.get.calls.mostRecent().args[0]).toContain('static-files/license.html');
-      expect(httpClient.get.calls.mostRecent().args[0]).not.toContain('/cs/');
-    });
+    const contentPromise = firstValueFrom(service.getHtmlContent('static-files/missing-page.html'));
 
-    it('should return undefined when both Czech and English files not found', async () => {
-      localeService.getCurrentLanguageCode.and.returnValue('cs');
+    const request = httpMock.expectOne('/repository/static-files/missing-page.html');
+    request.flush('Not Found', { status: 404, statusText: 'Not Found' });
 
-      const content404 = new HttpResponse({ status: 404, body: '' });
-
-      httpClient.get.and.returnValues(of(content404), of(content404));
-
-      const result = await service.getHmtlContentByPathAndLocale('nonexistent');
-
-      expect(result).toBeUndefined();
-      expect(httpClient.get).toHaveBeenCalledTimes(2);
-    });
+    const content = await contentPromise;
+    expect(content).toBe('');
   });
 });
