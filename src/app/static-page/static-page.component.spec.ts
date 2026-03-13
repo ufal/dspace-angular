@@ -129,7 +129,8 @@ describe('StaticPageComponent', () => {
     const oaiHtml = '<a href="/server/oai/request?verb=ListMetadataFormats">full list</a>';
     const { fixture, component } = await setupTest(oaiHtml, 'https://api.example.org/repository/server');
 
-    await component.ngOnInit();
+    fixture.detectChanges();
+    await fixture.whenStable();
     fixture.detectChanges();
 
     const rewritten = 'https://api.example.org/repository/server/oai/request?verb=ListMetadataFormats';
