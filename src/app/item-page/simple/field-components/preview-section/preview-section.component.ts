@@ -28,7 +28,6 @@ export class PreviewSectionComponent implements OnInit, OnChanges, OnDestroy {
     this.configService.findByPropertyName('lr.help.mail')?.subscribe(remoteData => {
       this.emailToContact = remoteData.payload?.values?.[0];
     });
-    this.refreshFiles(true);
   }
 
   ngOnChanges(changes: SimpleChanges): void {

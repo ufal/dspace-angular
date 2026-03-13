@@ -83,7 +83,6 @@ export class ClarinFilesSectionComponent implements OnInit, OnChanges, OnDestroy
 
   ngOnInit(): void {
     this.loadDownloadZipConfigProperties();
-    this.refreshFromInputs(true);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
