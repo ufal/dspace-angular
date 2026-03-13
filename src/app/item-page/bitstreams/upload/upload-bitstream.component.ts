@@ -225,12 +225,12 @@ export class UploadBitstreamComponent implements OnInit, OnDestroy {
       this.requestService.setStaleByHrefSubstring(item._links.self.href);
 
       // Clear metadatabitstreams search cache used by preview and CLARIN files sections
-      this.requestService.setStaleByHrefSubstring('/api/core/metadatabitstreams/search/byHandle');
       if (item?.handle) {
-        this.requestService.setStaleByHrefSubstring(`handle=${encodeURIComponent(item.handle)}`);
-        this.requestService.setStaleByHrefSubstring(`handle=${item.handle}`);
+        const byHandleBase = '/api/core/metadatabitstreams/search/byHandle';
+        const encodedHandle = encodeURIComponent(item.handle);
+        this.requestService.setStaleByHrefSubstring(`${byHandleBase}?handle=${encodedHandle}&fileGrpType=ORIGINAL`);
+        this.requestService.setStaleByHrefSubstring(`${byHandleBase}?handle=${item.handle}&fileGrpType=ORIGINAL`);
       }
-      this.requestService.setStaleByHrefSubstring('fileGrpType=ORIGINAL');
     });
 
     // Bring over the item ID as a query parameter
