@@ -209,12 +209,12 @@ export class UploadBitstreamComponent implements OnInit, OnDestroy {
   public onCompleteItem(bitstream) {
     // Clear cached requests for this bundle's bitstreams to ensure lists on all pages are up-to-date
     this.bundleService.getBitstreamsEndpoint(this.selectedBundleId).pipe(take(1)).subscribe((href: string) => {
-      this.requestService.removeByHrefSubstring(href);
+      this.requestService.setStaleByHrefSubstring(href);
     });
 
     // Clear cached requests for this item's bundles to ensure bundle resolution uses fresh data
     this.itemService.getBundlesEndpoint(this.itemId).pipe(take(1)).subscribe((href: string) => {
-      this.requestService.removeByHrefSubstring(href);
+      this.requestService.setStaleByHrefSubstring(href);
     });
 
     // Clear cached requests for this item to ensure breadcrumb navigation resolves a fresh item
@@ -222,15 +222,15 @@ export class UploadBitstreamComponent implements OnInit, OnDestroy {
       getFirstSucceededRemoteDataPayload(),
       take(1),
     ).subscribe((item: Item) => {
-      this.requestService.removeByHrefSubstring(item._links.self.href);
+      this.requestService.setStaleByHrefSubstring(item._links.self.href);
 
       // Clear metadatabitstreams search cache used by preview and CLARIN files sections
-      this.requestService.removeByHrefSubstring('/api/core/metadatabitstreams/search/byHandle');
+      this.requestService.setStaleByHrefSubstring('/api/core/metadatabitstreams/search/byHandle');
       if (item?.handle) {
-        this.requestService.removeByHrefSubstring(`handle=${encodeURIComponent(item.handle)}`);
-        this.requestService.removeByHrefSubstring(`handle=${item.handle}`);
+        this.requestService.setStaleByHrefSubstring(`handle=${encodeURIComponent(item.handle)}`);
+        this.requestService.setStaleByHrefSubstring(`handle=${item.handle}`);
       }
-      this.requestService.removeByHrefSubstring('fileGrpType=ORIGINAL');
+      this.requestService.setStaleByHrefSubstring('fileGrpType=ORIGINAL');
     });
 
     // Bring over the item ID as a query parameter
