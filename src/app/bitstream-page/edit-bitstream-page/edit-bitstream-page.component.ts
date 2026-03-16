@@ -420,8 +420,12 @@ export class EditBitstreamPageComponent implements OnInit, OnDestroy {
     );
 
     const bundle$ = bitstream$.pipe(
-      switchMap((bitstream: Bitstream) => bitstream.bundle),
-      getFirstSucceededRemoteDataPayload(),
+      switchMap((bitstream: Bitstream) => {
+        if (hasValue(bitstream) && hasValue(bitstream.bundle)) {
+          return bitstream.bundle.pipe(getFirstSucceededRemoteDataPayload());
+        }
+        return observableOf(undefined);
+      }),
     );
 
     const primaryBitstream$ = bundle$.pipe(
@@ -431,12 +435,20 @@ export class EditBitstreamPageComponent implements OnInit, OnDestroy {
     );
 
     const item$ = bundle$.pipe(
-      switchMap((bundle: Bundle) => bundle.item),
-      getFirstSucceededRemoteDataPayload(),
+      switchMap((bundle: Bundle) => {
+        if (hasValue(bundle) && hasValue(bundle.item)) {
+          return bundle.item.pipe(getFirstSucceededRemoteDataPayload());
+        }
+        return observableOf(undefined);
+      }),
     );
     const format$ = bitstream$.pipe(
-      switchMap(bitstream => bitstream.format),
-      getFirstSucceededRemoteDataPayload(),
+      switchMap((bitstream: Bitstream) => {
+        if (hasValue(bitstream) && hasValue(bitstream.format)) {
+          return bitstream.format.pipe(getFirstSucceededRemoteDataPayload());
+        }
+        return observableOf(undefined);
+      }),
     );
 
     this.subs.push(
@@ -449,15 +461,23 @@ export class EditBitstreamPageComponent implements OnInit, OnDestroy {
       ).subscribe(([bitstream, bundle, primaryBitstream, item, format]) => {
         this.bitstream = bitstream as Bitstream;
         this.bundle = bundle;
-        this.selectedFormat = format;
+        if (hasValue(format)) {
+          this.selectedFormat = format;
+        }
         // hasValue(primaryBitstream) because if there's no primaryBitstream on the bundle it will
         // be a success response, but empty
         this.primaryBitstreamUUID = hasValue(primaryBitstream) ? primaryBitstream.uuid : null;
-        this.itemId = item.uuid;
+        if (hasValue(item)) {
+          this.itemId = item.uuid;
+        }
         this.setIiifStatus(this.bitstream);
       }),
       format$.pipe(take(1)).subscribe(
-        (format) => this.originalFormat = format,
+        (format) => {
+          if (hasValue(format)) {
+            this.originalFormat = format;
+          }
+        },
       ),
     );
 
@@ -732,6 +752,11 @@ export class EditBitstreamPageComponent implements OnInit, OnDestroy {
    */
   setIiifStatus(bitstream: Bitstream) {
 
+    if (hasValue(bitstream) === false || hasValue(bitstream.bundle) === false || hasValue(bitstream.format) === false) {
+      this.isIIIF = false;
+      return;
+    }
+
     const regexExcludeBundles = /OTHERCONTENT|THUMBNAIL|LICENSE/;
     const regexIIIFItem = /true|yes/i;
 
@@ -745,13 +770,20 @@ export class EditBitstreamPageComponent implements OnInit, OnDestroy {
         this.dsoNameService.getName(bundle.payload).match(regexExcludeBundles) == null));
 
     const isEnabled$ = this.bitstream.bundle.pipe(
-      getFirstSucceededRemoteData(),
-      map((bundle: RemoteData<Bundle>) => bundle.payload.item.pipe(
-        getFirstSucceededRemoteData(),
-        map((item: RemoteData<Item>) =>
-          (item.payload.firstMetadataValue('dspace.iiif.enabled') &&
-            item.payload.firstMetadataValue('dspace.iiif.enabled').match(regexIIIFItem) !== null)
-        ))));
+      getFirstSucceededRemoteDataPayload(),
+      switchMap((bundle: Bundle) => {
+        if (hasValue(bundle) && hasValue(bundle.item)) {
+          return bundle.item.pipe(
+            getFirstSucceededRemoteDataPayload(),
+            map((item: Item) => {
+              const iiifEnabledValue = item.firstMetadataValue('dspace.iiif.enabled');
+              return hasValue(iiifEnabledValue) && iiifEnabledValue.match(regexIIIFItem) !== null;
+            })
+          );
+        }
+        return observableOf(false);
+      })
+    );
 
     const iiifSub = combineLatest(
       isImage$,
