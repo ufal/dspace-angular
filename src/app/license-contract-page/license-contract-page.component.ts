@@ -1,13 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { filter, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { RemoteData } from '../core/data/remote-data';
 import { Collection } from '../core/shared/collection.model';
 import { CollectionDataService } from '../core/data/collection-data.service';
 import { License } from '../core/shared/license.model';
 import { followLink } from '../shared/utils/follow-link-config.model';
-import { filter } from 'rxjs/operators';
 import { isNotEmpty, isNotUndefined } from '../shared/empty.util';
 import { PaginatedList } from '../core/data/paginated-list.model';
 import { PaginationComponentOptions } from '../shared/pagination/pagination-component-options.model';
@@ -25,6 +24,7 @@ import { PaginationService } from '../core/pagination/pagination.service';
 export class LicenseContractPageComponent implements OnInit, OnDestroy {
 
   readonly paginationId = 'contract-collections';
+  private readonly destroy$ = new Subject<void>();
 
   constructor(private route: ActivatedRoute,
               protected collectionDataService: CollectionDataService,
@@ -71,19 +71,21 @@ export class LicenseContractPageComponent implements OnInit, OnDestroy {
     if (isNotEmpty(this.collectionId)) {
       this.collectionDataService.findById(this.collectionId, false, true, followLink('license'))
         .pipe(
-          filter((collectionData: RemoteData<Collection>) => isNotUndefined(collectionData.payload)))
-        .subscribe((res) => {
-          this.collectionRD$.next(res);
-          res.payload.license.subscribe((licenseRD$) => {
-            this.licenseRD$.next(licenseRD$);
-          });
-        });
+          filter((collectionData: RemoteData<Collection>) => isNotUndefined(collectionData.payload)),
+          tap((collectionData: RemoteData<Collection>) => this.collectionRD$.next(collectionData)),
+          switchMap((collectionData: RemoteData<Collection>) => collectionData.payload.license),
+          tap((licenseRD: RemoteData<License>) => this.licenseRD$.next(licenseRD)),
+          takeUntil(this.destroy$)
+        )
+        .subscribe();
     } else {
       this.loadAuthorizedCollections();
     }
   }
 
   ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
     if (this.isListMode()) {
       this.paginationService.clearPagination(this.paginationId);
     }

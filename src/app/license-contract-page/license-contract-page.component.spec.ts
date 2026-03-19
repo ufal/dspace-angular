@@ -18,6 +18,7 @@ import { FindListOptions } from '../core/data/find-list-options.model';
 import { PaginationComponentOptions } from '../shared/pagination/pagination-component-options.model';
 import { SortDirection, SortOptions } from '../core/cache/models/sort-options.model';
 
+/* eslint-disable @angular-eslint/directive-selector */
 @Directive({
   selector: '[ngVar]'
 })
