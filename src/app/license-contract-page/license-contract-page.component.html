@@ -21,8 +21,8 @@
                    [collectionSize]="collectionsRD?.payload?.totalElements"
                    [hideGear]="true"
                    [hidePagerWhenSinglePage]="true">
-      <div class="card-body" *ngFor="let collection of collectionsRD?.payload?.page">
-        <div class=" well" id="cz_cuni_mff_ufal_ContractPage_div_licenses">
+      <div class="card-body" *ngFor="let collection of collectionsRD?.payload?.page; let i = index">
+        <div class=" well" id="cz_cuni_mff_ufal_ContractPage_div_licenses_{{i}}">
           <h3>{{collection?.name}}</h3>
           <textarea class="form-control"
                     cols="0"
