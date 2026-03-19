@@ -6,7 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Directive, Input, NO_ERRORS_SCHEMA } from '@angular/core';
-import { createSuccessfulRemoteDataObject$ } from '../shared/remote-data.utils';
+import { createFailedRemoteDataObject$, createSuccessfulRemoteDataObject$ } from '../shared/remote-data.utils';
 import { CollectionDataService } from '../core/data/collection-data.service';
 import { Collection } from '../core/shared/collection.model';
 import { License } from '../core/shared/license.model';
@@ -133,6 +133,7 @@ describe('LicenseContractPageComponent', () => {
 
   beforeEach(() => {
     routeStub.snapshot.queryParams = { ...paramObject };
+    collectionService.findById.and.returnValue(createSuccessfulRemoteDataObject$(collection));
     collectionService.findById.calls.reset();
     collectionService.getAuthorizedCollection.calls.reset();
     paginationService.getFindListOptions.calls.reset();
@@ -152,6 +153,18 @@ describe('LicenseContractPageComponent', () => {
 
   it('should load licenseRD$', () => {
     expect(component.licenseRD$.value.payload).toEqual(singleCollectionLicense);
+  });
+
+  it('should set hasFailed on collectionRD$ when collectionId is bogus', () => {
+    collectionService.findById.and.returnValue(createFailedRemoteDataObject$('Not Found', 404));
+    collectionService.findById.calls.reset();
+
+    const failFixture = TestBed.createComponent(LicenseContractPageComponent);
+    const failComponent = failFixture.componentInstance;
+    failFixture.detectChanges();
+
+    expect(collectionService.findById).toHaveBeenCalled();
+    expect(failComponent.collectionRD$.value.hasFailed).toBeTrue();
   });
 
   it('should load authorized collections when collectionId is missing', () => {

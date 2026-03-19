@@ -71,8 +71,8 @@ export class LicenseContractPageComponent implements OnInit, OnDestroy {
     if (isNotEmpty(this.collectionId)) {
       this.collectionDataService.findById(this.collectionId, false, true, followLink('license'))
         .pipe(
-          filter((collectionData: RemoteData<Collection>) => isNotEmpty(collectionData.payload)),
           tap((collectionData: RemoteData<Collection>) => this.collectionRD$.next(collectionData)),
+          filter((collectionData: RemoteData<Collection>) => isNotEmpty(collectionData.payload)),
           switchMap((collectionData: RemoteData<Collection>) => collectionData.payload.license ?? EMPTY),
           tap((licenseRD: RemoteData<License>) => this.licenseRD$.next(licenseRD)),
           takeUntil(this.destroy$)
