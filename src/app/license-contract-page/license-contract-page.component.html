@@ -2,14 +2,18 @@
   <div class="card">
     <h5 class="card-header">{{'contract.message.distribution-license-agreement' | translate}}</h5>
     <ng-container *ngIf="!isListMode(); else authorizedCollectionsTemplate">
-      <div class="card-body" *ngVar="(collectionRD$ | async)?.payload as collection">
-        <div class=" well" id="cz_cuni_mff_ufal_ContractPage_div_licenses">
-            <h3>{{collection?.name}}</h3>
-              <textarea class="form-control" cols="0" id="cz_cuni_mff_ufal_ContractPage_field_license_text_18"
-                        name="license_text_18" readonly
-                        rows="34">{{(licenseRD$ | async)?.payload?.text}}</textarea>
+      <ng-container *ngVar="(collectionRD$ | async) as collectionRD">
+        <ds-error *ngIf="collectionRD?.hasFailed" message="{{'error.collection' | translate}}"></ds-error>
+        <ds-themed-loading *ngIf="!collectionRD || collectionRD?.isLoading" message="{{'loading.collection' | translate}}"></ds-themed-loading>
+        <div class="card-body" *ngIf="collectionRD?.payload">
+          <div class=" well" id="cz_cuni_mff_ufal_ContractPage_div_licenses">
+            <h3>{{collectionRD?.payload?.name}}</h3>
+            <textarea class="form-control" cols="0" id="cz_cuni_mff_ufal_ContractPage_field_license_text_18"
+                      name="license_text_18" readonly
+                      rows="34">{{(licenseRD$ | async)?.payload?.text}}</textarea>
+          </div>
         </div>
-      </div>
+      </ng-container>
     </ng-container>
   </div>
 </div>
