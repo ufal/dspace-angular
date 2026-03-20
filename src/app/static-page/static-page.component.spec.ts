@@ -259,10 +259,10 @@ describe('StaticPageComponent', () => {
       expect(navigateTo).toHaveBeenCalledWith(`${window.location.origin}/testNamespace/contract`);
     });
 
-    it('should strip the no_static_ prefix and preserve the UI namespace', async () => {
+    it('should navigate licenses links relative to the UI namespace', async () => {
       const { component } = await setupTest('<div>test</div>');
       const navigateTo = spyOn<any>(component, 'navigateTo');
-      const event = createLinkEvent('no_static_licenses');
+      const event = createLinkEvent('licenses');
 
       component.processLinks(event);
 

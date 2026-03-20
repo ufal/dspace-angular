@@ -17,7 +17,6 @@ import { ServerResponseService } from '../core/services/server-response.service'
   styleUrls: ['./static-page.component.scss']
 })
 export class StaticPageComponent implements OnInit {
-  static readonly no_static: string = 'no_static_';
   htmlContent: BehaviorSubject<string> = new BehaviorSubject<string>('');
   htmlFileName: string;
   contentState: 'loading' | 'found' | 'not-found' = 'loading';
@@ -139,9 +138,6 @@ export class StaticPageComponent implements OnInit {
   }
 
   private redirectToInternalLink(href: string, namespacePrefix: string): void {
-    if (href.startsWith(StaticPageComponent.no_static)) {
-      href = href.replace(StaticPageComponent.no_static, '');
-    }
     const absoluteUrl = new URL(href, this.composeAppBaseUrl(namespacePrefix));
     this.navigateTo(absoluteUrl.href);
   }
