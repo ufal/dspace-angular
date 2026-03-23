@@ -75,23 +75,14 @@ export class StaticPageComponent implements OnInit {
     }
 
     const href = anchorElement.getAttribute('href');
-    if (!href) {
+    if (!href || !this.isRelativeLink(href)) {
       return;
     }
 
     event.preventDefault();
     const namespacePrefix = this.getNamespacePrefix();
     const staticPageBaseUrl = this.composeStaticPageBaseUrl(namespacePrefix);
-
-    if (this.isFragmentLink(href)) {
-      this.redirectToFragment(staticPageBaseUrl, href);
-    } else if (this.isRelativeLink(href)) {
-      this.redirectToRelativeLink(staticPageBaseUrl, href);
-    } else if (this.isExternalLink(href)) {
-      this.redirectToExternalLink(href);
-    } else {
-      this.redirectToInternalLink(href, namespacePrefix);
-    }
+    this.redirectToRelativeLink(staticPageBaseUrl, href);
   }
 
   private getNamespacePrefix(): string {
@@ -109,18 +100,6 @@ export class StaticPageComponent implements OnInit {
     return this.composeUrl(`${namespacePrefix}/${STATIC_PAGE_PATH}/`);
   }
 
-  private composeAppBaseUrl(namespacePrefix: string): string {
-    return this.composeUrl(`${namespacePrefix}/`);
-  }
-
-  private isFragmentLink(href: string | null): boolean {
-    return href?.startsWith('#') ?? false;
-  }
-
-  private redirectToFragment(redirectUrl: string, href: string | null): void {
-    this.navigateTo(`${redirectUrl}${this.htmlFileName}${href}`);
-  }
-
   private isRelativeLink(href: string | null): boolean {
     return href?.startsWith('.') ?? false;
   }
@@ -129,25 +108,8 @@ export class StaticPageComponent implements OnInit {
     this.navigateTo(new URL(href, redirectUrl).href);
   }
 
-  private isExternalLink(href: string | null): boolean {
-    return (href?.startsWith('http') || href?.startsWith('www')) ?? false;
-  }
-
-  private redirectToExternalLink(href: string | null): void {
-    this.replaceLocation(href);
-  }
-
-  private redirectToInternalLink(href: string, namespacePrefix: string): void {
-    const absoluteUrl = new URL(href, this.composeAppBaseUrl(namespacePrefix));
-    this.navigateTo(absoluteUrl.href);
-  }
-
   private navigateTo(url: string): void {
     window.location.href = url;
-  }
-
-  private replaceLocation(url: string): void {
-    window.location.replace(url);
   }
 
   /**

@@ -248,56 +248,48 @@ describe('StaticPageComponent', () => {
   });
 
   describe('link handling', () => {
-    it('should navigate standard internal links relative to the UI namespace', async () => {
-      const { component } = await setupTest('<div>test</div>');
-      const navigateTo = spyOn<any>(component, 'navigateTo');
-      const event = createLinkEvent('contract');
-
-      component.processLinks(event);
-
-      expect((event.preventDefault as jasmine.Spy)).toHaveBeenCalled();
-      expect(navigateTo).toHaveBeenCalledWith(`${window.location.origin}/testNamespace/contract`);
-    });
-
-    it('should navigate licenses links relative to the UI namespace', async () => {
-      const { component } = await setupTest('<div>test</div>');
-      const navigateTo = spyOn<any>(component, 'navigateTo');
-      const event = createLinkEvent('licenses');
-
-      component.processLinks(event);
-
-      expect(navigateTo).toHaveBeenCalledWith(`${window.location.origin}/testNamespace/licenses`);
-    });
-
-    it('should keep dot-relative links under the static route', async () => {
+    it('should intercept and navigate dot-relative links under the static route', async () => {
       const { component } = await setupTest('<div>test</div>');
       const navigateTo = spyOn<any>(component, 'navigateTo');
       const event = createLinkEvent('./cite');
 
       component.processLinks(event);
 
+      expect((event.preventDefault as jasmine.Spy)).toHaveBeenCalled();
       expect(navigateTo).toHaveBeenCalledWith(`${window.location.origin}/testNamespace/static/cite`);
     });
 
-    it('should preserve fragment links on the current static page', async () => {
+    it('should resolve nested relative-link clicks inside anchors', async () => {
       const { component } = await setupTest('<div>test</div>');
       const navigateTo = spyOn<any>(component, 'navigateTo');
-      component.htmlFileName = 'test-file.html';
+      const event = createLinkEvent('../discover?query=test', true);
+
+      component.processLinks(event);
+
+      expect((event.preventDefault as jasmine.Spy)).toHaveBeenCalled();
+      expect(navigateTo).toHaveBeenCalledWith(`${window.location.origin}/testNamespace/discover?query=test`);
+    });
+
+    it('should not intercept explicit app-route links', async () => {
+      const { component } = await setupTest('<div>test</div>');
+      const navigateTo = spyOn<any>(component, 'navigateTo');
+      const event = createLinkEvent('contract');
+
+      component.processLinks(event);
+
+      expect((event.preventDefault as jasmine.Spy)).not.toHaveBeenCalled();
+      expect(navigateTo).not.toHaveBeenCalled();
+    });
+
+    it('should not intercept fragment links', async () => {
+      const { component } = await setupTest('<div>test</div>');
+      const navigateTo = spyOn<any>(component, 'navigateTo');
       const event = createLinkEvent('#about-contracts');
 
       component.processLinks(event);
 
-      expect(navigateTo).toHaveBeenCalledWith(`${window.location.origin}/testNamespace/static/test-file.html#about-contracts`);
-    });
-
-    it('should resolve clicks from nested elements inside anchors', async () => {
-      const { component } = await setupTest('<div>test</div>');
-      const navigateTo = spyOn<any>(component, 'navigateTo');
-      const event = createLinkEvent('contract', true);
-
-      component.processLinks(event);
-
-      expect(navigateTo).toHaveBeenCalledWith(`${window.location.origin}/testNamespace/contract`);
+      expect((event.preventDefault as jasmine.Spy)).not.toHaveBeenCalled();
+      expect(navigateTo).not.toHaveBeenCalled();
     });
   });
 });
