@@ -133,7 +133,7 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
    * @param event
    */
   onBlur(event: Event) {
-    this.dispatchUpdate(this.currentValue);
+    this.dispatchUpdate(this.normalizeValue(this.currentValue));
     this.cdr.detectChanges();
   }
 
@@ -148,7 +148,9 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
       updateValue.value = this.handlePrefix.value + handle_title[0];
     }
 
-    this.dispatchUpdate(updateValue.value || updateValue.display);
+    const selectedValue = this.normalizeValue(updateValue);
+    this.currentValue = selectedValue;
+    this.dispatchUpdate(selectedValue);
   }
 
   /**
@@ -170,19 +172,11 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
     if (init) {
       this.getInitValueFromModel()
         .subscribe((formValue: FormFieldMetadataValueObject) => {
-          this.currentValue = formValue?.value || formValue?.display || '';
+          this.currentValue = this.normalizeValue(formValue);
           this.cdr.detectChanges();
         });
     } else {
-      if (isEmpty(value)) {
-        result = '';
-      } else {
-        if (typeof value === 'string') {
-          result = value;
-        } else {
-          result = value?.value || value?.display || '';
-        }
-      }
+      result = isEmpty(value) ? '' : this.normalizeValue(value);
 
       this.currentValue = result;
       this.cdr.detectChanges();
@@ -190,15 +184,24 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
   }
 
   /**
-   * Do not show whole suggestion object but just display value.
-   * @param x
+   * Formats input values for the typeahead.
+   * If x is a string (persisted ISO), return it as-is.
+   * If x is an object, return value first and fallback to display.
+   * @param x raw string/object value from model/typeahead
    */
   formatter = (x: string | { value?: string; display?: string }) => {
-  if (typeof x === 'string') {
-      return x;
-    }
-    return x?.value || x?.display || '';
+    return this.normalizeValue(x);
   };
+
+  /**
+   * Normalize autocomplete values to string.
+   */
+  private normalizeValue(value: string | { value?: string; display?: string }): string {
+    if (typeof value === 'string') {
+      return value;
+    }
+    return value?.value || value?.display || '';
+  }
 
   /**
    * Pretify suggestion.
