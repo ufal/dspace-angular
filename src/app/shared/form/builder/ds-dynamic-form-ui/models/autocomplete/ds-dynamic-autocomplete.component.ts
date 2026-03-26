@@ -148,7 +148,8 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
       updateValue.value = this.handlePrefix.value + handle_title[0];
     }
 
-    this.dispatchUpdate(updateValue.display);
+    // this.dispatchUpdate(updateValue.display);
+    this.dispatchUpdate(updateValue.value || updateValue.display);
   }
 
   /**
@@ -170,14 +171,20 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
     if (init) {
       this.getInitValueFromModel()
         .subscribe((formValue: FormFieldMetadataValueObject) => {
-          this.currentValue = formValue;
+          // this.currentValue = formValue;
+          this.currentValue = formValue?.value || formValue?.display || '';
           this.cdr.detectChanges();
         });
     } else {
       if (isEmpty(value)) {
         result = '';
       } else {
-        result = value.value;
+        // result = value.value;
+        if (typeof value === 'string') {
+          result = value;
+        } else {
+          result = value?.value || value?.display || '';
+        }
       }
 
       this.currentValue = result;
@@ -189,8 +196,14 @@ export class DsDynamicAutocompleteComponent extends DsDynamicTagComponent implem
    * Do not show whole suggestion object but just display value.
    * @param x
    */
-  formatter = (x: { display: string }) => {
-    return x.display;
+  // formatter = (x: { display: string }) => {
+  //   return x.display;
+  // };
+  formatter = (x: string | { value?: string; display?: string }) => {
+  if (typeof x === 'string') {
+      return x;
+    }
+    return x?.value || x?.display || '';
   };
 
   /**
