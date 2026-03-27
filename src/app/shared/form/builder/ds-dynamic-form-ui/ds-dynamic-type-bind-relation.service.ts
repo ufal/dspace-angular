@@ -2,7 +2,7 @@ import { Inject, Injectable, Injector, Optional } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 
 import { Subscription } from 'rxjs';
-import { filter, startWith } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
 
 import {
   AND_OPERATOR,
@@ -183,31 +183,39 @@ export class DsDynamicTypeBindRelationService {
 
     const relatedModels = this.getRelatedFormModel(model);
     const subscriptions: Subscription[] = [];
+    const attachedModelIds = new Set<string>();
 
-    // Always evaluate once on setup so MATCH_VISIBLE fallback logic is applied even before related models are ready.
-    this.evaluateRelations(model, control);
+    // If no related model is available at setup time, evaluate once so MATCH_VISIBLE fallback logic is applied.
+    if (relatedModels.length === 0) {
+      this.evaluateRelations(model, control);
+    }
 
-    Object.values(relatedModels).forEach((relatedModel: any) => {
+    const attachRelatedModels = (models: DynamicFormControlModel[]) => {
+      Object.values(models).forEach((relatedModel: any) => {
 
-      if (hasValue(relatedModel)) {
-        const initValue = (hasNoValue(relatedModel.value) || typeof relatedModel.value === 'string') ? relatedModel.value :
-          (Array.isArray(relatedModel.value) ? relatedModel.value : relatedModel.value.value);
+        if (hasValue(relatedModel) && !attachedModelIds.has(relatedModel.id)) {
+          attachedModelIds.add(relatedModel.id);
 
-        const updateSubject = (relatedModel.type === 'CHECKBOX_GROUP' ? relatedModel.valueUpdates : relatedModel.valueChanges);
-        const valueChanges = updateSubject.pipe(
-          startWith(initValue)
-        );
+          const updateSubject = (relatedModel.type === 'CHECKBOX_GROUP' ? relatedModel.valueUpdates : relatedModel.valueChanges);
 
-        // Build up the subscriptions to watch for changes;
-        subscriptions.push(valueChanges.subscribe(() => this.evaluateRelations(model, control)));
-      }
-    });
+          // Build up the subscriptions to watch for changes;
+          subscriptions.push(updateSubject.subscribe(() => this.evaluateRelations(model, control)));
+        }
+      });
+    };
 
-    // If no related model was found at this point, listen for type-bind model registration and re-evaluate.
+    attachRelatedModels(relatedModels);
+
+    // If no related model was found at this point, listen for type-bind model registration and attach
+    // value change listeners as soon as related models become available.
     if (relatedModels.length === 0) {
       subscriptions.push(this.formBuilderService.getTypeBindModelUpdates().pipe(
         filter((bindModelId: string) => hasValue(bindModelId))
-      ).subscribe(() => this.evaluateRelations(model, control)));
+      ).subscribe(() => {
+        const lateRelatedModels = this.getRelatedFormModel(model);
+        attachRelatedModels(lateRelatedModels);
+        this.evaluateRelations(model, control);
+      }));
     }
 
     return subscriptions;

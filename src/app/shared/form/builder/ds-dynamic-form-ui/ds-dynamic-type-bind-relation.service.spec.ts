@@ -234,6 +234,63 @@ describe('DSDynamicTypeBindRelationService test suite', () => {
       subscriptions.forEach((sub) => sub.unsubscribe());
     });
 
+    it('Should react to late bind model value changes after registration', () => {
+      const testModel = mockInputWithTypeBindModel;
+      testModel.typeBindRelations = getTypeBindRelations(['boundType']);
+      const dcTypeControl = new UntypedFormControl();
+      const bindModelUpdates$ = new Subject<string>();
+      let bindModelAvailable = false;
+      const bindModel: any = {
+        id: 'dc_type',
+        type: 'INPUT',
+        value: 'boundType',
+        valueChanges: new Subject<string>(),
+        valueUpdates: new Subject<string>(),
+      };
+
+      const visibleMatcher: any = {
+        match: MATCH_VISIBLE,
+        opposingMatch: HIDDEN_MATCHER.match,
+        onChange: jasmine.createSpy('onChange')
+      };
+      (service as any).dynamicMatchers = [visibleMatcher];
+      spyOn((service as any).formBuilderService, 'getTypeBindModel').and.callFake(() => bindModelAvailable ? bindModel : undefined);
+      spyOn((service as any).formBuilderService, 'getTypeBindModelUpdates').and.returnValue(bindModelUpdates$.asObservable());
+
+      const subscriptions = service.subscribeRelations(testModel, dcTypeControl);
+      expect(visibleMatcher.onChange).toHaveBeenCalledWith(false, testModel, dcTypeControl, jasmine.anything());
+
+      // Register late model and verify the matcher becomes visible.
+      bindModelAvailable = true;
+      bindModelUpdates$.next('dc_type');
+      expect(visibleMatcher.onChange).toHaveBeenCalledWith(true, testModel, dcTypeControl, jasmine.anything());
+
+      // Changing controlling model value should re-trigger evaluation via valueChanges subscription.
+      visibleMatcher.onChange.calls.reset();
+      bindModel.value = 'anotherType';
+      bindModel.valueChanges.next('anotherType');
+      expect(visibleMatcher.onChange).toHaveBeenCalledWith(false, testModel, dcTypeControl, jasmine.anything());
+
+      subscriptions.forEach((sub) => sub.unsubscribe());
+    });
+
+    it('Should evaluate only once during setup when related model already exists', () => {
+      const testModel = mockInputWithTypeBindModel;
+      testModel.typeBindRelations = getTypeBindRelations(['boundType']);
+      const dcTypeControl = new UntypedFormControl();
+      const visibleMatcher: any = {
+        match: MATCH_VISIBLE,
+        opposingMatch: HIDDEN_MATCHER.match,
+        onChange: jasmine.createSpy('onChange')
+      };
+      (service as any).dynamicMatchers = [visibleMatcher];
+
+      const subscriptions = service.subscribeRelations(testModel, dcTypeControl);
+
+      expect(visibleMatcher.onChange.calls.count()).toBe(1);
+      subscriptions.forEach((sub) => sub.unsubscribe());
+    });
+
   });
 
 });
