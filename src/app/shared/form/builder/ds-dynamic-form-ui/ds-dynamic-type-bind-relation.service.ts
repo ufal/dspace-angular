@@ -2,7 +2,7 @@ import { Inject, Injectable, Injector, Optional } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 
 import { Subscription } from 'rxjs';
-import { startWith } from 'rxjs/operators';
+import { filter, startWith } from 'rxjs/operators';
 
 import {
   AND_OPERATOR,
@@ -69,7 +69,7 @@ export class DsDynamicTypeBindRelationService {
 
       const bindModel: DynamicFormControlModel = this.formBuilderService.getTypeBindModel(rel?.id);
 
-      if (model && !models.some((modelElement) => modelElement === bindModel)) {
+      if (bindModel && !models.some((modelElement) => modelElement === bindModel)) {
         models.push(bindModel);
       }
     }));
@@ -97,6 +97,13 @@ export class DsDynamicTypeBindRelationService {
       // This model (DynamicRelationGroupModel) contains eg. mandatory field, formConfiguration, relationFields,
       // submission scope, form/section type and other high level properties
       const bindModel: any = this.formBuilderService.getTypeBindModel(condition?.id);
+
+      // If the bind model is not available yet, keep fields with MATCH_VISIBLE hidden.
+      // For opposite matchers (e.g. HIDDEN matcher evaluating a VISIBLE relation), return true to preserve
+      // the previous hiding behavior until the bind model is available.
+      if (hasNoValue(bindModel)) {
+        return relation.match === matcher.opposingMatch;
+      }
 
       let values: string[];
       let bindModelValue = bindModel.value;
@@ -177,6 +184,9 @@ export class DsDynamicTypeBindRelationService {
     const relatedModels = this.getRelatedFormModel(model);
     const subscriptions: Subscription[] = [];
 
+    // Always evaluate once on setup so MATCH_VISIBLE fallback logic is applied even before related models are ready.
+    this.evaluateRelations(model, control);
+
     Object.values(relatedModels).forEach((relatedModel: any) => {
 
       if (hasValue(relatedModel)) {
@@ -189,24 +199,32 @@ export class DsDynamicTypeBindRelationService {
         );
 
         // Build up the subscriptions to watch for changes;
-        subscriptions.push(valueChanges.subscribe(() => {
-          // Iterate each matcher
-          if (hasValue(this.dynamicMatchers)) {
-            this.dynamicMatchers.forEach((matcher) => {
-              // Find the relation
-              const relation = this.dynamicFormRelationService.findRelationByMatcher((model as any).typeBindRelations, matcher);
-              // If the relation is defined, get matchesCondition result and pass it to the onChange event listener
-              if (relation !== undefined) {
-                const hasMatch = this.matchesCondition(relation, matcher);
-                matcher.onChange(hasMatch, model, control, this.injector);
-              }
-            });
-          }
-        }));
+        subscriptions.push(valueChanges.subscribe(() => this.evaluateRelations(model, control)));
       }
     });
 
+    // If no related model was found at this point, listen for type-bind model registration and re-evaluate.
+    if (relatedModels.length === 0) {
+      subscriptions.push(this.formBuilderService.getTypeBindModelUpdates().pipe(
+        filter((bindModelId: string) => hasValue(bindModelId))
+      ).subscribe(() => this.evaluateRelations(model, control)));
+    }
+
     return subscriptions;
+  }
+
+  private evaluateRelations(model: DynamicFormControlModel, control: UntypedFormControl): void {
+    if (hasValue(this.dynamicMatchers)) {
+      this.dynamicMatchers.forEach((matcher) => {
+        // Find the relation
+        const relation = this.dynamicFormRelationService.findRelationByMatcher((model as any).typeBindRelations, matcher);
+        // If the relation is defined, get matchesCondition result and pass it to the onChange event listener
+        if (relation !== undefined) {
+          const hasMatch = this.matchesCondition(relation, matcher);
+          matcher.onChange(hasMatch, model, control, this.injector);
+        }
+      });
+    }
   }
 
   /**
