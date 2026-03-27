@@ -4,10 +4,6 @@ import { SharedModule } from '../shared/shared.module';
 import { LoginPageComponent } from './login-page.component';
 import { LoginPageRoutingModule } from './login-page-routing.module';
 import { ThemedLoginPageComponent } from './themed-login-page.component';
-import { AuthFailedPageComponent } from './auth-failed-page/auth-failed-page.component';
-import { MissingIdpHeadersComponent } from './missing-idp-headers/missing-idp-headers.component';
-import { DuplicateUserErrorComponent } from './duplicate-user-error/duplicate-user-error.component';
-import { AutoregistrationLoaderComponent } from './autoregistration/autoregistration-loader.component';
 
 @NgModule({
   imports: [
@@ -17,11 +13,7 @@ import { AutoregistrationLoaderComponent } from './autoregistration/autoregistra
   ],
   declarations: [
     LoginPageComponent,
-    ThemedLoginPageComponent,
-    AuthFailedPageComponent,
-    MissingIdpHeadersComponent,
-    AutoregistrationLoaderComponent,
-    DuplicateUserErrorComponent
+    ThemedLoginPageComponent
   ]
 })
 export class LoginPageModule {
