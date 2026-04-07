@@ -171,6 +171,23 @@ describe('ItemActionsComponent', () => {
     expect(isDisabled).toBeTrue();
   });
 
+  it('should derive tooltip from disable state without calling getVersioningTooltipMessage', () => {
+    dsoVersioningModalService.isNewVersionButtonDisabled.and.returnValue(observableOf(true));
+
+    fixture = TestBed.createComponent(ItemActionsComponent);
+    component = fixture.componentInstance;
+    component.object = mockObject;
+    fixture.detectChanges();
+
+    let tooltipKey: string;
+    component.newVersionTooltip$.subscribe((value) => {
+      tooltipKey = value;
+    });
+
+    expect(tooltipKey).toBe('item.page.version.hasDraft');
+    expect(dsoVersioningModalService.getVersioningTooltipMessage).not.toHaveBeenCalled();
+  });
+
   it('should open the create version modal when the New version button is clicked', () => {
     fixture.detectChanges();
 
