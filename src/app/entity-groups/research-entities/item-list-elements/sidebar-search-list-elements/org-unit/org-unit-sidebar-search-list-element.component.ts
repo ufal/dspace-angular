@@ -24,4 +24,11 @@ export class OrgUnitSidebarSearchListElementComponent extends SidebarSearchListE
   getDescription(): string {
     return this.firstMetadataValue('dc.description');
   }
+
+  /**
+   * Get the language of the Org Unit description.
+   */
+  getDescriptionLang(): string | null {
+    return this.dso.firstMetadata('dc.description')?.language || null;
+  }
 }

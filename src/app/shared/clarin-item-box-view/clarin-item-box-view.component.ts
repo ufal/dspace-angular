@@ -68,6 +68,10 @@ export class ClarinItemBoxViewComponent implements OnInit {
    */
   itemDescription = '';
   /**
+   * Language of the item's description metadata value.
+   */
+  itemDescriptionLang: string | null = null;
+  /**
    * Items's handle redirection URI.
    */
   itemUri = '';
@@ -145,7 +149,9 @@ export class ClarinItemBoxViewComponent implements OnInit {
     this.itemType = this.item?.firstMetadataValue('dc.type');
     this.itemName = this.item?.firstMetadataValue('dc.title');
     this.itemUri = getItemPageRoute(this.item);
-    this.itemDescription = this.item?.firstMetadataValue('dc.description');
+    const descMeta = this.item?.firstMetadata('dc.description');
+    this.itemDescription = descMeta?.value || null;
+    this.itemDescriptionLang = descMeta?.language || null;
     this.itemPublisher = this.item?.firstMetadataValue('dc.publisher');
     this.itemDate = this.clarinDateService.composeItemDate(this.item);
 
