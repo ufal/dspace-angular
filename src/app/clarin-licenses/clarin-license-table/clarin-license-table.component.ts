@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PaginationComponentOptions } from '../../shared/pagination/pagination-component-options.model';
-import { BehaviorSubject, combineLatest as observableCombineLatest } from 'rxjs';
+import { BehaviorSubject, combineLatest as observableCombineLatest, Observable, of } from 'rxjs';
 import { RemoteData } from '../../core/data/remote-data';
 import { PaginatedList } from '../../core/data/paginated-list.model';
 import { ClarinLicense } from '../../core/shared/clarin/clarin-license.model';
@@ -66,6 +66,16 @@ export class ClarinLicenseTableComponent implements OnInit {
    * License name typed into search input field, it is passed to the BE as searching value.
    */
   searchingLicenseName = '';
+
+  /**
+   * Placeholder list of license labels.
+   */
+  labels$: Observable<ClarinLicenseLabel[]> = of([]);
+
+  /**
+   * Placeholder loading state for labels table.
+   */
+  loading$: Observable<boolean> = of(false);
 
   ngOnInit(): void {
     this.initializePaginationOptions();
@@ -285,6 +295,22 @@ export class ClarinLicenseTableComponent implements OnInit {
         this.notifyOperationStatus(deleteLicenseResponse, successfulMessageContentDef, errorMessageContentDef);
         this.loadAllLicenses();
       });
+  }
+
+  /**
+   * Placeholder edit action for license labels. Wiring will be implemented in a follow-up task.
+   * @param label Selected license label
+   */
+  editLabel(label: ClarinLicenseLabel) {
+    console.log('Edit label placeholder action', label);
+  }
+
+  /**
+   * Placeholder delete action for license labels. Wiring will be implemented in a follow-up task.
+   * @param label Selected license label
+   */
+  confirmDeleteLabel(label: ClarinLicenseLabel) {
+    console.log('Delete label placeholder action', label);
   }
 
   /**
