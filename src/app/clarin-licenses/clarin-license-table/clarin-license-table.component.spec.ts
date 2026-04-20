@@ -21,6 +21,7 @@ import {
   createdLicenseLabelRD$,
   createdLicenseRD$,
   mockExtendedLicenseLabel,
+  mockLicenseLabelListRD$,
   mockLicense, mockLicenseRD$,
   mockNonExtendedLicenseLabel, successfulResponse
 } from '../../shared/testing/clarin-license-mock';
@@ -55,7 +56,8 @@ describe('ClarinLicenseTableComponent', () => {
       getLinkPath: observableOf('')
     });
     clarinLicenseLabelDataService = jasmine.createSpyObj('clarinLicenseLabelService', {
-      create: createdLicenseLabelRD$
+      create: createdLicenseLabelRD$,
+      findAll: mockLicenseLabelListRD$
     });
     requestService = jasmine.createSpyObj('requestService', {
       send: observableOf('response'),

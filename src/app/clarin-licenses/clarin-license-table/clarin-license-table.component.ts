@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { PaginationComponentOptions } from '../../shared/pagination/pagination-component-options.model';
-import { BehaviorSubject, combineLatest as observableCombineLatest, Observable, of } from 'rxjs';
+import { BehaviorSubject, combineLatest as observableCombineLatest, Subject } from 'rxjs';
 import { RemoteData } from '../../core/data/remote-data';
 import { PaginatedList } from '../../core/data/paginated-list.model';
 import { ClarinLicense } from '../../core/shared/clarin/clarin-license.model';
 import { getFirstCompletedRemoteData, getFirstSucceededRemoteData } from '../../core/shared/operators';
-import { scan, switchMap } from 'rxjs/operators';
+import { scan, switchMap, takeUntil } from 'rxjs/operators';
 import { PaginationService } from '../../core/pagination/pagination.service';
 import { ClarinLicenseDataService } from '../../core/data/clarin/clarin-license-data.service';
 import { defaultPagination, defaultSortConfiguration } from '../clarin-license-table-pagination';
@@ -22,6 +22,7 @@ import { ClarinLicenseLabelExtendedSerializer } from '../../core/shared/clarin/c
 import { ClarinLicenseRequiredInfoSerializer } from '../../core/shared/clarin/clarin-license-required-info-serializer';
 import cloneDeep from 'lodash/cloneDeep';
 import { RequestParam } from '../../core/cache/models/request-param.model';
+import { SortOptions } from '../../core/cache/models/sort-options.model';
 
 /**
  * Component for managing clarin licenses and defining clarin license labels.
@@ -31,7 +32,14 @@ import { RequestParam } from '../../core/cache/models/request-param.model';
   templateUrl: './clarin-license-table.component.html',
   styleUrls: ['./clarin-license-table.component.scss']
 })
-export class ClarinLicenseTableComponent implements OnInit {
+export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
+
+  private readonly defaultListState = {
+    searchTerm: '',
+    currentPage: 1,
+    currentPagination: defaultPagination,
+    currentSort: defaultSortConfiguration
+  };
 
   constructor(private paginationService: PaginationService,
               private clarinLicenseService: ClarinLicenseDataService,
@@ -68,18 +76,34 @@ export class ClarinLicenseTableComponent implements OnInit {
   searchingLicenseName = '';
 
   /**
-   * Placeholder list of license labels.
+    * List of license labels displayed in the labels table.
    */
-  labels$: Observable<ClarinLicenseLabel[]> = of([]);
+    labels$ = new BehaviorSubject<ClarinLicenseLabel[]>([]);
 
   /**
-   * Placeholder loading state for labels table.
+    * Loading state for labels table.
    */
-  loading$: Observable<boolean> = of(false);
+    loading$ = new BehaviorSubject<boolean>(false);
+
+    /**
+    * Selected label in labels table.
+    */
+    selectedLabel: ClarinLicenseLabel = null;
+
+    /**
+    * Emits when component is destroyed to clean up subscriptions.
+    */
+    private ngUnsubscribe = new Subject<void>();
 
   ngOnInit(): void {
     this.initializePaginationOptions();
     this.loadAllLicenses();
+    this.refreshLabels();
+  }
+
+  ngOnDestroy(): void {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 
   // define license
@@ -276,6 +300,7 @@ export class ClarinLicenseTableComponent implements OnInit {
         // check payload and show error or successful
         this.notifyOperationStatus(defineLicenseLabelResponse, successfulMessageContentDef, errorMessageContentDef);
         this.loadAllLicenses();
+        this.refreshLabels();
       });
   }
 
@@ -301,16 +326,64 @@ export class ClarinLicenseTableComponent implements OnInit {
    * Placeholder edit action for license labels. Wiring will be implemented in a follow-up task.
    * @param label Selected license label
    */
-  editLabel(label: ClarinLicenseLabel) {
-    console.log('Edit label placeholder action', label);
+  editLabel() {
+    if (isNull(this.selectedLabel)) {
+      return;
+    }
+    console.log('Edit label placeholder action', this.selectedLabel);
   }
 
   /**
    * Placeholder delete action for license labels. Wiring will be implemented in a follow-up task.
    * @param label Selected license label
    */
-  confirmDeleteLabel(label: ClarinLicenseLabel) {
-    console.log('Delete label placeholder action', label);
+  confirmDeleteLabel() {
+    if (isNull(this.selectedLabel)) {
+      return;
+    }
+    console.log('Delete label placeholder action', this.selectedLabel);
+  }
+
+  /**
+   * Load all labels for label management table.
+   */
+  refreshLabels() {
+    this.selectedLabel = null;
+    this.loading$.next(true);
+
+    this.clarinLicenseLabelService.findAll({ elementsPerPage: 1000 }, false)
+      .pipe(getFirstCompletedRemoteData(), takeUntil(this.ngUnsubscribe))
+      .subscribe((labelsResponse: RemoteData<PaginatedList<ClarinLicenseLabel>>) => {
+          if (labelsResponse?.hasSucceeded) {
+            this.labels$.next(labelsResponse?.payload?.page ?? []);
+          } else {
+            this.labels$.next([]);
+            this.notificationService.error('', this.translateService.get('clarin-license-label.define-license-label.notification.error-content'));
+          }
+          this.loading$.next(false);
+        }, () => {
+          this.labels$.next([]);
+          this.notificationService.error('', this.translateService.get('clarin-license-label.define-license-label.notification.error-content'));
+          this.loading$.next(false);
+        }
+      );
+  }
+
+  /**
+   * Select the label for edit/delete actions.
+   * @param label The label to select.
+   */
+  selectLabel(label: ClarinLicenseLabel) {
+    this.selectedLabel = label;
+  }
+
+  /**
+   * Determine whether the provided label is selected.
+   * @param label The label to check.
+   * @returns True when selected, otherwise false.
+   */
+  isSelected(label: ClarinLicenseLabel): boolean {
+    return this.selectedLabel?.id === label?.id;
   }
 
   /**
@@ -355,12 +428,16 @@ export class ClarinLicenseTableComponent implements OnInit {
     const searchTerm$ = new BehaviorSubject<string>(this.searchingLicenseName);
 
     observableCombineLatest([currentPagination$, currentSort$, searchTerm$]).pipe(
-      scan((prevState, [currentPagination, currentSort, searchTerm]) => {
+      scan((prevState: {
+        searchTerm: string;
+        currentPage: number;
+        currentPagination: PaginationComponentOptions;
+        currentSort: SortOptions;
+      }, [currentPagination, currentSort, searchTerm]) => {
         // If search term has changed, reset to page 1; otherwise, keep current page
         const currentPage = prevState.searchTerm !== searchTerm ? 1 : currentPagination.currentPage;
         return { currentPage, currentPagination, currentSort, searchTerm };
-      }, { searchTerm: '', currentPage: 1, currentPagination: this.getCurrentPagination(),
-        currentSort: this.getCurrentSort() }),
+      }, this.defaultListState),
 
       switchMap(({ currentPage, currentPagination, currentSort, searchTerm }) => {
         return this.clarinLicenseService.searchBy('byNameLike', {
