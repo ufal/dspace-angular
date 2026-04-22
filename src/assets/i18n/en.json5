@@ -6285,6 +6285,7 @@
   "clarin.license.label.create.submit": "Save",
   "clarin.license.label.create.success": "License label created successfully.",
   "clarin.license.label.create.error": "Failed to create license label.",
+  "clarin.license.label.load.error": "Failed to load license labels.",
   "clarin.license.label.edit.title": "Edit License Label",
   "clarin.license.label.edit.submit": "Save Changes",
   "clarin.license.label.edit.icon.note": "Leave empty to keep current icon.",

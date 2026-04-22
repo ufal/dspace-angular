@@ -9516,6 +9516,9 @@
   // "clarin.license.label.create.error": "Failed to create license label.",
   "clarin.license.label.create.error": "Nepodařilo se vytvořit licenční štítek.",
 
+  // "clarin.license.label.load.error": "Failed to load license labels.",
+  "clarin.license.label.load.error": "Nepodařilo se načíst licenční štítky.",
+
   // "clarin.license.label.edit.title": "Edit License Label",
   "clarin.license.label.edit.title": "Upravit licenční štítek",
 

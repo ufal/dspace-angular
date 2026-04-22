@@ -573,6 +573,7 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
    * Initialize labels data stream so pagination query-param changes trigger fetches reactively.
    */
   private initializeLabelsPaginationStream() {
+    const labelsLoadErrorKey = 'clarin.license.label.load.error';
     const currentLabelPagination$ = this.paginationService
       .getCurrentPagination(this.labelPaginationOptions.id, this.labelPaginationOptions);
 
@@ -593,12 +594,12 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
       .subscribe((labelsResponse: RemoteData<PaginatedList<ClarinLicenseLabel>>) => {
           this.labelsRD$.next(labelsResponse);
           if (!labelsResponse?.hasSucceeded) {
-            this.notificationService.error('', this.translateService.get('clarin.license.label.create.error'));
+            this.notificationService.error('', this.translateService.get(labelsLoadErrorKey));
           }
           this.loading$.next(false);
         }, () => {
           this.labelsRD$.next(null);
-          this.notificationService.error('', this.translateService.get('clarin.license.label.create.error'));
+          this.notificationService.error('', this.translateService.get(labelsLoadErrorKey));
           this.loading$.next(false);
         }
       );
