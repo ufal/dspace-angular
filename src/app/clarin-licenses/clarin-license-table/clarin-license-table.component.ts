@@ -450,6 +450,7 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
             if (deleteLabelResponse?.hasSucceeded) {
               this.notificationService.success('', this.translateService.get('clarin.license.label.delete.success'));
               this.refreshLabels();
+              this.loadAllLicenses();
             } else {
               this.notificationService.error('', this.translateService.get('clarin.license.label.delete.error'));
             }

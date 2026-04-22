@@ -287,6 +287,7 @@ describe('ClarinLicenseTableComponent', () => {
 
     it('should call clarinLicenseLabelService.delete with correct id on confirmation', fakeAsync(() => {
       const refreshSpy = spyOn(component, 'refreshLabels').and.stub();
+      const reloadLicensesSpy = spyOn(component, 'loadAllLicenses').and.stub();
       (clarinLicenseLabelDataService.delete as jasmine.Spy).and.returnValue(createNoContentRemoteDataObject$());
 
       component.confirmDeleteLabel(mockNonExtendedLicenseLabel);
@@ -296,6 +297,7 @@ describe('ClarinLicenseTableComponent', () => {
       expect((clarinLicenseLabelDataService.delete as jasmine.Spy)).toHaveBeenCalledWith(String(mockNonExtendedLicenseLabel.id));
       expect(notificationService.success).toHaveBeenCalled();
       expect(refreshSpy).toHaveBeenCalled();
+      expect(reloadLicensesSpy).toHaveBeenCalled();
     }));
 
     it('should show error notification on failed delete', () => {
