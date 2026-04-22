@@ -5,7 +5,7 @@ import { RemoteData } from '../../core/data/remote-data';
 import { PaginatedList } from '../../core/data/paginated-list.model';
 import { ClarinLicense } from '../../core/shared/clarin/clarin-license.model';
 import { getFirstCompletedRemoteData, getFirstSucceededRemoteData } from '../../core/shared/operators';
-import { scan, switchMap, takeUntil } from 'rxjs/operators';
+import { scan, switchMap, take, takeUntil } from 'rxjs/operators';
 import { PaginationService } from '../../core/pagination/pagination.service';
 import { ClarinLicenseDataService } from '../../core/data/clarin/clarin-license-data.service';
 import { defaultPagination, defaultSortConfiguration } from '../clarin-license-table-pagination';
@@ -23,6 +23,8 @@ import { ClarinLicenseRequiredInfoSerializer } from '../../core/shared/clarin/cl
 import cloneDeep from 'lodash/cloneDeep';
 import { RequestParam } from '../../core/cache/models/request-param.model';
 import { SortOptions } from '../../core/cache/models/sort-options.model';
+import { ConfirmationModalComponent } from '../../shared/confirmation-modal/confirmation-modal.component';
+import { DSpaceObject } from '../../core/shared/dspace-object.model';
 
 /**
  * Component for managing clarin licenses and defining clarin license labels.
@@ -76,19 +78,29 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
   searchingLicenseName = '';
 
   /**
-    * List of license labels displayed in the labels table.
+    * RemoteData stream for license labels table.
    */
-    labels$ = new BehaviorSubject<ClarinLicenseLabel[]>([]);
+    labelsRD$: BehaviorSubject<RemoteData<PaginatedList<ClarinLicenseLabel>>> =
+      new BehaviorSubject<RemoteData<PaginatedList<ClarinLicenseLabel>>>(null);
 
   /**
     * Loading state for labels table.
    */
     loading$ = new BehaviorSubject<boolean>(false);
 
-    /**
-    * Selected label in labels table.
-    */
-    selectedLabel: ClarinLicenseLabel = null;
+  /**
+   * Pagination configuration for labels table.
+   */
+  labelPaginationOptions: PaginationComponentOptions = Object.assign(new PaginationComponentOptions(), {
+    id: 'cLicenseLabels',
+    currentPage: 1,
+    pageSize: 10
+  });
+
+  /**
+   * Triggers a labels reload without changing pagination state.
+   */
+  private labelsRefresh$ = new BehaviorSubject<void>(undefined);
 
     /**
     * Emits when component is destroyed to clean up subscriptions.
@@ -98,7 +110,7 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initializePaginationOptions();
     this.loadAllLicenses();
-    this.refreshLabels();
+    this.initializeLabelsPaginationStream();
   }
 
   ngOnDestroy(): void {
@@ -129,6 +141,7 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
     const errorMessageContentDef = 'clarin-license.define-license.notification.error-content';
     if (isNull(clarinLicense)) {
       this.notifyOperationStatus(clarinLicense, successfulMessageContentDef, errorMessageContentDef);
+      return;
     }
 
     // convert string value from the form to the number
@@ -181,6 +194,7 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
     const errorMessageContentDef = 'clarin-license.edit-license.notification.error-content';
     if (isNull(clarinLicense)) {
       this.notifyOperationStatus(clarinLicense, successfulMessageContentDef, errorMessageContentDef);
+      return;
     }
 
     const clarinLicenseObj = new ClarinLicense();
@@ -246,10 +260,11 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
    * @param clarinLicenseLabel object from the License Label modal.
    */
   defineLicenseLabel(clarinLicenseLabel: ClarinLicenseLabel) {
-    const successfulMessageContentDef = 'clarin-license-label.define-license-label.notification.successful-content';
-    const errorMessageContentDef = 'clarin-license-label.define-license-label.notification.error-content';
+    const successfulMessageContentDef = 'clarin.license.label.create.success';
+    const errorMessageContentDef = 'clarin.license.label.create.error';
     if (isNull(clarinLicenseLabel)) {
       this.notifyOperationStatus(clarinLicenseLabel, successfulMessageContentDef, errorMessageContentDef);
+      return;
     }
 
     // convert file to the byte array
@@ -323,67 +338,129 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Placeholder edit action for license labels. Wiring will be implemented in a follow-up task.
-   * @param label Selected license label
+   * Open the edit modal for the selected license label, pre-filling its current values.
+   * On confirm, calls the PUT service and refreshes the label list.
    */
-  editLabel() {
-    if (isNull(this.selectedLabel)) {
+  editLabel(label: ClarinLicenseLabel) {
+    if (isNull(label)) {
       return;
     }
-    console.log('Edit label placeholder action', this.selectedLabel);
+
+    const editLabelModalRef = this.modalService.open(DefineLicenseLabelFormComponent);
+    editLabelModalRef.componentInstance.clarinLicenseLabel = label;
+
+    editLabelModalRef.result.then((result) => {
+      this.editLicenseLabel(result, label);
+    }).catch(() => { /* dismissed */ });
   }
 
   /**
-   * Placeholder delete action for license labels. Wiring will be implemented in a follow-up task.
-   * @param label Selected license label
+   * Send a PUT request to update the selected label with the new form values.
+   * Handles success/error notifications and refreshes the label list.
+   * @param formValues The updated form values returned from the edit modal.
+   * @param selectedLabel The selected label row to update.
    */
-  confirmDeleteLabel() {
-    if (isNull(this.selectedLabel)) {
+  editLicenseLabel(formValues: any, selectedLabel: ClarinLicenseLabel) {
+    const successMsg = 'clarin.license.label.edit.success';
+    const errorMsg = 'clarin.license.label.edit.error';
+    if (isNull(formValues) || isNull(selectedLabel)) {
+      this.notifyOperationStatus(null, successMsg, errorMsg);
       return;
     }
-    console.log('Delete label placeholder action', this.selectedLabel);
+
+    const updatedLabel = new ClarinLicenseLabel();
+    updatedLabel.id = selectedLabel.id;
+    updatedLabel._links = selectedLabel._links;
+    updatedLabel.type = selectedLabel.type;
+    updatedLabel.label = formValues.label;
+    updatedLabel.title = formValues.title;
+    updatedLabel.extended = !!formValues.extended;
+
+    // file input: convert if a new file was selected, otherwise keep existing icon
+    const reader = new FileReader();
+    try {
+      reader.readAsArrayBuffer(formValues.icon?.[0]);
+      reader.onerror = () => {
+        this.notifyOperationStatus(null, successMsg, errorMsg);
+      };
+      reader.onloadend = (evt) => {
+        if (evt.target.readyState === FileReader.DONE) {
+          const buf = evt.target.result;
+          const bytes: number[] = [];
+          if (buf instanceof ArrayBuffer) {
+            const arr = new Uint8Array(buf);
+            for (const b of arr) { bytes.push(b); }
+          }
+          updatedLabel.icon = bytes;
+          this.doUpdateLabel(updatedLabel, successMsg, errorMsg);
+        }
+      };
+    } catch {
+      // no new file selected – keep the existing icon from the stored label
+      updatedLabel.icon = selectedLabel.icon;
+      this.doUpdateLabel(updatedLabel, successMsg, errorMsg);
+    }
   }
 
   /**
-   * Load all labels for label management table.
+   * Execute the actual PUT request for a label and handle notifications + list refresh.
+   */
+  private doUpdateLabel(label: ClarinLicenseLabel, successMsg: string, errorMsg: string) {
+    this.clarinLicenseLabelService.put(label)
+      .pipe(getFirstCompletedRemoteData(), takeUntil(this.ngUnsubscribe))
+      .subscribe((res: RemoteData<ClarinLicenseLabel>) => {
+        this.notifyOperationStatus(res, successMsg, errorMsg);
+        this.refreshLabels();
+      });
+  }
+
+  /**
+   * Ask for confirmation and delete the selected license label.
+   */
+  confirmDeleteLabel(labelToDelete: ClarinLicenseLabel) {
+    if (isNull(labelToDelete?.id)) {
+      return;
+    }
+
+    const labelDeleteDSO = new DSpaceObject();
+    labelDeleteDSO.name = labelToDelete.label;
+
+    const modalRef = this.modalService.open(ConfirmationModalComponent);
+    modalRef.componentInstance.dso = labelDeleteDSO;
+    modalRef.componentInstance.headerLabel = 'clarin.license.label.delete.confirm.title';
+    modalRef.componentInstance.infoLabel = 'clarin.license.label.delete.confirm.message';
+    modalRef.componentInstance.cancelLabel = 'clarin.license.label.delete.cancel.button';
+    modalRef.componentInstance.confirmLabel = 'clarin.license.label.delete.confirm.button';
+    modalRef.componentInstance.brandColor = 'danger';
+    modalRef.componentInstance.confirmIcon = 'fas fa-trash';
+
+    modalRef.componentInstance.response
+      .pipe(take(1), takeUntil(this.ngUnsubscribe))
+      .subscribe((confirm: boolean) => {
+        if (!confirm) {
+          return;
+        }
+
+        this.clarinLicenseLabelService.delete(String(labelToDelete.id))
+          .pipe(getFirstCompletedRemoteData(), takeUntil(this.ngUnsubscribe))
+          .subscribe((deleteLabelResponse) => {
+            if (deleteLabelResponse?.hasSucceeded) {
+              this.notificationService.success('', this.translateService.get('clarin.license.label.delete.success'));
+              this.refreshLabels();
+            } else {
+              this.notificationService.error('', this.translateService.get('clarin.license.label.delete.error'));
+            }
+          }, () => {
+            this.notificationService.error('', this.translateService.get('clarin.license.label.delete.error'));
+          });
+      });
+  }
+
+  /**
+   * Reload labels table using current pagination options.
    */
   refreshLabels() {
-    this.selectedLabel = null;
-    this.loading$.next(true);
-
-    this.clarinLicenseLabelService.findAll({ elementsPerPage: 1000 }, false)
-      .pipe(getFirstCompletedRemoteData(), takeUntil(this.ngUnsubscribe))
-      .subscribe((labelsResponse: RemoteData<PaginatedList<ClarinLicenseLabel>>) => {
-          if (labelsResponse?.hasSucceeded) {
-            this.labels$.next(labelsResponse?.payload?.page ?? []);
-          } else {
-            this.labels$.next([]);
-            this.notificationService.error('', this.translateService.get('clarin-license-label.define-license-label.notification.error-content'));
-          }
-          this.loading$.next(false);
-        }, () => {
-          this.labels$.next([]);
-          this.notificationService.error('', this.translateService.get('clarin-license-label.define-license-label.notification.error-content'));
-          this.loading$.next(false);
-        }
-      );
-  }
-
-  /**
-   * Select the label for edit/delete actions.
-   * @param label The label to select.
-   */
-  selectLabel(label: ClarinLicenseLabel) {
-    this.selectedLabel = label;
-  }
-
-  /**
-   * Determine whether the provided label is selected.
-   * @param label The label to check.
-   * @returns True when selected, otherwise false.
-   */
-  isSelected(label: ClarinLicenseLabel): boolean {
-    return this.selectedLabel?.id === label?.id;
+    this.labelsRefresh$.next(undefined);
   }
 
   /**
@@ -490,5 +567,40 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
    */
   private getCurrentSort() {
     return this.paginationService.getCurrentSort(this.options.id, defaultSortConfiguration);
+  }
+
+  /**
+   * Initialize labels data stream so pagination query-param changes trigger fetches reactively.
+   */
+  private initializeLabelsPaginationStream() {
+    const currentLabelPagination$ = this.paginationService
+      .getCurrentPagination(this.labelPaginationOptions.id, this.labelPaginationOptions);
+
+    observableCombineLatest([currentLabelPagination$, this.labelsRefresh$])
+      .pipe(
+        switchMap(([currentPagination]) => {
+          this.labelsRD$.next(null);
+          this.loading$.next(true);
+          return this.clarinLicenseLabelService.findAll({
+            currentPage: currentPagination.currentPage,
+            elementsPerPage: currentPagination.pageSize
+          }, false).pipe(
+            getFirstCompletedRemoteData()
+          );
+        }),
+        takeUntil(this.ngUnsubscribe)
+      )
+      .subscribe((labelsResponse: RemoteData<PaginatedList<ClarinLicenseLabel>>) => {
+          this.labelsRD$.next(labelsResponse);
+          if (!labelsResponse?.hasSucceeded) {
+            this.notificationService.error('', this.translateService.get('clarin.license.label.create.error'));
+          }
+          this.loading$.next(false);
+        }, () => {
+          this.labelsRD$.next(null);
+          this.notificationService.error('', this.translateService.get('clarin.license.label.create.error'));
+          this.loading$.next(false);
+        }
+      );
   }
 }
