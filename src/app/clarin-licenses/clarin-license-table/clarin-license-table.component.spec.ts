@@ -231,6 +231,7 @@ describe('ClarinLicenseTableComponent', () => {
 
     it('should call clarinLicenseLabelService.put with updated label on modal submit', fakeAsync(() => {
       const refreshSpy = spyOn(component, 'refreshLabels').and.stub();
+      const reloadLicensesSpy = spyOn(component, 'loadAllLicenses').and.stub();
       labelEditModalRef.result = Promise.resolve({
         label: 'EDIT',
         title: 'Edited title',
@@ -249,6 +250,7 @@ describe('ClarinLicenseTableComponent', () => {
       expect(putArgument.extended).toBeFalse();
       expect(notificationService.success).toHaveBeenCalled();
       expect(refreshSpy).toHaveBeenCalled();
+      expect(reloadLicensesSpy).toHaveBeenCalled();
     }));
 
     it('should show error notification on failed edit', fakeAsync(() => {

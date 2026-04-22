@@ -403,14 +403,17 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Execute the actual PUT request for a label and handle notifications + list refresh.
+   * Execute the actual PUT request for a label and handle notifications + dependent list refreshes.
    */
   private doUpdateLabel(label: ClarinLicenseLabel, successMsg: string, errorMsg: string) {
     this.clarinLicenseLabelService.put(label)
       .pipe(getFirstCompletedRemoteData(), takeUntil(this.ngUnsubscribe))
       .subscribe((res: RemoteData<ClarinLicenseLabel>) => {
         this.notifyOperationStatus(res, successMsg, errorMsg);
-        this.refreshLabels();
+        if (res?.hasSucceeded) {
+          this.refreshLabels();
+          this.loadAllLicenses();
+        }
       });
   }
 
