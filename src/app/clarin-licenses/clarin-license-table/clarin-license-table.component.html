@@ -133,7 +133,7 @@
               </button>
             </td>
           </tr>
-          <tr *ngIf="!(cLicenseLabels?.page?.length > 0)">
+          <tr *ngIf="!(loading$ | async) && !(cLicenseLabels?.page?.length > 0)">
             <td colspan="5" class="text-center text-muted">{{'clarin.license.label.table.empty' | translate}}</td>
           </tr>
           </tbody>
