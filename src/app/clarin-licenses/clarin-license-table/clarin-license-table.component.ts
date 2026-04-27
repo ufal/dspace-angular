@@ -274,7 +274,7 @@ export class ClarinLicenseTableComponent implements OnInit {
    * Delete selected license. If none license is selected do nothing.
    */
   deleteLicense() {
-    if (isNull(this.selectedLicense?.id)) {
+    if (isNull(this.selectedLicense?.id) || this.isSelectedLicenseInUse()) {
       return;
     }
     this.clarinLicenseService.delete(String(this.selectedLicense.id))
@@ -285,6 +285,13 @@ export class ClarinLicenseTableComponent implements OnInit {
         this.notifyOperationStatus(deleteLicenseResponse, successfulMessageContentDef, errorMessageContentDef);
         this.loadAllLicenses();
       });
+  }
+
+  /**
+   * Returns whether selected license has attached bitstreams.
+   */
+  isSelectedLicenseInUse(): boolean {
+    return this.selectedLicense?.bitstreams > 0;
   }
 
   /**

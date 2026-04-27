@@ -1,4 +1,5 @@
 import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { ClarinLicenseTableComponent } from './clarin-license-table.component';
 import { NotificationsServiceStub } from '../../shared/testing/notifications-service.stub';
 import { ClarinLicenseDataService } from '../../core/data/clarin/clarin-license-data.service';
@@ -25,7 +26,7 @@ import {
   mockNonExtendedLicenseLabel, successfulResponse
 } from '../../shared/testing/clarin-license-mock';
 import {GroupDataService} from '../../core/eperson/group-data.service';
-import {createSuccessfulRemoteDataObject$} from '../../shared/remote-data.utils';
+import { createNoContentRemoteDataObject$, createSuccessfulRemoteDataObject$ } from '../../shared/remote-data.utils';
 import {createPaginatedList} from '../../shared/testing/utils.test';
 import {LinkHeadService} from '../../core/services/link-head.service';
 import {ConfigurationDataService} from '../../core/data/configuration-data.service';
@@ -51,6 +52,7 @@ describe('ClarinLicenseTableComponent', () => {
       findAll: mockLicenseRD$,
       create: createdLicenseRD$,
       put: createdLicenseRD$,
+      delete: createNoContentRemoteDataObject$(),
       searchBy: mockLicenseRD$,
       getLinkPath: observableOf('')
     });
@@ -180,5 +182,53 @@ describe('ClarinLicenseTableComponent', () => {
     // load table data
     expect((component as any).clarinLicenseService.searchBy).toHaveBeenCalled();
     expect((component as ClarinLicenseTableComponent).licensesRD$).not.toBeNull();
+  });
+
+  describe('license delete button', () => {
+    const getDeleteControls = () => {
+      const actionsRow = fixture.debugElement.query(By.css('.mt-2'));
+      const deleteWrapper = actionsRow.query(By.css('.btn-group.pr-1:last-child span'));
+      const deleteButton = deleteWrapper.query(By.css('button.btn-danger'));
+      return { deleteWrapper, deleteButton };
+    };
+
+    beforeEach(() => {
+      (clarinLicenseDataService.delete as jasmine.Spy).calls.reset();
+    });
+
+    it('should disable delete button and expose tooltip when selected license has bitstreams', () => {
+      component.selectedLicense = Object.assign({}, mockLicense, { bitstreams: 2 });
+      fixture.detectChanges();
+
+      const { deleteWrapper, deleteButton } = getDeleteControls();
+
+      expect(deleteButton.attributes['aria-disabled']).toBe('true');
+      expect(deleteButton.nativeElement.classList.contains('disabled')).toBeTrue();
+      expect((deleteWrapper.nativeElement as HTMLElement).getAttribute('tabindex')).toBe('0');
+      expect((deleteWrapper.nativeElement as HTMLElement).getAttribute('ng-reflect-ngb-tooltip')).toContain('clarin-license.button.delete-l');
+    });
+
+    it('should not call delete when clicking disabled delete button', () => {
+      component.selectedLicense = Object.assign({}, mockLicense, { bitstreams: 1 });
+      fixture.detectChanges();
+
+      const { deleteButton } = getDeleteControls();
+      deleteButton.nativeElement.click();
+
+      expect((clarinLicenseDataService.delete as jasmine.Spy)).not.toHaveBeenCalled();
+    });
+
+    it('should enable delete button and call delete when selected license has no bitstreams', () => {
+      component.selectedLicense = Object.assign({}, mockLicense, { bitstreams: 0 });
+      fixture.detectChanges();
+
+      const { deleteWrapper, deleteButton } = getDeleteControls();
+      deleteButton.nativeElement.click();
+
+      expect(deleteButton.attributes['aria-disabled']).toBe('false');
+      expect(deleteButton.nativeElement.classList.contains('disabled')).toBeFalse();
+      expect((deleteWrapper.nativeElement as HTMLElement).getAttribute('tabindex')).toBeNull();
+      expect((clarinLicenseDataService.delete as jasmine.Spy)).toHaveBeenCalledWith(String(mockLicense.id));
+    });
   });
 });
