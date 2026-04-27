@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { PaginationComponentOptions } from '../../shared/pagination/pagination-component-options.model';
-import { BehaviorSubject, combineLatest as observableCombineLatest, Subject } from 'rxjs';
+import { BehaviorSubject, combineLatest as observableCombineLatest, Observable, of, Subject } from 'rxjs';
 import { RemoteData } from '../../core/data/remote-data';
 import { PaginatedList } from '../../core/data/paginated-list.model';
 import { ClarinLicense } from '../../core/shared/clarin/clarin-license.model';
@@ -52,6 +52,12 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
               private translateService: TranslateService,) { }
 
   /**
+   * Full licenses dataset used by frontend-only label usage derivation.
+   */
+  allLicensesRD$: BehaviorSubject<RemoteData<PaginatedList<ClarinLicense>>> =
+    new BehaviorSubject<RemoteData<PaginatedList<ClarinLicense>>>(null);
+
+  /**
    * The list of ClarinLicense object as BehaviorSubject object
    */
   licensesRD$: BehaviorSubject<RemoteData<PaginatedList<ClarinLicense>>> = new BehaviorSubject<RemoteData<PaginatedList<ClarinLicense>>>(null);
@@ -101,6 +107,16 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
    * Triggers a labels reload without changing pagination state.
    */
   private labelsRefresh$ = new BehaviorSubject<void>(undefined);
+
+  /**
+   * Label ids currently linked from at least one license.
+   */
+  private inUseLabelIds = new Set<string>();
+
+  /**
+   * Page size used to retrieve all licenses for usage analysis.
+   */
+  private readonly allLicensesPageSize = 100;
 
     /**
     * Emits when component is destroyed to clean up subscriptions.
@@ -502,6 +518,7 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
     this.selectedLicense = null;
     this.licensesRD$ = new BehaviorSubject<RemoteData<PaginatedList<ClarinLicense>>>(null);
     this.isLoading = true;
+    this.loadAllLicensesForUsage();
 
     // load the current pagination and sorting options
     const currentPagination$ = this.getCurrentPagination();
@@ -534,6 +551,97 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
       this.licensesRD$.next(res);
       this.isLoading = false;
     });
+  }
+
+  /**
+   * Returns whether a license label is used by at least one license (primary or extended labels).
+   * @param label License label row object.
+   */
+  isLabelInUse(label: ClarinLicenseLabel): boolean {
+    if (isNull(label?.id)) {
+      return false;
+    }
+    return this.inUseLabelIds.has(String(label.id));
+  }
+
+  /**
+   * Load all licenses page-by-page and rebuild label usage set.
+   */
+  private loadAllLicensesForUsage() {
+    this.fetchAllLicensePages(0, [])
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe(({ response, licenses }) => {
+        this.allLicensesRD$.next(response);
+        if (response?.hasSucceeded) {
+          this.rebuildLabelUsageSet(licenses);
+        } else {
+          this.inUseLabelIds.clear();
+        }
+      }, () => {
+        this.inUseLabelIds.clear();
+      });
+  }
+
+  /**
+   * Recursively fetch all pages from the license search endpoint.
+   * @param currentPage Zero-based page index.
+   * @param accumulatedLicenses Already collected licenses.
+   */
+  private fetchAllLicensePages(
+    currentPage: number,
+    accumulatedLicenses: ClarinLicense[]
+  ): Observable<{ response: RemoteData<PaginatedList<ClarinLicense>>, licenses: ClarinLicense[] }> {
+    return this.clarinLicenseService.searchBy('byNameLike', {
+      currentPage,
+      elementsPerPage: this.allLicensesPageSize,
+      sort: { field: defaultSortConfiguration.field, direction: defaultSortConfiguration.direction },
+      searchParams: [new RequestParam('name', '')]
+    }, false).pipe(
+      getFirstCompletedRemoteData(),
+      switchMap((response: RemoteData<PaginatedList<ClarinLicense>>) => {
+        const pageLicenses = response?.payload?.page ?? [];
+        const nextAccumulated = [...accumulatedLicenses, ...pageLicenses];
+
+        if (!response?.hasSucceeded) {
+          return of({ response, licenses: nextAccumulated });
+        }
+
+        const totalPages = response?.payload?.totalPages ?? 1;
+        const payloadCurrentPage = response?.payload?.currentPage;
+        const resolvedCurrentPage = isNull(payloadCurrentPage) ? currentPage : payloadCurrentPage;
+        const nextPage = resolvedCurrentPage + 1;
+        const hasNextPage = nextPage < totalPages;
+
+        if (!hasNextPage) {
+          return of({ response, licenses: nextAccumulated });
+        }
+
+        return this.fetchAllLicensePages(nextPage, nextAccumulated);
+      })
+    );
+  }
+
+  /**
+   * Build fast lookup of label ids referenced by any loaded license.
+   * @param licenses Aggregated list of all licenses.
+   */
+  private rebuildLabelUsageSet(licenses: ClarinLicense[]) {
+    const usageSet = new Set<string>();
+
+    (licenses || []).forEach((license: ClarinLicense) => {
+      const mainLabelId = license?.clarinLicenseLabel?.id;
+      if (!isNull(mainLabelId)) {
+        usageSet.add(String(mainLabelId));
+      }
+
+      (license?.extendedClarinLicenseLabels || []).forEach((extendedLabel: ClarinLicenseLabel) => {
+        if (!isNull(extendedLabel?.id)) {
+          usageSet.add(String(extendedLabel.id));
+        }
+      });
+    });
+
+    this.inUseLabelIds = usageSet;
   }
 
   /**

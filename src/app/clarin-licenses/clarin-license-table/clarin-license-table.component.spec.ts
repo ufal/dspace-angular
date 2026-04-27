@@ -29,7 +29,7 @@ import {
   mockNonExtendedLicenseLabel, successfulResponse
 } from '../../shared/testing/clarin-license-mock';
 import {GroupDataService} from '../../core/eperson/group-data.service';
-import {createSuccessfulRemoteDataObject$} from '../../shared/remote-data.utils';
+import {createSuccessfulRemoteDataObject, createSuccessfulRemoteDataObject$} from '../../shared/remote-data.utils';
 import { createFailedRemoteDataObject$, createNoContentRemoteDataObject$ } from '../../shared/remote-data.utils';
 import {createPaginatedList} from '../../shared/testing/utils.test';
 import {LinkHeadService} from '../../core/services/link-head.service';
@@ -38,6 +38,10 @@ import {ConfigurationProperty} from '../../core/shared/configuration-property.mo
 import {SearchConfigurationService} from '../../core/shared/search/search-configuration.service';
 import { DefineLicenseLabelFormComponent } from './modal/define-license-label-form/define-license-label-form.component';
 import { ConfirmationModalComponent } from '../../shared/confirmation-modal/confirmation-modal.component';
+import { ClarinLicenseLabel } from '../../core/shared/clarin/clarin-license-label.model';
+import { ClarinLicense } from '../../core/shared/clarin/clarin-license.model';
+import { buildPaginatedList } from '../../core/data/paginated-list.model';
+import { PageInfo } from '../../core/shared/page-info.model';
 
 describe('ClarinLicenseTableComponent', () => {
   let component: ClarinLicenseTableComponent;
@@ -319,15 +323,83 @@ describe('ClarinLicenseTableComponent', () => {
   });
 
   describe('label row actions', () => {
-    it('should render edit and delete buttons for each label row', () => {
+    const linkedLabel = Object.assign(new ClarinLicenseLabel(), {
+      id: 200,
+      label: 'LNKD',
+      title: 'Linked',
+      extended: false,
+      icon: null,
+      _links: {
+        self: {
+          href: 'url.linked'
+        }
+      }
+    });
+
+    const unlinkedLabel = Object.assign(new ClarinLicenseLabel(), {
+      id: 201,
+      label: 'UNLK',
+      title: 'Unlinked',
+      extended: false,
+      icon: null,
+      _links: {
+        self: {
+          href: 'url.unlinked'
+        }
+      }
+    });
+
+    const linkedLicense = Object.assign(new ClarinLicense(), {
+      ...mockLicense,
+      clarinLicenseLabel: linkedLabel,
+      extendedClarinLicenseLabels: []
+    });
+
+    beforeEach(() => {
+      (component as any).labelsRD$.next(
+        createSuccessfulRemoteDataObject(buildPaginatedList(new PageInfo(), [linkedLabel, unlinkedLabel]))
+      );
+      (component as any).inUseLabelIds = new Set<string>([String(linkedLicense.clarinLicenseLabel.id)]);
+      fixture.detectChanges();
+    });
+
+    it('should disable delete button and expose tooltip for linked labels', () => {
       fixture.detectChanges();
 
-      const firstRowButtons = fixture.debugElement.queryAll(By.css('.labels-section tbody tr'))[0]
-        .queryAll(By.css('button'));
+      const labelRows = fixture.debugElement.queryAll(By.css('.labels-section tbody tr'));
+      const linkedRowDeleteWrapper = labelRows[0].query(By.css('td:last-child span'));
+      const linkedRowButtons = labelRows[0].queryAll(By.css('button'));
+      const linkedDeleteButton = linkedRowButtons[1];
 
-      expect(firstRowButtons.length).toBe(2);
-      expect((firstRowButtons[0].nativeElement as HTMLButtonElement).disabled).toBeFalse();
-      expect((firstRowButtons[1].nativeElement as HTMLButtonElement).disabled).toBeFalse();
+      expect(linkedRowButtons.length).toBe(2);
+      expect(linkedDeleteButton.attributes['aria-disabled']).toBe('true');
+      expect(linkedDeleteButton.nativeElement.classList.contains('disabled')).toBeTrue();
+      expect((linkedRowDeleteWrapper.nativeElement as HTMLElement).getAttribute('tabindex')).toBe('0');
+      expect((linkedRowDeleteWrapper.nativeElement as HTMLElement).getAttribute('ng-reflect-ngb-tooltip')).toContain('clarin.license.label.table.del');
+    });
+
+    it('should not open confirmation modal when clicking disabled delete on linked label', () => {
+      const labelRows = fixture.debugElement.queryAll(By.css('.labels-section tbody tr'));
+      const linkedDeleteButton = labelRows[0].queryAll(By.css('button'))[1];
+
+      modalServiceStub.open.calls.reset();
+      (clarinLicenseLabelDataService.delete as jasmine.Spy).calls.reset();
+
+      linkedDeleteButton.nativeElement.click();
+      fixture.detectChanges();
+
+      expect(modalServiceStub.open).not.toHaveBeenCalledWith(ConfirmationModalComponent);
+      expect((clarinLicenseLabelDataService.delete as jasmine.Spy)).not.toHaveBeenCalled();
+    });
+
+    it('should keep delete button enabled for unlinked labels', () => {
+      const labelRows = fixture.debugElement.queryAll(By.css('.labels-section tbody tr'));
+      const unlinkedRowDeleteWrapper = labelRows[1].query(By.css('td:last-child span'));
+      const unlinkedRowDeleteButton = labelRows[1].queryAll(By.css('button'))[1];
+
+      expect(unlinkedRowDeleteButton.attributes['aria-disabled']).toBe('false');
+      expect(unlinkedRowDeleteButton.nativeElement.classList.contains('disabled')).toBeFalse();
+      expect((unlinkedRowDeleteWrapper.nativeElement as HTMLElement).getAttribute('tabindex')).toBeNull();
     });
   });
 });

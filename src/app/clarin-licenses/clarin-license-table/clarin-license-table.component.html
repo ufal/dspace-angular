@@ -123,14 +123,17 @@
                 <i class="fas fa-pen" aria-hidden="true"></i>
                 {{'clarin.license.label.table.edit' | translate}}
               </button>
-              <button
-                type="button"
-                class="btn btn-danger btn-sm"
-                (click)="confirmDeleteLabel(label)"
-                [attr.aria-label]="('clarin.license.label.table.delete.aria' | translate:{label: (label?.label || '')})">
-                <i class="fas fa-trash" aria-hidden="true"></i>
-                {{'clarin.license.label.table.delete' | translate}}
-              </button>
+                <span [ngbTooltip]="isLabelInUse(label) ? ('clarin.license.label.table.delete.disabled-tooltip' | translate:{ label: label.label }) : null"
+                      [attr.tabindex]="isLabelInUse(label) ? 0 : null">
+                  <button class="btn btn-danger btn-sm"
+                          type="button"
+                          [dsBtnDisabled]="isLabelInUse(label)"
+                    [attr.aria-label]="('clarin.license.label.table.delete.aria' | translate:{label: (label?.label || '')})"
+                          (click)="!isLabelInUse(label) && confirmDeleteLabel(label)">
+                    <i class="fas fa-trash" aria-hidden="true"></i>
+                    {{ 'clarin.license.label.table.delete' | translate }}
+                  </button>
+                </span>
             </td>
           </tr>
           <tr *ngIf="!(loading$ | async) && !(cLicenseLabels?.page?.length > 0)">

@@ -9498,6 +9498,9 @@
   // "clarin.license.label.table.delete.aria": "Delete label {{label}}",
   "clarin.license.label.table.delete.aria": "Odstranit štítek {{label}}",
 
+  // "clarin.license.label.table.delete.disabled-tooltip": "Label \"{{label}}\" cannot be deleted because it is assigned to one or more licenses.",
+  "clarin.license.label.table.delete.disabled-tooltip": "Štítek \"{{label}}\" nelze odstranit, protože je přiřazen k jedné nebo více licencím.",
+
   // "clarin.license.label.table.empty": "No license labels available.",
   "clarin.license.label.table.empty": "Nejsou k dispozici žádné licenční štítky.",
 
