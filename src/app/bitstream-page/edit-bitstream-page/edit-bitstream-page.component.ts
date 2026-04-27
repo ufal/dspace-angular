@@ -760,16 +760,16 @@ export class EditBitstreamPageComponent implements OnInit, OnDestroy {
     const regexExcludeBundles = /OTHERCONTENT|THUMBNAIL|LICENSE/;
     const regexIIIFItem = /true|yes/i;
 
-    const isImage$ = this.bitstream.format.pipe(
+    const isImage$ = bitstream.format.pipe(
       getFirstSucceededRemoteData(),
       map((format: RemoteData<BitstreamFormat>) => format.payload.mimetype.includes('image/')));
 
-    const isIIIFBundle$ = this.bitstream.bundle.pipe(
+    const isIIIFBundle$ = bitstream.bundle.pipe(
       getFirstSucceededRemoteData(),
       map((bundle: RemoteData<Bundle>) =>
         this.dsoNameService.getName(bundle.payload).match(regexExcludeBundles) == null));
 
-    const isEnabled$ = this.bitstream.bundle.pipe(
+    const isEnabled$ = bitstream.bundle.pipe(
       getFirstSucceededRemoteDataPayload(),
       switchMap((bundle: Bundle) => {
         if (hasValue(bundle) && hasValue(bundle.item)) {
