@@ -310,6 +310,7 @@ jobs:
       - name: Rerun failed jobs only
         env:
           GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
         run: gh run rerun ${{ github.run_id }} --failed
 
 #  # Codecov upload is a separate job in order to allow us to restart this separate from the entire build/test
