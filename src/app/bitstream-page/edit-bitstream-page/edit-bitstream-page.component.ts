@@ -752,7 +752,7 @@ export class EditBitstreamPageComponent implements OnInit, OnDestroy {
    */
   setIiifStatus(bitstream: Bitstream) {
 
-    if (hasValue(bitstream) === false || hasValue(bitstream.bundle) === false || hasValue(bitstream.format) === false) {
+    if (!hasValue(bitstream) || !hasValue(bitstream.bundle) || !hasValue(bitstream.format)) {
       this.isIIIF = false;
       return;
     }

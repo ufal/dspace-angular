@@ -20,12 +20,13 @@ export class PreviewSectionComponent implements OnInit, OnChanges, OnDestroy {
 
   private currentItemHandle: string;
   private filesSubscription?: Subscription;
+  private configSubscription?: Subscription;
 
   constructor(protected registryService: RegistryService,
               private configService: ConfigurationDataService) {}
 
   ngOnInit(): void {
-    this.configService.findByPropertyName('lr.help.mail')?.subscribe(remoteData => {
+    this.configSubscription = this.configService.findByPropertyName('lr.help.mail')?.subscribe(remoteData => {
       this.emailToContact = remoteData.payload?.values?.[0];
     });
   }
@@ -38,6 +39,7 @@ export class PreviewSectionComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnDestroy(): void {
     this.filesSubscription?.unsubscribe();
+    this.configSubscription?.unsubscribe();
   }
 
   private refreshFiles(force = false): void {

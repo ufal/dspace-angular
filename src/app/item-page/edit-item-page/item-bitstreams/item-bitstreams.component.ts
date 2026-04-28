@@ -24,6 +24,7 @@ import { NoContent } from '../../../core/shared/NoContent.model';
 import { ItemBitstreamsService } from './item-bitstreams.service';
 import { AlertType } from '../../../shared/alert/alert-type';
 import { PaginationComponentOptions } from '../../../shared/pagination/pagination-component-options.model';
+import { hasValue } from '../../../shared/empty.util';
 
 @Component({
   selector: 'ds-item-bitstreams',
@@ -227,6 +228,7 @@ export class ItemBitstreamsComponent extends AbstractItemUpdateComponent impleme
 
       // Clear caches to ensure file lists are refreshed after bitstream removal (same as upload)
       this.bundles$.pipe(take(1)).subscribe((bundles: Bundle[]) => {
+        if (!hasValue(bundles)) { return; }
         bundles.forEach((bundle: Bundle) => {
           if (bundle?._links?.bitstreams?.href) {
             this.requestService.setStaleByHrefSubstring(bundle._links.bitstreams.href);
