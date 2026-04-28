@@ -15,7 +15,7 @@ import { PaginationServiceStub } from '../../shared/testing/pagination-service.s
 import { NotificationsService } from '../../shared/notifications/notifications.service';
 import { defaultPagination } from '../clarin-license-table-pagination';
 import { ClarinLicenseLabelDataService } from '../../core/data/clarin/clarin-license-label-data.service';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { HostWindowService } from '../../shared/host-window.service';
 import { HostWindowServiceStub } from '../../shared/testing/host-window-service.stub';
 import {
@@ -201,11 +201,12 @@ describe('ClarinLicenseTableComponent', () => {
       fixture.detectChanges();
 
       const { deleteWrapper, deleteButton } = getDeleteControls();
+      const deleteTooltip = deleteWrapper.injector.get(NgbTooltip);
 
       expect(deleteButton.attributes['aria-disabled']).toBe('true');
       expect(deleteButton.nativeElement.classList.contains('disabled')).toBeTrue();
       expect((deleteWrapper.nativeElement as HTMLElement).getAttribute('tabindex')).toBe('0');
-      expect((deleteWrapper.nativeElement as HTMLElement).getAttribute('ng-reflect-ngb-tooltip')).toContain('clarin-license.button.delete-l');
+      expect(deleteTooltip.ngbTooltip as string).toContain('clarin-license.button.delete-l');
     });
 
     it('should not call delete when clicking disabled delete button', () => {
