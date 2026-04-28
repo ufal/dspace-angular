@@ -414,4 +414,36 @@ describe('ClarinLicenseTableComponent', () => {
 
     expect(emptyStateRow).toBeUndefined();
   });
+
+  describe('license usage loading performance', () => {
+    it('should load full usage dataset only once across repeated table reloads', () => {
+      (component as any).licenseUsageLoaded = false;
+      (component as any).licenseUsageLoading = false;
+
+      const usageSpy = spyOn<any>(component, 'loadAllLicensesForUsage').and.callFake(() => {
+        (component as any).licenseUsageLoading = false;
+        (component as any).licenseUsageLoaded = true;
+      });
+
+      component.loadAllLicenses();
+      component.loadAllLicenses();
+
+      expect(usageSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should force usage dataset reload when explicitly requested', () => {
+      (component as any).licenseUsageLoaded = false;
+      (component as any).licenseUsageLoading = false;
+
+      const usageSpy = spyOn<any>(component, 'loadAllLicensesForUsage').and.callFake(() => {
+        (component as any).licenseUsageLoading = false;
+        (component as any).licenseUsageLoaded = true;
+      });
+
+      component.loadAllLicenses();
+      component.loadAllLicenses(true);
+
+      expect(usageSpy).toHaveBeenCalledTimes(2);
+    });
+  });
 });

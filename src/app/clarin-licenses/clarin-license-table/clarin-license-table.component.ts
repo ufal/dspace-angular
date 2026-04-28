@@ -118,6 +118,16 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
    */
   private readonly allLicensesPageSize = 100;
 
+  /**
+   * Indicates whether the full usage crawl has completed successfully.
+   */
+  private licenseUsageLoaded = false;
+
+  /**
+   * Indicates whether a full usage crawl is currently in flight.
+   */
+  private licenseUsageLoading = false;
+
     /**
     * Emits when component is destroyed to clean up subscriptions.
     */
@@ -172,7 +182,7 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
       .subscribe((defineLicenseResponse: RemoteData<ClarinLicense>) => {
         // check payload and show error or successful
         this.notifyOperationStatus(defineLicenseResponse, successfulMessageContentDef, errorMessageContentDef);
-        this.loadAllLicenses();
+        this.loadAllLicenses(true);
       });
   }
 
@@ -235,7 +245,7 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
       .subscribe((editResponse: RemoteData<ClarinLicense>) => {
         // check payload and show error or successful
         this.notifyOperationStatus(editResponse, successfulMessageContentDef, errorMessageContentDef);
-        this.loadAllLicenses();
+        this.loadAllLicenses(true);
       });
   }
 
@@ -349,7 +359,7 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
         const successfulMessageContentDef = 'clarin-license.delete-license.notification.successful-content';
         const errorMessageContentDef = 'clarin-license.delete-license.notification.error-content';
         this.notifyOperationStatus(deleteLicenseResponse, successfulMessageContentDef, errorMessageContentDef);
-        this.loadAllLicenses();
+        this.loadAllLicenses(true);
       });
   }
 
@@ -514,11 +524,11 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
   /**
    * Fetch all licenses from the API.
    */
-  loadAllLicenses() {
+  loadAllLicenses(forceUsageReload = false) {
     this.selectedLicense = null;
     this.licensesRD$ = new BehaviorSubject<RemoteData<PaginatedList<ClarinLicense>>>(null);
     this.isLoading = true;
-    this.loadAllLicensesForUsage();
+    this.ensureLicenseUsageLoaded(forceUsageReload);
 
     // load the current pagination and sorting options
     const currentPagination$ = this.getCurrentPagination();
@@ -554,6 +564,23 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Ensure the expensive full usage crawl runs only when needed.
+   * @param forceReload When true, invalidate existing usage cache and reload.
+   */
+  private ensureLicenseUsageLoaded(forceReload = false) {
+    if (forceReload) {
+      this.licenseUsageLoaded = false;
+    }
+
+    if (this.licenseUsageLoaded || this.licenseUsageLoading) {
+      return;
+    }
+
+    this.licenseUsageLoading = true;
+    this.loadAllLicensesForUsage();
+  }
+
+  /**
    * Returns whether a license label is used by at least one license (primary or extended labels).
    * @param label License label row object.
    */
@@ -571,13 +598,18 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
     this.fetchAllLicensePages(0, [])
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe(({ response, licenses }) => {
+        this.licenseUsageLoading = false;
         this.allLicensesRD$.next(response);
         if (response?.hasSucceeded) {
           this.rebuildLabelUsageSet(licenses);
+          this.licenseUsageLoaded = true;
         } else {
           this.inUseLabelIds.clear();
+          this.licenseUsageLoaded = false;
         }
       }, () => {
+        this.licenseUsageLoading = false;
+        this.licenseUsageLoaded = false;
         this.inUseLabelIds.clear();
       });
   }
