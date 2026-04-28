@@ -31,6 +31,7 @@ import {
 import {GroupDataService} from '../../core/eperson/group-data.service';
 import {createSuccessfulRemoteDataObject, createSuccessfulRemoteDataObject$} from '../../shared/remote-data.utils';
 import { createFailedRemoteDataObject$, createNoContentRemoteDataObject$ } from '../../shared/remote-data.utils';
+import { createFailedRemoteDataObject } from '../../shared/remote-data.utils';
 import {createPaginatedList} from '../../shared/testing/utils.test';
 import {LinkHeadService} from '../../core/services/link-head.service';
 import {ConfigurationDataService} from '../../core/data/configuration-data.service';
@@ -401,5 +402,16 @@ describe('ClarinLicenseTableComponent', () => {
       expect(unlinkedRowDeleteButton.nativeElement.classList.contains('disabled')).toBeFalse();
       expect((unlinkedRowDeleteWrapper.nativeElement as HTMLElement).getAttribute('tabindex')).toBeNull();
     });
+  });
+
+  it('should not show labels empty-state row when labels request failed', () => {
+    (component as any).loading$.next(false);
+    (component as any).labelsRD$.next(createFailedRemoteDataObject('labels load failed', 500));
+    fixture.detectChanges();
+
+    const emptyStateRow = fixture.debugElement.queryAll(By.css('.labels-section tbody tr'))
+      .find((row) => row.nativeElement.textContent.includes('clarin.license.label.table.empty'));
+
+    expect(emptyStateRow).toBeUndefined();
   });
 });
