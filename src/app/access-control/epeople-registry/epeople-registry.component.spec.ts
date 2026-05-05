@@ -1,7 +1,7 @@
 import { Router } from '@angular/router';
 import { Observable, of as observableOf } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { DebugElement, NO_ERRORS_SCHEMA } from '@angular/core';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule, By } from '@angular/platform-browser';
@@ -364,12 +364,9 @@ describe('EPeopleRegistryComponent', () => {
       fixture.detectChanges();
     });
 
-    it('should be disabled', () => {
+    it('should be hidden', () => {
       ePeopleDeleteButton = fixture.debugElement.queryAll(By.css('#epeople tr td div button.delete-button'));
-      ePeopleDeleteButton.forEach((deleteButton: DebugElement) => {
-        expect(deleteButton.nativeElement.getAttribute('aria-disabled')).toBe('true');
-        expect(deleteButton.nativeElement.classList.contains('disabled')).toBeTrue();
-      });
+      expect(ePeopleDeleteButton.length).toBe(0);
     });
   });
 });
