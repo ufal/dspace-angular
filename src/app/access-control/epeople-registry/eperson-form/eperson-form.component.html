@@ -46,7 +46,7 @@
             </button>
           </span>
           <ng-template #enabledDeleteButton>
-            <button class="btn btn-danger delete-button" type="button" (click)="delete()">
+            <button *ngIf="currentAuthenticatedUserId" class="btn btn-danger delete-button" type="button" (click)="delete()">
               <i class="fas fa-trash"></i> {{'admin.access-control.epeople.actions.delete' | translate}}
             </button>
           </ng-template>

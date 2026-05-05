@@ -568,6 +568,24 @@ describe('EPersonFormComponent', () => {
       notificationsService.error.calls.mostRecent().args[0].subscribe((value) => translatedKey = value);
       expect(translatedKey).toBe('admin.access-control.epeople.notification.deleted.forbidden.self');
     });
+
+    it('should hide enabled delete button before authenticated user id is resolved', () => {
+      component.currentAuthenticatedUserId = undefined;
+      fixture.detectChanges();
+
+      const deleteButton = fixture.debugElement.query(By.css('.delete-button'));
+      expect(deleteButton).toBeNull();
+    });
+
+    it('should not open delete modal before authenticated user id is resolved', () => {
+      component.currentAuthenticatedUserId = undefined;
+      const deleteSpy = spyOn(component.epersonService, 'deleteEPerson').and.callThrough();
+
+      component.delete();
+
+      expect(modalService.open).not.toHaveBeenCalled();
+      expect(deleteSpy).not.toHaveBeenCalled();
+    });
   });
 
   describe('self delete button', () => {

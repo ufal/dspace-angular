@@ -501,6 +501,10 @@ export class EPersonFormComponent implements OnInit, OnDestroy {
           return observableOf(null);
         }
 
+        if (!hasValue(this.currentAuthenticatedUserId)) {
+          return observableOf(null);
+        }
+
         if (this.isCurrentUser(eperson)) {
           this.showSelfDeleteNotification();
           return observableOf(null);
