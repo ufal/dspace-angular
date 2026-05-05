@@ -342,6 +342,18 @@ describe('EPeopleRegistryComponent', () => {
       notificationsService.error.calls.mostRecent().args[0].subscribe((value) => translatedKey = value);
       expect(translatedKey).toBe('admin.access-control.epeople.notification.deleted.failure');
     }));
+
+    it('should not open delete modal before authenticated user id is resolved', fakeAsync(() => {
+      component.currentAuthenticatedUserId = undefined;
+      const deleteSpy = spyOn(ePersonDataServiceStub, 'deleteEPerson').and.callThrough();
+
+      const deleteButtons = fixture.debugElement.queryAll(By.css('.access-control-deleteEPersonButton'));
+      deleteButtons[0].triggerEventHandler('click', null);
+      tick();
+
+      expect(modalService.open).not.toHaveBeenCalled();
+      expect(deleteSpy).not.toHaveBeenCalled();
+    }));
   });
 
   describe('delete EPerson button when the isAuthorized returns false', () => {

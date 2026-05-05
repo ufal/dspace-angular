@@ -86,7 +86,7 @@
                     </span>
                   </ng-container>
                   <ng-template #enabledDeleteButton>
-                    <button *ngIf="epersonDto.ableToDelete" (click)="deleteEPerson(epersonDto.eperson)"
+                    <button *ngIf="epersonDto.ableToDelete && currentAuthenticatedUserId" (click)="deleteEPerson(epersonDto.eperson)"
                             class="delete-button btn btn-outline-danger btn-sm access-control-deleteEPersonButton"
                             title="{{labelPrefix + 'table.edit.buttons.remove' | translate: { name: dsoNameService.getName(epersonDto.eperson) } }}">
                       <i class="fas fa-trash-alt fa-fw"></i>

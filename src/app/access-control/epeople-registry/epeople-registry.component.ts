@@ -212,6 +212,10 @@ export class EPeopleRegistryComponent implements OnInit, OnDestroy {
    */
   deleteEPerson(ePerson: EPerson) {
     if (hasValue(ePerson.id)) {
+      if (!hasValue(this.currentAuthenticatedUserId)) {
+        return;
+      }
+
       if (this.isCurrentUser(ePerson)) {
         this.showSelfDeleteNotification();
         return;
