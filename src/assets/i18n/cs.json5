@@ -555,7 +555,7 @@
   "admin.access-control.epeople.notification.deleted.forbidden.self": "Nemůžete smazat svůj vlastní účet uživatele.",
 
   // "admin.access-control.epeople.delete.warning.submitter": "Warning: this user has submitted items. Deleting this EPerson may affect submission ownership and related repository records.",
-  "admin.access-control.epeople.delete.warning.submitter": "Upozornění: Tento uživatel odeslal položky. Smazání tohoto uživatele může ovlivnit vlastnictví příspěvků a související záznamy v repositáři.",
+  "admin.access-control.epeople.delete.warning.submitter": "Upozornění: Tento uživatel odeslal položky. Smazání tohoto uživatele může ovlivnit vlastnictví příspěvků a související záznamy v repozitáři.",
 
   // "admin.access-control.epeople.delete.warning.admin": "Warning: this user is a member of the Administrator group. Deleting this EPerson will remove an administrator account.",
   "admin.access-control.epeople.delete.warning.admin": "Upozornění: Tento uživatel je členem skupiny Správce. Smazání tohoto uživatele odebere účet správce.",
