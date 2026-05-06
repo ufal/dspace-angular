@@ -311,6 +311,39 @@ describe('EPeopleRegistryComponent', () => {
       expect(modalRef.componentInstance.warningLabel).toBe('admin.access-control.epeople.delete.warning.submitterAndAdmin');
     }));
 
+    it('should detect administrator membership on later pages', fakeAsync(() => {
+      const adminGroup = Object.assign(new Group(), { _name: 'Administrator' });
+      const firstPage = createSuccessfulRemoteDataObject$(
+        buildPaginatedList(new PageInfo({
+          elementsPerPage: 100,
+          totalElements: 101,
+          totalPages: 2,
+          currentPage: 1,
+        }), [Object.assign(new Group(), { _name: 'Regular Group' })])
+      );
+      const secondPage = createSuccessfulRemoteDataObject$(
+        buildPaginatedList(new PageInfo({
+          elementsPerPage: 100,
+          totalElements: 101,
+          totalPages: 2,
+          currentPage: 2,
+        }), [adminGroup])
+      );
+
+      workspaceItemDataService.searchBy.and.returnValue(buildRemoteList([], 0));
+      workflowItemDataService.searchBy.and.returnValue(buildRemoteList([], 0));
+      searchService.search.and.returnValue(createSuccessfulRemoteDataObject$(buildSearchObjects(0)));
+      groupDataService.findListByHref.and.returnValues(firstPage, secondPage);
+      modalRef.componentInstance.response = observableOf(false);
+
+      const deleteButtons = fixture.debugElement.queryAll(By.css('.access-control-deleteEPersonButton'));
+      deleteButtons[0].triggerEventHandler('click', null);
+      tick();
+
+      expect(groupDataService.findListByHref).toHaveBeenCalledTimes(2);
+      expect(modalRef.componentInstance.warningLabel).toBe('admin.access-control.epeople.delete.warning.admin');
+    }));
+
     it('should show a friendly self-delete notification on backend 400 self-delete errors', fakeAsync(() => {
       modalRef.componentInstance.response = observableOf(true);
       ePersonDataServiceStub.deleteEPerson = jasmine.createSpy('deleteEPerson').and.returnValue(

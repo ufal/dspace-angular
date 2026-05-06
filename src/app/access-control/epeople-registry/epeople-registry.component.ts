@@ -313,14 +313,34 @@ export class EPeopleRegistryComponent implements OnInit, OnDestroy {
   }
 
   private isAdministrator(ePerson: EPerson): Observable<boolean> {
+    return this.hasAdministratorGroupOnPage(ePerson._links.groups.href, 1);
+  }
+
+  private hasAdministratorGroupOnPage(groupsHref: string, currentPage: number): Observable<boolean> {
     const options = Object.assign(new FindListOptions(), {
-      currentPage: 1,
+      currentPage,
       elementsPerPage: 100,
     });
 
-    return this.groupDataService.findListByHref(ePerson._links.groups.href, options).pipe(
+    return this.groupDataService.findListByHref(groupsHref, options).pipe(
       getFirstCompletedRemoteData(),
-      map((rd: RemoteData<PaginatedList<Group>>) => rd.hasSucceeded && rd.payload.page.some((group: Group) => group.name?.toLowerCase() === 'administrator')),
+      switchMap((rd: RemoteData<PaginatedList<Group>>) => {
+        if (!rd?.hasSucceeded || !hasValue(rd.payload)) {
+          return observableOf(false);
+        }
+
+        const hasAdministrator = rd.payload.page.some((group: Group) => group.name?.toLowerCase() === 'administrator');
+        if (hasAdministrator) {
+          return observableOf(true);
+        }
+
+        const hasMorePages = rd.payload.pageInfo.currentPage < rd.payload.pageInfo.totalPages;
+        if (!hasMorePages) {
+          return observableOf(false);
+        }
+
+        return this.hasAdministratorGroupOnPage(groupsHref, rd.payload.pageInfo.currentPage + 1);
+      }),
       catchError(() => observableOf(false))
     );
   }
