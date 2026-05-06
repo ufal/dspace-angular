@@ -37,7 +37,7 @@
             <i class="fa fa-user-secret"></i> {{'admin.access-control.epeople.actions.stop-impersonating' | translate}}
           </button>
         </div>
-        <span after *ngIf="(canDelete$ | async) && (activeEPerson$ | async) as activeEPerson">
+        <span *ngIf="(canDelete$ | async) && (activeEPerson$ | async) as activeEPerson">
           <span *ngIf="isCurrentUser(activeEPerson); else enabledDeleteButton"
                 tabindex="0"
                 [ngbTooltip]="selfDeleteWarningLabel | translate">
