@@ -627,9 +627,34 @@ export class EPersonFormComponent implements OnInit, OnDestroy {
       elementsPerPage: 100,
     });
 
-    return this.groupsDataService.findListByHref(ePerson._links.groups.href, options).pipe(
+    return this.hasAdministratorGroupOnPage(ePerson._links.groups.href, options);
+  }
+
+  private hasAdministratorGroupOnPage(groupsHref: string, options: FindListOptions): Observable<boolean> {
+    return this.groupsDataService.findListByHref(groupsHref, options).pipe(
       getFirstCompletedRemoteData(),
-      map((rd: RemoteData<PaginatedList<Group>>) => rd.hasSucceeded && rd.payload.page.some((group: Group) => group.name?.toLowerCase() === 'administrator')),
+      switchMap((rd: RemoteData<PaginatedList<Group>>) => {
+        if (!rd.hasSucceeded || !hasValue(rd.payload) || !hasValue(rd.payload.pageInfo)) {
+          return observableOf(false);
+        }
+
+        const hasAdministratorGroup = rd.payload.page.some((group: Group) => group.name?.toLowerCase() === 'administrator');
+        if (hasAdministratorGroup) {
+          return observableOf(true);
+        }
+
+        const currentPage = rd.payload.pageInfo.currentPage;
+        const totalPages = rd.payload.pageInfo.totalPages;
+        const hasMorePages = hasValue(currentPage) && hasValue(totalPages) && currentPage < totalPages;
+        if (!hasMorePages) {
+          return observableOf(false);
+        }
+
+        const nextPageOptions = Object.assign(new FindListOptions(), options, {
+          currentPage: currentPage + 1,
+        });
+        return this.hasAdministratorGroupOnPage(groupsHref, nextPageOptions);
+      }),
     );
   }
 

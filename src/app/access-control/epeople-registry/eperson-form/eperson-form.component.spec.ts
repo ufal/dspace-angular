@@ -499,6 +499,7 @@ describe('EPersonFormComponent', () => {
       modalService = (component as any).modalService;
       spyOn(modalService, 'open').and.returnValue(Object.assign({ componentInstance: Object.assign({ response: observableOf(true) }) }));
       component.ngOnInit();
+      component.currentAuthenticatedUserId = 'different-user-id';
       fixture.detectChanges();
     });
 
@@ -555,6 +556,56 @@ describe('EPersonFormComponent', () => {
       expect(modalService.open).toHaveBeenCalled();
       expect(modalService.open.calls.mostRecent().returnValue.componentInstance.warningLabel)
         .toBe('admin.access-control.epeople.delete.warning.submitterAndAdmin');
+    });
+
+    it('should detect administrator membership on later pages', () => {
+      const firstPage = createSuccessfulRemoteDataObject$(
+        buildPaginatedList(new PageInfo({
+          elementsPerPage: 100,
+          totalElements: 101,
+          totalPages: 2,
+          currentPage: 1,
+        }), [Object.assign(new Group(), { _name: 'Regular Group' })])
+      );
+      const secondPage = createSuccessfulRemoteDataObject$(
+        buildPaginatedList(new PageInfo({
+          elementsPerPage: 100,
+          totalElements: 101,
+          totalPages: 2,
+          currentPage: 2,
+        }), [Object.assign(new Group(), { _name: 'Administrator' })])
+      );
+
+      workspaceItemDataService.searchBy.and.returnValue(createSuccessfulRemoteDataObject$(buildPaginatedList(new PageInfo({
+        elementsPerPage: 1,
+        totalElements: 0,
+        totalPages: 1,
+        currentPage: 1,
+      }), [])));
+      workflowItemDataService.searchBy.and.returnValue(createSuccessfulRemoteDataObject$(buildPaginatedList(new PageInfo({
+        elementsPerPage: 1,
+        totalElements: 0,
+        totalPages: 1,
+        currentPage: 1,
+      }), [])));
+      searchService.search.and.returnValue(createSuccessfulRemoteDataObject$(Object.assign(
+        new SearchObjects<DSpaceObject>(),
+        buildPaginatedList(new PageInfo({
+          elementsPerPage: 1,
+          totalElements: 0,
+          totalPages: 1,
+          currentPage: 1,
+        }), [])
+      )));
+      groupsDataService.findListByHref = jasmine.createSpy().and.returnValues(firstPage, secondPage);
+      fixture.detectChanges();
+
+      const deleteButton = fixture.debugElement.query(By.css('.delete-button'));
+      deleteButton.triggerEventHandler('click', null);
+
+      expect(groupsDataService.findListByHref).toHaveBeenCalledTimes(2);
+      expect(modalService.open.calls.mostRecent().returnValue.componentInstance.warningLabel)
+        .toBe('admin.access-control.epeople.delete.warning.admin');
     });
 
     it('should show the friendly self-delete notification when the backend returns the self-delete error', () => {
