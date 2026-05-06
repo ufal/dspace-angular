@@ -41,7 +41,7 @@
           <span *ngIf="isCurrentUser(activeEPerson); else enabledDeleteButton"
                 tabindex="0"
                 [ngbTooltip]="selfDeleteWarningLabel | translate">
-            <button class="btn btn-danger delete-button" [dsBtnDisabled]="true" type="button">
+            <button class="btn btn-danger delete-button" [dsBtnDisabled]="true" tabindex="-1" type="button">
               <i class="fas fa-trash"></i> {{'admin.access-control.epeople.actions.delete' | translate}}
             </button>
           </span>
