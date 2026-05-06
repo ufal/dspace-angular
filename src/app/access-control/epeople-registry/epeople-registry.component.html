@@ -80,6 +80,7 @@
                     <ng-container *ngIf="isCurrentUser(epersonDto.eperson); else enabledDeleteButton">
                       <span tabindex="0" [ngbTooltip]="selfDeleteWarningLabel | translate">
                         <button [dsBtnDisabled]="true"
+                                tabindex="-1"
                                 class="delete-button btn btn-outline-danger btn-sm access-control-deleteEPersonButton"
                                 type="button">
                           <i class="fas fa-trash-alt fa-fw"></i>
