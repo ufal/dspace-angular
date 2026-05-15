@@ -25,6 +25,7 @@ export class ViewTrackerResolverService {
     const dsoPath = routeSnapshot.data.dsoPath || 'dso.payload'; // Fetch the resolvers passed via the route data
     this.router.events.pipe(
       filter(event => event instanceof ResolveEnd),
+      filter(() => !!this.getNestedProperty(routeSnapshot.data, dsoPath)),
       take(1),
       switchMap(() =>
         this.referrerService.getReferrer().pipe(take(1))))

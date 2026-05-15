@@ -9,6 +9,14 @@ import { WorkspaceItem } from '../models/workspaceitem.model';
  * Needs to be in a separate file to prevent circular dependencies in webpack.
  */
 export const SUBMISSION_LINKS_TO_FOLLOW: FollowLinkConfig<WorkflowItem | WorkspaceItem>[] = [
-  followLink('item'),
+  followLink('item', {},
+    followLink('owningCollection', {},
+      followLink('parentCommunity', {},
+        followLink('parentCommunity')),
+    ),
+    followLink('relationships'),
+    followLink('version', {}, followLink('versionhistory')),
+    followLink('thumbnail'),
+  ),
   followLink('collection'),
 ];
