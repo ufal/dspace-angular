@@ -14,7 +14,6 @@ export const SUBMISSION_LINKS_TO_FOLLOW: FollowLinkConfig<WorkflowItem | Workspa
       followLink('parentCommunity', {},
         followLink('parentCommunity')),
     ),
-    followLink('relationships'),
     followLink('version', {}, followLink('versionhistory')),
     followLink('thumbnail'),
   ),
