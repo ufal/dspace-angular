@@ -1,6 +1,6 @@
 import { Injectable, } from '@angular/core';
 import { Angulartics2 } from 'angulartics2';
-import { switchMap } from 'rxjs';
+import { EMPTY, map, switchMap } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
 
 import { ReferrerService } from '../../../core/services/referrer.service';
@@ -25,12 +25,18 @@ export class ViewTrackerResolverService {
     const dsoPath = routeSnapshot.data.dsoPath || 'dso.payload'; // Fetch the resolvers passed via the route data
     this.router.events.pipe(
       filter(event => event instanceof ResolveEnd),
-      filter(() => !!this.getNestedProperty(routeSnapshot.data, dsoPath)),
       take(1),
-      switchMap(() =>
-        this.referrerService.getReferrer().pipe(take(1))))
-      .subscribe((referrer: string) => {
+      switchMap(() => {
         const object = this.getNestedProperty(routeSnapshot.data, dsoPath);
+        if (!object) {
+          return EMPTY;
+        }
+        return this.referrerService.getReferrer().pipe(
+          take(1),
+          map((referrer: string) => ({ object, referrer })),
+        );
+      }))
+      .subscribe(({ object, referrer }: { object: any, referrer: string }) => {
         const dc_identifier = object?.firstMetadataValue?.('dc.identifier.uri');
         this.angulartics2.eventTrack.next({
           action: 'page_view',
