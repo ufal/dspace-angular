@@ -5,7 +5,7 @@ import { RemoteData } from '../../core/data/remote-data';
 import { PaginatedList } from '../../core/data/paginated-list.model';
 import { ClarinLicense } from '../../core/shared/clarin/clarin-license.model';
 import { getFirstCompletedRemoteData, getFirstSucceededRemoteData } from '../../core/shared/operators';
-import { scan, switchMap, take, takeUntil } from 'rxjs/operators';
+import { switchMap, take, takeUntil } from 'rxjs/operators';
 import { PaginationService } from '../../core/pagination/pagination.service';
 import { ClarinLicenseDataService } from '../../core/data/clarin/clarin-license-data.service';
 import { defaultPagination, defaultSortConfiguration } from '../clarin-license-table-pagination';
@@ -22,7 +22,6 @@ import { ClarinLicenseLabelExtendedSerializer } from '../../core/shared/clarin/c
 import { ClarinLicenseRequiredInfoSerializer } from '../../core/shared/clarin/clarin-license-required-info-serializer';
 import cloneDeep from 'lodash/cloneDeep';
 import { RequestParam } from '../../core/cache/models/request-param.model';
-import { SortOptions } from '../../core/cache/models/sort-options.model';
 import { ConfirmationModalComponent } from '../../shared/confirmation-modal/confirmation-modal.component';
 import { DSpaceObject } from '../../core/shared/dspace-object.model';
 
@@ -35,13 +34,6 @@ import { DSpaceObject } from '../../core/shared/dspace-object.model';
   styleUrls: ['./clarin-license-table.component.scss']
 })
 export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
-
-  private readonly defaultListState = {
-    searchTerm: '',
-    currentPage: 1,
-    currentPagination: defaultPagination,
-    currentSort: defaultSortConfiguration
-  };
 
   constructor(private paginationService: PaginationService,
               private clarinLicenseService: ClarinLicenseDataService,
@@ -84,15 +76,15 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
   searchingLicenseName = '';
 
   /**
-    * RemoteData stream for license labels table.
+   * RemoteData stream for license labels table.
    */
-    labelsRD$: BehaviorSubject<RemoteData<PaginatedList<ClarinLicenseLabel>>> =
-      new BehaviorSubject<RemoteData<PaginatedList<ClarinLicenseLabel>>>(null);
+  labelsRD$: BehaviorSubject<RemoteData<PaginatedList<ClarinLicenseLabel>>> =
+    new BehaviorSubject<RemoteData<PaginatedList<ClarinLicenseLabel>>>(null);
 
   /**
-    * Loading state for labels table.
+   * Loading state for labels table.
    */
-    loading$ = new BehaviorSubject<boolean>(false);
+  loading$ = new BehaviorSubject<boolean>(false);
 
   /**
    * Pagination configuration for labels table.
@@ -128,10 +120,15 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
    */
   private licenseUsageLoading = false;
 
-    /**
-    * Emits when component is destroyed to clean up subscriptions.
-    */
-    private ngUnsubscribe = new Subject<void>();
+  /**
+   * Stores the previous search term to detect when a new search should reset pagination.
+   */
+  private previousSearchTerm = '';
+
+  /**
+   * Emits when component is destroyed to clean up subscriptions.
+   */
+  private ngUnsubscribe = new Subject<void>();
 
   ngOnInit(): void {
     this.initializePaginationOptions();
@@ -182,7 +179,7 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
       .subscribe((defineLicenseResponse: RemoteData<ClarinLicense>) => {
         // check payload and show error or successful
         this.notifyOperationStatus(defineLicenseResponse, successfulMessageContentDef, errorMessageContentDef);
-        this.loadAllLicenses(true);
+        this.loadAllLicenses({ forceUsageReload: true });
       });
   }
 
@@ -245,7 +242,7 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
       .subscribe((editResponse: RemoteData<ClarinLicense>) => {
         // check payload and show error or successful
         this.notifyOperationStatus(editResponse, successfulMessageContentDef, errorMessageContentDef);
-        this.loadAllLicenses(true);
+        this.loadAllLicenses({ forceUsageReload: true });
       });
   }
 
@@ -359,7 +356,7 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
         const successfulMessageContentDef = 'clarin-license.delete-license.notification.successful-content';
         const errorMessageContentDef = 'clarin-license.delete-license.notification.error-content';
         this.notifyOperationStatus(deleteLicenseResponse, successfulMessageContentDef, errorMessageContentDef);
-        this.loadAllLicenses(true);
+        this.loadAllLicenses({ forceUsageReload: true });
       });
   }
 
@@ -522,9 +519,24 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Run a search and reset the route-backed pagination when the search term changes.
+   */
+  searchLicenses() {
+    const hasSearchTermChanged = this.searchingLicenseName !== this.previousSearchTerm;
+
+    if (hasSearchTermChanged) {
+      this.paginationService.resetPage(this.options.id);
+    }
+
+    this.loadAllLicenses({ pageOverride: hasSearchTermChanged ? 1 : undefined });
+    this.previousSearchTerm = this.searchingLicenseName;
+  }
+
+  /**
    * Fetch all licenses from the API.
    */
-  loadAllLicenses(forceUsageReload = false) {
+  loadAllLicenses(options: { pageOverride?: number; forceUsageReload?: boolean } = {}) {
+    const { pageOverride, forceUsageReload = false } = options;
     this.selectedLicense = null;
     this.licensesRD$ = new BehaviorSubject<RemoteData<PaginatedList<ClarinLicense>>>(null);
     this.isLoading = true;
@@ -533,26 +545,14 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
     // load the current pagination and sorting options
     const currentPagination$ = this.getCurrentPagination();
     const currentSort$ = this.getCurrentSort();
-    const searchTerm$ = new BehaviorSubject<string>(this.searchingLicenseName);
 
-    observableCombineLatest([currentPagination$, currentSort$, searchTerm$]).pipe(
-      scan((prevState: {
-        searchTerm: string;
-        currentPage: number;
-        currentPagination: PaginationComponentOptions;
-        currentSort: SortOptions;
-      }, [currentPagination, currentSort, searchTerm]) => {
-        // If search term has changed, reset to page 1; otherwise, keep current page
-        const currentPage = prevState.searchTerm !== searchTerm ? 1 : currentPagination.currentPage;
-        return { currentPage, currentPagination, currentSort, searchTerm };
-      }, this.defaultListState),
-
-      switchMap(({ currentPage, currentPagination, currentSort, searchTerm }) => {
+    observableCombineLatest([currentPagination$, currentSort$]).pipe(
+      switchMap(([currentPagination, currentSort]) => {
         return this.clarinLicenseService.searchBy('byNameLike', {
-            currentPage: currentPage, // Properly reset page only when needed
+            currentPage: pageOverride ?? currentPagination.currentPage,
             elementsPerPage: currentPagination.pageSize,
             sort: { field: currentSort.field, direction: currentSort.direction },
-            searchParams: [new RequestParam('name', searchTerm)]
+            searchParams: [new RequestParam('name', this.searchingLicenseName)]
           }, false
         );
       }),
