@@ -51,6 +51,8 @@ import { FormRowModel } from '../../../core/config/models/config-submission-form
 import {ConfigurationDataService} from '../../../core/data/configuration-data.service';
 import {createSuccessfulRemoteDataObject$} from '../../remote-data.utils';
 import {ConfigurationProperty} from '../../../core/shared/configuration-property.model';
+import { getMockTranslateService } from '../../mocks/translate.service.mock';
+import { TranslateService } from '@ngx-translate/core';
 
 describe('FormBuilderService test suite', () => {
 
@@ -81,6 +83,7 @@ describe('FormBuilderService test suite', () => {
 
   beforeEach(() => {
     configSpy = createConfigSuccessSpy(typeFieldTestValue);
+    let translateService = getMockTranslateService();
     TestBed.configureTestingModule({
       imports: [ReactiveFormsModule],
       providers: [
@@ -88,7 +91,8 @@ describe('FormBuilderService test suite', () => {
         { provide: DynamicFormValidationService, useValue: {} },
         { provide: NG_VALIDATORS, useValue: testValidator, multi: true },
         { provide: NG_ASYNC_VALIDATORS, useValue: testAsyncValidator, multi: true },
-        { provide: ConfigurationDataService, useValue: configSpy }
+        { provide: ConfigurationDataService, useValue: configSpy },
+        { provide: TranslateService, useValue: translateService },
       ]
     });
 
@@ -529,6 +533,36 @@ describe('FormBuilderService test suite', () => {
       conference: [new FormFieldMetadataValueObject('test one')]
     };
     expect(service.getValueFromModel(formModel)).toEqual(value);
+  });
+
+  it('should preserve place 0 for object-valued fields in arrays', () => {
+    const arrayModel = new DynamicRowArrayModel({
+      id: 'testObjectArray',
+      initialCount: 1,
+      notRepeatable: false,
+      relationshipConfig: undefined,
+      submissionId,
+      isDraggable: true,
+      groupFactory: () => [
+        new DynamicInputModel({ id: 'dc_title' }),
+      ],
+      required: false,
+      metadataKey: 'dc.title',
+      metadataFields: ['dc.title'],
+      hasSelectableMetadata: true,
+      showButtons: true,
+      typeBindRelations: [],
+    });
+
+    (arrayModel.groups[0].group[0] as any).name = 'dc.title';
+    (arrayModel.groups[0].group[0] as any).value = {
+      value: 'Title with stale place',
+      place: 4,
+    };
+
+    const value = service.getValueFromModel([arrayModel]);
+
+    expect(value['dc.title'][0].place).toBe(0);
   });
 
   it('should clear all form\'s fields value', () => {

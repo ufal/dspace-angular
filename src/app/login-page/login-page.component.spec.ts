@@ -6,6 +6,7 @@ import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { of as observableOf, of } from 'rxjs';
 
+import { XSRFService } from '../core/xsrf/xsrf.service';
 import { LoginPageComponent } from './login-page.component';
 import { ActivatedRouteStub } from '../shared/testing/active-router.stub';
 import { AuthService } from '../core/auth/auth.service';
@@ -45,6 +46,7 @@ describe('LoginPageComponent', () => {
       providers: [
         { provide: ActivatedRoute, useValue: activatedRouteStub },
         { provide: Store, useValue: store },
+        { provide: XSRFService, useValue: {} },
         { provide: AuthService, useValue: authServiceSpy },
       ],
       schemas: [NO_ERRORS_SCHEMA]

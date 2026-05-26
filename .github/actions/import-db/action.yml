@@ -14,6 +14,10 @@ inputs:
     description: 'location of assetstore folder'
     required: false
     type: string
+  ADMIN_PASSWORD:
+    description: 'Admin password for DSpace'
+    required: true
+    type: string
 
 runs:
   using: "composite"
@@ -26,22 +30,24 @@ runs:
 
     - uses: actions/checkout@v4
       with:
-        repository: dataquest-dev/dspace-import
+        repository: dataquest-dev/dspace-import-clarin
         ref: 'main'
         submodules: 'recursive'
-        path: 'dspace-import'
+        path: 'dspace-import-clarin'
 
 
     - name: stop and remove containers
       id: import
       shell: bash
-      working-directory: dspace-import/scripts
+      working-directory: dspace-import-clarin/scripts
       env:
         DATADIR: ${{ inputs.DATADIR }}
         DB5PORT: 15432
         DB5NAME: dspace-import-db5
         DB7PORT: 543${{ inputs.INSTANCE }}
         BEURL: http://dev-5.pc:8${{ inputs.INSTANCE }}/repository/server/api
+        BEUSERNAME: dspace.admin.dev@dataquest.sk
+        BEUSERPASSWORD: ${{ inputs.ADMIN_PASSWORD }}
       run: |
           docker stop $DB5NAME || true
           echo "====="
@@ -56,6 +62,7 @@ runs:
             echo Location of assetstore folder is empty. Not copping assetstore
           else
             docker cp ${{ inputs.ASSETSTORE }} dspace${{ inputs.INSTANCE }}:/dspace/
+            docker exec -u root dspace${{ inputs.INSTANCE }} chown -R dspace:dspace /dspace/assetstore
           fi
           echo "====="
           cd ../
@@ -78,6 +85,8 @@ runs:
           args=(
             --resume=false
             --config=backend.endpoint=$BEURL
+            --config=backend.user=$BEUSERNAME
+            --config=backend.password=$BEUSERPASSWORD
             --config=db_dspace_7.port=$DB7PORT
             --config=db_dspace_5.port=$DB5PORT
             --config=db_utilities_5.port=$DB5PORT

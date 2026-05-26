@@ -30,7 +30,6 @@
               "lodash",
               "jwt-decode",
               "uuid",
-              "webfontloader",
               "zone.js"
             ],
             "outputPath": "dist/browser",
@@ -41,6 +40,7 @@
             "aot": true,
             "assets": [
               "src/assets",
+              "src/static-files",
               "src/robots.txt"
             ],
             "styles": [

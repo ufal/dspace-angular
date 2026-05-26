@@ -57,6 +57,7 @@ import { ItemAlertsComponent } from './alerts/item-alerts.component';
 import { ItemVersionsModule } from './versions/item-versions.module';
 import { BitstreamRequestACopyPageComponent } from './bitstreams/request-a-copy/bitstream-request-a-copy-page.component';
 import { FileSectionComponent } from './simple/field-components/file-section/file-section.component';
+import { TotalDownloadsComponent } from './simple/field-components/file-section/total-downloads.component';
 import { ItemSharedModule } from './item-shared.module';
 import { DsoPageModule } from '../shared/dso-page/dso-page.module';
 import { ThemedItemAlertsComponent } from './alerts/themed-item-alerts.component';
@@ -71,14 +72,13 @@ import { ClarinRefBoxComponent } from './clarin-ref-box/clarin-ref-box.component
 import { ClarinRefCitationComponent } from './clarin-ref-citation/clarin-ref-citation.component';
 import { ClarinRefFeaturedServicesComponent } from './clarin-ref-featured-services/clarin-ref-featured-services.component';
 import { ClarinRefCitationModalComponent } from './clarin-ref-citation-modal/clarin-ref-citation-modal.component';
-import { ClarinMatomoStatisticsComponent } from './clarin-matomo-statistics/clarin-matomo-statistics.component';
-import { ClarinStatisticsButtonComponent } from './clarin-statistics-button/clarin-statistics-button.component';
 import { NgChartsModule } from 'ng2-charts';
 import { ClarinGenericItemFieldComponent } from './simple/field-components/clarin-generic-item-field/clarin-generic-item-field.component';
 import { ClarinCollectionsItemFieldComponent } from './simple/field-components/clarin-collections-item-field/clarin-collections-item-field.component';
 import { ClarinFilesItemFieldComponent } from './simple/field-components/clarin-files-item-field/clarin-files-item-field.component';
+import { ClarinItemVersionsFieldComponent } from './simple/field-components/clarin-item-versions-field/clarin-item-versions-field.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import {PreviewSectionComponent} from './simple/field-components/preview-section/preview-section.component';
+import { PreviewSectionComponent } from './simple/field-components/preview-section/preview-section.component';
 import {
   FileDescriptionComponent
 } from './simple/field-components/preview-section/file-description/file-description.component';
@@ -95,6 +95,7 @@ import { MatomoSubscriptionButtonComponent } from './matomo-subscription-button/
 import { MyDSpaceActionsModule } from '../shared/mydspace-actions/mydspace-actions.module';
 import { DataciteBadgeComponent } from './datacite/datacite-badge.component';
 import { ViewsDownloadsStatisticsButtonComponent } from './views-downloads-statistics-button/views-downloads-statistics-button.component';
+import { CreativeCommonsLicenseFieldComponent } from './simple/field-components/creative-commons-license-field/creative-commons-license-field.component';
 
 const ENTRY_COMPONENTS = [
   // put only entry components that use custom decorator
@@ -104,6 +105,7 @@ const ENTRY_COMPONENTS = [
 
 const DECLARATIONS = [
   FileSectionComponent,
+  TotalDownloadsComponent,
   ThemedFileSectionComponent,
   ItemPageComponent,
   ThemedItemPageComponent,
@@ -147,11 +149,10 @@ const DECLARATIONS = [
   ClarinRefCitationComponent,
   ClarinRefFeaturedServicesComponent,
   ClarinRefCitationModalComponent,
-  ClarinMatomoStatisticsComponent,
-  ClarinStatisticsButtonComponent,
   ClarinGenericItemFieldComponent,
   ClarinCollectionsItemFieldComponent,
   ClarinFilesItemFieldComponent,
+  ClarinItemVersionsFieldComponent,
   ClarinSponsorItemFieldComponent,
   PreviewSectionComponent,
   FileDescriptionComponent,
@@ -163,7 +164,8 @@ const DECLARATIONS = [
   DataciteBadgeComponent,
   ViewsDownloadsStatisticsComponent,
   ViewsDownloadsStatisticsButtonComponent,
-  MatomoSubscriptionButtonComponent
+  MatomoSubscriptionButtonComponent,
+  CreativeCommonsLicenseFieldComponent
 ];
 
 @NgModule({

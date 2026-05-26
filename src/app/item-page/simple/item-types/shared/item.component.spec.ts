@@ -45,6 +45,8 @@ import { BrowseDefinitionDataService } from '../../../../core/browse/browse-defi
 import {
   BrowseDefinitionDataServiceStub
 } from '../../../../shared/testing/browse-definition-data-service.stub';
+import { BrowseService } from '../../../../core/browse/browse.service';
+import { BrowseServiceStub } from '../../../../shared/testing/browse-service.stub';
 
 import { buildPaginatedList } from '../../../../core/data/paginated-list.model';
 import { PageInfo } from '../../../../core/shared/page-info.model';
@@ -74,6 +76,12 @@ export function getIIIFEnabled(enabled: boolean): MetadataValue {
 export const mockRouteService = {
   getPreviousUrl(): Observable<string> {
     return observableOf('');
+  },
+  storeUrlInSession(key: string, url: string): void {
+    // no-op
+  },
+  getUrlFromSession(key: string): string | null {
+    return null;
   }
 };
 
@@ -138,6 +146,7 @@ export function getItemPageFieldsTest(mockItem: Item, component) {
           { provide: AuthorizationDataService, useValue: authorizationService },
           { provide: ResearcherProfileDataService, useValue: {} },
           { provide: BrowseDefinitionDataService, useValue: BrowseDefinitionDataServiceStub },
+          { provide: BrowseService, useValue: BrowseServiceStub },
           { provide: APP_CONFIG, useValue: { statistics: { baseUrl: 'http://test.com', endpoint: '/test' } } },
         ],
 
@@ -422,6 +431,7 @@ describe('ItemComponent', () => {
 
     const searchUrl = '/search?query=test&spc.page=2';
     const browseUrl = '/browse/title?scope=0cc&bbm.page=3';
+    const homeUrl = '/home';
     const recentSubmissionsUrl = '/collections/be7b8430-77a5-4016-91c9-90863e50583a?cp.page=3';
 
     beforeEach(waitForAsync(() => {
@@ -482,6 +492,7 @@ describe('ItemComponent', () => {
 
     it('should hide back button',() => {
       spyOn(mockRouteService, 'getPreviousUrl').and.returnValue(observableOf('/item'));
+      comp.ngOnInit();
       comp.showBackButton.subscribe((val) => {
         expect(val).toBeFalse();
       });
@@ -505,6 +516,32 @@ describe('ItemComponent', () => {
       comp.ngOnInit();
       comp.showBackButton.subscribe((val) => {
         expect(val).toBeTrue();
+      });
+    });
+
+    it('should show back button for home', () => {
+      spyOn(mockRouteService, 'getPreviousUrl').and.returnValue(observableOf(homeUrl));
+      comp.ngOnInit();
+      comp.showBackButton.subscribe((val) => {
+        expect(val).toBeTrue();
+      });
+    });
+
+    it('should prioritize home previous url over session fallback', () => {
+      const staleSessionUrl = searchUrl;
+      const getPreviousUrlSpy = spyOn(mockRouteService, 'getPreviousUrl').and.returnValue(observableOf(homeUrl));
+      const getUrlFromSessionSpy = spyOn(mockRouteService, 'getUrlFromSession').and.returnValue(staleSessionUrl);
+      const storeUrlInSessionSpy = spyOn(mockRouteService, 'storeUrlInSession');
+
+      comp.ngOnInit();
+      comp.showBackButton.subscribe((val) => {
+        expect(val).toBeTrue();
+        expect(getPreviousUrlSpy).toHaveBeenCalled();
+        expect(getUrlFromSessionSpy).not.toHaveBeenCalled();
+        expect(storeUrlInSessionSpy).toHaveBeenCalledWith('item-previous-url', homeUrl);
+
+        comp.back();
+        expect(router.navigateByUrl).toHaveBeenCalledWith(homeUrl);
       });
     });
   });

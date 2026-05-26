@@ -351,7 +351,33 @@ function addOperationToList(body: JsonPatchOperationObject[], actionType, target
       newBody.push(makeOperationEntry({ op: JsonPatchOperationType.move, from: fromPath, path: targetPath }));
       break;
   }
-  return newBody;
+  return dedupeOperationEntries(newBody);
+}
+
+/**
+ * Dedupe operation entries by op and path. This prevents processing unnecessary patches in a single PATCH request.
+ * For any given op+path combination, only the latest operation is retained (earlier duplicates are discarded).
+ *
+ * Note: this function is only called for submission-form patch operations, which always use numeric-indexed or
+ * bare metadata paths (e.g. /sections/step/dc.title or /sections/step/dc.title/0). The JSON Patch append
+ * notation (path ending in "/-") is intentionally never produced by this pipeline, so collapsing duplicates
+ * by op+path is safe here.
+ *
+ * @param body JSON patch operation object entries
+ * @returns deduped JSON patch operation object entries
+ */
+function dedupeOperationEntries(body: JsonPatchOperationObject[]): JsonPatchOperationObject[] {
+  const lastIndexByOpPath = new Map<string, number>();
+
+  body.forEach((entry, index) => {
+    const patch = entry.operation;
+    lastIndexByOpPath.set(`${patch.op}-${patch.path}`, index);
+  });
+
+  return body.filter((entry, index) => {
+    const patch = entry.operation;
+    return lastIndexByOpPath.get(`${patch.op}-${patch.path}`) === index;
+  });
 }
 
 function makeOperationEntry(operation) {

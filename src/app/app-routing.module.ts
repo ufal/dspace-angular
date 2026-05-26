@@ -42,6 +42,8 @@ import {
 import { ServerCheckGuard } from './core/server-check/server-check.guard';
 import { MenuResolver } from './menu.resolver';
 import { ThemedPageErrorComponent } from './page-error/themed-page-error.component';
+import { HomePageResolver } from './home-page/home-page.resolver';
+import { ViewTrackerResolverService } from './statistics/angulartics/dspace/view-tracker-resolver.service';
 import { HANDLE_TABLE_MODULE_PATH } from './handle-page/handle-page-routing-paths';
 import { STATIC_PAGE_PATH } from './static-page/static-page-routing-paths';
 import { EPIC_HANDLE_TABLE_MODULE_PATH } from './epic-handle/epic-handle-routing-paths';
@@ -68,7 +70,15 @@ import { EPIC_HANDLE_TABLE_MODULE_PATH } from './epic-handle/epic-handle-routing
             path: 'home',
             loadChildren: () => import('./home-page/home-page.module')
               .then((m) => m.HomePageModule),
-            data: { showBreadcrumbs: false },
+            data: {
+              showBreadcrumbs: false,
+              dsoPath: 'site'
+            },
+            resolve: {
+              site: HomePageResolver,
+              tracking: ViewTrackerResolverService,
+            },
+
             canActivate: [EndUserAgreementCurrentUserGuard]
           },
           {
@@ -290,6 +300,7 @@ import { EPIC_HANDLE_TABLE_MODULE_PATH } from './epic-handle/epic-handle-routing
 })
   ],
   exports: [RouterModule],
+  providers: [HomePageResolver, ViewTrackerResolverService],
 })
 export class AppRoutingModule {
 

@@ -9,7 +9,7 @@ import { LinkService } from '../core/cache/builders/link.service';
 import { UploadBitstreamComponent } from './bitstreams/upload/upload-bitstream.component';
 import {
   ITEM_EDIT_PATH,
-  MATOMO_STATISTICS_PATH, ORCID_PATH,
+  ORCID_PATH,
   TOMBSTONE_ITEM_PATH,
   UPLOAD_BITSTREAM_PATH,
   VIEWS_DOWNLOADS_STATISTICS_PATH
@@ -22,11 +22,11 @@ import { MenuItemType } from '../shared/menu/menu-item-type.model';
 import { VersionPageComponent } from './version-page/version-page/version-page.component';
 import { BitstreamRequestACopyPageComponent } from './bitstreams/request-a-copy/bitstream-request-a-copy-page.component';
 import { TombstoneComponent } from './tombstone/tombstone.component';
-import { ClarinMatomoStatisticsComponent } from './clarin-matomo-statistics/clarin-matomo-statistics.component';
 import { REQUEST_COPY_MODULE_PATH } from '../app-routing-paths';
 import { OrcidPageComponent } from './orcid-page/orcid-page.component';
 import { OrcidPageGuard } from './orcid-page/orcid-page.guard';
 import { DSOEditMenuResolver } from '../shared/dso-page/dso-edit-menu.resolver';
+import { ViewTrackerResolverService } from '../statistics/angulartics/dspace/view-tracker-resolver.service';
 import {
   ClarinZipDownloadPageComponent
 } from '../bitstream-page/clarin-zip-download-page/clarin-zip-download-page.component';
@@ -40,7 +40,6 @@ import { ViewsDownloadsStatisticsComponent } from './views-downloads-statistics/
         resolve: {
           dso: ItemPageResolver,
           breadcrumb: ItemBreadcrumbResolver,
-          menu: DSOEditMenuResolver
         },
         runGuardsAndResolvers: 'always',
         children: [
@@ -48,10 +47,18 @@ import { ViewsDownloadsStatisticsComponent } from './views-downloads-statistics/
             path: '',
             component: ThemedItemPageComponent,
             pathMatch: 'full',
+            resolve: {
+              menu: DSOEditMenuResolver,
+              tracking: ViewTrackerResolverService,
+            },
           },
           {
             path: 'full',
             component: ThemedFullItemPageComponent,
+            resolve: {
+              menu: DSOEditMenuResolver,
+              tracking: ViewTrackerResolverService,
+            },
           },
           {
             path: ITEM_EDIT_PATH,
@@ -75,13 +82,6 @@ import { ViewsDownloadsStatisticsComponent } from './views-downloads-statistics/
           {
             path: TOMBSTONE_ITEM_PATH,
             component: TombstoneComponent
-          },
-          {
-            path: MATOMO_STATISTICS_PATH,
-            component: ClarinMatomoStatisticsComponent,
-            resolve: {
-              dso: ItemPageResolver,
-            }
           },
           {
             path: VIEWS_DOWNLOADS_STATISTICS_PATH,
@@ -159,7 +159,8 @@ import { ViewsDownloadsStatisticsComponent } from './views-downloads-statistics/
     LinkService,
     ItemPageAdministratorGuard,
     VersionResolver,
-    OrcidPageGuard
+    OrcidPageGuard,
+    ViewTrackerResolverService,
   ]
 
 })
