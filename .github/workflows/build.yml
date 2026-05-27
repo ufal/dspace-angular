@@ -49,9 +49,6 @@ jobs:
       NODE_OPTIONS: '--max-old-space-size=4096'
       # Project name to use when running "docker compose" prior to e2e tests
       COMPOSE_PROJECT_NAME: 'ci'
-      # Docker Registry to use for Docker compose scripts below.
-      # We use GitHub's Container Registry to avoid aggressive rate limits at DockerHub.
-      #DOCKER_REGISTRY: ghcr.io
     strategy:
       # Create a matrix of Node versions to test against (in parallel)
       matrix:
@@ -124,14 +121,6 @@ jobs:
           name: coverage-report-${{ matrix.node-version }}
           path: 'coverage/dspace-angular/lcov.info'
           retention-days: 14
-
-      # Login to our Docker registry, so that we can access private Docker images using "docker compose" below.
-      #- name: Login to ${{ env.DOCKER_REGISTRY }}
-      #  uses: docker/login-action@v3
-      #  with:
-      #    registry: ${{ env.DOCKER_REGISTRY }}
-      #    username: ${{ github.repository_owner }}
-      #    password: ${{ secrets.GITHUB_TOKEN }}
 
       # Using "docker compose" start backend using CI configuration
       # and load assetstore from a cached copy
@@ -311,6 +300,18 @@ jobs:
 
       - name: Shutdown Docker containers
         run: docker compose -f ./docker/docker-compose-ci.yml down
+  rerun-on-failure:
+    runs-on: ubuntu-slim
+    needs: tests
+    if: failure() && !cancelled() && github.run_attempt < 4
+    steps:
+      - name: Wait before retry (avoid hammering)
+        run: sleep 60
+      - name: Rerun failed jobs only
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: gh run rerun ${{ github.run_id }} --failed
 
 #  # Codecov upload is a separate job in order to allow us to restart this separate from the entire build/test
 #  # job above. This is necessary because Codecov uploads seem to randomly fail at times.

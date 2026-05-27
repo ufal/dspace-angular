@@ -23,6 +23,12 @@
 
   "404.page-not-found": "Page not found",
 
+  "static-page.404.help": "The static page you requested does not exist. It may have been moved or deleted. You can use the button below to get back to the home page.",
+
+  "static-page.404.link.home-page": "Take me to the home page",
+
+  "static-page.404.page-not-found": "page not found",
+
   "error-page.description.401": "Unauthorized",
 
   "error-page.description.403": "Forbidden",
@@ -6099,10 +6105,6 @@
 
   "item.page.license.message": ["This item is", "and licensed under:"],
 
-  "item.page.matomo-statistics.views.button": "Views",
-
-  "item.page.matomo-statistics.downloads.button": "Downloads",
-
   "item.page.acknowledgement.project-name": "Project name:",
 
   "item.page.acknowledgement.project-code": "Project code:",
@@ -6132,8 +6134,6 @@
   "item.refbox.featured-service.heading": "This resource is also integrated in following services:",
 
   "item.refbox.featured-service.share.message": "Share",
-
-  "item.matomo-statistics.info.message": "Click on a data point to summarize by year / month.",
 
   "item.view.box.author.message": "Author(s):",
 
@@ -6172,6 +6172,9 @@
   "item.page.files.head": "Files in this item",
 
   "item.page.download.button.command.line": "Download instructions for command line",
+  "item.page.download.command.copy": "Copy to clipboard",
+  "item.page.download.command.copied": "Copied!",
+  "item.page.download.command.close": "Close",
 
   "item.page.download.button.all.files.zip": "Download all files in item",
 
@@ -6464,6 +6467,24 @@
   "submission.workflow.generic.share-submission": "Share submission",
 
   "submission.workflow.generic.share-submission.tooltip": "Share submission",
+
+  "submission.workflow.generic.add-url-bitstream": "Add bitstream from URL",
+
+  "submission.workflow.generic.add-url-bitstream.tooltip": "Add a new bitstream to this workspace item using a URL",
+
+  "submission.workflow.generic.add-url-bitstream.modal.title": "Add bitstream from URL",
+
+  "submission.workflow.generic.add-url-bitstream.url.label": "File URL",
+
+  "submission.workflow.generic.add-url-bitstream.url.required": "URL is required",
+
+  "submission.workflow.generic.add-url-bitstream.name.label": "Bitstream name (optional)",
+
+  "submission.workflow.generic.add-url-bitstream.name.placeholder": "e.g. image.png",
+
+  "submission.workflow.generic.add-url-bitstream.cancel": "Cancel",
+
+  "submission.workflow.generic.add-url-bitstream.submit": "Add",
 
   "submission.workflow.share-submission.email.successful": "The email with the share link has been sent successfully",
 
