@@ -232,7 +232,7 @@ describe('ClarinLicenseTableComponent', () => {
     it('should open edit modal with the selected label when editLabel is called', () => {
       component.editLabel(mockExtendedLicenseLabel);
 
-      expect(modalServiceStub.open).toHaveBeenCalledWith(DefineLicenseLabelFormComponent);
+      expect(modalServiceStub.open).toHaveBeenCalledWith(DefineLicenseLabelFormComponent, { centered: true });
       expect(labelEditModalRef.componentInstance.clarinLicenseLabel).toBe(mockExtendedLicenseLabel);
     });
 

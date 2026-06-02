@@ -149,7 +149,7 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
    * Pop up the License modal where the user fill in the License data.
    */
   openDefineLicenseForm() {
-    const defineLicenseModalRef = this.modalService.open(DefineLicenseFormComponent);
+    const defineLicenseModalRef = this.modalService.open(DefineLicenseFormComponent, { centered: true });
 
     defineLicenseModalRef.result.then((result: ClarinLicense) => {
       this.defineNewLicense(result);
@@ -196,7 +196,7 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
     }
 
     // pass the actual clarin license values to the define-clarin-license modal
-    const editLicenseModalRef = this.modalService.open(DefineLicenseFormComponent);
+    const editLicenseModalRef = this.modalService.open(DefineLicenseFormComponent, { centered: true });
     editLicenseModalRef.componentInstance.name = this.selectedLicense.name;
     editLicenseModalRef.componentInstance.definition = this.selectedLicense.definition;
     editLicenseModalRef.componentInstance.confirmation = this.selectedLicense.confirmation;
@@ -272,7 +272,7 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
    * Pop up License Label modal where the user fill in the License Label data.
    */
   openDefineLicenseLabelForm() {
-    const defineLicenseLabelModalRef = this.modalService.open(DefineLicenseLabelFormComponent);
+    const defineLicenseLabelModalRef = this.modalService.open(DefineLicenseLabelFormComponent, { centered: true });
 
     defineLicenseLabelModalRef.result.then((result: ClarinLicenseLabel) => {
       this.defineLicenseLabel(result);
@@ -372,7 +372,7 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const editLabelModalRef = this.modalService.open(DefineLicenseLabelFormComponent);
+    const editLabelModalRef = this.modalService.open(DefineLicenseLabelFormComponent, { centered: true });
     editLabelModalRef.componentInstance.clarinLicenseLabel = label;
 
     editLabelModalRef.result.then((result) => {
