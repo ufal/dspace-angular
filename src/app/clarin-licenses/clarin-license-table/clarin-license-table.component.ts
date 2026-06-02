@@ -87,6 +87,14 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
   loading$ = new BehaviorSubject<boolean>(false);
 
   /**
+   * Single source of truth for whether the full license usage crawl has finished building the
+   * in-use set. Emits true once the crawl completes successfully; until then the label Delete
+   * buttons stay disabled so an in-use label is never deletable during the crawl window.
+   * Read synchronously via `.value` as the re-crawl guard, and bound reactively in the template.
+   */
+  labelUsageReady$ = new BehaviorSubject<boolean>(false);
+
+  /**
    * Pagination configuration for labels table.
    */
   labelPaginationOptions: PaginationComponentOptions = Object.assign(new PaginationComponentOptions(), {
@@ -109,11 +117,6 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
    * Page size used to retrieve all licenses for usage analysis.
    */
   private readonly allLicensesPageSize = 100;
-
-  /**
-   * Indicates whether the full usage crawl has completed successfully.
-   */
-  private licenseUsageLoaded = false;
 
   /**
    * Indicates whether a full usage crawl is currently in flight.
@@ -569,14 +572,15 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
    */
   private ensureLicenseUsageLoaded(forceReload = false) {
     if (forceReload) {
-      this.licenseUsageLoaded = false;
+      this.labelUsageReady$.next(false);
     }
 
-    if (this.licenseUsageLoaded || this.licenseUsageLoading) {
+    if (this.labelUsageReady$.value || this.licenseUsageLoading) {
       return;
     }
 
     this.licenseUsageLoading = true;
+    this.labelUsageReady$.next(false);
     this.loadAllLicensesForUsage();
   }
 
@@ -602,15 +606,15 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
         this.allLicensesRD$.next(response);
         if (response?.hasSucceeded) {
           this.rebuildLabelUsageSet(licenses);
-          this.licenseUsageLoaded = true;
+          this.labelUsageReady$.next(true);
         } else {
           this.inUseLabelIds.clear();
-          this.licenseUsageLoaded = false;
+          this.labelUsageReady$.next(false);
         }
       }, () => {
         this.licenseUsageLoading = false;
-        this.licenseUsageLoaded = false;
         this.inUseLabelIds.clear();
+        this.labelUsageReady$.next(false);
       });
   }
 

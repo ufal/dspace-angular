@@ -363,7 +363,21 @@ describe('ClarinLicenseTableComponent', () => {
         createSuccessfulRemoteDataObject(buildPaginatedList(new PageInfo(), [linkedLabel, unlinkedLabel]))
       );
       (component as any).inUseLabelIds = new Set<string>([String(linkedLicense.clarinLicenseLabel.id)]);
+      (component as any).labelUsageReady$.next(true);
       fixture.detectChanges();
+    });
+
+    it('should disable delete on all rows until the usage crawl has finished', () => {
+      (component as any).labelUsageReady$.next(false);
+      fixture.detectChanges();
+
+      const labelRows = fixture.debugElement.queryAll(By.css('.labels-section tbody tr'));
+      const deleteButtons = labelRows.map((row) => row.queryAll(By.css('button'))[1]);
+
+      deleteButtons.forEach((deleteButton) => {
+        expect(deleteButton.attributes['aria-disabled']).toBe('true');
+        expect(deleteButton.nativeElement.classList.contains('disabled')).toBeTrue();
+      });
     });
 
     it('should disable delete button and expose tooltip for linked labels', () => {
@@ -419,12 +433,12 @@ describe('ClarinLicenseTableComponent', () => {
 
   describe('license usage loading performance', () => {
     it('should load full usage dataset only once across repeated table reloads', () => {
-      (component as any).licenseUsageLoaded = false;
+      (component as any).labelUsageReady$.next(false);
       (component as any).licenseUsageLoading = false;
 
       const usageSpy = spyOn<any>(component, 'loadAllLicensesForUsage').and.callFake(() => {
         (component as any).licenseUsageLoading = false;
-        (component as any).licenseUsageLoaded = true;
+        (component as any).labelUsageReady$.next(true);
       });
 
       component.loadAllLicenses();
@@ -434,12 +448,12 @@ describe('ClarinLicenseTableComponent', () => {
     });
 
     it('should force usage dataset reload when explicitly requested', () => {
-      (component as any).licenseUsageLoaded = false;
+      (component as any).labelUsageReady$.next(false);
       (component as any).licenseUsageLoading = false;
 
       const usageSpy = spyOn<any>(component, 'loadAllLicensesForUsage').and.callFake(() => {
         (component as any).licenseUsageLoading = false;
-        (component as any).licenseUsageLoaded = true;
+        (component as any).labelUsageReady$.next(true);
       });
 
       component.loadAllLicenses();

@@ -6280,6 +6280,7 @@
   "clarin.license.label.table.delete": "Delete",
   "clarin.license.label.table.delete.aria": "Delete label {{label}}",
   "clarin.license.label.table.delete.disabled-tooltip": "Label \"{{label}}\" cannot be deleted because it is assigned to one or more licenses.",
+  "clarin.license.label.table.delete.checking-tooltip": "Checking whether this label is in use…",
   "clarin.license.label.table.empty": "No license labels available.",
   "clarin.license.label.table.loading": "Loading labels...",
   "clarin.license.label.create.title": "Define License Label",

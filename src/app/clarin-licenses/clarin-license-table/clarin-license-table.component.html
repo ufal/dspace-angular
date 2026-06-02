@@ -123,17 +123,21 @@
                 <i class="fas fa-pen" aria-hidden="true"></i>
                 {{'clarin.license.label.table.edit' | translate}}
               </button>
-                <span [ngbTooltip]="isLabelInUse(label) ? ('clarin.license.label.table.delete.disabled-tooltip' | translate:{ label: label.label }) : null"
-                      [attr.tabindex]="isLabelInUse(label) ? 0 : null">
-                  <button class="btn btn-danger btn-sm"
-                          type="button"
-                          [dsBtnDisabled]="isLabelInUse(label)"
-                    [attr.aria-label]="('clarin.license.label.table.delete.aria' | translate:{label: (label?.label || '')})"
-                          (click)="!isLabelInUse(label) && confirmDeleteLabel(label)">
-                    <i class="fas fa-trash" aria-hidden="true"></i>
-                    {{ 'clarin.license.label.table.delete' | translate }}
-                  </button>
-                </span>
+                <ng-container *ngVar="(labelUsageReady$ | async) as usageReady">
+                  <span [ngbTooltip]="!usageReady
+                          ? ('clarin.license.label.table.delete.checking-tooltip' | translate)
+                          : (isLabelInUse(label) ? ('clarin.license.label.table.delete.disabled-tooltip' | translate:{ label: label.label }) : null)"
+                        [attr.tabindex]="(!usageReady || isLabelInUse(label)) ? 0 : null">
+                    <button class="btn btn-danger btn-sm"
+                            type="button"
+                            [dsBtnDisabled]="!usageReady || isLabelInUse(label)"
+                      [attr.aria-label]="('clarin.license.label.table.delete.aria' | translate:{label: (label?.label || '')})"
+                            (click)="usageReady && !isLabelInUse(label) && confirmDeleteLabel(label)">
+                      <i class="fas fa-trash" aria-hidden="true"></i>
+                      {{ 'clarin.license.label.table.delete' | translate }}
+                    </button>
+                  </span>
+                </ng-container>
             </td>
           </tr>
           <tr *ngIf="!(loading$ | async) && (labelsRD$ | async)?.hasSucceeded && !(cLicenseLabels?.page?.length > 0)">
