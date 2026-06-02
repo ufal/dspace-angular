@@ -275,6 +275,24 @@ describe('ClarinLicenseTableComponent', () => {
     }));
   });
 
+  describe('label create pagination', () => {
+    it('should jump to the last labels page after a successful create so the new label is visible', () => {
+      paginationServiceStub.updateRoute.calls.reset();
+      const refreshSpy = spyOn(component, 'refreshLabels').and.stub();
+      // 25 existing labels, page size 10 -> after adding one (26) the new label is on page 3.
+      (component as any).labelsRD$.next(
+        createSuccessfulRemoteDataObject(buildPaginatedList(
+          Object.assign(new PageInfo(), { totalElements: 25, elementsPerPage: 10 }), []))
+      );
+
+      component.createClarinLicenseLabel(mockNonExtendedLicenseLabel, [], 'ok', 'err');
+
+      expect(paginationServiceStub.updateRoute).toHaveBeenCalledWith(
+        (component as any).labelPaginationOptions.id, { page: 3 });
+      expect(refreshSpy).toHaveBeenCalled();
+    });
+  });
+
   describe('label delete flow', () => {
     beforeEach(() => {
       notificationService.success.calls.reset();

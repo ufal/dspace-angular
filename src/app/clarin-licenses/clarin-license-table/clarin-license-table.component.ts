@@ -341,7 +341,13 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
         // check payload and show error or successful
         this.notifyOperationStatus(defineLicenseLabelResponse, successfulMessageContentDef, errorMessageContentDef);
         this.loadAllLicenses();
-        this.refreshLabels();
+        if (defineLicenseLabelResponse?.hasSucceeded) {
+          // The backend returns labels in ascending insertion order (it ignores the sort param),
+          // so a new label lands on the last page. Jump there so the admin sees it without paging.
+          this.goToLastLabelsPage();
+        } else {
+          this.refreshLabels();
+        }
       });
   }
 
@@ -491,6 +497,20 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
    */
   refreshLabels() {
     this.labelsRefresh$.next(undefined);
+  }
+
+  /**
+   * Navigate the labels table to the page that contains the most recently created label.
+   * Exactly one label was just added, so the new total is the current total plus one; the new
+   * label is on the last page because the backend lists labels in ascending insertion order.
+   */
+  private goToLastLabelsPage() {
+    const pageSize = this.labelPaginationOptions.pageSize;
+    const currentTotal = this.labelsRD$.value?.payload?.totalElements ?? 0;
+    const lastPage = Math.max(1, Math.ceil((currentTotal + 1) / pageSize));
+    this.paginationService.updateRoute(this.labelPaginationOptions.id, { page: lastPage });
+    // Force a reload as well so the table refreshes even when already on the target page.
+    this.refreshLabels();
   }
 
   /**
