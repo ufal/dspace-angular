@@ -1,8 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { isNull } from '../../../../shared/empty.util';
 import { ClarinLicenseLabel } from '../../../../core/shared/clarin/clarin-license-label.model';
+import { secureImageData } from '../../../../shared/clarin-shared-util';
 
 /**
  * The component for defining the Clarin License Label
@@ -15,7 +17,8 @@ import { ClarinLicenseLabel } from '../../../../core/shared/clarin/clarin-licens
 export class DefineLicenseLabelFormComponent implements OnInit {
 
   constructor(public activeModal: NgbActiveModal,
-              private formBuilder: FormBuilder) { }
+              private formBuilder: FormBuilder,
+              private sanitizer: DomSanitizer) { }
 
   /**
    * The `label` of the Clarin License Label. That's the shortcut which is max 5 characters long.
@@ -55,6 +58,20 @@ export class DefineLicenseLabelFormComponent implements OnInit {
   }
 
   /**
+   * Returns true when the label being edited currently has an icon to preview.
+   */
+  get hasIcon(): boolean {
+    return this.clarinLicenseLabel?.icon?.length > 0;
+  }
+
+  /**
+   * Returns a sanitized data URL for the current icon so it can be previewed in the form.
+   */
+  get currentIconUrl(): SafeUrl {
+    return secureImageData(this.sanitizer, this.clarinLicenseLabel?.icon);
+  }
+
+  /**
    * The form with the Clarin License Label input fields
    */
   clarinLicenseLabelForm: FormGroup;
@@ -88,6 +105,8 @@ export class DefineLicenseLabelFormComponent implements OnInit {
       title: [this.title, Validators.required],
       extended: [this.extended],
       icon: [this.icon],
+      // When true the current icon is removed on save (only relevant in edit mode).
+      clearIcon: [false],
     });
   }
 

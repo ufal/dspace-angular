@@ -428,8 +428,8 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
         }
       };
     } catch {
-      // no new file selected – keep the existing icon from the stored label
-      updatedLabel.icon = selectedLabel.icon;
+      // no new file selected – clear the icon when requested, otherwise keep the existing one
+      updatedLabel.icon = formValues.clearIcon ? [] : selectedLabel.icon;
       this.doUpdateLabel(updatedLabel, successMsg, errorMsg);
     }
   }

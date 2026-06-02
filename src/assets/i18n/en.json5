@@ -6291,6 +6291,8 @@
   "clarin.license.label.edit.title": "Edit License Label",
   "clarin.license.label.edit.submit": "Save Changes",
   "clarin.license.label.edit.icon.note": "Leave empty to keep current icon.",
+  "clarin.license.label.edit.icon.preview": "Current icon",
+  "clarin.license.label.edit.icon.clear": "Remove current icon",
   "clarin.license.label.edit.success": "License label updated successfully.",
   "clarin.license.label.edit.error": "Failed to update license label.",
   "clarin.license.label.modal.close": "Close",

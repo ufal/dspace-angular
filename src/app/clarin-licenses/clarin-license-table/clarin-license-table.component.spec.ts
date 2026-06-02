@@ -260,6 +260,47 @@ describe('ClarinLicenseTableComponent', () => {
       expect(reloadLicensesSpy).toHaveBeenCalled();
     }));
 
+    it('should clear the icon when clearIcon is set and no new file is selected', fakeAsync(() => {
+      spyOn(component, 'refreshLabels').and.stub();
+      spyOn(component, 'loadAllLicenses').and.stub();
+      const labelWithIcon = Object.assign(new ClarinLicenseLabel(), {
+        ...mockExtendedLicenseLabel,
+        icon: [1, 2, 3]
+      });
+
+      component.editLicenseLabel({
+        label: 'CLR',
+        title: 'Cleared icon',
+        extended: false,
+        clearIcon: true
+      }, labelWithIcon);
+      tick();
+
+      const putArgument = (clarinLicenseLabelDataService.put as jasmine.Spy).calls.mostRecent().args[0];
+      expect(putArgument.icon).toEqual([]);
+      expect(notificationService.success).toHaveBeenCalled();
+    }));
+
+    it('should keep the existing icon when clearIcon is not set and no new file is selected', fakeAsync(() => {
+      spyOn(component, 'refreshLabels').and.stub();
+      spyOn(component, 'loadAllLicenses').and.stub();
+      const labelWithIcon = Object.assign(new ClarinLicenseLabel(), {
+        ...mockExtendedLicenseLabel,
+        icon: [1, 2, 3]
+      });
+
+      component.editLicenseLabel({
+        label: 'KEP',
+        title: 'Kept icon',
+        extended: false,
+        clearIcon: false
+      }, labelWithIcon);
+      tick();
+
+      const putArgument = (clarinLicenseLabelDataService.put as jasmine.Spy).calls.mostRecent().args[0];
+      expect(putArgument.icon).toEqual([1, 2, 3]);
+    }));
+
     it('should show error notification on failed edit', fakeAsync(() => {
       spyOn(component, 'refreshLabels').and.stub();
       (clarinLicenseLabelDataService.put as jasmine.Spy).and.returnValue(createFailedRemoteDataObject$('put failed', 500));

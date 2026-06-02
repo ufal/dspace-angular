@@ -27,7 +27,16 @@
       <div class="form-group mt-4">
         <label for="icon">{{'clarin-license-label.define-license-label.input-icon' | translate}}</label>
         <small *ngIf="isEditMode" class="form-text text-muted mb-1">{{'clarin.license.label.edit.icon.note' | translate}}</small>
+        <div *ngIf="isEditMode && hasIcon" class="mb-2">
+          <span class="d-block text-muted small mb-1">{{'clarin.license.label.edit.icon.preview' | translate}}</span>
+          <img [src]="currentIconUrl" class="border rounded" style="max-height: 48px; max-width: 120px;"
+               [attr.alt]="('clarin.license.label.edit.icon.preview' | translate)"/>
+        </div>
         <input id="icon" type="file" class="form-control" formControlName="icon"/>
+        <div *ngIf="isEditMode && hasIcon" class="form-check mt-2">
+          <input id="clearIcon" type="checkbox" class="form-check-input" formControlName="clearIcon"/>
+          <label class="form-check-label" for="clearIcon">{{'clarin.license.label.edit.icon.clear' | translate}}</label>
+        </div>
       </div>
     </div>
   </div>
