@@ -345,7 +345,7 @@ describe('ClarinLicenseTableComponent', () => {
     it('should open confirmation modal when confirmDeleteLabel is called', () => {
       component.confirmDeleteLabel(mockNonExtendedLicenseLabel);
 
-      expect(modalServiceStub.open).toHaveBeenCalledWith(ConfirmationModalComponent);
+      expect(modalServiceStub.open).toHaveBeenCalledWith(ConfirmationModalComponent, { centered: true });
       expect(labelDeleteModalRef.componentInstance.headerLabel).toBe('clarin.license.label.delete.confirm.title');
       expect(labelDeleteModalRef.componentInstance.infoLabel).toBe('clarin.license.label.delete.confirm.message');
       expect(labelDeleteModalRef.componentInstance.dso.name).toBe(mockNonExtendedLicenseLabel.label);
