@@ -9501,6 +9501,9 @@
   // "clarin.license.label.table.delete.disabled-tooltip": "Label \"{{label}}\" cannot be deleted because it is assigned to one or more licenses.",
   "clarin.license.label.table.delete.disabled-tooltip": "Štítek \"{{label}}\" nelze odstranit, protože je přiřazen k jedné nebo více licencím.",
 
+  // "clarin.license.label.table.delete.checking-tooltip": "Checking whether this label is in use…",
+  "clarin.license.label.table.delete.checking-tooltip": "Zjišťuje se, zda se tento štítek používá…",
+
   // "clarin.license.label.table.empty": "No license labels available.",
   "clarin.license.label.table.empty": "Nejsou k dispozici žádné licenční štítky.",
 
@@ -9530,6 +9533,12 @@
 
   // "clarin.license.label.edit.icon.note": "Leave empty to keep current icon.",
   "clarin.license.label.edit.icon.note": "Ponechte prázdné, chcete-li zachovat stávající ikonu.",
+
+  // "clarin.license.label.edit.icon.preview": "Current icon",
+  "clarin.license.label.edit.icon.preview": "Stávající ikona",
+
+  // "clarin.license.label.edit.icon.clear": "Remove current icon",
+  "clarin.license.label.edit.icon.clear": "Odstranit stávající ikonu",
 
   // "clarin.license.label.edit.success": "License label updated successfully.",
   "clarin.license.label.edit.success": "Licenční štítek byl úspěšně aktualizován.",

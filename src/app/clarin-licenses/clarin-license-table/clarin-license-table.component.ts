@@ -460,7 +460,7 @@ export class ClarinLicenseTableComponent implements OnInit, OnDestroy {
     const labelDeleteDSO = new DSpaceObject();
     labelDeleteDSO.name = labelToDelete.label;
 
-    const modalRef = this.modalService.open(ConfirmationModalComponent);
+    const modalRef = this.modalService.open(ConfirmationModalComponent, { centered: true });
     modalRef.componentInstance.dso = labelDeleteDSO;
     modalRef.componentInstance.headerLabel = 'clarin.license.label.delete.confirm.title';
     modalRef.componentInstance.infoLabel = 'clarin.license.label.delete.confirm.message';
