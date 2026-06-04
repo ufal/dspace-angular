@@ -28,6 +28,7 @@ import { LicenseType } from '../../item-page/clarin-license-info/clarin-license-
 import { ListableObject } from '../object-collection/shared/listable-object.model';
 import { ItemSearchResult } from '../object-collection/shared/item-search-result.model';
 import { getItemPageRoute } from '../../item-page/item-page-routing-paths';
+import { metadataLangToBcp47 } from '../utils/metadata-language.util';
 import { FindListOptions } from '../../core/data/find-list-options.model';
 import { ClarinDateService } from '../clarin-date.service';
 import { AUTHOR_METADATA_FIELDS } from '../../core/shared/clarin/constants';
@@ -151,7 +152,7 @@ export class ClarinItemBoxViewComponent implements OnInit {
     this.itemUri = getItemPageRoute(this.item);
     const descMeta = this.item?.firstMetadata('dc.description');
     this.itemDescription = descMeta?.value || null;
-    this.itemDescriptionLang = descMeta?.language || null;
+    this.itemDescriptionLang = metadataLangToBcp47(descMeta?.language);
     this.itemPublisher = this.item?.firstMetadataValue('dc.publisher');
     this.itemDate = this.clarinDateService.composeItemDate(this.item);
 
