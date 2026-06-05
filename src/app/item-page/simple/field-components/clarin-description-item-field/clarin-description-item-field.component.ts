@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Item } from '../../../../core/shared/item.model';
 import { makeLinks } from '../../../../shared/clarin-shared-util';
+import { metadataLangToBcp47 } from '../../../../shared/utils/metadata-language.util';
 
 @Component({
   selector: 'ds-clarin-description-item-field',
@@ -27,7 +28,7 @@ export class ClarinDescriptionItemFieldComponent implements OnInit {
   ngOnInit(): void {
     this.descriptionEntries = this.item.allMetadata(this.fields).map(md => ({
       value: makeLinks(md.value),
-      language: md.language || null
+      language: metadataLangToBcp47(md.language)
     }));
   }
 

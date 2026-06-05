@@ -4,7 +4,7 @@
       Choose a template. Priority: markdown, link, browse link.
       -->
       <ng-container *ngTemplateOutlet="(renderMarkdown ? markdown : (hasLink(mdValue) ? link : (hasBrowseDefinition() ? browselink : simple)));
-        context: {value: mdValue.value, lang: mdValue.language || null}">
+        context: {value: mdValue.value, lang: getLang(mdValue)}">
       </ng-container>
       <span class="separator" *ngIf="!last" [innerHTML]="separator"></span>
     </ng-container>
