@@ -2,11 +2,13 @@ import { DebugElement, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
+import { of as observableOf, Subject, throwError } from 'rxjs';
 import { IdleModalComponent } from './idle-modal.component';
 import { AuthService } from '../../core/auth/auth.service';
 import { By } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
 import { LogOutAction } from '../../core/auth/auth.actions';
+import { AuthTokenInfo } from '../../core/auth/models/auth-token-info.model';
 
 describe('IdleModalComponent', () => {
   let component: IdleModalComponent;
@@ -19,7 +21,10 @@ describe('IdleModalComponent', () => {
 
   beforeEach(waitForAsync(() => {
     modalStub = jasmine.createSpyObj('modalStub', ['close']);
-    authServiceStub = jasmine.createSpyObj('authService', ['setIdle']);
+    authServiceStub = jasmine.createSpyObj('authService', ['setIdle', 'getToken', 'refreshAuthenticationToken', 'replaceToken']);
+    const token = new AuthTokenInfo('test-token');
+    authServiceStub.getToken.and.returnValue(token);
+    authServiceStub.refreshAuthenticationToken.and.returnValue(observableOf(token));
     storeStub = jasmine.createSpyObj('store', ['dispatch']);
     TestBed.configureTestingModule({
       imports: [TranslateModule.forRoot()],
@@ -57,6 +62,59 @@ describe('IdleModalComponent', () => {
     });
     it('response \'closed\' should emit true', () => {
       expect(component.response.emit).toHaveBeenCalledWith(true);
+    });
+
+    it('should refresh authentication token with current token', () => {
+      expect(authServiceStub.refreshAuthenticationToken).toHaveBeenCalledWith(authServiceStub.getToken.calls.mostRecent().returnValue);
+    });
+
+    it('should replace token before closing modal', () => {
+      const replaceTokenOrder = authServiceStub.replaceToken.calls.first().invocationOrder;
+      const closeOrder = modalStub.close.calls.first().invocationOrder;
+      expect(replaceTokenOrder).toBeLessThan(closeOrder);
+    });
+  });
+
+  describe('extendSessionAndCloseModal hardening', () => {
+    it('should dispatch LogOutAction and close modal when refresh fails', () => {
+      authServiceStub.refreshAuthenticationToken.and.returnValue(throwError(() => new Error('refresh failed')));
+      spyOn(component, 'closeModal').and.callThrough();
+
+      component.extendSessionAndCloseModal();
+
+      expect(storeStub.dispatch).toHaveBeenCalledWith(new LogOutAction());
+      expect(component.closeModal).toHaveBeenCalled();
+      expect(modalStub.close).toHaveBeenCalled();
+    });
+
+    it('should prevent duplicate refresh requests on rapid double click', () => {
+      const refresh$ = new Subject<AuthTokenInfo>();
+      authServiceStub.refreshAuthenticationToken.and.returnValue(refresh$.asObservable());
+
+      component.extendSessionAndCloseModal();
+      component.extendSessionAndCloseModal();
+
+      expect(authServiceStub.refreshAuthenticationToken).toHaveBeenCalledTimes(1);
+
+      refresh$.next(new AuthTokenInfo('updated-token'));
+      refresh$.complete();
+    });
+
+    it('should not close modal before token refresh completes', () => {
+      const refresh$ = new Subject<AuthTokenInfo>();
+      authServiceStub.refreshAuthenticationToken.and.returnValue(refresh$.asObservable());
+      spyOn(component, 'closeModal').and.callThrough();
+
+      component.extendSessionAndCloseModal();
+
+      expect(component.closeModal).not.toHaveBeenCalled();
+      expect(modalStub.close).not.toHaveBeenCalled();
+
+      refresh$.next(new AuthTokenInfo('updated-token'));
+      refresh$.complete();
+
+      expect(component.closeModal).toHaveBeenCalledTimes(1);
+      expect(modalStub.close).toHaveBeenCalledTimes(1);
     });
   });
 

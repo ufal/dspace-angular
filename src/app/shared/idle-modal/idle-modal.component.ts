@@ -6,6 +6,7 @@ import { hasValue } from '../empty.util';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../app.reducer';
 import { LogOutAction } from '../../core/auth/auth.actions';
+import { finalize, take } from 'rxjs/operators';
 
 @Component({
   selector: 'ds-idle-modal',
@@ -23,6 +24,11 @@ export class IdleModalComponent implements OnInit {
    * Timer to track time grace period
    */
   private graceTimer;
+
+  /**
+   * Guards against multiple rapid extension attempts.
+   */
+  private extending = false;
 
   /**
    * An event fired when the modal is closed
@@ -71,11 +77,30 @@ export class IdleModalComponent implements OnInit {
    * Close the modal and extend session
    */
   extendSessionAndCloseModal() {
+    if (this.extending) {
+      return;
+    }
+    this.extending = true;
+
     if (hasValue(this.graceTimer)) {
       clearTimeout(this.graceTimer);
     }
+
     this.authService.setIdle(false);
-    this.closeModal();
+
+    this.authService.refreshAuthenticationToken(this.authService.getToken()).pipe(
+      take(1),
+      finalize(() => this.extending = false)
+    ).subscribe({
+      next: (token) => {
+        this.authService.replaceToken(token);
+        this.closeModal();
+      },
+      error: () => {
+        this.store.dispatch(new LogOutAction());
+        this.closeModal();
+      }
+    });
   }
 
   /**
