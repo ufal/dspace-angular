@@ -7,7 +7,7 @@ import { IdleModalComponent } from './idle-modal.component';
 import { AuthService } from '../../core/auth/auth.service';
 import { By } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
-import { LogOutAction } from '../../core/auth/auth.actions';
+import { LogOutAction, RefreshTokenSuccessAction } from '../../core/auth/auth.actions';
 import { AuthTokenInfo } from '../../core/auth/models/auth-token-info.model';
 
 describe('IdleModalComponent', () => {
@@ -21,7 +21,7 @@ describe('IdleModalComponent', () => {
 
   beforeEach(waitForAsync(() => {
     modalStub = jasmine.createSpyObj('modalStub', ['close']);
-    authServiceStub = jasmine.createSpyObj('authService', ['setIdle', 'getToken', 'refreshAuthenticationToken', 'replaceToken']);
+    authServiceStub = jasmine.createSpyObj('authService', ['setIdle', 'getToken', 'refreshAuthenticationToken']);
     const token = new AuthTokenInfo('test-token');
     authServiceStub.getToken.and.returnValue(token);
     authServiceStub.refreshAuthenticationToken.and.returnValue(observableOf(token));
@@ -65,13 +65,15 @@ describe('IdleModalComponent', () => {
     });
 
     it('should refresh authentication token with current token', () => {
-      expect(authServiceStub.refreshAuthenticationToken).toHaveBeenCalledWith(authServiceStub.getToken.calls.mostRecent().returnValue);
+      const currentToken = authServiceStub.getToken();
+      expect(authServiceStub.refreshAuthenticationToken).toHaveBeenCalledWith(currentToken);
     });
 
-    it('should replace token before closing modal', () => {
-      const replaceTokenOrder = authServiceStub.replaceToken.calls.first().invocationOrder;
+    it('should dispatch refreshed token before closing modal', () => {
+      expect(storeStub.dispatch).toHaveBeenCalledWith(new RefreshTokenSuccessAction(authServiceStub.getToken()));
+      const dispatchOrder = storeStub.dispatch.calls.first().invocationOrder;
       const closeOrder = modalStub.close.calls.first().invocationOrder;
-      expect(replaceTokenOrder).toBeLessThan(closeOrder);
+      expect(dispatchOrder).toBeLessThan(closeOrder);
     });
   });
 

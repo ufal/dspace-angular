@@ -5,7 +5,8 @@ import { AuthService } from '../../core/auth/auth.service';
 import { hasValue } from '../empty.util';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../app.reducer';
-import { LogOutAction } from '../../core/auth/auth.actions';
+import { LogOutAction, RefreshTokenSuccessAction } from '../../core/auth/auth.actions';
+import { Subscription } from 'rxjs';
 import { finalize, take } from 'rxjs/operators';
 
 @Component({
@@ -29,6 +30,11 @@ export class IdleModalComponent implements OnInit {
    * Guards against multiple rapid extension attempts.
    */
   private extending = false;
+
+  /**
+   * Tracks the in-flight refresh subscription for cancellation on logout.
+   */
+  private refreshSubscription: Subscription;
 
   /**
    * An event fired when the modal is closed
@@ -88,12 +94,12 @@ export class IdleModalComponent implements OnInit {
 
     this.authService.setIdle(false);
 
-    this.authService.refreshAuthenticationToken(this.authService.getToken()).pipe(
+    this.refreshSubscription = this.authService.refreshAuthenticationToken(this.authService.getToken()).pipe(
       take(1),
       finalize(() => this.extending = false)
     ).subscribe({
       next: (token) => {
-        this.authService.replaceToken(token);
+        this.store.dispatch(new RefreshTokenSuccessAction(token));
         this.closeModal();
       },
       error: () => {
@@ -107,6 +113,8 @@ export class IdleModalComponent implements OnInit {
    * Close the modal and set the response to true so RootComponent knows the modal was closed
    */
   closeModal() {
+    this.refreshSubscription?.unsubscribe();
+    this.extending = false;
     this.activeModal.close();
     this.response.emit(true);
   }
