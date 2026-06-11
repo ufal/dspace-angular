@@ -1,6 +1,7 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
 import { Item } from '../../../../core/shared/item.model';
 import { makeLinks } from '../../../../shared/clarin-shared-util';
+import { metadataLangToBcp47 } from '../../../../shared/utils/metadata-language.util';
 import { APP_CONFIG, AppConfig } from '../../../../../config/app-config.interface';
 
 @Component({
@@ -23,9 +24,9 @@ export class ClarinDescriptionItemFieldComponent implements OnInit {
   @Input() fields: string[];
 
   /**
-   * The valid text metadata to display - updated with links
+   * Description entries with processed value and language, built from metadata.
    */
-  validTextMetadata: string;
+  descriptionEntries: { rawValue: string; linkedValue: string; language: string | null }[] = [];
 
   /**
    * This variable will be true if {@link appConfig.markdown.enabled} is true.
@@ -35,14 +36,12 @@ export class ClarinDescriptionItemFieldComponent implements OnInit {
   ngOnInit(): void {
     this.renderMarkdown = !!this.appConfig.markdown.enabled && this.markdownEnabled();
 
-    // Store all description metadata values
-    let updatedMVs = [];
-    this.item.allMetadataValues(this.fields).forEach((value) => {
-      updatedMVs.push(this.renderMarkdown ? value : makeLinks(value));
-    });
-
-    // Join the metadata values with a line break
-    this.validTextMetadata = updatedMVs.join('<br>');
+    const metadataList = this.item.allMetadata(this.fields);
+    this.descriptionEntries = metadataList.map(md => ({
+      rawValue: md.value,
+      linkedValue: makeLinks(md.value),
+      language: metadataLangToBcp47(md.language)
+    }));
   }
 
   /**
