@@ -153,12 +153,18 @@ export class ClarinItemBoxViewComponent implements OnInit {
     const descMeta = this.item?.firstMetadata('dc.description');
     this.itemDescription = descMeta?.value || null;
     this.itemDescriptionLang = metadataLangToBcp47(descMeta?.language);
-    this.itemPublisher = this.item?.firstMetadataValue('dc.publisher');
+    const publisherMd = this.item?.allMetadata('dc.publisher')?.[0];
+    this.itemPublisher = publisherMd?.value ?? this.item?.firstMetadataValue('dc.publisher');
     this.itemDate = this.clarinDateService.composeItemDate(this.item);
 
     await this.assignBaseUrl();
-    this.publisherRedirectLink = this.getSearchEndpoint() + '?f.publisher=' + encodeURIComponent(this.itemPublisher)
-      + ',equals';
+    if (publisherMd?.authority) {
+      this.publisherRedirectLink = this.getSearchEndpoint() + '?f.publisher='
+        + encodeURIComponent(publisherMd.authority) + ',authority';
+    } else {
+      this.publisherRedirectLink = this.getSearchEndpoint() + '?f.publisher='
+        + encodeURIComponent(this.itemPublisher) + ',equals';
+    }
     this.getItemCommunity();
     this.loadItemLicense();
     this.getItemFilesSize();
