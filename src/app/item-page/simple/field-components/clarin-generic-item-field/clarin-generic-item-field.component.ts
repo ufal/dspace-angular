@@ -138,38 +138,26 @@ export class ClarinGenericItemFieldComponent implements OnInit {
    * @param index
    */
   public getLinkToSearch(index, value = '') {
-    let metadataValue = 'Error: value is empty';
-    if (isEmpty(value)) {
-      // Get metadata value from the Item's metadata field
-      metadataValue = this.getMetadataValue(index);
-    } else {
-      // The metadata value is passed from the parameter.
-      metadataValue = value;
-    }
-
     const searchType = convertMetadataFieldIntoSearchType(this.fields);
-    return this.baseUrl + '/search?f.' + encodeURIComponent(searchType) + '=' +
-      encodeURIComponent(metadataValue) + ',equals';
-  }
 
-  /**
-   * If the metadata field has more than 1 value return the value based on the index.
-   * @param index of the metadata value
-   */
-  public getMetadataValue(index) {
-    let metadataValue = '';
-    if (index === 0) {
-      // Return first metadata value.
-      return this.item.firstMetadataValue(this.fields);
+    // if a value is explicitly provided (e.g., from a parameter), use it as a fallback
+    if (!isEmpty(value)) {
+      return this.baseUrl + '/search?f.' + encodeURIComponent(searchType) + '=' + encodeURIComponent(value) + ',equals';
     }
-    // The metadata field has more metadata values - get the actual one
-    this.item.allMetadataValues(this.fields)?.forEach((metadataValueArray, arrayIndex) => {
-      if (index !== arrayIndex) {
-        return metadataValue;
+
+    // retrieve the full MetadataValue object for this index
+    const metadataArray = this.item.allMetadata(this.fields);
+    const mdValue = metadataArray?.[index];
+    if (mdValue) {
+      if (mdValue.authority) {
+        return this.baseUrl + '/search?f.' + encodeURIComponent(searchType) + '=' + encodeURIComponent(mdValue.authority) + ',authority';
+      } else {
+        return this.baseUrl + '/search?f.' + encodeURIComponent(searchType) + '=' + encodeURIComponent(mdValue.value) + ',equals';
       }
-      metadataValue = metadataValueArray;
-    });
-    return metadataValue;
+    }
+
+    // ultimate fallback (should not happen)
+    return this.baseUrl + '/search?f.' + encodeURIComponent(searchType) + '=,equals';
   }
 
   /**
