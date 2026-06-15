@@ -28,6 +28,7 @@
         </span>
         <span *ngIf="type === 'search'" class="d-inline-flex pr-1">
           <a [href]="getLinkToSearch(i)">{{mdValue.value | dsReplace: this.replaceCharacter}}</a>
+          <img *ngIf="mdValue.authority" src="/assets/images/ror-icon.svg" alt="ROR ID" class="ror-icon" height="16" style="margin-left: 4px; vertical-align: middle;">
           <span *ngIf="!last" [innerHTML]="separator"></span>
         </span>
         <span *ngIf="type === 'subject'" class="pr-1">

@@ -109,6 +109,10 @@ export class ClarinItemBoxViewComponent implements OnInit {
    */
   publisherRedirectLink: string;
   /**
+   * Whether the publisher has an authority (e.g., ROR ID)
+   */
+  hasPublisherAuthority: boolean = false;
+  /**
    * Composed date of the Item.
    */
   itemDate: string;
@@ -154,6 +158,7 @@ export class ClarinItemBoxViewComponent implements OnInit {
     this.itemDescription = descMeta?.value || null;
     this.itemDescriptionLang = metadataLangToBcp47(descMeta?.language);
     const publisherMd = this.item?.allMetadata('dc.publisher')?.[0];
+    this.hasPublisherAuthority = !!publisherMd?.authority;
     this.itemPublisher = publisherMd?.value ?? this.item?.firstMetadataValue('dc.publisher');
     this.itemDate = this.clarinDateService.composeItemDate(this.item);
 
