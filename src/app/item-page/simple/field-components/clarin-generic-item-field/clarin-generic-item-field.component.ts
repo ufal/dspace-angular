@@ -157,7 +157,7 @@ export class ClarinGenericItemFieldComponent implements OnInit {
     }
 
     // ultimate fallback (should not happen)
-    return this.baseUrl + '/search?f.' + encodeURIComponent(searchType) + '=,equals';
+    return this.baseUrl + '/search';
   }
 
   /**
