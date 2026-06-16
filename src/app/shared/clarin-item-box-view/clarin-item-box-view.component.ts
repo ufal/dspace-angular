@@ -111,7 +111,7 @@ export class ClarinItemBoxViewComponent implements OnInit {
   /**
    * Whether the publisher has an authority (e.g., ROR ID)
    */
-  hasPublisherAuthority: boolean = false;
+  hasPublisherAuthority = false;
   /**
    * Composed date of the Item.
    */
