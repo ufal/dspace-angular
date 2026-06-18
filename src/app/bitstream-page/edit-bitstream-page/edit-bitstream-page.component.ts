@@ -742,24 +742,31 @@ export class EditBitstreamPageComponent implements OnInit, OnDestroy {
    * otherwise retrieve the item ID based on the owning bundle's link
    */
   navigateToItemEditBitstreams() {
+    const navigate = () => this.router.navigate([getEntityEditRoute(this.entityType, this.itemId), 'bitstreams']);
+
     if (hasValue(this.itemId)) {
-      this.router.navigate([getEntityEditRoute(this.entityType, this.itemId), 'bitstreams']);
+      navigate();
       return;
     }
+
     if (hasValue(this.bundle) && hasValue(this.bundle.item)) {
       this.bundle.item.pipe(
-        getFirstSucceededRemoteDataPayload(),
-        take(1),
-      ).subscribe((item: Item) => {
-        this.itemId = item.uuid;
-        if (!hasValue(this.entityType)) {
-          this.entityType = item.firstMetadataValue('dspace.entity.type');
+        getFirstCompletedRemoteData(),
+      ).subscribe((itemRd: RemoteData<Item>) => {
+        if (itemRd.hasSucceeded && hasValue(itemRd.payload)) {
+          this.itemId = itemRd.payload.uuid;
+          if (!hasValue(this.entityType)) {
+            this.entityType = itemRd.payload.firstMetadataValue('dspace.entity.type');
+          }
+          navigate();
+        } else {
+          this.location.back();
         }
-        this.router.navigate([getEntityEditRoute(this.entityType, this.itemId), 'bitstreams']);
       });
       return;
     }
-    this.router.navigate([getEntityEditRoute(this.entityType, this.itemId), 'bitstreams']);
+
+    this.location.back();
   }
 
   /**
