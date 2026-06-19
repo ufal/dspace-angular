@@ -750,19 +750,21 @@ export class EditBitstreamPageComponent implements OnInit, OnDestroy {
     }
 
     if (hasValue(this.bundle) && hasValue(this.bundle.item)) {
-      this.bundle.item.pipe(
-        getFirstCompletedRemoteData(),
-      ).subscribe((itemRd: RemoteData<Item>) => {
-        if (itemRd.hasSucceeded && hasValue(itemRd.payload)) {
-          this.itemId = itemRd.payload.uuid;
-          if (!hasValue(this.entityType)) {
-            this.entityType = itemRd.payload.firstMetadataValue('dspace.entity.type');
+      this.subs.push(
+        this.bundle.item.pipe(
+          getFirstCompletedRemoteData(),
+        ).subscribe((itemRd: RemoteData<Item>) => {
+          if (itemRd.hasSucceeded && hasValue(itemRd.payload)) {
+            this.itemId = itemRd.payload.uuid;
+            if (!hasValue(this.entityType)) {
+              this.entityType = itemRd.payload.firstMetadataValue('dspace.entity.type');
+            }
+            navigate();
+          } else {
+            this.location.back();
           }
-          navigate();
-        } else {
-          this.location.back();
-        }
-      });
+        }),
+      );
       return;
     }
 
