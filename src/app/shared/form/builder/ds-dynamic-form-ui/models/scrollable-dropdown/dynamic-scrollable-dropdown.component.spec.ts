@@ -5,6 +5,7 @@ import { ComponentFixture, fakeAsync, inject, TestBed, tick, waitForAsync, } fro
 import { By } from '@angular/platform-browser';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
+import { of as observableOf } from 'rxjs';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { DynamicFormLayoutService, DynamicFormsCoreModule, DynamicFormValidationService } from '@ng-dynamic-forms/core';
 import { DynamicFormsNGBootstrapUIModule } from '@ng-dynamic-forms/ui-ng-bootstrap';
@@ -15,6 +16,7 @@ import { VocabularyServiceStub } from '../../../../../testing/vocabulary-service
 import { DsDynamicScrollableDropdownComponent } from './dynamic-scrollable-dropdown.component';
 import { DynamicScrollableDropdownModel } from './dynamic-scrollable-dropdown.model';
 import { VocabularyEntry } from '../../../../../../core/submission/vocabularies/models/vocabulary-entry.model';
+import { FormFieldMetadataValueObject } from '../../../models/form-field-metadata-value.model';
 import { createTestComponent, hasClass } from '../../../../../testing/utils.test';
 import {
   mockDynamicFormLayoutService,
@@ -209,6 +211,47 @@ describe('Dynamic Dynamic Scrollable Dropdown component', () => {
         expect(scrollableDropdownComp.optionsList).toEqual(vocabularyServiceStub.getList());
         expect(scrollableDropdownComp.model.value).toEqual(modelValue);
       });
+
+      it('should fall back to the underlying value when display is empty on value change', () => {
+        const valueWithEmptyDisplay = { display: '', value: 'Corpus' };
+        scrollableDropdownComp.setCurrentValue(valueWithEmptyDisplay);
+
+        let currentValue;
+        scrollableDropdownComp.currentValue.subscribe((v) => currentValue = v);
+
+        expect(currentValue).toBe('Corpus');
+      });
+
+      it('should fall back to the underlying value when display is empty on init', () => {
+        spyOn(vocabularyServiceStub, 'getVocabularyEntryByID').and.returnValue(observableOf(new VocabularyEntry()));
+        (scrollableDropdownComp.model as any).value = Object.assign(
+          new FormFieldMetadataValueObject(),
+          { display: '', value: 'Corpus', authority: 'corpus-auth' }
+        );
+        scrollableDropdownComp.setCurrentValue(scrollableDropdownComp.model.value, true);
+
+        let currentValue;
+        scrollableDropdownComp.currentValue.subscribe((v) => currentValue = v);
+
+        expect(currentValue).toBe('Corpus');
+      });
+
+      // Regression for ufal/clarin-dspace#1377: after a dc.type change the section
+      // reloads and pushes a new value with an empty display through the form control.
+      // The rendered input must not blank out.
+      it('should keep the rendered value when a value with empty display arrives via valueChanges', fakeAsync(() => {
+        const reloadedValue = Object.assign(
+          new FormFieldMetadataValueObject(),
+          { display: '', value: 'Corpus', authority: 'corpus-auth' }
+        );
+
+        scrollableDropdownComp.group.get(scrollableDropdownComp.model.id).setValue(reloadedValue);
+        tick();
+        scrollableDropdownFixture.detectChanges();
+
+        const input = scrollableDropdownFixture.debugElement.query(By.css('input.form-control')).nativeElement;
+        expect(input.value).toBe('Corpus');
+      }));
     });
   });
 });
