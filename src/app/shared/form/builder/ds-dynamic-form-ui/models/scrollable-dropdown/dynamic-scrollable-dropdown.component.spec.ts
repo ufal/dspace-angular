@@ -223,12 +223,15 @@ describe('Dynamic Dynamic Scrollable Dropdown component', () => {
       });
 
       it('should fall back to the underlying value when display is empty on init', () => {
-        spyOn(vocabularyServiceStub, 'getVocabularyEntryByID').and.returnValue(observableOf(new VocabularyEntry()));
-        (scrollableDropdownComp.model as any).value = Object.assign(
+        // Build the value bypassing the FormFieldMetadataValueObject constructor (which would
+        // otherwise apply its own `display || value`), so the init branch genuinely receives an
+        // empty display and exercises the fallback in setCurrentValue.
+        const emptyDisplayValue = Object.assign(
           new FormFieldMetadataValueObject(),
-          { display: '', value: 'Corpus', authority: 'corpus-auth' }
+          { display: '', value: 'Corpus' }
         );
-        scrollableDropdownComp.setCurrentValue(scrollableDropdownComp.model.value, true);
+        spyOn(scrollableDropdownComp, 'getInitValueFromModel').and.returnValue(observableOf(emptyDisplayValue));
+        scrollableDropdownComp.setCurrentValue(emptyDisplayValue, true);
 
         let currentValue;
         scrollableDropdownComp.currentValue.subscribe((v) => currentValue = v);
