@@ -344,12 +344,6 @@ export class EPersonFormComponent implements OnInit, OnDestroy {
     this.canReset$ = observableOf(true);
   }
 
-  private getDeleteAccess(): Observable<boolean> {
-    return this.activeEPerson$.pipe(
-      switchMap((eperson) => this.authorizationService.isAuthorized(FeatureID.CanDelete, hasValue(eperson) ? eperson.self : undefined))
-    );
-  }
-
   /**
    * Stop editing the currently selected eperson
    */
@@ -527,7 +521,7 @@ export class EPersonFormComponent implements OnInit, OnDestroy {
 
                 return observableOf({ restResponse: null, eperson, attempted: false });
               }),
-              finalize(() => this.canDelete$ = this.getDeleteAccess())
+              finalize(() => this.canDelete$ = observableOf(true))
             );
           })
         );
