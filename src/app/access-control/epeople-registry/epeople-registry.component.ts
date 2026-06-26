@@ -3,15 +3,12 @@ import { UntypedFormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, combineLatest, Observable, of as observableOf, Subscription } from 'rxjs';
-import { catchError, map, switchMap, take } from 'rxjs/operators';
+import { map, switchMap, take } from 'rxjs/operators';
 import { AuthService } from '../../core/auth/auth.service';
-import { RequestParam } from '../../core/cache/models/request-param.model';
 import { buildPaginatedList, PaginatedList } from '../../core/data/paginated-list.model';
 import { RemoteData } from '../../core/data/remote-data';
 import { EPersonDataService } from '../../core/eperson/eperson-data.service';
 import { EPerson } from '../../core/eperson/models/eperson.model';
-import { GroupDataService } from '../../core/eperson/group-data.service';
-import { Group } from '../../core/eperson/models/group.model';
 import { hasValue } from '../../shared/empty.util';
 import { NotificationsService } from '../../shared/notifications/notifications.service';
 import { PaginationComponentOptions } from '../../shared/pagination/pagination-component-options.model';
@@ -21,19 +18,13 @@ import { AuthorizationDataService } from '../../core/data/feature-authorization/
 import { getAllSucceededRemoteData, getFirstCompletedRemoteData } from '../../core/shared/operators';
 import { ConfirmationModalComponent } from '../../shared/confirmation-modal/confirmation-modal.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { FindListOptions } from '../../core/data/find-list-options.model';
 import { RequestService } from '../../core/data/request.service';
 import { PageInfo } from '../../core/shared/page-info.model';
 import { NoContent } from '../../core/shared/NoContent.model';
 import { PaginationService } from '../../core/pagination/pagination.service';
 import { DSONameService } from '../../core/breadcrumbs/dso-name.service';
-import { WorkspaceitemDataService } from '../../core/submission/workspaceitem-data.service';
-import { WorkflowItemDataService } from '../../core/submission/workflowitem-data.service';
 import { getEPersonEditRoute, getEPersonsRoute } from '../access-control-routing-paths';
-import { SearchService } from '../../core/shared/search/search.service';
-import { PaginatedSearchOptions } from '../../shared/search/models/paginated-search-options.model';
-import { DSpaceObject } from '../../core/shared/dspace-object.model';
-import { SearchObjects } from '../../shared/search/models/search-objects.model';
+import { EPersonDeleteGuardService, SELF_DELETE_WARNING_LABEL } from './eperson-delete-guard.service';
 
 @Component({
   selector: 'ds-epeople-registry',
@@ -46,7 +37,7 @@ import { SearchObjects } from '../../shared/search/models/search-objects.model';
 export class EPeopleRegistryComponent implements OnInit, OnDestroy {
 
   labelPrefix = 'admin.access-control.epeople.';
-  selfDeleteWarningLabel = this.labelPrefix + 'notification.deleted.forbidden.self';
+  selfDeleteWarningLabel = SELF_DELETE_WARNING_LABEL;
 
   currentAuthenticatedUserId: string;
 
@@ -108,14 +99,11 @@ export class EPeopleRegistryComponent implements OnInit, OnDestroy {
               private notificationsService: NotificationsService,
               private authorizationService: AuthorizationDataService,
               private authService: AuthService,
-              private groupDataService: GroupDataService,
+              private deleteGuard: EPersonDeleteGuardService,
               private formBuilder: UntypedFormBuilder,
               private router: Router,
               private modalService: NgbModal,
               private paginationService: PaginationService,
-              private workspaceItemDataService: WorkspaceitemDataService,
-              private workflowItemDataService: WorkflowItemDataService,
-              private searchService: SearchService,
               public requestService: RequestService,
               public dsoNameService: DSONameService,
   ) {
@@ -217,11 +205,11 @@ export class EPeopleRegistryComponent implements OnInit, OnDestroy {
       }
 
       if (this.isCurrentUser(ePerson)) {
-        this.showSelfDeleteNotification();
+        this.deleteGuard.showSelfDeleteNotification();
         return;
       }
 
-      this.getDeleteWarningLabel(ePerson).pipe(take(1)).subscribe((warningLabel: string | undefined) => {
+      this.deleteGuard.getDeleteWarningLabel(ePerson).pipe(take(1)).subscribe((warningLabel: string | undefined) => {
         const modalRef = this.modalService.open(ConfirmationModalComponent);
         modalRef.componentInstance.dso = ePerson;
         modalRef.componentInstance.headerLabel = 'confirmation-modal.delete-eperson.header';
@@ -236,8 +224,8 @@ export class EPeopleRegistryComponent implements OnInit, OnDestroy {
             this.epersonService.deleteEPerson(ePerson).pipe(getFirstCompletedRemoteData()).subscribe((restResponse: RemoteData<NoContent>) => {
               if (restResponse.hasSucceeded) {
                 this.notificationsService.success(this.translateService.get(this.labelPrefix + 'notification.deleted.success', {name: this.dsoNameService.getName(ePerson)}));
-              } else if (this.isSelfDeletionError(restResponse)) {
-                this.showSelfDeleteNotification();
+              } else if (this.deleteGuard.isSelfDeletionError(restResponse)) {
+                this.deleteGuard.showSelfDeleteNotification();
               } else {
                 this.notificationsService.error(this.translateService.get(this.labelPrefix + 'notification.deleted.failure', {
                   id: ePerson.id,
@@ -254,103 +242,7 @@ export class EPeopleRegistryComponent implements OnInit, OnDestroy {
   }
 
   isCurrentUser(ePerson: EPerson): boolean {
-    return hasValue(ePerson?.id) && ePerson.id === this.currentAuthenticatedUserId;
-  }
-
-  private getDeleteWarningLabel(ePerson: EPerson): Observable<string | undefined> {
-    return combineLatest([
-      this.hasSubmittedItems(ePerson.id),
-      this.isAdministrator(ePerson),
-    ]).pipe(
-      map(([hasSubmittedItems, isAdmin]: [boolean, boolean]) => {
-        if (hasSubmittedItems && isAdmin) {
-          return this.labelPrefix + 'delete.warning.submitterAndAdmin';
-        }
-        if (hasSubmittedItems) {
-          return this.labelPrefix + 'delete.warning.submitter';
-        }
-        if (isAdmin) {
-          return this.labelPrefix + 'delete.warning.admin';
-        }
-        return undefined;
-      })
-    );
-  }
-
-  private hasSubmittedItems(epersonId: string): Observable<boolean> {
-    const submitterSearchOptions = Object.assign(new FindListOptions(), {
-      currentPage: 1,
-      elementsPerPage: 1,
-      searchParams: [new RequestParam('uuid', epersonId)],
-    });
-    const archivedSearchOptions = new PaginatedSearchOptions({
-      query: `submitter_authority:${epersonId}`,
-      pagination: Object.assign(new PaginationComponentOptions(), {
-        currentPage: 1,
-        pageSize: 1,
-      }),
-    });
-
-    return combineLatest([
-      this.workspaceItemDataService.searchBy('findBySubmitter', submitterSearchOptions).pipe(
-        getFirstCompletedRemoteData(),
-        map((rd: RemoteData<PaginatedList<any>>) => rd.hasSucceeded && rd.payload.totalElements > 0),
-        catchError(() => observableOf(false))
-      ),
-      this.workflowItemDataService.searchBy('findBySubmitter', submitterSearchOptions).pipe(
-        getFirstCompletedRemoteData(),
-        map((rd: RemoteData<PaginatedList<any>>) => rd.hasSucceeded && rd.payload.totalElements > 0),
-        catchError(() => observableOf(false))
-      ),
-      this.searchService.search<DSpaceObject>(archivedSearchOptions).pipe(
-        getFirstCompletedRemoteData(),
-        map((rd: RemoteData<SearchObjects<DSpaceObject>>) => rd.hasSucceeded && rd.payload.totalElements > 0),
-        catchError(() => observableOf(false))
-      ),
-    ]).pipe(
-      map((results: boolean[]) => results.some(Boolean))
-    );
-  }
-
-  private isAdministrator(ePerson: EPerson): Observable<boolean> {
-    return this.hasAdministratorGroupOnPage(ePerson._links.groups.href, 1);
-  }
-
-  private hasAdministratorGroupOnPage(groupsHref: string, currentPage: number): Observable<boolean> {
-    const options = Object.assign(new FindListOptions(), {
-      currentPage,
-      elementsPerPage: 100,
-    });
-
-    return this.groupDataService.findListByHref(groupsHref, options).pipe(
-      getFirstCompletedRemoteData(),
-      switchMap((rd: RemoteData<PaginatedList<Group>>) => {
-        if (!rd?.hasSucceeded || !hasValue(rd.payload)) {
-          return observableOf(false);
-        }
-
-        const hasAdministrator = rd.payload.page.some((group: Group) => group.name?.toLowerCase() === 'administrator');
-        if (hasAdministrator) {
-          return observableOf(true);
-        }
-
-        const hasMorePages = rd.payload.pageInfo.currentPage < rd.payload.pageInfo.totalPages;
-        if (!hasMorePages) {
-          return observableOf(false);
-        }
-
-        return this.hasAdministratorGroupOnPage(groupsHref, rd.payload.pageInfo.currentPage + 1);
-      }),
-      catchError(() => observableOf(false))
-    );
-  }
-
-  private isSelfDeletionError(restResponse: RemoteData<NoContent>): boolean {
-    return restResponse?.statusCode === 400 && restResponse?.errorMessage?.toLowerCase().includes('cannot delete yourself');
-  }
-
-  private showSelfDeleteNotification(): void {
-    this.notificationsService.error(this.translateService.get(this.selfDeleteWarningLabel));
+    return this.deleteGuard.isCurrentUser(ePerson, this.currentAuthenticatedUserId);
   }
 
   /**

@@ -1,5 +1,5 @@
 import { Router } from '@angular/router';
-import { Observable, of as observableOf } from 'rxjs';
+import { Observable, of as observableOf, throwError as observableThrowError } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
@@ -11,9 +11,7 @@ import { buildPaginatedList, PaginatedList } from '../../core/data/paginated-lis
 import { RemoteData } from '../../core/data/remote-data';
 import { AuthService } from '../../core/auth/auth.service';
 import { EPersonDataService } from '../../core/eperson/eperson-data.service';
-import { GroupDataService } from '../../core/eperson/group-data.service';
 import { EPerson } from '../../core/eperson/models/eperson.model';
-import { Group } from '../../core/eperson/models/group.model';
 import { PageInfo } from '../../core/shared/page-info.model';
 import { DSONameService } from '../../core/breadcrumbs/dso-name.service';
 import { FormBuilderService } from '../../shared/form/builder/form-builder.service';
@@ -27,6 +25,8 @@ import { TranslateLoaderMock } from '../../shared/mocks/translate-loader.mock';
 import { NotificationsServiceStub } from '../../shared/testing/notifications-service.stub';
 import { RouterStub } from '../../shared/testing/router.stub';
 import { AuthorizationDataService } from '../../core/data/feature-authorization/authorization-data.service';
+import { FeatureID } from '../../core/data/feature-authorization/feature-id';
+import { EPersonDeleteGuardService } from './eperson-delete-guard.service';
 import { RequestService } from '../../core/data/request.service';
 import { PaginationService } from '../../core/pagination/pagination.service';
 import { PaginationServiceStub } from '../../shared/testing/pagination-service.stub';
@@ -48,7 +48,6 @@ describe('EPeopleRegistryComponent', () => {
   let ePersonDataServiceStub: any;
   let authorizationService: AuthorizationDataService;
   let authService: jasmine.SpyObj<AuthService>;
-  let groupDataService: jasmine.SpyObj<GroupDataService>;
   let workspaceItemDataService: jasmine.SpyObj<WorkspaceitemDataService>;
   let workflowItemDataService: jasmine.SpyObj<WorkflowItemDataService>;
   let searchService: jasmine.SpyObj<SearchService>;
@@ -156,8 +155,6 @@ describe('EPeopleRegistryComponent', () => {
     });
     authService = jasmine.createSpyObj('authService', ['getAuthenticatedUserFromStore']);
     authService.getAuthenticatedUserFromStore.and.returnValue(observableOf(EPersonMock2));
-    groupDataService = jasmine.createSpyObj('groupDataService', ['findListByHref']);
-    groupDataService.findListByHref.and.returnValue(buildRemoteList([], 0));
     workspaceItemDataService = jasmine.createSpyObj('workspaceItemDataService', ['searchBy']);
     workspaceItemDataService.searchBy.and.returnValue(buildRemoteList([], 0));
     workflowItemDataService = jasmine.createSpyObj('workflowItemDataService', ['searchBy']);
@@ -184,11 +181,11 @@ describe('EPeopleRegistryComponent', () => {
         { provide: NotificationsService, useValue: notificationsService },
         { provide: AuthorizationDataService, useValue: authorizationService },
         { provide: AuthService, useValue: authService },
-        { provide: GroupDataService, useValue: groupDataService },
         { provide: FormBuilderService, useValue: builderService },
         { provide: WorkspaceitemDataService, useValue: workspaceItemDataService },
         { provide: WorkflowItemDataService, useValue: workflowItemDataService },
         { provide: SearchService, useValue: searchService },
+        EPersonDeleteGuardService,
         { provide: Router, useValue: new RouterStub() },
         { provide: RequestService, useValue: jasmine.createSpyObj('requestService', ['removeByHrefSubstring']) },
         { provide: PaginationService, useValue: paginationService },
@@ -293,11 +290,10 @@ describe('EPeopleRegistryComponent', () => {
     });
 
     it('should call submitter checks and compose the combined warning label', fakeAsync(() => {
-      const adminGroup = Object.assign(new Group(), { _name: 'Administrator' });
       workspaceItemDataService.searchBy.and.returnValue(buildRemoteList([{} as any], 1));
       workflowItemDataService.searchBy.and.returnValue(buildRemoteList([], 0));
       searchService.search.and.returnValue(createSuccessfulRemoteDataObject$(buildSearchObjects(0)));
-      groupDataService.findListByHref.and.returnValue(buildRemoteList([adminGroup], 1));
+      // isAuthorized returns true by default -> the target is treated as an administrator
       modalRef.componentInstance.response = observableOf(false);
 
       const deleteButtons = fixture.debugElement.queryAll(By.css('.access-control-deleteEPersonButton'));
@@ -307,41 +303,40 @@ describe('EPeopleRegistryComponent', () => {
       expect(workspaceItemDataService.searchBy).toHaveBeenCalledWith('findBySubmitter', jasmine.any(FindListOptions));
       expect(workflowItemDataService.searchBy).toHaveBeenCalledWith('findBySubmitter', jasmine.any(FindListOptions));
       expect(searchService.search).toHaveBeenCalled();
-      expect(groupDataService.findListByHref).toHaveBeenCalledWith(EPersonMock._links.groups.href, jasmine.any(FindListOptions));
+      expect(authorizationService.isAuthorized).toHaveBeenCalledWith(FeatureID.AdministratorOf, undefined, EPersonMock.id);
       expect(modalRef.componentInstance.warningLabel).toBe('admin.access-control.epeople.delete.warning.submitterAndAdmin');
     }));
 
-    it('should detect administrator membership on later pages', fakeAsync(() => {
-      const adminGroup = Object.assign(new Group(), { _name: 'Administrator' });
-      const firstPage = createSuccessfulRemoteDataObject$(
-        buildPaginatedList(new PageInfo({
-          elementsPerPage: 100,
-          totalElements: 101,
-          totalPages: 2,
-          currentPage: 1,
-        }), [Object.assign(new Group(), { _name: 'Regular Group' })])
-      );
-      const secondPage = createSuccessfulRemoteDataObject$(
-        buildPaginatedList(new PageInfo({
-          elementsPerPage: 100,
-          totalElements: 101,
-          totalPages: 2,
-          currentPage: 2,
-        }), [adminGroup])
-      );
-
+    it('should detect administrator via the authorization feature', fakeAsync(() => {
       workspaceItemDataService.searchBy.and.returnValue(buildRemoteList([], 0));
       workflowItemDataService.searchBy.and.returnValue(buildRemoteList([], 0));
       searchService.search.and.returnValue(createSuccessfulRemoteDataObject$(buildSearchObjects(0)));
-      groupDataService.findListByHref.and.returnValues(firstPage, secondPage);
+      // admin -> true, all submitter probes empty -> admin-only warning
+      (authorizationService.isAuthorized as jasmine.Spy).and.callFake((featureId: FeatureID) => observableOf(featureId === FeatureID.AdministratorOf));
       modalRef.componentInstance.response = observableOf(false);
 
       const deleteButtons = fixture.debugElement.queryAll(By.css('.access-control-deleteEPersonButton'));
       deleteButtons[0].triggerEventHandler('click', null);
       tick();
 
-      expect(groupDataService.findListByHref).toHaveBeenCalledTimes(2);
+      expect(authorizationService.isAuthorized).toHaveBeenCalledWith(FeatureID.AdministratorOf, undefined, EPersonMock.id);
       expect(modalRef.componentInstance.warningLabel).toBe('admin.access-control.epeople.delete.warning.admin');
+    }));
+
+    it('should still open the delete modal when a submitter probe errors (centralised catchError)', fakeAsync(() => {
+      workspaceItemDataService.searchBy.and.returnValue(observableThrowError(() => new Error('boom')));
+      workflowItemDataService.searchBy.and.returnValue(buildRemoteList([], 0));
+      searchService.search.and.returnValue(createSuccessfulRemoteDataObject$(buildSearchObjects(0)));
+      // CanDelete stays true so the button renders; AdministratorOf false so the only warning could come from submitter probes
+      (authorizationService.isAuthorized as jasmine.Spy).and.callFake((featureId: FeatureID) => observableOf(featureId !== FeatureID.AdministratorOf));
+      modalRef.componentInstance.response = observableOf(false);
+
+      const deleteButtons = fixture.debugElement.queryAll(By.css('.access-control-deleteEPersonButton'));
+      deleteButtons[0].triggerEventHandler('click', null);
+      tick();
+
+      expect(modalService.open).toHaveBeenCalled();
+      expect(modalRef.componentInstance.warningLabel).toBeUndefined();
     }));
 
     it('should show a friendly self-delete notification on backend 400 self-delete errors', fakeAsync(() => {

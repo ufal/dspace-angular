@@ -1,4 +1,6 @@
-import { Observable, of as observableOf } from 'rxjs';
+import { Observable, of as observableOf, throwError as observableThrowError } from 'rxjs';
+import { FeatureID } from '../../../core/data/feature-authorization/feature-id';
+import { EPersonDeleteGuardService } from '../eperson-delete-guard.service';
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
@@ -10,7 +12,6 @@ import { buildPaginatedList, PaginatedList } from '../../../core/data/paginated-
 import { RemoteData } from '../../../core/data/remote-data';
 import { EPersonDataService } from '../../../core/eperson/eperson-data.service';
 import { EPerson } from '../../../core/eperson/models/eperson.model';
-import { Group } from '../../../core/eperson/models/group.model';
 import { PageInfo } from '../../../core/shared/page-info.model';
 import { FormBuilderService } from '../../../shared/form/builder/form-builder.service';
 import { NotificationsService } from '../../../shared/notifications/notifications.service';
@@ -246,6 +247,7 @@ describe('EPersonFormComponent', () => {
         { provide: WorkspaceitemDataService, useValue: workspaceItemDataService },
         { provide: WorkflowItemDataService, useValue: workflowItemDataService },
         { provide: SearchService, useValue: searchService },
+        EPersonDeleteGuardService,
         { provide: RequestService, useValue: jasmine.createSpyObj('requestService', ['removeByHrefSubstring'])},
         { provide: EpersonRegistrationService, useValue: epersonRegistrationService },
         { provide: DSONameService, useValue: jasmine.createSpyObj('dsoNameService', {
@@ -535,77 +537,48 @@ describe('EPersonFormComponent', () => {
     });
 
     it('should pass the combined warning label to the delete confirmation modal', () => {
-      const adminGroup = Object.assign(new Group(), { _name: 'Administrator' });
       workspaceItemDataService.searchBy.and.returnValue(createSuccessfulRemoteDataObject$(buildPaginatedList(new PageInfo({
         elementsPerPage: 1,
         totalElements: 1,
         totalPages: 1,
         currentPage: 1,
       }), [{} as any])));
-      groupsDataService.findListByHref = jasmine.createSpy().and.returnValue(createSuccessfulRemoteDataObject$(buildPaginatedList(new PageInfo({
-        elementsPerPage: 1,
-        totalElements: 1,
-        totalPages: 1,
-        currentPage: 1,
-      }), [adminGroup])));
+      // isAuthorized returns true by default -> the target is treated as an administrator
+      fixture.detectChanges();
+
+      const deleteButton = fixture.debugElement.query(By.css('.delete-button'));
+      deleteButton.triggerEventHandler('click', null);
+
+      expect(authorizationService.isAuthorized).toHaveBeenCalledWith(FeatureID.AdministratorOf, undefined, eperson.id);
+      expect(modalService.open).toHaveBeenCalled();
+      expect(modalService.open.calls.mostRecent().returnValue.componentInstance.warningLabel)
+        .toBe('admin.access-control.epeople.delete.warning.submitterAndAdmin');
+    });
+
+    it('should detect administrator via the authorization feature', () => {
+      // all submitter probes empty (default), administrator feature -> true
+      (authorizationService.isAuthorized as jasmine.Spy).and.callFake((featureId: FeatureID) => observableOf(featureId === FeatureID.AdministratorOf));
+      fixture.detectChanges();
+
+      const deleteButton = fixture.debugElement.query(By.css('.delete-button'));
+      deleteButton.triggerEventHandler('click', null);
+
+      expect(authorizationService.isAuthorized).toHaveBeenCalledWith(FeatureID.AdministratorOf, undefined, eperson.id);
+      expect(modalService.open.calls.mostRecent().returnValue.componentInstance.warningLabel)
+        .toBe('admin.access-control.epeople.delete.warning.admin');
+    });
+
+    it('should still open the delete modal when a submitter probe errors (centralised catchError)', () => {
+      workspaceItemDataService.searchBy.and.returnValue(observableThrowError(() => new Error('boom')));
+      // workflow/search empty by default; AdministratorOf false so there is no warning to compose
+      (authorizationService.isAuthorized as jasmine.Spy).and.callFake((featureId: FeatureID) => observableOf(featureId !== FeatureID.AdministratorOf));
       fixture.detectChanges();
 
       const deleteButton = fixture.debugElement.query(By.css('.delete-button'));
       deleteButton.triggerEventHandler('click', null);
 
       expect(modalService.open).toHaveBeenCalled();
-      expect(modalService.open.calls.mostRecent().returnValue.componentInstance.warningLabel)
-        .toBe('admin.access-control.epeople.delete.warning.submitterAndAdmin');
-    });
-
-    it('should detect administrator membership on later pages', () => {
-      const firstPage = createSuccessfulRemoteDataObject$(
-        buildPaginatedList(new PageInfo({
-          elementsPerPage: 100,
-          totalElements: 101,
-          totalPages: 2,
-          currentPage: 1,
-        }), [Object.assign(new Group(), { _name: 'Regular Group' })])
-      );
-      const secondPage = createSuccessfulRemoteDataObject$(
-        buildPaginatedList(new PageInfo({
-          elementsPerPage: 100,
-          totalElements: 101,
-          totalPages: 2,
-          currentPage: 2,
-        }), [Object.assign(new Group(), { _name: 'Administrator' })])
-      );
-
-      workspaceItemDataService.searchBy.and.returnValue(createSuccessfulRemoteDataObject$(buildPaginatedList(new PageInfo({
-        elementsPerPage: 1,
-        totalElements: 0,
-        totalPages: 1,
-        currentPage: 1,
-      }), [])));
-      workflowItemDataService.searchBy.and.returnValue(createSuccessfulRemoteDataObject$(buildPaginatedList(new PageInfo({
-        elementsPerPage: 1,
-        totalElements: 0,
-        totalPages: 1,
-        currentPage: 1,
-      }), [])));
-      searchService.search.and.returnValue(createSuccessfulRemoteDataObject$(Object.assign(
-        new SearchObjects<DSpaceObject>(),
-        buildPaginatedList(new PageInfo({
-          elementsPerPage: 1,
-          totalElements: 0,
-          totalPages: 1,
-          currentPage: 1,
-        }), [])
-      )));
-      groupsDataService.findListByHref = jasmine.createSpy().and.returnValues(firstPage, secondPage);
-      fixture.detectChanges();
-
-      const deleteButton = fixture.debugElement.query(By.css('.delete-button'));
-      deleteButton.triggerEventHandler('click', null);
-
-      expect(groupsDataService.findListByHref).toHaveBeenCalledTimes(2);
-      expect(modalService.open.calls.mostRecent().returnValue.componentInstance.warningLabel)
-        .toBe('admin.access-control.epeople.delete.warning.admin');
+      expect(modalService.open.calls.mostRecent().returnValue.componentInstance.warningLabel).toBeUndefined();
     });
 
     it('should show the friendly self-delete notification when the backend returns the self-delete error', () => {
