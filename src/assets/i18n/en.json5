@@ -355,9 +355,9 @@
 
   "admin.access-control.epeople.delete.warning.submitter": "Warning: this user has submitted items. Deleting this EPerson may affect submission ownership and related repository records.",
 
-  "admin.access-control.epeople.delete.warning.admin": "Warning: this user is a member of the Administrator group. Deleting this EPerson will remove an administrator account.",
+  "admin.access-control.epeople.delete.warning.admin": "Warning: this user has administrator privileges. Deleting this EPerson will remove an administrator account.",
 
-  "admin.access-control.epeople.delete.warning.submitterAndAdmin": "Warning: this user has submitted items and is a member of the Administrator group. Deleting this EPerson may affect submission ownership and remove an administrator account.",
+  "admin.access-control.epeople.delete.warning.submitterAndAdmin": "Warning: this user has submitted items and has administrator privileges. Deleting this EPerson may affect submission ownership and remove an administrator account.",
 
   "admin.access-control.epeople.form.groupsEPersonIsMemberOf": "Member of these groups:",
 
