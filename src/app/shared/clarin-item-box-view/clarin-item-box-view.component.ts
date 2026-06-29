@@ -19,7 +19,7 @@ import { RemoteData } from '../../core/data/remote-data';
 import { PaginatedList } from '../../core/data/paginated-list.model';
 import { ClarinLicense } from '../../core/shared/clarin/clarin-license.model';
 import { ClarinLicenseDataService } from '../../core/data/clarin/clarin-license-data.service';
-import { getBaseUrl, secureImageData } from '../clarin-shared-util';
+import { buildAuthoritySearchFilter, getBaseUrl, secureImageData } from '../clarin-shared-util';
 import { DomSanitizer } from '@angular/platform-browser';
 import { BundleDataService } from '../../core/data/bundle-data.service';
 import { Bundle } from '../../core/shared/bundle.model';
@@ -159,16 +159,12 @@ export class ClarinItemBoxViewComponent implements OnInit {
     this.itemDescriptionLang = metadataLangToBcp47(descMeta?.language);
     const publisherMd = this.item?.allMetadata('dc.publisher')?.[0];
     this.hasPublisherRorAuthority = !!publisherMd?.authority;
-    this.itemPublisher = publisherMd?.value ?? this.item?.firstMetadataValue('dc.publisher');
+    this.itemPublisher = publisherMd?.value;
     this.itemDate = this.clarinDateService.composeItemDate(this.item);
 
     await this.assignBaseUrl();
-    if (publisherMd?.authority) {
-      this.publisherRedirectLink = this.getSearchEndpoint() + '?f.publisher='
-        + encodeURIComponent(publisherMd.authority) + ',authority';
-    } else {
-      this.publisherRedirectLink = this.getSearchEndpoint() + '?f.publisher='
-        + encodeURIComponent(this.itemPublisher) + ',equals';
+    if (publisherMd) {
+      this.publisherRedirectLink = this.getSearchEndpoint() + '?' + buildAuthoritySearchFilter('publisher', publisherMd);
     }
     this.getItemCommunity();
     this.loadItemLicense();

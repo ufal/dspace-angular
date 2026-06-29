@@ -3,7 +3,7 @@ import { Item } from '../../../../core/shared/item.model';
 import { isEmpty, isNotUndefined } from '../../../../shared/empty.util';
 import { ConfigurationProperty } from '../../../../core/shared/configuration-property.model';
 import { DSONameService } from '../../../../core/breadcrumbs/dso-name.service';
-import { convertMetadataFieldIntoSearchType, getBaseUrl } from '../../../../shared/clarin-shared-util';
+import { buildAuthoritySearchFilter, convertMetadataFieldIntoSearchType, getBaseUrl } from '../../../../shared/clarin-shared-util';
 import { ConfigurationDataService } from '../../../../core/data/configuration-data.service';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { getFirstSucceededRemoteDataPayload } from '../../../../core/shared/operators';
@@ -140,24 +140,15 @@ export class ClarinGenericItemFieldComponent implements OnInit {
   public getLinkToSearch(index, value = '') {
     const searchType = convertMetadataFieldIntoSearchType(this.fields);
 
-    // if a value is explicitly provided (e.g., from a parameter), use it as a fallback
-    if (!isEmpty(value)) {
-      return this.baseUrl + '/search?f.' + encodeURIComponent(searchType) + '=' + encodeURIComponent(value) + ',equals';
+    // If a value is explicitly provided (e.g. a single subject from a split list), search by that plain value.
+    // Otherwise resolve the full MetadataValue for this index so an authority (e.g. ROR) can be used.
+    const mdValue = !isEmpty(value) ? { value } : this.item.allMetadata(this.fields)?.[index];
+    if (!mdValue) {
+      // ultimate fallback (should not happen)
+      return this.baseUrl + '/search';
     }
 
-    // retrieve the full MetadataValue object for this index
-    const metadataArray = this.item.allMetadata(this.fields);
-    const mdValue = metadataArray?.[index];
-    if (mdValue) {
-      if (mdValue.authority) {
-        return this.baseUrl + '/search?f.' + encodeURIComponent(searchType) + '=' + encodeURIComponent(mdValue.authority) + ',authority';
-      } else {
-        return this.baseUrl + '/search?f.' + encodeURIComponent(searchType) + '=' + encodeURIComponent(mdValue.value) + ',equals';
-      }
-    }
-
-    // ultimate fallback (should not happen)
-    return this.baseUrl + '/search';
+    return this.baseUrl + '/search?' + buildAuthoritySearchFilter(searchType, mdValue);
   }
 
   /**
