@@ -157,7 +157,7 @@ export class ClarinItemBoxViewComponent implements OnInit {
     const descMeta = this.item?.firstMetadata('dc.description');
     this.itemDescription = descMeta?.value || null;
     this.itemDescriptionLang = metadataLangToBcp47(descMeta?.language);
-    const publisherMd = this.item?.allMetadata('dc.publisher')?.[0];
+    const publisherMd = this.item?.allMetadata(['dc.publisher', 'creativework.publisher'])?.[0];
     this.hasPublisherRorAuthority = !!publisherMd?.authority;
     this.itemPublisher = publisherMd?.value;
     this.itemDate = this.clarinDateService.composeItemDate(this.item);

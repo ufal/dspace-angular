@@ -28,8 +28,8 @@ describe('clarin-shared-util', () => {
       expect(convertMetadataFieldIntoSearchType(['dc.publisher'])).toBe('publisher');
     });
 
-    it('no longer maps creativework.publisher (falls back to default)', () => {
-      expect(convertMetadataFieldIntoSearchType(['creativework.publisher'])).toBe('');
+    it('maps creativework.publisher to the publisher filter', () => {
+      expect(convertMetadataFieldIntoSearchType(['creativework.publisher'])).toBe('publisher');
     });
 
     it('maps dc.type to the type filter', () => {
