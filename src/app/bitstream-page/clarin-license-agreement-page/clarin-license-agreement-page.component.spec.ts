@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -25,6 +26,14 @@ import { getMockRequestService } from '../../shared/mocks/request.service.mock';
 import { NotificationsService } from '../../shared/notifications/notifications.service';
 import { HtmlContentService } from '../../shared/html-content.service';
 import { NotificationsServiceStub } from '../../shared/testing/notifications-service.stub';
+import { VarDirective } from '../../shared/utils/var.directive';
+
+@Pipe({ name: 'dsSafeHtml' })
+class MockDsSafeHtmlPipe implements PipeTransform {
+  transform(value: unknown): unknown {
+    return value;
+  }
+}
 
 describe('ClarinLicenseAgreementPageComponent', () => {
   let component: ClarinLicenseAgreementPageComponent;
@@ -42,7 +51,7 @@ describe('ClarinLicenseAgreementPageComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      declarations: [ ClarinLicenseAgreementPageComponent ],
+      declarations: [ ClarinLicenseAgreementPageComponent, VarDirective, MockDsSafeHtmlPipe ],
       imports: [ CommonModule, TranslateModule.forRoot() ],
       providers: [
         { provide: ClarinLicenseResourceMappingService, useValue: jasmine.createSpyObj('clarinLicenseResourceMappingService', ['searchBy']) },
