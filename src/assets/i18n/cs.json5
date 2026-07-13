@@ -8458,8 +8458,7 @@
   // TODO Source message changed - Revise the translation
   "admin.update-config.success.save.title": "Konfigurace uložena",
   // "admin.update-config.success.save.message": "{{fileName}} has been updated successfully",
-  // TODO Source message changed - Revise the translation
-  "admin.update-config.success.save.message": "{{message}}",
+  "admin.update-config.success.save.message": "{{fileName}} byl úspěšně aktualizován",
   // "admin.update-config.success.reload.title": "File Reloaded",
   "admin.update-config.success.reload.title": "Soubor znovu načten",
   // "admin.update-config.success.reload.message": "Reloaded {{fileName}} from server",
@@ -8577,7 +8576,7 @@
   "access-control-option-end-date": "Povolit přístup do",
 
   // "access-control-option-end-date-note": "Select the date until which the related access condition is applied",
-  "item.delete.virtual-metadata.info": "Zobrazit informace o virtuálních metadatech",
+  "access-control-option-end-date-note": "Vyberte datum, do kterého má být typ přístupu aktivován",
 
   // "item.delete.virtual-metadata.info": "Show virtual metadata information",
   // TODO Source message changed - Revise the translation

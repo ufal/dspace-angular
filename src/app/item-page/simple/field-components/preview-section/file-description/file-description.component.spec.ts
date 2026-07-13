@@ -105,17 +105,21 @@ describe('FileDescriptionComponent', () => {
     component.fileInput.description = '';
     fixture.detectChanges();
 
-    const descElement = fixture.debugElement.queryAll(By.css('.file-content dd'))[3];
-    expect(descElement).toBeTruthy();
-    expect(descElement.nativeElement.textContent).toContain('item.file.description.na');
+    const descDt = fixture.debugElement.queryAll(By.css('.file-content dt'))
+       .find((de) => (de.nativeElement as HTMLElement).textContent?.includes('item.file.description.description'));
+     expect(descDt).toBeTruthy();
+     const descElement = (descDt!.nativeElement as HTMLElement).nextElementSibling as HTMLElement;
+     expect(descElement.textContent).toContain('item.file.description.na');
   });
 
   it('should show the description text when description is present', () => {
     component.fileInput.description = 'This is a test description';
     fixture.detectChanges();
 
-    const descElement = fixture.debugElement.queryAll(By.css('.file-content dd'))[3];
-    expect(descElement).toBeTruthy();
-    expect(descElement.nativeElement.textContent).toContain('This is a test description');
+    const descDt = fixture.debugElement.queryAll(By.css('.file-content dt'))
+       .find((de) => (de.nativeElement as HTMLElement).textContent?.includes('item.file.description.description'));
+     expect(descDt).toBeTruthy();
+     const descElement = (descDt!.nativeElement as HTMLElement).nextElementSibling as HTMLElement;
+     expect(descElement.textContent).toContain('This is a test description');
   });
 });
