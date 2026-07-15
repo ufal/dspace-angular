@@ -1,4 +1,4 @@
-import { FormatAuthorPipe } from "./format-author.pipe";
+import { FormatAuthorPipe } from './format-author.pipe';
 
 describe('FormatAuthorPipe', () => {
   let pipe: FormatAuthorPipe;
