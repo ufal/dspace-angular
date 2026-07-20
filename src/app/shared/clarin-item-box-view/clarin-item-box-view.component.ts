@@ -19,7 +19,7 @@ import { RemoteData } from '../../core/data/remote-data';
 import { PaginatedList } from '../../core/data/paginated-list.model';
 import { ClarinLicense } from '../../core/shared/clarin/clarin-license.model';
 import { ClarinLicenseDataService } from '../../core/data/clarin/clarin-license-data.service';
-import { getBaseUrl, secureImageData } from '../clarin-shared-util';
+import { buildAuthoritySearchFilter, getBaseUrl, secureImageData } from '../clarin-shared-util';
 import { DomSanitizer } from '@angular/platform-browser';
 import { BundleDataService } from '../../core/data/bundle-data.service';
 import { Bundle } from '../../core/shared/bundle.model';
@@ -28,6 +28,7 @@ import { LicenseType } from '../../item-page/clarin-license-info/clarin-license-
 import { ListableObject } from '../object-collection/shared/listable-object.model';
 import { ItemSearchResult } from '../object-collection/shared/item-search-result.model';
 import { getItemPageRoute } from '../../item-page/item-page-routing-paths';
+import { metadataLangToBcp47 } from '../utils/metadata-language.util';
 import { FindListOptions } from '../../core/data/find-list-options.model';
 import { ClarinDateService } from '../clarin-date.service';
 import { AUTHOR_METADATA_FIELDS } from '../../core/shared/clarin/constants';
@@ -68,6 +69,10 @@ export class ClarinItemBoxViewComponent implements OnInit {
    */
   itemDescription = '';
   /**
+   * Language of the item's description metadata value.
+   */
+  itemDescriptionLang: string | null = null;
+  /**
    * Items's handle redirection URI.
    */
   itemUri = '';
@@ -103,6 +108,10 @@ export class ClarinItemBoxViewComponent implements OnInit {
    * Redirect the user after clicking on the Publisher link.
    */
   publisherRedirectLink: string;
+  /**
+   * Whether the publisher has an authority (e.g., ROR ID)
+   */
+  hasPublisherRorAuthority = false;
   /**
    * Composed date of the Item.
    */
@@ -145,13 +154,18 @@ export class ClarinItemBoxViewComponent implements OnInit {
     this.itemType = this.item?.firstMetadataValue('dc.type');
     this.itemName = this.item?.firstMetadataValue('dc.title');
     this.itemUri = getItemPageRoute(this.item);
-    this.itemDescription = this.item?.firstMetadataValue('dc.description');
-    this.itemPublisher = this.item?.firstMetadataValue('dc.publisher');
+    const descMeta = this.item?.firstMetadata('dc.description');
+    this.itemDescription = descMeta?.value || null;
+    this.itemDescriptionLang = metadataLangToBcp47(descMeta?.language);
+    const publisherMd = this.item?.allMetadata(['dc.publisher', 'creativework.publisher'])?.[0];
+    this.hasPublisherRorAuthority = !!publisherMd?.authority;
+    this.itemPublisher = publisherMd?.value;
     this.itemDate = this.clarinDateService.composeItemDate(this.item);
 
     await this.assignBaseUrl();
-    this.publisherRedirectLink = this.getSearchEndpoint() + '?f.publisher=' + encodeURIComponent(this.itemPublisher)
-      + ',equals';
+    if (publisherMd) {
+      this.publisherRedirectLink = this.getSearchEndpoint() + '?' + buildAuthoritySearchFilter('publisher', publisherMd);
+    }
     this.getItemCommunity();
     this.loadItemLicense();
     this.getItemFilesSize();
