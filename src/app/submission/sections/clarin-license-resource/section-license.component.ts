@@ -282,8 +282,11 @@ export class SubmissionSectionClarinLicenseComponent extends SectionModelCompone
           return;
         }
         const requestId = this.requestService.generateRequestId();
+        // Route the PATCH through the `clarin-license` submission step so it
+        // works for workflow items too and keeps `sections.license` (CC) and
+        // `sections.clarin-license` payloads separate on subsequent GETs.
         const patchOperation2 = {
-          op: 'replace', path: '/license', value: licenseNameRest
+          op: 'replace', path: this.pathCombiner.getPath('select').path, value: licenseNameRest
         } as Operation;
         const request = new PatchRequest(requestId, submissionItemRD.payload._links.self.href, [patchOperation2]);
         this.requestService.send(request);
