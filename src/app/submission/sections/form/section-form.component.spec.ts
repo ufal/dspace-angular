@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, NO_ERRORS_SCHEMA } from '@angular/core';
+import { ChangeDetectorRef, Component, NO_ERRORS_SCHEMA, PLATFORM_ID } from '@angular/core';
 import {ComponentFixture, inject, TestBed, waitForAsync} from '@angular/core/testing';
 
 import { of as observableOf } from 'rxjs';
@@ -47,6 +47,7 @@ import { SubmissionSectionError } from '../../objects/submission-section-error.m
 import {
   mockItemWithMetadataFieldsAndValue
 } from '../../../item-page/simple/field-components/specific-field/item-page-field.component.spec';
+import { NativeWindowRef, NativeWindowService } from '../../../core/services/window.service';
 
 function getMockSubmissionFormsConfigService(): SubmissionFormsConfigDataService {
   return jasmine.createSpyObj('FormOperationsService', {
@@ -195,6 +196,8 @@ describe('SubmissionSectionFormComponent test suite', () => {
         { provide: 'sectionDataProvider', useValue: Object.assign({}, sectionObject) },
         { provide: 'submissionIdProvider', useValue: submissionId },
         { provide: SubmissionObjectDataService, useValue: submissionObjectDataService },
+        { provide: NativeWindowService, useClass: NativeWindowRef },
+        { provide: PLATFORM_ID, useValue: 'browser' },
         ChangeDetectorRef,
         SubmissionSectionFormComponent
       ],
@@ -633,6 +636,7 @@ describe('SubmissionSectionFormComponent test suite', () => {
       comp.onRemove(dynamicFormControlEvent);
 
       expect(formOperationsService.dispatchOperationsFromEvent).toHaveBeenCalled();
+      expect(submissionServiceStub.dispatchSave).toHaveBeenCalledWith(submissionId);
 
     });
 
@@ -668,7 +672,7 @@ describe('SubmissionSectionFormComponent test suite', () => {
       compAsAny = null;
     });
 
-    it('onChange on `local.sponsor` complex input field should refresh formModel', () => {
+    it('onChange on `local.sponsor` complex input field should trigger reinitialize', () => {
       const sectionData = {};
       formOperationsService.getFieldPathSegmentedFromChangeEvent.and.returnValue('local.sponsor');
       formOperationsService.getFieldValueFromChangeEvent.and.returnValue({ value: EU_SPONSOR });
@@ -682,6 +686,7 @@ describe('SubmissionSectionFormComponent test suite', () => {
       spyOn(comp, 'initForm');
       spyOn(comp, 'subscriptions');
       spyOn(comp, 'reinitializeForm');
+      submissionServiceStub.dispatchSaveSection.calls.reset();
 
       const wi = new WorkspaceItem();
       wi.item = createSuccessfulRemoteDataObject$(mockItemWithMetadataFieldsAndValue(['local.sponsor'], EU_SPONSOR));
@@ -691,9 +696,9 @@ describe('SubmissionSectionFormComponent test suite', () => {
       comp.onChange(dynamicFormControlEvent);
       fixture.detectChanges();
 
-      expect(submissionServiceStub.dispatchSaveSection).toHaveBeenCalled();
-
-      expect(comp.reinitializeForm).toHaveBeenCalled();
+      // The onChange method calls dispatchFormSaveAndReinitialize for sponsor fields
+      expect(submissionServiceStub.dispatchSaveSection).toHaveBeenCalledWith(comp.submissionId, comp.sectionData.id);
+      expect(comp.reinitializeForm).toHaveBeenCalledWith('local.sponsor', { value: EU_SPONSOR });
     });
   });
 });

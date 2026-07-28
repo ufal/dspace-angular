@@ -62,7 +62,7 @@ export class SectionFormOperationsService {
                                      hasStoredValue: boolean): void {
     switch (event.type) {
       case 'remove':
-        this.dispatchOperationsFromRemoveEvent(pathCombiner, event, previousValue);
+        this.dispatchOperationsFromRemoveEvent(pathCombiner, event, previousValue, hasStoredValue);
         break;
       case 'change':
         this.dispatchOperationsFromChangeEvent(pathCombiner, event, previousValue, hasStoredValue);
@@ -294,18 +294,21 @@ export class SectionFormOperationsService {
    *    the [[DynamicFormControlEvent]] for the specified operation
    * @param previousValue
    *    the [[FormFieldPreviousValueObject]] for the specified operation
+   * @param hasStoredValue
+   *    representing if field value related to the specified operation has stored value
    */
   protected dispatchOperationsFromRemoveEvent(pathCombiner: JsonPatchOperationPathCombiner,
                                               event: DynamicFormControlEvent,
-                                              previousValue: FormFieldPreviousValueObject): void {
-
+                                              previousValue: FormFieldPreviousValueObject,
+                                              hasStoredValue: boolean): void {
     const path = this.getFieldPathFromEvent(event);
     const value = this.getFieldValueFromChangeEvent(event);
+
+
     if (this.formBuilder.isQualdropGroup(event.model as DynamicFormControlModel)) {
       this.dispatchOperationsFromMap(this.getQualdropValueMap(event), pathCombiner, event, previousValue);
     } else if (event.context && event.context instanceof DynamicFormArrayGroupModel) {
-      // Model is a DynamicRowArrayModel
-      this.handleArrayGroupPatch(pathCombiner, event, (event as any).context.context, previousValue);
+      this.handleArrayGroupPatch(pathCombiner, event, (event as any).context.context, previousValue, true, hasStoredValue);
     } else if ((isNotEmpty(value) && typeof value === 'string') || (isNotEmpty(value) && value instanceof FormFieldMetadataValueObject && value.hasValue())) {
       this.operationsBuilder.remove(pathCombiner.getPath(path));
     }
@@ -496,7 +499,7 @@ export class SectionFormOperationsService {
                                           event: DynamicFormControlEvent,
                                           previousValue: FormFieldPreviousValueObject) {
 
-    return this.handleArrayGroupPatch(pathCombiner, event.$event, (event as any).$event.arrayModel, previousValue);
+    return this.handleArrayGroupPatch(pathCombiner, event.$event, (event as any).$event.arrayModel, previousValue, false, false);
   }
 
   /**
@@ -514,11 +517,19 @@ export class SectionFormOperationsService {
   private handleArrayGroupPatch(pathCombiner: JsonPatchOperationPathCombiner,
                                 event,
                                 model: DynamicRowArrayModel,
-                                previousValue: FormFieldPreviousValueObject) {
-
+                                previousValue: FormFieldPreviousValueObject,
+                                isRemoveEvent: boolean = false,
+                                hasStoredValue: boolean = false) {
     const arrayValue = this.formBuilder.getValueFromModel([model]);
     const segmentedPath = this.getFieldPathSegmentedFromChangeEvent(event);
-    if (isNotEmpty(arrayValue)) {
+
+    const isClearLastItem = (event as any).isClearLastItem === true;
+
+    const shouldRemoveField = isRemoveEvent && hasStoredValue && isClearLastItem;
+
+    if (shouldRemoveField) {
+      this.operationsBuilder.remove(pathCombiner.getPath(segmentedPath));
+    } else if (isNotEmpty(arrayValue)) {
       this.operationsBuilder.add(
         pathCombiner.getPath(segmentedPath),
         arrayValue[segmentedPath],
@@ -527,6 +538,5 @@ export class SectionFormOperationsService {
     } else if (previousValue.isPathEqual(this.formBuilder.getPath(event.model))) {
       this.operationsBuilder.remove(pathCombiner.getPath(segmentedPath));
     }
-
   }
 }

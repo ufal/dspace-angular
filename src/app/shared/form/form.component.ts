@@ -16,6 +16,7 @@ import findIndex from 'lodash/findIndex';
 import { FormBuilderService } from './builder/form-builder.service';
 import { hasValue, isNotEmpty, isNotNull, isNull } from '../empty.util';
 import { FormService } from './form.service';
+import { isFormGroupEmpty } from './utils/form-group-empty.util';
 import { FormEntry, FormError } from './form.reducer';
 import { FormFieldMetadataValueObject } from './builder/models/form-field-metadata-value.model';
 
@@ -32,6 +33,13 @@ export class FormComponent implements OnDestroy, OnInit {
 
   private formErrors: FormError[] = [];
   private formValid: boolean;
+
+  /**
+   * Cache for isFirstGroupEmpty results to optimize change detection.
+   * Cleared automatically on form value changes to prevent stale data.
+   * Key: arrayContext.id, Value: boolean (isEmpty result)
+   */
+  private emptyStateCache: Map<string, boolean> = new Map();
 
   /**
    * A boolean that indicate if to display form's submit button
@@ -166,6 +174,12 @@ export class FormComponent implements OnDestroy, OnInit {
         this.formService.setStatusChanged(this.formId, this.getFormGroupValidStatus());
         this.formValid = this.getFormGroupValidStatus();
       }));
+
+    // Clear empty state cache on form value changes to ensure fresh calculations
+    // This prevents stale cache while avoiding repeated expensive computations during change detection
+    this.subs.push(this.formGroup.valueChanges.subscribe(() => {
+      this.emptyStateCache.clear();
+    }));
 
     this.subs.push(
       this.formService.getForm(this.formId).pipe(
@@ -334,10 +348,181 @@ export class FormComponent implements OnDestroy, OnInit {
     this.formService.changeForm(this.formId, this.formModel);
   }
 
+  /**
+   * Reveal the hidden first group without adding a new group.
+   * Used when hideGroupsWhenEmpty flag is set and user clicks "Add" in empty-state.
+   * Instead of creating a new group, this just sets hideGroupsWhenEmpty to false
+   * to unhide the structurally-required but visually-hidden Group 0.
+   *
+   * @param $event The click event
+   * @param arrayContext The array model context
+   */
+  revealFirstGroup($event: any, arrayContext: DynamicFormArrayModel): void {
+    // Toggle off the hideGroupsWhenEmpty flag to reveal Group 0
+    (arrayContext as any).hideGroupsWhenEmpty = false;
+
+    this.formService.changeForm(this.formId, this.formModel);
+  }
+
+  /**
+   * Clear all values in a single-item array and return to visual-empty state.
+   * Used for hideGroupsWhenEmpty arrays where delete should hide the group instead of removing it.
+   * This provides symmetric behavior: "Add" reveals → "Delete" hides and clears.
+   *
+   * @param $event The click event
+   * @param arrayContext The array model context
+   * @param index The index of the group to clear
+   */
+  clearItemValues($event: any, arrayContext: DynamicFormArrayModel, index: number): void {
+    // Get the form control BEFORE emitting/resetting to log values
+    const formArrayControl = this.formGroup.get(this.formBuilderService.getPath(arrayContext)) as UntypedFormArray;
+    const groupControl = formArrayControl.at(index);
+
+    // Emit remove event before reset so submission patch ops are created for cleared values
+    const removeEvent = this.getEvent($event, arrayContext, index, 'remove');
+
+    // Mark this as a "clear last item" operation (not a regular multi-item delete)
+    // This flag distinguishes: delete last item (→ REMOVE field) vs delete one of many (→ ADD updated array)
+    (removeEvent as any).isClearLastItem = true;
+
+    this.removeArrayItem.emit(removeEvent);
+
+    if (groupControl) {
+      groupControl.reset();  // Clears all form controls in the group
+
+      // CRITICAL: reset() doesn't mark form as dirty, but we need to save the "cleared" state
+      // Mark controls as dirty so formService.changeForm() creates patch operations
+      groupControl.markAsDirty();
+      groupControl.markAsTouched();
+      formArrayControl.markAsDirty();
+      this.formGroup.markAsDirty();
+    }
+
+    // Re-enable visual-empty state to hide fields and show "Add" button
+    (arrayContext as any).hideGroupsWhenEmpty = true;
+
+    // Notify form service of change so save button enables
+    this.formService.changeForm(this.formId, this.formModel);
+  }
+
+  /**
+   * Route delete action: for single-item hideGroupsWhenEmpty arrays, clear instead of remove.
+   * For multi-item arrays, perform standard removal.
+   *
+   * @param $event The click event
+   * @param arrayContext The array model context
+   * @param index The index of the group to delete
+   */
+  handleItemDelete($event: any, arrayContext: DynamicFormArrayModel, index: number): void {
+    const allowDeleteSingle = (arrayContext as any).allowDeleteOnSingleItem;
+    const isSingleGroup = arrayContext.groups.length === 1;
+    const shouldClear = allowDeleteSingle && isSingleGroup;
+
+    // For single-item arrays with hideGroupsWhenEmpty: clear instead of remove
+    if (shouldClear) {
+      this.clearItemValues($event, arrayContext, index);
+    } else {
+      // For multi-item arrays: standard removal
+      this.removeItem($event, arrayContext, index);
+    }
+  }
+
   isVirtual(arrayContext: DynamicFormArrayModel, index: number) {
     const context = arrayContext.groups[index];
     const value: FormFieldMetadataValueObject = (context.group[0] as any).metadataValue;
     return isNotEmpty(value) && value.isVirtual;
+  }
+
+  /**
+   * Determines whether the delete button should be displayed for an array item.
+   * Shows delete button when multiple groups exist, or for single-item arrays with allowDeleteOnSingleItem enabled (unless in visual-empty state).
+   *
+   * @param arrayContext The array model context
+   * @param index The index of the item
+   * @returns true if delete button should be visible
+   */
+  shouldShowDeleteButton(arrayContext: DynamicFormArrayModel, index: number): boolean {
+    const notRepeatable = (arrayContext as any).notRepeatable;
+    const isVirtualItem = this.isVirtual(arrayContext, index);
+    const isReadOnly = this.isItemReadOnly(arrayContext, index);
+    const multipleGroups = arrayContext.groups.length > 1;
+    const allowDeleteSingle = (arrayContext as any).allowDeleteOnSingleItem;
+    const hideWhenEmpty = (arrayContext as any).hideGroupsWhenEmpty;
+    const singleGroup = arrayContext.groups.length === 1;
+    const isEmpty = this.isFirstGroupEmpty(arrayContext);
+    const inVisualEmptyState = hideWhenEmpty && singleGroup && isEmpty;
+
+    const shouldShow = !notRepeatable && !isVirtualItem && !isReadOnly &&
+                        (multipleGroups || (allowDeleteSingle && !inVisualEmptyState));
+
+    return shouldShow;
+  }
+
+  /**
+   * Determines whether the "Add" button should be displayed in empty-state.
+   * Shows button only when hideGroupsWhenEmpty is enabled, field is single-item and empty, at first index, and not read-only.
+   *
+   * @param arrayContext The array model context
+   * @param index The index of the item
+   * @returns true if empty-state Add button should be visible
+   */
+  shouldShowEmptyStateAddButton(arrayContext: DynamicFormArrayModel, index: number): boolean {
+    const notRepeatable = (arrayContext as any).notRepeatable;
+    const hideWhenEmpty = (arrayContext as any).hideGroupsWhenEmpty;
+    const singleGroup = arrayContext.groups.length === 1;
+    const isFirstIndex = index === 0;
+    const isEmpty = this.isFirstGroupEmpty(arrayContext);
+    const isReadOnly = this.isItemReadOnly(arrayContext, index);
+
+    const shouldShow = !notRepeatable && hideWhenEmpty && singleGroup && isFirstIndex && isEmpty && !isReadOnly;
+
+    return shouldShow;
+  }
+
+  /**
+   * Check if the first group in an array is visually empty (all controls have no meaningful values).
+   * This is used to determine visual-empty state independent of structural state (FormArray always has 1 group minimum).
+   * Delegates to shared utility function for consistent empty detection.
+   *
+   * Uses memoization to optimize performance during change detection. Cache is cleared on form value changes.
+   *
+   * @param arrayContext The array model context
+   * @returns true if first group exists and all its controls are empty/null
+   */
+  isFirstGroupEmpty(arrayContext: DynamicFormArrayModel): boolean {
+    // Check cache first to avoid repeated expensive computations during change detection
+    const cacheKey = arrayContext.id;
+    if (this.emptyStateCache.has(cacheKey)) {
+      return this.emptyStateCache.get(cacheKey);
+    }
+
+    // Must have at least one group
+    if (!arrayContext.groups || arrayContext.groups.length === 0) {
+      this.emptyStateCache.set(cacheKey, false);
+      return false;
+    }
+
+    // Get the FormArray control
+    const formArrayControl = this.formGroup.get(this.formBuilderService.getPath(arrayContext)) as UntypedFormArray;
+    if (!formArrayControl || formArrayControl.length === 0) {
+      this.emptyStateCache.set(cacheKey, false);
+      return false;
+    }
+
+    // Get first group's FormGroup
+    const firstGroupControl = formArrayControl.at(0) as UntypedFormGroup;
+    if (!firstGroupControl) {
+      this.emptyStateCache.set(cacheKey, false);
+      return false;
+    }
+
+    // Use shared utility to check if the form group is empty (expensive operation)
+    const isEmpty = isFormGroupEmpty(firstGroupControl);
+
+    // Cache the result for subsequent calls during this change detection cycle
+    this.emptyStateCache.set(cacheKey, isEmpty);
+
+    return isEmpty;
   }
 
   protected getEvent($event: any, arrayContext: DynamicFormArrayModel, index: number, type: string): DynamicFormControlEvent {

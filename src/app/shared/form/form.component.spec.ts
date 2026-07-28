@@ -435,6 +435,100 @@ describe('FormComponent test suite', () => {
 
       expect(formComp.removeArrayItem.emit).toHaveBeenCalled();
     }));
+
+    it('revealFirstGroup should set hideGroupsWhenEmpty to false and call formService.changeForm', inject([FormBuilderService], (service: FormBuilderService) => {
+      spyOn((formComp as any).formService, 'changeForm');
+      const arrayModel = formComp.formModel[0] as DynamicFormArrayModel;
+      (arrayModel as any).hideGroupsWhenEmpty = true;
+
+      formComp.revealFirstGroup(new Event('click'), arrayModel);
+
+      expect((arrayModel as any).hideGroupsWhenEmpty).toBe(false);
+      expect((formComp as any).formService.changeForm).toHaveBeenCalledWith(formComp.formId, formComp.formModel);
+    }));
+
+    it('clearItemValues should reset group control and mark as dirty', inject([FormBuilderService], (service: FormBuilderService) => {
+      spyOn(formComp.removeArrayItem, 'emit');
+      spyOn((formComp as any).formService, 'changeForm');
+
+      const arrayModel = formComp.formModel[0] as DynamicFormArrayModel;
+      (arrayModel as any).hideGroupsWhenEmpty = false;
+
+      formComp.clearItemValues(new Event('click'), arrayModel, 0);
+
+      expect((arrayModel as any).hideGroupsWhenEmpty).toBe(true);
+
+      expect((formComp as any).formService.changeForm).toHaveBeenCalledWith(formComp.formId, formComp.formModel);
+
+      expect(formComp.removeArrayItem.emit).toHaveBeenCalled();
+
+      const emittedEvent = (formComp.removeArrayItem.emit as jasmine.Spy).calls.mostRecent().args[0];
+      expect((emittedEvent as any).isClearLastItem).toBe(true);
+    }));
+
+    it('handleItemDelete should call clearItemValues for single-item hideWhenEmpty array', inject([FormBuilderService], (service: FormBuilderService) => {
+      spyOn(formComp, 'clearItemValues');
+      spyOn(formComp, 'removeItem');
+
+      const arrayModel = formComp.formModel[0] as DynamicFormArrayModel;
+      (arrayModel as any).hideGroupsWhenEmpty = true;
+      (arrayModel as any).allowDeleteOnSingleItem = true;
+      while (arrayModel.groups.length > 1) {
+        arrayModel.groups.pop();
+      }
+
+      formComp.handleItemDelete(new Event('click'), arrayModel, 0);
+
+      expect(formComp.clearItemValues).toHaveBeenCalledWith(jasmine.any(Event), arrayModel, 0);
+      expect(formComp.removeItem).not.toHaveBeenCalled();
+    }));
+
+    it('handleItemDelete should call clearItemValues for single-item allowDeleteOnSingleItem array when hideGroupsWhenEmpty is false', inject([FormBuilderService], (service: FormBuilderService) => {
+      spyOn(formComp, 'clearItemValues');
+      spyOn(formComp, 'removeItem');
+
+      const arrayModel = formComp.formModel[0] as DynamicFormArrayModel;
+      (arrayModel as any).allowDeleteOnSingleItem = true;
+      (arrayModel as any).hideGroupsWhenEmpty = false;
+      while (arrayModel.groups.length > 1) {
+        arrayModel.groups.pop();
+      }
+
+      formComp.handleItemDelete(new Event('click'), arrayModel, 0);
+
+      expect(formComp.clearItemValues).toHaveBeenCalledWith(jasmine.any(Event), arrayModel, 0);
+      expect(formComp.removeItem).not.toHaveBeenCalled();
+    }));
+
+    it('handleItemDelete should call removeItem for multi-item array', inject([FormBuilderService], (service: FormBuilderService) => {
+      spyOn(formComp, 'clearItemValues');
+      spyOn(formComp, 'removeItem');
+
+      const arrayModel = formComp.formModel[0] as DynamicFormArrayModel;
+      (arrayModel as any).hideGroupsWhenEmpty = true;
+      // Add multiple groups
+      if (arrayModel.groups.length === 1) {
+        arrayModel.addGroup();
+      }
+
+      formComp.handleItemDelete(new Event('click'), arrayModel, 0);
+
+      expect(formComp.removeItem).toHaveBeenCalledWith(jasmine.any(Event), arrayModel, 0);
+      expect(formComp.clearItemValues).not.toHaveBeenCalled();
+    }));
+
+    it('handleItemDelete should call removeItem when hideGroupsWhenEmpty is false', inject([FormBuilderService], (service: FormBuilderService) => {
+      spyOn(formComp, 'clearItemValues');
+      spyOn(formComp, 'removeItem');
+
+      const arrayModel = formComp.formModel[0] as DynamicFormArrayModel;
+      (arrayModel as any).hideGroupsWhenEmpty = false;
+
+      formComp.handleItemDelete(new Event('click'), arrayModel, 0);
+
+      expect(formComp.removeItem).toHaveBeenCalledWith(jasmine.any(Event), arrayModel, 0);
+      expect(formComp.clearItemValues).not.toHaveBeenCalled();
+    }));
   });
 });
 

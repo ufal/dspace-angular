@@ -26,6 +26,7 @@ import { ParserType } from './parser-type';
 import { isNgbDateStruct } from '../../../date.util';
 import { SubmissionScopeType } from '../../../../core/submission/submission-scope-type';
 import { TranslateService } from '@ngx-translate/core';
+import { SPONSOR_METADATA_NAME } from '../ds-dynamic-form-ui/models/ds-dynamic-complex.model';
 
 export const SUBMISSION_ID: InjectionToken<string> = new InjectionToken<string>('submissionId');
 export const CONFIG_DATA: InjectionToken<FormFieldModel> = new InjectionToken<FormFieldModel>('configData');
@@ -88,6 +89,10 @@ export abstract class FieldParser {
         metadataFields: this.getAllFieldIds(),
         hasSelectableMetadata: isNotEmpty(this.configData.selectableMetadata),
         isDraggable,
+        hideGroupsWhenEmpty: this.configData.input.type === ParserType.Complex &&
+                       metadataKey === SPONSOR_METADATA_NAME,
+        allowDeleteOnSingleItem: this.configData.input.type === ParserType.Complex &&
+                           metadataKey === SPONSOR_METADATA_NAME,
         typeBindRelations: isNotEmpty(this.configData.typeBind) ? this.getTypeBindRelations(this.configData.typeBind,
           this.parserOptions.typeField) : null,
         groupFactory: () => {
@@ -246,8 +251,16 @@ export abstract class FieldParser {
 
   protected getInitArrayIndex() {
     const fieldIds: any = this.getAllFieldIds();
-    if (isNotEmpty(this.initFormValues) && isNotNull(fieldIds) && fieldIds.length === 1 && this.initFormValues.hasOwnProperty(fieldIds)) {
-      return this.initFormValues[fieldIds].length;
+
+    if (isNotEmpty(this.initFormValues) && isNotNull(fieldIds) && fieldIds.length === 1) {
+      if (this.initFormValues.hasOwnProperty(fieldIds[0])) {
+        const count = this.initFormValues[fieldIds[0]].length;
+        const result = count === 0 ? 1 : count;
+        return result;
+      } else {
+        const result = 1;
+        return result;
+      }
     } else if (isNotEmpty(this.initFormValues) && isNotNull(fieldIds) && fieldIds.length > 1) {
       let counter = 0;
       fieldIds.forEach((id) => {
@@ -255,9 +268,11 @@ export abstract class FieldParser {
           counter = counter + this.initFormValues[id].length;
         }
       });
-      return (counter === 0) ? 1 : counter;
+      const result = counter === 0 ? 1 : counter;
+      return result;
     } else {
-      return 1;
+      const result = 1;
+      return result;
     }
   }
 
