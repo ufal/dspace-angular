@@ -94,7 +94,7 @@ describe('ClarinNameFieldParser test suite', () => {
 
     const fieldModel = parser.parse();
 
-    expect((fieldModel as DynamicConcatModel).separator).toBe(',');
+    expect((fieldModel as DynamicConcatModel).separator).toBe(', ');
   });
 
   it('should set init value properly', () => {
