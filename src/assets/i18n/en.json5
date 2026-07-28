@@ -6714,6 +6714,7 @@
 
   "home.news.image.banner": "Home news banner image",
 
+  "item.page.datacite.badge.label": "DataCite",
   "curation-task.task.checkhandles.label": "Check Item Handles",
 
   "admin.access-control.epeople.table.lastActive": "Last time active",
