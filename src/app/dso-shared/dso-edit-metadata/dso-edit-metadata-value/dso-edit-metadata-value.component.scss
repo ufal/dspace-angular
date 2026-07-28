@@ -14,3 +14,13 @@
 .cdk-drag-placeholder {
   opacity: 0;
 }
+
+.ds-markdown-mode-toggle {
+  margin-bottom: var(--ds-spacer-1);
+}
+
+.ds-markdown-preview-container {
+  min-height: 9rem;
+  overflow-y: auto;
+  white-space: normal;
+}

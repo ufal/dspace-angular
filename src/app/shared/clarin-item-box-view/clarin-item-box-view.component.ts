@@ -1,5 +1,5 @@
 // eslint-disable-next-line max-classes-per-file
-import { Component, Input, OnInit } from '@angular/core';
+import {Component, Inject, Input, OnInit} from '@angular/core';
 import { Item } from '../../core/shared/item.model';
 import { CollectionDataService } from '../../core/data/collection-data.service';
 import {
@@ -33,6 +33,7 @@ import { FindListOptions } from '../../core/data/find-list-options.model';
 import { ClarinDateService } from '../clarin-date.service';
 import { AUTHOR_METADATA_FIELDS } from '../../core/shared/clarin/constants';
 import {RequestParam} from '../../core/cache/models/request-param.model';
+import { APP_CONFIG, AppConfig } from '../../../config/app-config.interface';
 
 /**
  * Show item on the Home/Search page in the customized box with Item's information.
@@ -133,7 +134,13 @@ export class ClarinItemBoxViewComponent implements OnInit {
    */
   licenseLabelIcons: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
 
-  constructor(protected collectionService: CollectionDataService,
+  /**
+   * This variable will be true if {@link appConfig.markdown.enabled} is true.
+   */
+  renderMarkdown: boolean;
+
+  constructor(@Inject(APP_CONFIG) private appConfig: AppConfig,
+              protected collectionService: CollectionDataService,
               protected bundleService: BundleDataService,
               protected dsoNameService: DSONameService,
               protected configurationService: ConfigurationDataService,
@@ -142,6 +149,7 @@ export class ClarinItemBoxViewComponent implements OnInit {
               private clarinDateService: ClarinDateService) { }
 
   async ngOnInit(): Promise<void> {
+
     if (this.object instanceof Item) {
       this.item = this.object;
     } else if (this.object instanceof ItemSearchResult) {
@@ -149,6 +157,8 @@ export class ClarinItemBoxViewComponent implements OnInit {
     } else {
       return;
     }
+
+    this.renderMarkdown = !!this.appConfig.markdown.enabled && this.markdownEnabled();
 
     // Load Items metadata
     this.itemType = this.item?.firstMetadataValue('dc.type');
@@ -273,6 +283,17 @@ export class ClarinItemBoxViewComponent implements OnInit {
 
   hasMoreFiles() {
     return this.itemCountOfFiles.value > 1;
+  }
+
+  /**
+   * Check if the item uses Markdown to render description text.
+   * */
+  private markdownEnabled() {
+    if (isNull(this.item)) {
+      return false;
+    }
+    const useMarkdown = this.item.metadata?.['local.description.usemarkdown']?.[0]?.value;
+    return useMarkdown !== undefined && useMarkdown.toLowerCase() === 'yes';
   }
 
   handleImageError(event) {

@@ -1,7 +1,7 @@
 import { Component, Inject, Injector, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AlertType } from '../../shared/alert/alert-type';
 import { DSpaceObject } from '../../core/shared/dspace-object.model';
-import { DsoEditMetadataForm } from './dso-edit-metadata-form';
+import { DsoEditMetadataForm, DsoEditMetadataValue } from './dso-edit-metadata-form';
 import { map } from 'rxjs/operators';
 import { ActivatedRoute, Data } from '@angular/router';
 import { combineLatest as observableCombineLatest } from 'rxjs/internal/observable/combineLatest';
@@ -32,6 +32,8 @@ import { HALDataService } from '../../core/data/base/hal-data-service.interface'
  * Component showing a table of all metadata on a DSpaceObject and options to modify them
  */
 export class DsoEditMetadataComponent implements OnInit, OnDestroy {
+  protected readonly localDescriptionUseMarkdownMetadataKey = 'local.description.usemarkdown';
+
   /**
    * DSpaceObject to edit metadata for
    */
@@ -172,6 +174,32 @@ export class DsoEditMetadataComponent implements OnInit, OnDestroy {
     this.hasChanges = this.form.hasChanges();
     this.isReinstatable = this.form.isReinstatable();
     this.isEmpty = Object.keys(this.form.fields).length === 0;
+  }
+
+  /**
+   * Returns whether local.description.usemarkdown exists in form metadata and explicitly enables markdown.
+   */
+  isLocalDescriptionUseMarkdownEnabled(): boolean {
+    const useMarkdownValues = this.form?.fields?.[this.localDescriptionUseMarkdownMetadataKey];
+
+    if (!Array.isArray(useMarkdownValues) || useMarkdownValues.length === 0) {
+      return false;
+    }
+
+    return useMarkdownValues.some((metadataValue: DsoEditMetadataValue) => {
+      const value = metadataValue?.newValue?.value;
+
+      if (typeof value === 'boolean') {
+        return value;
+      }
+
+      if (typeof value === 'string') {
+        const normalizedValue = value.toLowerCase();
+        return normalizedValue === 'yes' || normalizedValue === 'true';
+      }
+
+      return value === true;
+    });
   }
 
   /**

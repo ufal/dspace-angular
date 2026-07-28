@@ -1,3 +1,6 @@
-<div *ngFor="let entry of descriptionEntries" [attr.lang]="entry.language" style="white-space: pre-line;">
-  <span [innerHTML]="entry.value"></span>
-</div>
+<ng-container *ngFor="let entry of descriptionEntries">
+  <div [attr.lang]="entry.language" style="white-space: pre-line;">
+    <span *ngIf="!renderMarkdown" [innerHTML]="entry.linkedValue"></span>
+    <span *ngIf="renderMarkdown" [innerHTML]="entry.rawValue | dsMarkdown | async"></span>
+  </div>
+</ng-container>
