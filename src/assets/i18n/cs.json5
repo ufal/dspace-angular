@@ -6399,6 +6399,24 @@
   // "submission.general.save-later": "Save for later",
   "submission.general.save-later": "Uložit na později",
 
+  // "submission.general.save-and-exit": "Save & Exit",
+  "submission.general.save-and-exit": "Uložit a Ukončit",
+
+  // "submission.general.submit-review": "Submit for Review",
+  "submission.general.submit-review": "Odeslat ke Kontrole",
+
+  // "submission.buttons.save.tooltip": "Save progress and continue editing",
+  "submission.buttons.save.tooltip": "Uložit průběh a pokračovat v úpravách",
+
+  // "submission.buttons.save.disabled.tooltip": "The autosave is active, there are no pending changes to save",
+  "submission.buttons.save.disabled.tooltip": "Automatické ukládání je aktivní, nejsou žádné neuložené změny",
+
+  // "submission.buttons.save-exit.tooltip": "Save progress and exit the form",
+  "submission.buttons.save-exit.tooltip": "Uložit průběh a ukončit formulář",
+
+  // "submission.buttons.submit.tooltip": "Submit to editor for review",
+  "submission.buttons.submit.tooltip": "Odeslat editorovi ke kontrole",
+
   // "submission.import-external.page.title": "Import metadata from an external source",
   "submission.import-external.page.title": "Importovat metadata z externího zdroje",
 
@@ -6999,8 +7017,8 @@
   // "submission.sections.general.deposit_error_notice": "There was an issue when submitting the item, please try again later.",
   "submission.sections.general.deposit_error_notice": "Při odesílání záznamu došlo k problému, zkuste to prosím později.",
 
-  // "submission.sections.general.deposit_success_notice": "Submission deposited successfully.",
-  "submission.sections.general.deposit_success_notice": "Příspěvek úspěšně uložen.",
+  // "submission.sections.general.deposit_success_notice": "Submission successful! Your entry has been sent to the editor for review and will be published after approval.",
+  "submission.sections.general.deposit_success_notice": "Odeslání úspěšné! Váš příspěvek byl odeslán editorovi ke kontrole a bude publikován po schválení.",
 
   // "submission.sections.general.discard_error_notice": "There was an issue when discarding the item, please try again later.",
   "submission.sections.general.discard_error_notice": "Při vyřazování záznamu došlo k problému, zkuste to prosím později.",
@@ -9747,8 +9765,8 @@
   // "submission.sections.clarin-license.head.license-more-details": "See more details for the licenses",
   "submission.sections.clarin-license.head.license-more-details": "Více podrobností o licencích",
 
-  // "submission.sections.clarin-license.head.license-do-not-suits-needs": "None of these licenses suits your needs",
-  "submission.sections.clarin-license.head.license-do-not-suits-needs": "Žádná z těchto licencí nevyhovuje vašim potřebám",
+  // "submission.sections.clarin-license.head.license-do-not-suits-needs": "If none of these licenses suit your needs:",
+  "submission.sections.clarin-license.head.license-do-not-suits-needs": "Pokud vám žádná z těchto licencí nevyhovuje:",
 
   // "submission.sections.clarin-license.head.license-not-offer-proceeds": "If you need to use a license we currently do not offer, proceed as follows:",
   "submission.sections.clarin-license.head.license-not-offer-proceeds": "Pokud potřebujete použít licenci, kterou v současné době nenabízíme, postupujte následovně:",

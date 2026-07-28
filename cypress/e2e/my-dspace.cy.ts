@@ -88,7 +88,7 @@ describe('My DSpace page', () => {
             const id = subpaths[2];
 
             // Click the "Save for Later" button to save this submission
-            cy.get('ds-submission-form-footer [data-test="save-for-later"]').click();
+            cy.get('ds-submission-form-footer [data-test="save-and-exit"]').click();
 
             // "Save for Later" should send us to MyDSpace
             cy.url().should('include', '/mydspace');

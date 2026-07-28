@@ -4267,6 +4267,19 @@
 
   "submission.general.save-later": "Save for later",
 
+  "submission.general.save-and-exit": "Save & Exit",
+
+  "submission.general.submit-review": "Submit for Review",
+
+  // Button tooltips (Issue #2 - UX Improvement)
+  "submission.buttons.save.tooltip": "Save progress and continue editing",
+
+  "submission.buttons.save.disabled.tooltip": "The autosave is active, there are no pending changes to save",
+
+  "submission.buttons.save-exit.tooltip": "Save progress and exit the form",
+
+  "submission.buttons.submit.tooltip": "Submit to editor for review",
+
   "submission.import-external.page.title": "Import metadata from an external source",
 
   "submission.import-external.title": "Import metadata from an external source",
@@ -4667,7 +4680,7 @@
 
   "submission.sections.general.deposit_error_notice": "There was an issue when submitting the item, please try again later.",
 
-  "submission.sections.general.deposit_success_notice": "Submission deposited successfully.",
+  "submission.sections.general.deposit_success_notice": "Submission successful! Your entry has been sent to the editor for review and will be published after approval.",
 
   "submission.sections.general.discard_error_notice": "There was an issue when discarding the item, please try again later.",
 
@@ -6425,7 +6438,7 @@
 
   "submission.sections.clarin-license.head.license-more-details": "See more details for the licenses",
 
-  "submission.sections.clarin-license.head.license-do-not-suits-needs": "None of these licenses suits your needs",
+  "submission.sections.clarin-license.head.license-do-not-suits-needs": "If none of these licenses suit your needs:",
 
   "submission.sections.clarin-license.head.license-not-offer-proceeds": "If you need to use a license we currently do not offer, proceed as follows:",
 
