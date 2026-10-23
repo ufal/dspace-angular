@@ -29,6 +29,8 @@ import { ItemSearchResultGridElementComponent } from './item-search-result-grid-
 
 const mockItemWithMetadata: ItemSearchResult = new ItemSearchResult();
 mockItemWithMetadata.hitHighlights = {};
+const mockItemWithAbstractOnly: ItemSearchResult = new ItemSearchResult();
+mockItemWithAbstractOnly.hitHighlights = {};
 const dcTitle = 'This is just another <em>title</em>';
 mockItemWithMetadata.indexableObject = Object.assign(new Item(), {
   hitHighlights: {
@@ -56,10 +58,27 @@ mockItemWithMetadata.indexableObject = Object.assign(new Item(), {
         value: '2015-06-26'
       }
     ],
-    'dc.description.abstract': [
+    'dc.description': [
       {
         language: 'en_US',
         value: 'This is an abstract'
+      }
+    ]
+  }
+});
+mockItemWithAbstractOnly.indexableObject = Object.assign(new Item(), {
+  bundles: createSuccessfulRemoteDataObject$(buildPaginatedList(new PageInfo(), [])),
+  metadata: {
+    'dc.title': [
+      {
+        language: 'en_US',
+        value: dcTitle
+      }
+    ],
+    'dc.description.abstract': [
+      {
+        language: 'en_US',
+        value: 'Legacy abstract only'
       }
     ]
   }
@@ -99,7 +118,7 @@ const mockPerson: ItemSearchResult = Object.assign(new ItemSearchResult(), {
             value: '2015-06-26'
           }
         ],
-        'dc.description.abstract': [
+        'dc.description': [
           {
             language: 'en_US',
             value: 'This is the abstract'
@@ -153,7 +172,7 @@ const mockOrgUnit: ItemSearchResult = Object.assign(new ItemSearchResult(), {
             value: '2015-06-26'
           }
         ],
-        'dc.description.abstract': [
+        'dc.description': [
           {
             language: 'en_US',
             value: 'This is the abstract'
@@ -187,7 +206,7 @@ mockItemWithoutMetadata.indexableObject = Object.assign(new Item(), {
   }
 });
 
-describe('ItemGridElementComponent', getEntityGridElementTestComponent(ItemSearchResultGridElementComponent, mockItemWithMetadata, mockItemWithoutMetadata, ['authors', 'date', 'abstract']));
+describe('ItemGridElementComponent', getEntityGridElementTestComponent(ItemSearchResultGridElementComponent, mockItemWithMetadata, mockItemWithoutMetadata, ['authors', 'date', 'abstract'], mockItemWithAbstractOnly));
 
 /**
  * Create test cases for a grid component of an entity.
@@ -198,7 +217,13 @@ describe('ItemGridElementComponent', getEntityGridElementTestComponent(ItemSearc
  *                                      For example: If one of the fields to check is labeled "authors", the html template should contain at least one element with class ".item-authors" that's
  *                                      present when the author metadata is available.
  */
-export function getEntityGridElementTestComponent(component, searchResultWithMetadata: ItemSearchResult, searchResultWithoutMetadata: ItemSearchResult, fieldsToCheck: string[]) {
+export function getEntityGridElementTestComponent(
+  component,
+  searchResultWithMetadata: ItemSearchResult,
+  searchResultWithoutMetadata: ItemSearchResult,
+  fieldsToCheck: string[],
+  searchResultWithAbstractOnly?: ItemSearchResult,
+) {
   return () => {
     let comp;
     let fixture;
@@ -244,6 +269,20 @@ export function getEntityGridElementTestComponent(component, searchResultWithMet
       fixture = TestBed.createComponent(component);
       comp = fixture.componentInstance;
     }));
+
+    if (searchResultWithAbstractOnly) {
+      describe('when the item has only dc.description.abstract metadata', () => {
+        beforeEach(() => {
+          comp.object = searchResultWithAbstractOnly;
+          fixture.detectChanges();
+        });
+
+        it('should not show abstract field', () => {
+          const abstractField = fixture.debugElement.query(By.css('.item-abstract'));
+          expect(abstractField).toBeNull();
+        });
+      });
+    }
 
     fieldsToCheck.forEach((field) => {
       describe(`when the item has "${field}" metadata`, () => {
