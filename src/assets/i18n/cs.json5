@@ -8448,8 +8448,7 @@
   "admin.update-config.file-info.bytes": "bajtů",
 
   // "admin.update-config.file-info.modified": "Modified",
-  // TODO Source message changed - Revise the translation
-  "admin.update-config.file-info.modified": "Naposledy změněno",
+  "admin.update-config.file-info.modified": "Změněno",
 
   // "admin.update-config.file-info.status": "Status",
   "admin.update-config.file-info.status": "Stav",
@@ -8488,9 +8487,7 @@
 
   // Success Messages
   // "admin.update-config.success.save.title": "File Saved Successfully",
-  // TODO Source comments changed - Revise the translation
-  // TODO Source message changed - Revise the translation
-  "admin.update-config.success.save.title": "Konfigurace uložena",
+  "admin.update-config.success.save.title": "Soubor úspěšně uložen",
 
   // "admin.update-config.success.save.message": "{{fileName}} has been updated successfully",
   "admin.update-config.success.save.message": "{{fileName}} byl úspěšně aktualizován",
@@ -8512,8 +8509,7 @@
   "admin.update-config.error.save.title": "Uložení selhalo",
 
   // "admin.update-config.error.save.message": "Could not save {{fileName}}",
-  // TODO Source message changed - Revise the translation
-  "admin.update-config.error.save.message": "Nepodařilo se uložit konfigurační soubor. Zkontrolujte logy a zkuste to znovu.",
+  "admin.update-config.error.save.message": "Nepodařilo se uložit {{fileName}}",
 
   // "admin.update-config.error.reload.title": "Reload Failed",
   "admin.update-config.error.reload.title": "Opětovné načtení selhalo",
