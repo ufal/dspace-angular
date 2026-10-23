@@ -51,7 +51,7 @@ export class ItemResolver implements Resolve<RemoteData<Item>> {
    */
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<RemoteData<Item>> {
     const itemRD$ = this.itemService.findById(route.params.id,
-      true,
+      false,
       true,
       ...getItemPageLinksToFollow(),
     ).pipe(

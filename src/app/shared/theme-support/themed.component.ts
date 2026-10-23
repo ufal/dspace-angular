@@ -119,6 +119,9 @@ export abstract class ThemedComponent<T> implements AfterViewInit, OnDestroy, On
 
     this.lazyLoadSub = this.lazyLoadObs.subscribe(([simpleChanges, constructor]: [SimpleChanges, GenericConstructor<T>]) => {
       this.destroyComponentInstance();
+      if (!this.vcr || !this.themedElementContent) {
+        return;
+      }
       this.compRef = this.vcr.createComponent(constructor, {
         projectableNodes: [this.themedElementContent.nativeElement.childNodes],
       });
