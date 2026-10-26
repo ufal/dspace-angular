@@ -14,6 +14,7 @@ import {
 import {
   NavigationCancel,
   NavigationEnd,
+  NavigationError,
   NavigationStart,
   Router,
 } from '@angular/router';
@@ -253,7 +254,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         distinctNext(this.isRouteLoading$, true);
       } else if (
         event instanceof NavigationEnd ||
-        event instanceof NavigationCancel
+        event instanceof NavigationCancel ||
+        event instanceof NavigationError
       ) {
         distinctNext(this.isRouteLoading$, false);
       }

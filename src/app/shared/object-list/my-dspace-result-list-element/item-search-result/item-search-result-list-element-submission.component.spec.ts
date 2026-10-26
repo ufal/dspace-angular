@@ -78,6 +78,13 @@ describe('ItemMyDSpaceResultListElementComponent', () => {
   });
 
   it('should have correct badge context', () => {
+    expect(component.badgeContext).toEqual(Context.Any);
+  });
+
+  it('should show archived badge context when item is archived', () => {
+    component.dso = Object.assign(new Item(), mockResultObject.indexableObject, { isArchived: true });
+    component.ngOnInit();
+
     expect(component.badgeContext).toEqual(Context.MyDSpaceArchived);
   });
 
