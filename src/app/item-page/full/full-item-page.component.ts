@@ -32,6 +32,7 @@ import { LinkService } from '../../core/cache/builders/link.service';
 import { followLink } from '../../shared/utils/follow-link-config.model';
 import { getFirstCompletedRemoteData } from '../../core/shared/operators';
 import { WorkflowAction } from 'src/app/core/tasks/models/workflow-action-object.model';
+import { MyDSpaceConfigurationValueType } from '../../my-dspace-page/my-dspace-configuration-value-type';
 
 /**
  * This component renders a full item page.
@@ -176,7 +177,7 @@ export class FullItemPageComponent extends ItemPageComponent implements OnInit, 
    */
   onWorkflowActionCompleted(reloadedObject: any) {
     if (reloadedObject) {
-      this.router.navigate(['/mydspace']);
+      this.router.navigate(['/mydspace'], { queryParams: { configuration: MyDSpaceConfigurationValueType.Workflow } });
     }
   }
 
