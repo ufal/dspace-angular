@@ -1,7 +1,4 @@
-import {
-  CdkTreeModule,
-  FlatTreeControl,
-} from '@angular/cdk/tree';
+import { CdkTreeModule } from '@angular/cdk/tree';
 import { AsyncPipe } from '@angular/common';
 import {
   Component,
@@ -24,6 +21,7 @@ import { TruncatableComponent } from '../../shared/truncatable/truncatable.compo
 import { TruncatablePartComponent } from '../../shared/truncatable/truncatable-part/truncatable-part.component';
 import { CommunityListDatasource } from '../community-list-datasource';
 import { CommunityListService } from '../community-list-service';
+import { CommunityListTreeControl } from '../community-list-tree-control';
 import { FlatNode } from '../flat-node.model';
 
 /**
@@ -52,9 +50,7 @@ export class CommunityListComponent implements OnInit, OnDestroy {
   private expandedNodes: FlatNode[] = [];
   public loadingNode: FlatNode;
 
-  treeControl = new FlatTreeControl<FlatNode>(
-    (node: FlatNode) => node.level, (node: FlatNode) => true,
-  );
+  treeControl = new CommunityListTreeControl(() => this.expandedNodes);
   dataSource: CommunityListDatasource;
   paginationConfig: FindListOptions;
   trackBy = (index, node: FlatNode) => node.id;

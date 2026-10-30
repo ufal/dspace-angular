@@ -27,6 +27,7 @@ import {
 } from 'rxjs/operators';
 import { NotifyInfoService } from 'src/app/core/coar-notify/notify-info/notify-info.service';
 
+import { environment } from '../../../environments/environment';
 import { AuthorizationDataService } from '../../core/data/feature-authorization/authorization-data.service';
 import { FeatureID } from '../../core/data/feature-authorization/feature-id';
 import { ItemDataService } from '../../core/data/item-data.service';
@@ -52,7 +53,9 @@ import { ThemedLoadingComponent } from '../../shared/loading/themed-loading.comp
 import { ListableObjectComponentLoaderComponent } from '../../shared/object-collection/shared/listable-object/listable-object-component-loader.component';
 import { VarDirective } from '../../shared/utils/var.directive';
 import { ThemedItemAlertsComponent } from '../alerts/themed-item-alerts.component';
+import { ClarinFilesSectionComponent } from '../clarin-files-section/clarin-files-section.component';
 import { getItemPageRoute } from '../item-page-routing-paths';
+import { TombstoneComponent } from '../tombstone/tombstone.component';
 import { ItemVersionsComponent } from '../versions/item-versions.component';
 import { ItemVersionsNoticeComponent } from '../versions/notice/item-versions-notice.component';
 import { AccessByTokenNotificationComponent } from './access-by-token-notification/access-by-token-notification.component';
@@ -73,6 +76,7 @@ import { QaEventNotificationComponent } from './qa-event-notification/qa-event-n
   imports: [
     AccessByTokenNotificationComponent,
     AsyncPipe,
+    ClarinFilesSectionComponent,
     ErrorComponent,
     ItemVersionsComponent,
     ItemVersionsNoticeComponent,
@@ -81,6 +85,7 @@ import { QaEventNotificationComponent } from './qa-event-notification/qa-event-n
     QaEventNotificationComponent,
     ThemedItemAlertsComponent,
     ThemedLoadingComponent,
+    TombstoneComponent,
     TranslateModule,
     VarDirective,
   ],
@@ -116,6 +121,12 @@ export class ItemPageComponent implements OnInit, OnDestroy {
    * Whether the current user is an admin or not
    */
   isAdmin$: Observable<boolean>;
+
+  /**
+   * CLARIN: whether the tombstone page is shown instead of the item. A withdrawn item is only
+   * readable by administrators, everyone else gets the "withdrawn / replaced by" tombstone.
+   */
+  showTombstone$: Observable<boolean>;
 
   itemUrl: string;
 
@@ -162,6 +173,12 @@ export class ItemPageComponent implements OnInit, OnDestroy {
 
     this.isAdmin$ = this.authorizationService.isAuthorized(FeatureID.AdministratorOf);
 
+    this.showTombstone$ = combineLatest([
+      this.itemRD$.pipe(getAllSucceededRemoteDataPayload()),
+      this.isAdmin$,
+    ]).pipe(
+      map(([item, isAdmin]: [Item, boolean]) => !!item.isWithdrawn && !isAdmin),
+    );
   }
 
   /**
@@ -170,6 +187,9 @@ export class ItemPageComponent implements OnInit, OnDestroy {
    * @private
    */
   private initPageLinks(): void {
+    if (!environment.signpostingEnabled) {
+      return;
+    }
     this.route.params.subscribe(params => {
       combineLatest([this.signpostingDataService.getLinks(params.id).pipe(take(1)), this.getCoarLdnLocalInboxUrls()])
         .subscribe(([signpostingLinks, coarRestApiUrls]) => {

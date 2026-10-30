@@ -347,6 +347,8 @@ export class DefaultAppConfig implements AppConfig {
       pageSize: 5,
       // Show the bitstream access status label
       showAccessStatuses: false,
+      // Link a restricted bitstream to the vanilla request-a-copy form instead of the CLARIN licence gate
+      enableRequestACopyLink: false,
     },
   };
 
@@ -359,10 +361,12 @@ export class DefaultAppConfig implements AppConfig {
   };
 
   // Collection Page Config
+  // CLARIN/LINDAT: the item listing without the filter sidebar approximates the v7 collection
+  // landing ("Recent Submissions" list)
   collection: CollectionPageConfig = {
     defaultBrowseTab: 'search',
     searchSection: {
-      showSidebar: true,
+      showSidebar: false,
     },
     edit: {
       undoTimeout: 10000, // 10 seconds
@@ -621,7 +625,11 @@ export class DefaultAppConfig implements AppConfig {
     isVisible: false,
   };
 
-  matomo: MatomoConfig = {};
+  // 0 means no custom dimension is reported; set it to the dimension created in Matomo, either
+  // here, in config.*.yml, or through DSPACE_MATOMO_DIMENSIONID
+  matomo: MatomoConfig = {
+    dimensionId: 0,
+  };
 
   // Leaflet tile providers and other configurable attributes
   geospatialMapViewer: GeospatialMapConfig = {
@@ -648,4 +656,7 @@ export class DefaultAppConfig implements AppConfig {
   accessibility: AccessibilitySettingsConfig = {
     cookieExpirationDuration: 7,
   };
+
+  // CLARIN: signposting is opt-in; when off, the UI makes no /signposting/links request at all
+  signpostingEnabled = false;
 }
