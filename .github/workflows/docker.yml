@@ -24,7 +24,7 @@ jobs:
     # Ensure this job never runs on forked repos. It's only executed for 'ufal/dspace-angular'
     if: github.repository == 'ufal/dspace-angular'
     # Use the reusable-docker-build.yml script from ufal/clarin-dspace repo to build our Docker image
-    uses: ufal/clarin-dspace/.github/workflows/reusable-docker-build.yml@clarin-v9
+    uses: ufal/clarin-dspace/.github/workflows/reusable-docker-build.yml@dtq-dev-9-base-test
     with:
       build_id: dspace-angular-dev
       image_name: ufal/dspace-angular
@@ -46,7 +46,7 @@ jobs:
     # Ensure this job never runs on forked repos. It's only executed for 'ufal/dspace-angular'
     if: github.repository == 'ufal/dspace-angular'
     # Use the reusable-docker-build.yml script from ufal/clarin-dspace repo to build our Docker image
-    uses: ufal/clarin-dspace/.github/workflows/reusable-docker-build.yml@clarin-v9
+    uses: ufal/clarin-dspace/.github/workflows/reusable-docker-build.yml@dtq-dev-9-base-test
     with:
       build_id: dspace-angular
       image_name: ufal/dspace-angular
