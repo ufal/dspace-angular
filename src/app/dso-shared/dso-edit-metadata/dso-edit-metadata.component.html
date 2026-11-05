@@ -41,6 +41,8 @@
           <ds-dso-edit-metadata-value-headers role="presentation" [dsoType]="dsoType"></ds-dso-edit-metadata-value-headers>
           <ds-dso-edit-metadata-value [dso]="dso"
                                       [mdValue]="form.newValue"
+                                      [mdField]="newMdField"
+                                      [markdownEnabledForForm]="isLocalDescriptionUseMarkdownEnabled()"
                                       [dsoType]="dsoType"
                                       [saving$]="savingOrLoadingFieldValidation$"
                                       [isOnlyValue]="true"

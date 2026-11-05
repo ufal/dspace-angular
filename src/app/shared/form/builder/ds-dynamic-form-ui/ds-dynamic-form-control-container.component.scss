@@ -14,3 +14,17 @@
   -moz-appearance: none;
   appearance: none;
 }
+
+.markdown-preview-toggle {
+  .btn.active {
+    pointer-events: none;
+  }
+}
+
+.markdown-preview-box {
+  max-height: 24rem;
+  min-height: 3rem;
+  overflow: auto;
+  padding: 0.75rem;
+  white-space: pre-wrap;
+}

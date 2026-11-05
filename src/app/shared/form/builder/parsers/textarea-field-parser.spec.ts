@@ -66,4 +66,29 @@ describe('TextareaFieldParser test suite', () => {
     expect(fieldModel.value).toEqual(expectedValue);
   });
 
+  it('should enable markdown preview support for description metadata fields', () => {
+    const parser = new TextareaFieldParser(submissionId, field, initFormValues, parserOptions, translateService);
+
+    const fieldModel = parser.parse();
+
+    expect(fieldModel.supportsMarkdownPreview).toBe(true);
+  });
+
+  it('should disable markdown preview support for non-description metadata fields', () => {
+    field.selectableMetadata = [
+      {
+        metadata: 'dc.title',
+        label: 'Title',
+        controlledVocabulary: null,
+        closed: false
+      }
+    ];
+
+    const parser = new TextareaFieldParser(submissionId, field, initFormValues, parserOptions, translateService);
+
+    const fieldModel = parser.parse();
+
+    expect(fieldModel.supportsMarkdownPreview).toBe(false);
+  });
+
 });

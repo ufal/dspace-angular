@@ -171,3 +171,7 @@ languages:
   - code: uk
     label: Yкраї́нська
     active: false
+
+markdown:
+  enabled: true
+  mathjax: false

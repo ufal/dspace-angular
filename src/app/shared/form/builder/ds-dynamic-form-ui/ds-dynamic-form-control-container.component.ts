@@ -17,7 +17,7 @@ import {
   ViewChild,
   ViewContainerRef
 } from '@angular/core';
-import { UntypedFormArray, UntypedFormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormArray, UntypedFormGroup } from '@angular/forms';
 
 import {
   DYNAMIC_FORM_CONTROL_TYPE_ARRAY,
@@ -125,6 +125,8 @@ import { DYNAMIC_FORM_CONTROL_TYPE_AUTOCOMPLETE } from './models/autocomplete/ds
 import { DsDynamicSponsorAutocompleteComponent } from './models/sponsor-autocomplete/ds-dynamic-sponsor-autocomplete.component';
 import { SPONSOR_METADATA_NAME } from './models/ds-dynamic-complex.model';
 import { DsDynamicSponsorScrollableDropdownComponent } from './models/sponsor-scrollable-dropdown/dynamic-sponsor-scrollable-dropdown.component';
+import { DsDynamicTextAreaModel } from './models/ds-dynamic-textarea.model';
+import { MARKDOWN_DESCRIPTION_METADATA_ALLOW_LIST } from '../constants/markdown-description-metadata-allow-list';
 
 export function dsDynamicFormControlMapFn(model: DynamicFormControlModel): Type<DynamicFormControl> | null {
   switch (model.type) {
@@ -210,7 +212,6 @@ export function dsDynamicFormControlMapFn(model: DynamicFormControlModel): Type<
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class DsDynamicFormControlContainerComponent extends DynamicFormControlContainerComponent implements OnInit, OnChanges, OnDestroy {
-
   /**
    * Tracks per-baseId state for unique ID generation.
    * nextSuffix: the next numeric suffix to assign (0 means keep original ID).
@@ -219,6 +220,8 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
    *     starts fresh.
    */
   private static _idState = new Map<string, { nextSuffix: number; activeCount: number }>();
+
+  protected readonly markdownDescriptionMetadataAllowList: string[] = MARKDOWN_DESCRIPTION_METADATA_ALLOW_LIST;
 
   @ContentChildren(DynamicTemplateDirective) contentTemplateList: QueryList<DynamicTemplateDirective>;
   // eslint-disable-next-line @angular-eslint/no-input-rename
@@ -263,6 +266,26 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
    * Determines whether to request embedded thumbnail.
    */
   fetchThumbnail: boolean;
+
+  /**
+   * Whether markdown preview mode is enabled for the current control.
+   */
+  isMarkdownPreviewMode = false;
+
+  /**
+   * Cached visibility flag for markdown preview toggle.
+   */
+  markdownToggleVisible = false;
+
+  /**
+   * Cached control reference for local.description.usemarkdown.
+   */
+  private localDescriptionUseMarkdownControl: AbstractControl;
+
+  /**
+   * Subscription to local.description.usemarkdown control value changes.
+   */
+  private localDescriptionUseMarkdownSubscription: Subscription;
 
   private _cachedId: string;
   private _baseId: string;
@@ -407,7 +430,7 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes && !this.isRelationship && hasValue(this.group.get(this.model.id))) {
+    if (changes && !this.isRelationship && hasValue(this.group) && hasValue(this.model) && hasValue(this.group.get(this.model.id))) {
       super.ngOnChanges(changes);
       if (this.model && this.model.placeholder) {
         this.model.placeholder = this.translateService.instant(this.model.placeholder);
@@ -416,6 +439,8 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
         this.subscriptions.push(...this.typeBindRelationService.subscribeRelations(this.model, this.control));
       }
     }
+
+    this.setupMarkdownToggleVisibilityBinding();
   }
 
   ngDoCheck() {
@@ -560,6 +585,11 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
    * for this instance's base ID.
    */
   ngOnDestroy(): void {
+    if (hasValue(this.localDescriptionUseMarkdownSubscription)) {
+      this.localDescriptionUseMarkdownSubscription.unsubscribe();
+      this.localDescriptionUseMarkdownSubscription = null;
+    }
+
     if (this._baseId) {
       const state = DsDynamicFormControlContainerComponent._idState.get(this._baseId);
       if (state) {
@@ -576,6 +606,225 @@ export class DsDynamicFormControlContainerComponent extends DynamicFormControlCo
 
   get hasHint(): boolean {
     return isNotEmpty(this.model.hint) && this.model.hint !== '&nbsp;';
+  }
+
+  /**
+   * Checks if markdown preview toggle can be shown for this control.
+   */
+  canShowMarkdownPreviewToggle(): boolean {
+    return this.markdownToggleVisible;
+  }
+
+  /**
+   * Checks if markdown preview should be displayed.
+   */
+  isMarkdownPreviewModeEnabled(): boolean {
+    return this.markdownToggleVisible && this.isMarkdownPreviewMode;
+  }
+
+  /**
+   * Enable/disable markdown preview mode.
+   */
+  setMarkdownPreviewMode(enabled: boolean): void {
+    this.isMarkdownPreviewMode = enabled;
+  }
+
+  /**
+   * Returns current control value as a string for markdown rendering.
+   */
+  getMarkdownPreviewValue(): string {
+    const value = this.control?.value ?? this.model?.value;
+    if (typeof value === 'string') {
+      return value;
+    }
+    if (hasValue(value?.value) && typeof value.value === 'string') {
+      return value.value;
+    }
+    if (Array.isArray(value) && value.length > 0) {
+      return value
+        .map((entry) => {
+          if (typeof entry === 'string') {
+            return entry;
+          }
+          if (hasValue(entry?.value) && typeof entry.value === 'string') {
+            return entry.value;
+          }
+          return '';
+        })
+        .filter((entry: string) => isNotEmpty(entry))
+        .join('\n');
+    }
+    return '';
+  }
+
+  /**
+   * Checks if the current control is an eligible textarea for markdown preview.
+   */
+  protected isMarkdownPreviewSupported(): boolean {
+    if (this.model?.type !== DYNAMIC_FORM_CONTROL_TYPE_TEXTAREA) {
+      return false;
+    }
+    if (!this.appConfig?.markdown?.enabled) {
+      return false;
+    }
+    if (!this.isDescriptionTextareaField()) {
+      return false;
+    }
+    return this.isLocalDescriptionUseMarkdownEnabled();
+  }
+
+  /**
+   * Check whether this textarea is configured for one of the known description metadata fields.
+   */
+  protected isDescriptionTextareaField(): boolean {
+    const textareaModel = this.model as DsDynamicTextAreaModel;
+    if (textareaModel?.supportsMarkdownPreview === true) {
+      return true;
+    }
+
+    const metadataFields = this.model?.metadataFields || [];
+    return metadataFields.some((metadataField: string) => this.markdownDescriptionMetadataAllowList.includes(metadataField));
+  }
+
+  /**
+   * Check if local.description.usemarkdown exists in form state and enables markdown rendering.
+   */
+  protected isLocalDescriptionUseMarkdownEnabled(): boolean {
+    const useMarkdownControl = this.localDescriptionUseMarkdownControl || this.resolveLocalDescriptionUseMarkdownControl();
+    this.localDescriptionUseMarkdownControl = useMarkdownControl;
+
+    if (!hasValue(useMarkdownControl)) {
+      return false;
+    }
+
+    const rawValue = useMarkdownControl.value?.value ?? useMarkdownControl.value;
+    return this.isUseMarkdownValueEnabled(rawValue);
+  }
+
+  private setupMarkdownToggleVisibilityBinding(): void {
+    if (!this.shouldBindMarkdownToggleVisibility()) {
+      this.clearMarkdownToggleVisibilityBinding();
+      return;
+    }
+
+    const useMarkdownControl = this.resolveLocalDescriptionUseMarkdownControl();
+    const hasSameUseMarkdownControl = useMarkdownControl === this.localDescriptionUseMarkdownControl;
+
+    this.localDescriptionUseMarkdownControl = useMarkdownControl;
+    this.refreshMarkdownToggleVisibility();
+
+    if (hasSameUseMarkdownControl) {
+      return;
+    }
+
+    if (hasValue(this.localDescriptionUseMarkdownSubscription)) {
+      this.localDescriptionUseMarkdownSubscription.unsubscribe();
+      this.localDescriptionUseMarkdownSubscription = null;
+    }
+
+    if (!hasValue(useMarkdownControl)) {
+      return;
+    }
+
+    this.localDescriptionUseMarkdownSubscription = useMarkdownControl.valueChanges
+      .pipe(startWith(useMarkdownControl.value))
+      .subscribe(() => this.refreshMarkdownToggleVisibility());
+  }
+
+  private shouldBindMarkdownToggleVisibility(): boolean {
+    if (!this.appConfig?.markdown?.enabled) {
+      return false;
+    }
+
+    if (this.model?.type !== DYNAMIC_FORM_CONTROL_TYPE_TEXTAREA) {
+      return false;
+    }
+
+    if (this.model?.readOnly) {
+      return false;
+    }
+
+    return this.isDescriptionTextareaField();
+  }
+
+  private clearMarkdownToggleVisibilityBinding(): void {
+    this.markdownToggleVisible = false;
+    this.localDescriptionUseMarkdownControl = null;
+
+    if (hasValue(this.localDescriptionUseMarkdownSubscription)) {
+      this.localDescriptionUseMarkdownSubscription.unsubscribe();
+      this.localDescriptionUseMarkdownSubscription = null;
+    }
+  }
+
+  private resolveLocalDescriptionUseMarkdownControl(): AbstractControl {
+    return this.group?.root?.get('local_description_usemarkdown')
+      || this.formGroup?.root?.get('local_description_usemarkdown')
+      || this.group?.get('local_description_usemarkdown')
+      || this.findNestedControlByKey(this.group?.root, 'local_description_usemarkdown')
+      || this.findNestedControlByKey(this.formGroup?.root, 'local_description_usemarkdown')
+      || this.findNestedControlByKey(this.group, 'local_description_usemarkdown');
+  }
+
+  private refreshMarkdownToggleVisibility(): void {
+    this.markdownToggleVisible = this.isMarkdownPreviewSupported() && !this.model?.readOnly;
+  }
+
+  private findNestedControlByKey(control: AbstractControl, key: string): AbstractControl {
+    if (!hasValue(control)) {
+      return null;
+    }
+
+    if (control instanceof UntypedFormGroup) {
+      if (hasValue(control.controls[key])) {
+        return control.controls[key];
+      }
+
+      for (const childControl of Object.values(control.controls)) {
+        const matchingControl = this.findNestedControlByKey(childControl, key);
+        if (hasValue(matchingControl)) {
+          return matchingControl;
+        }
+      }
+
+      return null;
+    }
+
+    if (control instanceof UntypedFormArray) {
+      for (const childControl of control.controls) {
+        const matchingControl = this.findNestedControlByKey(childControl, key);
+        if (hasValue(matchingControl)) {
+          return matchingControl;
+        }
+      }
+    }
+
+    return null;
+  }
+
+  private isUseMarkdownValueEnabled(value: any): boolean {
+    if (!hasValue(value)) {
+      return false;
+    }
+
+    if (typeof value === 'boolean') {
+      return value;
+    }
+
+    if (typeof value === 'string') {
+      const normalizedValue = value.toLowerCase();
+      return normalizedValue === 'yes' || normalizedValue === 'true';
+    }
+
+    if (Array.isArray(value)) {
+      return value.some((entry) => this.isUseMarkdownValueEnabled(entry));
+    }
+
+    if (typeof value === 'object') {
+      return Object.values(value).some((entry) => this.isUseMarkdownValueEnabled(entry));
+    }
+
+    return false;
   }
 
   /**

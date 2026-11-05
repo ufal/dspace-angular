@@ -377,6 +377,277 @@ describe('DsDynamicFormControlContainerComponent test suite', () => {
     expect(testFn(formModel[25])).toEqual(DsDynamicFormGroupComponent);
   });
 
+  it('should show markdown preview toggle for eligible textarea when markdown is enabled', () => {
+    const appConfig = TestBed.inject(APP_CONFIG) as any;
+    const previousMarkdownEnabled = appConfig.markdown.enabled;
+    appConfig.markdown.enabled = true;
+
+    const textareaModel: any = formModel[14];
+    textareaModel.supportsMarkdownPreview = true;
+    textareaModel.metadataFields = ['dc.description'];
+
+    formGroup.addControl('local_description_usemarkdown', new UntypedFormControl('yes'));
+
+    component.model = textareaModel;
+    component.group = formGroup;
+    component.ngOnChanges({
+      group: new SimpleChange(null, component.group, false),
+      model: new SimpleChange(null, component.model, false)
+    });
+
+    expect(component.canShowMarkdownPreviewToggle()).toBe(true);
+
+    appConfig.markdown.enabled = previousMarkdownEnabled;
+  });
+
+  it('should hide markdown preview toggle when markdown is disabled', () => {
+    const appConfig = TestBed.inject(APP_CONFIG) as any;
+    const previousMarkdownEnabled = appConfig.markdown.enabled;
+    appConfig.markdown.enabled = false;
+
+    const textareaModel: any = formModel[14];
+    textareaModel.supportsMarkdownPreview = true;
+    textareaModel.metadataFields = ['dc.description'];
+
+    formGroup.addControl('local_description_usemarkdown', new UntypedFormControl('yes'));
+
+    component.model = textareaModel;
+    component.group = formGroup;
+    component.ngOnChanges({
+      group: new SimpleChange(null, component.group, false),
+      model: new SimpleChange(null, component.model, false)
+    });
+
+    expect(component.canShowMarkdownPreviewToggle()).toBe(false);
+
+    appConfig.markdown.enabled = previousMarkdownEnabled;
+  });
+
+  it('should switch to markdown preview mode and return current textarea value', () => {
+    const appConfig = TestBed.inject(APP_CONFIG) as any;
+    const previousMarkdownEnabled = appConfig.markdown.enabled;
+    appConfig.markdown.enabled = true;
+
+    const textareaModel: any = formModel[14];
+    textareaModel.supportsMarkdownPreview = true;
+    textareaModel.metadataFields = ['dc.description'];
+
+    formGroup.addControl('local_description_usemarkdown', new UntypedFormControl('yes'));
+
+    component.model = textareaModel;
+    component.group = formGroup;
+    component.ngOnChanges({
+      group: new SimpleChange(null, component.group, false),
+      model: new SimpleChange(null, component.model, false)
+    });
+
+    component.control.setValue('# Title');
+    component.setMarkdownPreviewMode(true);
+
+    expect(component.isMarkdownPreviewModeEnabled()).toBe(true);
+    expect(component.getMarkdownPreviewValue()).toBe('# Title');
+
+    appConfig.markdown.enabled = previousMarkdownEnabled;
+  });
+
+  it('should hide markdown preview toggle when local.description.usemarkdown is set to no', () => {
+    const appConfig = TestBed.inject(APP_CONFIG) as any;
+    const previousMarkdownEnabled = appConfig.markdown.enabled;
+    appConfig.markdown.enabled = true;
+
+    const textareaModel: any = formModel[14];
+    textareaModel.supportsMarkdownPreview = true;
+    textareaModel.metadataFields = ['dc.description'];
+
+    formGroup.addControl('local_description_usemarkdown', new UntypedFormControl('no'));
+
+    component.model = textareaModel;
+    component.group = formGroup;
+    component.ngOnChanges({
+      group: new SimpleChange(null, component.group, false),
+      model: new SimpleChange(null, component.model, false)
+    });
+
+    expect(component.canShowMarkdownPreviewToggle()).toBe(false);
+
+    appConfig.markdown.enabled = previousMarkdownEnabled;
+  });
+
+  it('should hide markdown preview toggle when local.description.usemarkdown control is missing', () => {
+    const appConfig = TestBed.inject(APP_CONFIG) as any;
+    const previousMarkdownEnabled = appConfig.markdown.enabled;
+    appConfig.markdown.enabled = true;
+
+    const textareaModel: any = formModel[14];
+    textareaModel.supportsMarkdownPreview = true;
+    textareaModel.metadataFields = ['dc.description'];
+
+    component.model = textareaModel;
+    component.group = formGroup;
+    component.ngOnChanges({
+      group: new SimpleChange(null, component.group, false),
+      model: new SimpleChange(null, component.model, false)
+    });
+
+    expect(component.canShowMarkdownPreviewToggle()).toBe(false);
+
+    appConfig.markdown.enabled = previousMarkdownEnabled;
+  });
+
+  it('should show markdown preview toggle when usemarkdown is in a sibling row-group with object value', () => {
+    const appConfig = TestBed.inject(APP_CONFIG) as any;
+    const previousMarkdownEnabled = appConfig.markdown.enabled;
+    appConfig.markdown.enabled = true;
+
+    const textareaModel: any = new DynamicTextAreaModel({ id: 'dc_description' });
+    textareaModel.supportsMarkdownPreview = true;
+    textareaModel.metadataFields = ['dc.description'];
+
+    const descriptionGroup = new UntypedFormGroup({
+      dc_description: new UntypedFormControl('# something')
+    });
+    const markdownGroup = new UntypedFormGroup({
+      local_description_usemarkdown: new UntypedFormControl({ local_description_usemarkdown_yes: true })
+    });
+    const rootFormGroup = new UntypedFormGroup({
+      'df-row-group-config-22': descriptionGroup,
+      'df-row-group-config-23': markdownGroup
+    });
+
+    component.model = textareaModel;
+    component.group = descriptionGroup;
+    component.formGroup = rootFormGroup;
+    component.ngOnChanges({
+      group: new SimpleChange(null, component.group, false),
+      model: new SimpleChange(null, component.model, false)
+    });
+
+    expect(component.canShowMarkdownPreviewToggle()).toBe(true);
+
+    appConfig.markdown.enabled = previousMarkdownEnabled;
+  });
+
+  it('should show markdown preview toggle when local.description.usemarkdown is YES', () => {
+    const appConfig = TestBed.inject(APP_CONFIG) as any;
+    const previousMarkdownEnabled = appConfig.markdown.enabled;
+    appConfig.markdown.enabled = true;
+
+    const textareaModel: any = formModel[14];
+    textareaModel.supportsMarkdownPreview = true;
+    textareaModel.metadataFields = ['dc.description'];
+
+    formGroup.addControl('local_description_usemarkdown', new UntypedFormControl('YES'));
+
+    component.model = textareaModel;
+    component.group = formGroup;
+    component.ngOnChanges({
+      group: new SimpleChange(null, component.group, false),
+      model: new SimpleChange(null, component.model, false)
+    });
+
+    expect(component.canShowMarkdownPreviewToggle()).toBe(true);
+
+    appConfig.markdown.enabled = previousMarkdownEnabled;
+  });
+
+  it('should show markdown preview toggle when local.description.usemarkdown is True', () => {
+    const appConfig = TestBed.inject(APP_CONFIG) as any;
+    const previousMarkdownEnabled = appConfig.markdown.enabled;
+    appConfig.markdown.enabled = true;
+
+    const textareaModel: any = formModel[14];
+    textareaModel.supportsMarkdownPreview = true;
+    textareaModel.metadataFields = ['dc.description'];
+
+    formGroup.addControl('local_description_usemarkdown', new UntypedFormControl('True'));
+
+    component.model = textareaModel;
+    component.group = formGroup;
+    component.ngOnChanges({
+      group: new SimpleChange(null, component.group, false),
+      model: new SimpleChange(null, component.model, false)
+    });
+
+    expect(component.canShowMarkdownPreviewToggle()).toBe(true);
+
+    appConfig.markdown.enabled = previousMarkdownEnabled;
+  });
+
+  it('should show markdown preview toggle when local.description.usemarkdown is boolean true', () => {
+    const appConfig = TestBed.inject(APP_CONFIG) as any;
+    const previousMarkdownEnabled = appConfig.markdown.enabled;
+    appConfig.markdown.enabled = true;
+
+    const textareaModel: any = formModel[14];
+    textareaModel.supportsMarkdownPreview = true;
+    textareaModel.metadataFields = ['dc.description'];
+
+    formGroup.addControl('local_description_usemarkdown', new UntypedFormControl(true));
+
+    component.model = textareaModel;
+    component.group = formGroup;
+    component.ngOnChanges({
+      group: new SimpleChange(null, component.group, false),
+      model: new SimpleChange(null, component.model, false)
+    });
+
+    expect(component.canShowMarkdownPreviewToggle()).toBe(true);
+
+    appConfig.markdown.enabled = previousMarkdownEnabled;
+  });
+
+  it('should show markdown preview toggle when local.description.usemarkdown is an object map with a truthy value', () => {
+    const appConfig = TestBed.inject(APP_CONFIG) as any;
+    const previousMarkdownEnabled = appConfig.markdown.enabled;
+    appConfig.markdown.enabled = true;
+
+    const textareaModel: any = formModel[14];
+    textareaModel.supportsMarkdownPreview = true;
+    textareaModel.metadataFields = ['dc.description'];
+
+    formGroup.addControl('local_description_usemarkdown', new UntypedFormControl({
+      local_description_usemarkdown_yes: false,
+      another_option: true
+    }));
+
+    component.model = textareaModel;
+    component.group = formGroup;
+    component.ngOnChanges({
+      group: new SimpleChange(null, component.group, false),
+      model: new SimpleChange(null, component.model, false)
+    });
+
+    expect(component.canShowMarkdownPreviewToggle()).toBe(true);
+
+    appConfig.markdown.enabled = previousMarkdownEnabled;
+  });
+
+  it('should hide markdown preview toggle when local.description.usemarkdown object map is fully falsy', () => {
+    const appConfig = TestBed.inject(APP_CONFIG) as any;
+    const previousMarkdownEnabled = appConfig.markdown.enabled;
+    appConfig.markdown.enabled = true;
+
+    const textareaModel: any = formModel[14];
+    textareaModel.supportsMarkdownPreview = true;
+    textareaModel.metadataFields = ['dc.description'];
+
+    formGroup.addControl('local_description_usemarkdown', new UntypedFormControl({
+      local_description_usemarkdown_yes: false,
+      another_option: false
+    }));
+
+    component.model = textareaModel;
+    component.group = formGroup;
+    component.ngOnChanges({
+      group: new SimpleChange(null, component.group, false),
+      model: new SimpleChange(null, component.model, false)
+    });
+
+    expect(component.canShowMarkdownPreviewToggle()).toBe(false);
+
+    appConfig.markdown.enabled = previousMarkdownEnabled;
+  });
+
   describe('unique id generation', () => {
     afterEach(() => {
       DsDynamicFormControlContainerComponent.resetIdCounters();
