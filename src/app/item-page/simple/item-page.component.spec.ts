@@ -20,6 +20,7 @@ import {
 } from '@ngx-translate/core';
 import { of } from 'rxjs';
 
+import { environment } from '../../../environments/environment';
 import { NotifyInfoService } from '../../core/coar-notify/notify-info/notify-info.service';
 import { AuthorizationDataService } from '../../core/data/feature-authorization/authorization-data.service';
 import { ItemDataService } from '../../core/data/item-data.service';
@@ -45,6 +46,8 @@ import { ActivatedRouteStub } from '../../shared/testing/active-router.stub';
 import { createPaginatedList } from '../../shared/testing/utils.test';
 import { VarDirective } from '../../shared/utils/var.directive';
 import { ThemedItemAlertsComponent } from '../alerts/themed-item-alerts.component';
+import { ClarinFilesSectionComponent } from '../clarin-files-section/clarin-files-section.component';
+import { TombstoneComponent } from '../tombstone/tombstone.component';
 import { ItemVersionsComponent } from '../versions/item-versions.component';
 import { ItemVersionsNoticeComponent } from '../versions/notice/item-versions-notice.component';
 import { ItemPageComponent } from './item-page.component';
@@ -139,6 +142,7 @@ describe('ItemPageComponent', () => {
     }).overrideComponent(ItemPageComponent, {
       add: { changeDetection: ChangeDetectionStrategy.Default },
       remove: { imports: [
+        ClarinFilesSectionComponent,
         ThemedItemAlertsComponent,
         ItemVersionsNoticeComponent,
         ListableObjectComponentLoaderComponent,
@@ -267,4 +271,199 @@ describe('ItemPageComponent', () => {
     });
   });
 
+  describe('local.has.files', () => {
+    const withHasFiles = (value: string): Item => Object.assign(new Item(), mockItem, {
+      metadata: { 'local.has.files': [{ value }] },
+    });
+
+    it('should not display the files section when the item has no files', () => {
+      comp.itemRD$ = createSuccessfulRemoteDataObject$(withHasFiles('no'));
+      fixture.detectChanges();
+      expect(fixture.debugElement.query(By.css('ds-clarin-files-section'))).toBeNull();
+    });
+
+    it('should display the files section when the item has files', () => {
+      comp.itemRD$ = createSuccessfulRemoteDataObject$(withHasFiles('yes'));
+      fixture.detectChanges();
+      expect(fixture.debugElement.query(By.css('ds-clarin-files-section'))).not.toBeNull();
+    });
+  });
+
+});
+
+/**
+ * CLARIN: a withdrawn item is served as a tombstone page instead of the item itself, so the route
+ * data has to carry the withdrawn item before the component is created.
+ */
+describe('ItemPageComponent tombstone', () => {
+  let comp: ItemPageComponent;
+  let fixture: ComponentFixture<ItemPageComponent>;
+
+  const init = (item: Item, isAdmin: boolean) => {
+    TestBed.configureTestingModule({
+      imports: [TranslateModule.forRoot({
+        loader: {
+          provide: TranslateLoader,
+          useClass: TranslateLoaderMock,
+        },
+      }), BrowserAnimationsModule, ItemPageComponent, VarDirective],
+      providers: [
+        {
+          provide: ActivatedRoute,
+          useValue: Object.assign(new ActivatedRouteStub(), {
+            data: of({ dso: createSuccessfulRemoteDataObject(item) }),
+          }),
+        },
+        { provide: ItemDataService, useValue: {} },
+        { provide: Router, useValue: {} },
+        {
+          provide: AuthorizationDataService,
+          useValue: jasmine.createSpyObj('authorizationDataService', { isAuthorized: of(isAdmin) }),
+        },
+        { provide: ServerResponseService, useValue: jasmine.createSpyObj('ServerResponseService', ['setHeader']) },
+        {
+          provide: SignpostingDataService,
+          useValue: jasmine.createSpyObj('SignpostingDataService', { getLinks: of([]) }),
+        },
+        { provide: LinkHeadService, useValue: jasmine.createSpyObj('LinkHeadService', ['addTag', 'removeTag']) },
+        {
+          provide: NotifyInfoService,
+          useValue: jasmine.createSpyObj('NotifyInfoService', {
+            getInboxRelationLink: 'http://www.w3.org/ns/ldp#inbox',
+            isCoarConfigEnabled: of(false),
+            getCoarLdnLocalInboxUrls: of([]),
+          }),
+        },
+        { provide: PLATFORM_ID, useValue: 'server' },
+      ],
+      schemas: [NO_ERRORS_SCHEMA],
+    }).overrideComponent(ItemPageComponent, {
+      add: { changeDetection: ChangeDetectionStrategy.Default },
+      remove: { imports: [
+        ClarinFilesSectionComponent,
+        ThemedItemAlertsComponent,
+        ItemVersionsNoticeComponent,
+        ListableObjectComponentLoaderComponent,
+        ItemVersionsComponent,
+        ErrorComponent,
+        ThemedLoadingComponent,
+        NotifyRequestsStatusComponent,
+        QaEventNotificationComponent,
+        TombstoneComponent,
+      ] },
+    });
+    fixture = TestBed.createComponent(ItemPageComponent);
+    comp = fixture.componentInstance;
+    fixture.detectChanges();
+  };
+
+  const showTombstone = (): boolean => {
+    let shown: boolean;
+    comp.showTombstone$.subscribe((value: boolean) => shown = value);
+    return shown;
+  };
+
+  it('should show the tombstone instead of a withdrawn item', () => {
+    init(mockWithdrawnItem, false);
+
+    expect(showTombstone()).toBeTrue();
+    expect(fixture.debugElement.query(By.css('ds-tombstone'))).not.toBeNull();
+    expect(fixture.debugElement.query(By.css('ds-listable-object-component-loader'))).toBeNull();
+  });
+
+  it('should keep showing a withdrawn item to an admin', () => {
+    init(mockWithdrawnItem, true);
+
+    expect(showTombstone()).toBeFalse();
+    expect(fixture.debugElement.query(By.css('ds-tombstone'))).toBeNull();
+    expect(fixture.debugElement.query(By.css('ds-listable-object-component-loader'))).not.toBeNull();
+  });
+
+  it('should not show the tombstone for an item that is not withdrawn', () => {
+    init(mockItem, false);
+
+    expect(showTombstone()).toBeFalse();
+    expect(fixture.debugElement.query(By.css('ds-tombstone'))).toBeNull();
+    expect(fixture.debugElement.query(By.css('ds-listable-object-component-loader'))).not.toBeNull();
+  });
+});
+
+/**
+ * CLARIN: with signpostingEnabled off the page must not reach the signposting endpoint at all.
+ */
+describe('ItemPageComponent with signposting disabled', () => {
+  let signpostingDataService: jasmine.SpyObj<SignpostingDataService>;
+  let serverResponseService: jasmine.SpyObj<ServerResponseService>;
+
+  beforeEach(waitForAsync(() => {
+    environment.signpostingEnabled = false;
+
+    signpostingDataService = jasmine.createSpyObj('SignpostingDataService', {
+      getLinks: of([mocklink, mocklink2]),
+    });
+    serverResponseService = jasmine.createSpyObj('ServerResponseService', {
+      setHeader: jasmine.createSpy('setHeader'),
+    });
+
+    TestBed.configureTestingModule({
+      imports: [TranslateModule.forRoot({
+        loader: {
+          provide: TranslateLoader,
+          useClass: TranslateLoaderMock,
+        },
+      }), BrowserAnimationsModule, ItemPageComponent, VarDirective],
+      providers: [
+        {
+          provide: ActivatedRoute,
+          useValue: Object.assign(new ActivatedRouteStub(), {
+            data: of({ dso: createSuccessfulRemoteDataObject(mockItem) }),
+          }),
+        },
+        { provide: ItemDataService, useValue: {} },
+        { provide: Router, useValue: {} },
+        {
+          provide: AuthorizationDataService,
+          useValue: jasmine.createSpyObj('authorizationDataService', { isAuthorized: of(false) }),
+        },
+        { provide: ServerResponseService, useValue: serverResponseService },
+        { provide: SignpostingDataService, useValue: signpostingDataService },
+        { provide: LinkHeadService, useValue: jasmine.createSpyObj('LinkHeadService', ['addTag', 'removeTag']) },
+        {
+          provide: NotifyInfoService,
+          useValue: jasmine.createSpyObj('NotifyInfoService', {
+            getInboxRelationLink: 'http://www.w3.org/ns/ldp#inbox',
+            isCoarConfigEnabled: of(false),
+            getCoarLdnLocalInboxUrls: of([]),
+          }),
+        },
+        { provide: PLATFORM_ID, useValue: 'server' },
+      ],
+      schemas: [NO_ERRORS_SCHEMA],
+    }).overrideComponent(ItemPageComponent, {
+      add: { changeDetection: ChangeDetectionStrategy.Default },
+      remove: { imports: [
+        ClarinFilesSectionComponent,
+        ThemedItemAlertsComponent,
+        ItemVersionsNoticeComponent,
+        ListableObjectComponentLoaderComponent,
+        ItemVersionsComponent,
+        ErrorComponent,
+        ThemedLoadingComponent,
+        NotifyRequestsStatusComponent,
+        QaEventNotificationComponent,
+        TombstoneComponent,
+      ] },
+    }).compileComponents();
+  }));
+
+  afterEach(() => {
+    environment.signpostingEnabled = true;
+  });
+
+  it('should not request the signposting links', () => {
+    TestBed.createComponent(ItemPageComponent).detectChanges();
+
+    expect(signpostingDataService.getLinks).not.toHaveBeenCalled();
+    expect(serverResponseService.setHeader).not.toHaveBeenCalled();
+  });
 });

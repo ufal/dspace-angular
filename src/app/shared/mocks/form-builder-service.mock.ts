@@ -2,13 +2,14 @@ import {
   UntypedFormControl,
   UntypedFormGroup,
 } from '@angular/forms';
+import { EMPTY } from 'rxjs';
 
 import { DsDynamicInputModel } from '../form/builder/ds-dynamic-form-ui/models/ds-dynamic-input.model';
 import { FormBuilderService } from '../form/builder/form-builder.service';
 
 export function getMockFormBuilderService(): FormBuilderService {
 
-  return jasmine.createSpyObj('FormBuilderService', {
+  const formBuilderService = jasmine.createSpyObj('FormBuilderService', {
     modelFromConfiguration: [],
     createFormGroup: new UntypedFormGroup({}),
     getValueFromModel: {},
@@ -25,6 +26,7 @@ export function getMockFormBuilderService(): FormBuilderService {
     isModelInCustomGroup: true,
     isRelationGroup: true,
     isConcatGroup: false,
+    isComplexGroup: false,
     hasArrayGroupValue: true,
     getTypeBindModel: new DsDynamicInputModel({
       name: 'dc.type',
@@ -45,5 +47,13 @@ export function getMockFormBuilderService(): FormBuilderService {
       ],
     },
     ),
+    getTypeBindModelUpdates: EMPTY,
+    resolveTypeBindModelId: undefined,
+    getTypeFieldValues: ['dc_type'],
   });
+
+  // as the real implementation behaves for a reference the type field map does not remap
+  formBuilderService.resolveTypeBindModelId.and.callFake((typeBindFieldRef?: string) => typeBindFieldRef ?? 'dc_type');
+
+  return formBuilderService;
 }

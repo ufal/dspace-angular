@@ -18,7 +18,10 @@ import {
   TranslateLoader,
   TranslateModule,
 } from '@ngx-translate/core';
-import { of } from 'rxjs';
+import {
+  NEVER,
+  of,
+} from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 
 import { buildPaginatedList } from '../../core/data/paginated-list.model';
@@ -131,6 +134,11 @@ describe('CommunityListComponent', () => {
       }), of(false), 0, false, null,
     ),
   ];
+  // Like the real service, every reload builds new node objects and marks the expanded ones by id.
+  const reloaded = (nodes: FlatNode[], expandedNodes: FlatNode[]): FlatNode[] => nodes.map((node: FlatNode) => ({
+    ...node,
+    isExpanded: (expandedNodes ?? []).some((expanded: FlatNode) => expanded.id === node.id),
+  }));
   let communityListServiceStub;
 
   beforeEach(waitForAsync(() => {
@@ -162,9 +170,9 @@ describe('CommunityListComponent', () => {
         }
         if (expandedNodes === null || isEmpty(expandedNodes)) {
           if (showMoreTopComNode) {
-            return of([...mockTopFlatnodesUnexpanded.slice(0, endPageIndex), showMoreFlatNode(`community-${uuidv4()}`, 0, null)]);
+            return of(reloaded([...mockTopFlatnodesUnexpanded.slice(0, endPageIndex), showMoreFlatNode(`community-${uuidv4()}`, 0, null)], expandedNodes));
           } else {
-            return of(mockTopFlatnodesUnexpanded.slice(0, endPageIndex));
+            return of(reloaded(mockTopFlatnodesUnexpanded.slice(0, endPageIndex), expandedNodes));
           }
         } else {
           flatnodes = [];
@@ -205,7 +213,7 @@ describe('CommunityListComponent', () => {
           if (showMoreTopComNode) {
             flatnodes = [...flatnodes, showMoreFlatNode(`community-${uuidv4()}`, 0, null)];
           }
-          return of(flatnodes);
+          return of(reloaded(flatnodes, expandedNodes));
         }
       },
     };
@@ -367,4 +375,240 @@ describe('CommunityListComponent', () => {
     });
   });
 
+  describe('keyboard activation of the expand toggle', () => {
+    // Replays what a browser does for a key press on a native button: keydown on the button,
+    // keyup on whatever holds focus by then, and a click only if the keydown was not cancelled.
+    const pressKey = (button: HTMLElement, key: string): void => {
+      button.focus();
+      const proceed = button.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }));
+      (document.activeElement as HTMLElement).dispatchEvent(new KeyboardEvent('keyup', { key, bubbles: true }));
+      if (proceed) {
+        button.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+      }
+    };
+
+    // The second node on purpose: the tree key manager starts out on the first one, and a toggle
+    // directive only pulls focus away from a node that is not already the active one.
+    const toggleButton = (): HTMLElement =>
+      fixture.debugElement.queryAll(By.css('.expandable-node button[data-test="expand-button"]'))[1].nativeElement;
+
+    const chevron = (): string => toggleButton().querySelector('span[aria-hidden]').className;
+
+    const ariaExpanded = (): string => toggleButton().closest('cdk-tree-node').getAttribute('aria-expanded');
+
+    const nodeNames = (): string[] => [
+      ...fixture.debugElement.queryAll(By.css('.expandable-node a')),
+      ...fixture.debugElement.queryAll(By.css('.childless-node a')),
+    ].map((el: DebugElement) => el.nativeElement.textContent.trim());
+
+    const press = (key: string): void => {
+      pressKey(toggleButton(), key);
+      tick();
+      fixture.detectChanges();
+    };
+
+    const togglesTheNodeWith = (key: string) => fakeAsync(() => {
+      expect(toggleButton().closest('cdk-tree-node').getAttribute('tabindex')).toEqual('-1');
+      expect(nodeNames()).not.toContain('collection1');
+      expect(chevron()).toContain('fa-chevron-right');
+      expect(ariaExpanded()).toEqual('false');
+
+      press(key);
+
+      expect(nodeNames()).toContain('collection1');
+      expect(nodeNames()).toContain('collection2');
+      expect(chevron()).toContain('fa-chevron-down');
+      expect(ariaExpanded()).toEqual('true');
+      expect(document.activeElement).toBe(toggleButton());
+
+      press(key);
+
+      expect(nodeNames()).not.toContain('collection1');
+      expect(chevron()).toContain('fa-chevron-right');
+      expect(ariaExpanded()).toEqual('false');
+      expect(document.activeElement).toBe(toggleButton());
+    });
+
+    it('expands the node on Space and collapses it on the next Space', togglesTheNodeWith(' '));
+
+    it('expands the node on Enter and collapses it on the next Enter', togglesTheNodeWith('Enter'));
+  });
+
+  describe('aria-expanded on tree rows', () => {
+    const rowFor = (name: string): HTMLElement => {
+      const row: DebugElement = fixture.debugElement.queryAll(By.css('cdk-tree-node'))
+        .find((node: DebugElement) => node.query(By.css('a.lead'))?.nativeElement.textContent.trim() === name);
+      expect(row).toBeTruthy();
+      return row.nativeElement;
+    };
+
+    const clickToggle = (name: string): void => {
+      rowFor(name).querySelector<HTMLElement>('button[data-test="expand-button"]').click();
+      tick();
+      fixture.detectChanges();
+    };
+
+    const rowNames = (): string[] => fixture.debugElement.queryAll(By.css('cdk-tree-node a.lead'))
+      .map((link: DebugElement) => link.nativeElement.textContent.trim());
+
+    describe('in the rendered tree', () => {
+      beforeEach(fakeAsync(() => {
+        const toggleButtons: DebugElement[] = fixture.debugElement.queryAll(By.css('.expandable-node button'));
+        toggleButtons[1].nativeElement.click();
+        tick();
+        fixture.detectChanges();
+      }));
+
+      it('is absent on a collection row, which has no children to expand', () => {
+        expect(rowFor('collection1').hasAttribute('aria-expanded')).toBe(false);
+        expect(rowFor('collection2').hasAttribute('aria-expanded')).toBe(false);
+      });
+
+      it('is present on a community row, which can be expanded', () => {
+        expect(rowFor('community1').hasAttribute('aria-expanded')).toBe(true);
+        expect(rowFor('community2').hasAttribute('aria-expanded')).toBe(true);
+      });
+
+      it('is absent on a show more row', () => {
+        const showMoreRows: DebugElement[] = fixture.debugElement.queryAll(By.css('.show-more-node'));
+        expect(showMoreRows.length).toEqual(2);
+        showMoreRows.forEach((row: DebugElement) => expect(row.nativeElement.hasAttribute('aria-expanded')).toBe(false));
+      });
+    });
+
+    describe('when the tree reloads with new node objects', () => {
+      const ariaExpanded = (name: string): string => rowFor(name).getAttribute('aria-expanded');
+
+      it('follows a row through expand, collapse and expand again', fakeAsync(() => {
+        clickToggle('community2');
+        expect(rowNames()).toContain('collection1');
+        expect(ariaExpanded('community2')).toEqual('true');
+
+        clickToggle('community2');
+        expect(rowNames()).not.toContain('collection1');
+        expect(ariaExpanded('community2')).toEqual('false');
+
+        clickToggle('community2');
+        expect(rowNames()).toContain('collection1');
+        expect(ariaExpanded('community2')).toEqual('true');
+      }));
+
+      it('reads true on a row that was on screen before another row expanded', fakeAsync(() => {
+        clickToggle('community1');
+        clickToggle('community2');
+
+        expect(rowNames()).toContain('subcommunity1');
+        expect(rowNames()).toContain('collection1');
+        expect(ariaExpanded('community1')).toEqual('true');
+        expect(ariaExpanded('community2')).toEqual('true');
+      }));
+
+      it('follows a row that the store restores as expanded', fakeAsync(() => {
+        clickToggle('community2');
+        fixture.destroy();
+        fixture = TestBed.createComponent(CommunityListComponent);
+        fixture.detectChanges();
+
+        expect(rowNames()).toContain('collection1');
+        expect(ariaExpanded('community2')).toEqual('true');
+
+        clickToggle('community2');
+        expect(rowNames()).not.toContain('collection1');
+        expect(ariaExpanded('community2')).toEqual('false');
+
+        clickToggle('community2');
+        expect(rowNames()).toContain('collection1');
+        expect(ariaExpanded('community2')).toEqual('true');
+      }));
+    });
+
+    describe('after an arrow key, which moves the tree control on its own', () => {
+      const press = (row: HTMLElement, key: string): void => {
+        row.focus();
+        row.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }));
+        tick();
+        fixture.detectChanges();
+      };
+
+      const rowCount = (): number => fixture.debugElement.queryAll(By.css('cdk-tree-node')).length;
+
+      // Focus the row before the first reload: after one, the key manager no longer finds surviving
+      // rows. tabindex 0 then shows the arrow key reaches this row.
+      const activate = (name: string): HTMLElement => {
+        const row: HTMLElement = rowFor(name);
+        row.focus();
+        return row;
+      };
+
+      it('a collapsed community row still reads false and opens nothing', fakeAsync(() => {
+        const row: HTMLElement = rowFor('community1');
+        expect(row.getAttribute('tabindex')).toEqual('0');
+        const rowsBefore: number = rowCount();
+
+        press(row, 'ArrowRight');
+
+        expect(row.getAttribute('aria-expanded')).toEqual('false');
+        expect(rowCount()).toEqual(rowsBefore);
+      }));
+
+      it('an expanded community row still reads true and keeps its children', fakeAsync(() => {
+        const row: HTMLElement = activate('community2');
+        clickToggle('community2');
+        expect(row.getAttribute('tabindex')).toEqual('0');
+        expect(row.getAttribute('aria-expanded')).toEqual('true');
+        const rowsBefore: number = rowCount();
+
+        press(row, 'ArrowLeft');
+
+        expect(row.getAttribute('aria-expanded')).toEqual('true');
+        expect(rowCount()).toEqual(rowsBefore);
+      }));
+
+      it('a community row collapsed again by click still reads false after ArrowRight and opens nothing', fakeAsync(() => {
+        const row: HTMLElement = activate('community2');
+        clickToggle('community2');
+        clickToggle('community2');
+        expect(row.getAttribute('tabindex')).toEqual('0');
+        expect(row.getAttribute('aria-expanded')).toEqual('false');
+        const rowsBefore: number = rowCount();
+
+        press(row, 'ArrowRight');
+
+        expect(row.getAttribute('aria-expanded')).toEqual('false');
+        expect(rowCount()).toEqual(rowsBefore);
+      }));
+
+      it('a community without children reads false before and after, and renders no toggle', fakeAsync(() => {
+        fixture.debugElement.query(By.css('.show-more-node .btn-outline-primary'))
+          .triggerEventHandler('click', { preventDefault: () => {/**/} });
+        tick();
+        fixture.detectChanges();
+        const row: HTMLElement = rowFor('community3');
+        expect(row.querySelector('button[data-test="expand-button"]')).toBeNull();
+        expect(row.getAttribute('aria-expanded')).toEqual('false');
+
+        press(row, 'ArrowRight');
+
+        expect(row.getAttribute('aria-expanded')).toEqual('false');
+      }));
+    });
+
+    describe('when a node has not loaded its children yet', () => {
+      it('a community whose child counts never arrive stays expandable', () => {
+        const community: FlatNode = toFlatNode(
+          Object.assign(new Community(), { id: 'pending-com', uuid: 'pending-com', name: 'pending community' }),
+          NEVER, 0, false, null,
+        );
+        expect(component.treeControl.isExpandable(community)).toBe(true);
+      });
+
+      it('a collection stays a leaf whatever its children observable does', () => {
+        const collection: FlatNode = toFlatNode(
+          Object.assign(new Collection(), { id: 'pending-coll', uuid: 'pending-coll', name: 'pending collection' }),
+          NEVER, 1, false, null,
+        );
+        expect(component.treeControl.isExpandable(collection)).toBe(false);
+      });
+    });
+  });
 });

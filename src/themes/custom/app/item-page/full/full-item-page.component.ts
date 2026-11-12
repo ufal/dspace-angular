@@ -1,6 +1,7 @@
 import {
   AsyncPipe,
   KeyValuePipe,
+  NgTemplateOutlet,
 } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -10,16 +11,19 @@ import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { ThemedItemAlertsComponent } from '../../../../../app/item-page/alerts/themed-item-alerts.component';
+import { ClarinFilesSectionComponent } from '../../../../../app/item-page/clarin-files-section/clarin-files-section.component';
+import { ClarinRefBoxComponent } from '../../../../../app/item-page/clarin-ref-box/clarin-ref-box.component';
 import { CollectionsComponent } from '../../../../../app/item-page/field-components/collections/collections.component';
-import { ThemedFullFileSectionComponent } from '../../../../../app/item-page/full/field-components/file-section/themed-full-file-section.component';
 import { FullItemPageComponent as BaseComponent } from '../../../../../app/item-page/full/full-item-page.component';
-import { ThemedItemPageTitleFieldComponent } from '../../../../../app/item-page/simple/field-components/specific-field/title/themed-item-page-field.component';
 import { ItemVersionsComponent } from '../../../../../app/item-page/versions/item-versions.component';
 import { ItemVersionsNoticeComponent } from '../../../../../app/item-page/versions/notice/item-versions-notice.component';
+import { ViewsDownloadsStatisticsButtonComponent } from '../../../../../app/item-page/views-downloads-statistics-button/views-downloads-statistics-button.component';
 import { fadeInOut } from '../../../../../app/shared/animations/fade';
 import { DsoEditMenuComponent } from '../../../../../app/shared/dso-page/dso-edit-menu/dso-edit-menu.component';
 import { ErrorComponent } from '../../../../../app/shared/error/error.component';
 import { ThemedLoadingComponent } from '../../../../../app/shared/loading/themed-loading.component';
+import { ClaimedTaskActionsComponent } from '../../../../../app/shared/mydspace-actions/claimed-task/claimed-task-actions.component';
+import { ReplacePipe } from '../../../../../app/shared/utils/replace.pipe';
 import { VarDirective } from '../../../../../app/shared/utils/var.directive';
 
 @Component({
@@ -32,19 +36,23 @@ import { VarDirective } from '../../../../../app/shared/utils/var.directive';
   animations: [fadeInOut],
   imports: [
     AsyncPipe,
+    ClaimedTaskActionsComponent,
+    ClarinFilesSectionComponent,
+    ClarinRefBoxComponent,
     CollectionsComponent,
     DsoEditMenuComponent,
     ErrorComponent,
     ItemVersionsComponent,
     ItemVersionsNoticeComponent,
     KeyValuePipe,
+    NgTemplateOutlet,
+    ReplacePipe,
     RouterLink,
-    ThemedFullFileSectionComponent,
     ThemedItemAlertsComponent,
-    ThemedItemPageTitleFieldComponent,
     ThemedLoadingComponent,
     TranslateModule,
     VarDirective,
+    ViewsDownloadsStatisticsButtonComponent,
   ],
 })
 export class FullItemPageComponent extends BaseComponent {

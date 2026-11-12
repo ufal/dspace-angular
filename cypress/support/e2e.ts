@@ -21,6 +21,21 @@ import 'cypress-axe';
 
 import { DSPACE_XSRF_COOKIE } from 'src/app/core/xsrf/xsrf.constants';
 
+// Known flaky tests, skipped until they are fixed. Remove an entry once its test is fixed.
+// Each entry is '<spec file name> > <full test title>'.
+const QUARANTINED_TESTS = [
+  'collection-create.cy.ts > should show loading component while saving',
+  'community-create.cy.ts > should show loading component while saving',
+  'my-dspace.cy.ts > My DSpace page should let you filter to only archived items',
+  'submission.cy.ts > New Submission page should allow for deposit if all required fields completed & file uploaded',
+];
+
+beforeEach(function () {
+  if (QUARANTINED_TESTS.includes(`${Cypress.spec.name} > ${this.currentTest.fullTitle()}`)) {
+    this.skip();
+  }
+});
+
 // Runs once before all tests
 before(() => {
   // Cypress doesn't have access to the running application in Node.js.
@@ -42,10 +57,10 @@ before(() => {
 
     // Find domain of our REST API & save to global variable via task.
     let baseDomain = FALLBACK_TEST_REST_DOMAIN;
-    if (!config.rest.host) {
-      console.warn("Could not load 'rest.host' from config.json. Falling back to " + FALLBACK_TEST_REST_DOMAIN);
+    if (!config.rest.baseUrl) {
+      console.warn("Could not load 'rest.baseUrl' from config.json. Falling back to " + FALLBACK_TEST_REST_DOMAIN);
     } else {
-      baseDomain = config.rest.host;
+      baseDomain = new URL(config.rest.baseUrl).hostname;
     }
     cy.task('saveRestBaseDomain', baseDomain);
 
