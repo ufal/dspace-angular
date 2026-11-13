@@ -96,8 +96,13 @@ export function makeLinks(text: string): string {
   const regex = /(?:https?|ftp):\/\/[^\s)]+|www\.[^\s)]+/g;
   return text?.replace(regex, (match) => {
     // Punctuation ending a sentence (e.g. "see http://hdl.handle.net/11234/1-5813.") is not part of the URL
-    const url = match.replace(/[.,;:!?'"]+$/, '');
-    const trailing = match.slice(url.length);
+    let url = match.replace(/[.,;:!?'"]+$/, '');
+    let trailing = match.slice(url.length);
+    // The result is rendered through innerHTML, so a ';' closing a character reference (e.g. "&amp;") belongs to the URL
+    if (trailing.startsWith(';') && /&(?:#\d+|#x[\da-f]+|[a-z][a-z\d]*)$/i.test(url)) {
+      url += ';';
+      trailing = trailing.slice(1);
+    }
     const href = url.startsWith('www.') ? `http://${url}` : url;
     return `<a href="${href}" target="_blank">${url}</a>${trailing}`;
   });

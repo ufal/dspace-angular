@@ -14,6 +14,17 @@ describe('clarin-shared-util', () => {
         '<a href="https://example.org/a.b?x=1;y=2#c" target="_blank">https://example.org/a.b?x=1;y=2#c</a>');
     });
 
+    it('keeps the semicolon of a trailing HTML character reference in the link', () => {
+      const container = document.createElement('div');
+      container.innerHTML = makeLinks('see https://example.org/a&sol; and https://example.org/?a=1&amp;. Done');
+      const anchors = container.querySelectorAll('a');
+      expect(anchors[0].getAttribute('href')).toBe('https://example.org/a/');
+      expect(anchors[0].textContent).toBe('https://example.org/a/');
+      expect(anchors[1].getAttribute('href')).toBe('https://example.org/?a=1&');
+      expect(anchors[1].textContent).toBe('https://example.org/?a=1&');
+      expect(container.textContent).toBe('see https://example.org/a/ and https://example.org/?a=1&. Done');
+    });
+
     it('links www. addresses as absolute URLs', () => {
       expect(makeLinks('Visit www.example.org.')).toBe(
         'Visit <a href="http://www.example.org" target="_blank">www.example.org</a>.');
