@@ -1,6 +1,25 @@
-import { buildAuthoritySearchFilter, convertMetadataFieldIntoSearchType } from './clarin-shared-util';
+import { buildAuthoritySearchFilter, convertMetadataFieldIntoSearchType, makeLinks } from './clarin-shared-util';
 
 describe('clarin-shared-util', () => {
+  describe('makeLinks', () => {
+    it('does not include sentence-ending punctuation in the link', () => {
+      expect(makeLinks('Consolidated 2.0 http://hdl.handle.net/11234/1-5813.')).toBe(
+        'Consolidated 2.0 <a href="http://hdl.handle.net/11234/1-5813" target="_blank">http://hdl.handle.net/11234/1-5813</a>.');
+      expect(makeLinks('see https://github.com/ufal/perin, then')).toBe(
+        'see <a href="https://github.com/ufal/perin" target="_blank">https://github.com/ufal/perin</a>, then');
+    });
+
+    it('keeps punctuation inside the URL', () => {
+      expect(makeLinks('https://example.org/a.b?x=1;y=2#c')).toBe(
+        '<a href="https://example.org/a.b?x=1;y=2#c" target="_blank">https://example.org/a.b?x=1;y=2#c</a>');
+    });
+
+    it('links www. addresses as absolute URLs', () => {
+      expect(makeLinks('Visit www.example.org.')).toBe(
+        'Visit <a href="http://www.example.org" target="_blank">www.example.org</a>.');
+    });
+  });
+
   describe('buildAuthoritySearchFilter', () => {
     it('uses the authority operator and key when an authority is present', () => {
       expect(buildAuthoritySearchFilter('publisher', { value: 'ACME Press', authority: '02mhbdp94' }))
