@@ -58,6 +58,7 @@ interface AppConfig extends Config {
   accessibility: AccessibilitySettingsConfig;
   signpostingEnabled: boolean;
   matomo: MatomoConfig;
+  dataciteBadgeField?: string;
   statistics?: StatisticsConfig;
 }
 

@@ -1,0 +1,13 @@
+@import '../simple/item-page.component';
+
+@media (min-width: 992px) {
+  .col-2-5 {
+    flex: 0 0 20%;
+    max-width: 20%;
+  }
+}
+
+data-metrics-badge {
+  display: inline-block;
+  max-width: 100%;
+}

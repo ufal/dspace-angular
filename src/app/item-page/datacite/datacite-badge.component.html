@@ -1,0 +1,11 @@
+<div class="row clarin-item-page-field justify-content-start" *ngIf="showBadge && doi">
+  <div class="col-lg-3 col-2-5 d-flex">
+    <div><i class="fas fa-chart-bar fa-xs"></i></div>
+    <div class="pl-1"><b>{{"item.page.datacite.badge.label" | translate}}</b></div>
+  </div>
+  <div class="col-lg-9">
+    <div>
+      <data-metrics-badge [attr.doi]="doi" [attr.display]="displayMode"></data-metrics-badge>
+    </div>
+  </div>
+</div>
