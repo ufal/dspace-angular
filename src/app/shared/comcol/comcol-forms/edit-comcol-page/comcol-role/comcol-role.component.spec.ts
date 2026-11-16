@@ -26,12 +26,16 @@ describe('ComcolRoleComponent', () => {
   let comcolRole;
   let notificationsService;
 
-  const requestService = { hasByHref$: () => observableOf(true) };
+  const requestService = {
+    hasByHref$: () => observableOf(true),
+    setStaleByHrefSubstring: jasmine.createSpy('setStaleByHrefSubstring')
+  };
 
   const groupService = {
     findByHref: jasmine.createSpy('findByHref'),
     createComcolGroup: jasmine.createSpy('createComcolGroup').and.returnValue(observableOf({})),
-    deleteComcolGroup: jasmine.createSpy('deleteComcolGroup').and.returnValue(observableOf({}))
+    deleteComcolGroup: jasmine.createSpy('deleteComcolGroup').and.returnValue(observableOf({})),
+    clearGroupsRequests: jasmine.createSpy('clearGroupsRequests')
   };
 
   beforeEach(waitForAsync(() => {
@@ -153,6 +157,21 @@ describe('ComcolRoleComponent', () => {
 
       it('should call the groupService create method', (done) => {
         expect(groupService.createComcolGroup).toHaveBeenCalledWith(comp.dso, 'test role name', 'test role link');
+        done();
+      });
+    });
+
+    describe('when a group is created successfully', () => {
+      beforeEach(() => {
+        groupService.createComcolGroup.and.returnValue(createSuccessfulRemoteDataObject$({
+          id: '123',
+          name: 'TestGroup'
+        }));
+        comp.create();
+      });
+
+      it('should force a fresh GET after successful create', (done) => {
+        expect(groupService.findByHref).toHaveBeenCalledWith(comp.comcolRole.href, false, true);
         done();
       });
     });

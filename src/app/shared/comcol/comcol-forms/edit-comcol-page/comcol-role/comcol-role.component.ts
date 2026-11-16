@@ -4,7 +4,7 @@ import { Community } from '../../../../../core/shared/community.model';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { GroupDataService } from '../../../../../core/eperson/group-data.service';
 import { Collection } from '../../../../../core/shared/collection.model';
-import { filter, map, switchMap } from 'rxjs/operators';
+import { filter, map, switchMap, take } from 'rxjs/operators';
 import { getAllCompletedRemoteData, getFirstCompletedRemoteData } from '../../../../../core/shared/operators';
 import { RequestService } from '../../../../../core/data/request.service';
 import { RemoteData } from '../../../../../core/data/remote-data';
@@ -111,6 +111,9 @@ export class ComcolRoleComponent implements OnInit {
       if (rd.hasSucceeded) {
         this.groupService.clearGroupsRequests();
         this.requestService.setStaleByHrefSubstring(this.comcolRole.href);
+        this.groupService.findByHref(this.comcolRole.href, false, true)
+          .pipe(getFirstCompletedRemoteData(), take(1))
+          .subscribe();
       } else {
         this.notificationsService.error(
           this.roleName$.pipe(
