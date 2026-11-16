@@ -39,6 +39,7 @@ import { ClaimedTask } from 'src/app/core/tasks/models/claimed-task-object.model
 import { ClaimedTaskDataService } from 'src/app/core/tasks/claimed-task-data.service';
 import { LinkService } from 'src/app/core/cache/builders/link.service';
 import { getMockLinkService } from 'src/app/shared/mocks/link-service.mock';
+import { MyDSpaceConfigurationValueType } from '../../my-dspace-page/my-dspace-configuration-value-type';
 
 const mockItem: Item = Object.assign(new Item(), {
   uuid: 'test-item-uuid',
@@ -449,10 +450,10 @@ describe('FullItemPageComponent', () => {
         comp.ngOnInit();
       });
 
-      it('should navigate to /mydspace when reloadedObject is provided', () => {
+      it('should navigate to the Workflow tasks tab after a claimed-task action completes', () => {
         const reloadedObject = { id: 'reloaded-1' };
         comp.onWorkflowActionCompleted(reloadedObject);
-        expect(router.navigate).toHaveBeenCalledWith(['/mydspace']);
+        expect(router.navigate).toHaveBeenCalledWith(['/mydspace'], { queryParams: { configuration: MyDSpaceConfigurationValueType.Workflow } });
       });
 
       it('should not navigate when reloadedObject is null', () => {
