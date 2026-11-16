@@ -89,8 +89,6 @@ export class ItemVersionsNoticeComponent implements OnInit {
         map((isLatest) => isLatest != null && !isLatest),
         startWith(false),
       );
-    }
-
     // Compute the destination URL from latestVersion$ with the namespace
     this.destinationUrl$ = this.latestVersion$.pipe(
       switchMap(latestVersion => latestVersion?.item || of(null)),
@@ -110,7 +108,11 @@ export class ItemVersionsNoticeComponent implements OnInit {
 
         return finalUrl;
       })
-    );
+      );
+    } else {
+      this.showLatestVersionNotice$ = of(false);
+      this.destinationUrl$ = of(this.document.location.pathname);
+    }
   }
 
 }

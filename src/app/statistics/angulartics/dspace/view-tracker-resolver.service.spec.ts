@@ -93,7 +93,7 @@ describe('ViewTrackerResolverService', () => {
     expect(emittedEvent.properties.dc_identifier).toBeUndefined();
   });
 
-  it('should handle missing dso gracefully (dc_identifier undefined)', () => {
+  it('should not emit tracking event when dso is missing', () => {
     const routeSnapshot = {
       data: {
         dso: {
@@ -111,9 +111,7 @@ describe('ViewTrackerResolverService', () => {
     service.resolve(routeSnapshot, stateSnapshot);
     routerEvents$.next(new ResolveEnd(1, '/', '/', {} as any));
 
-    expect(emittedEvent).toBeDefined();
-    expect(emittedEvent.action).toBe('page_view');
-    expect(emittedEvent.properties.dc_identifier).toBeUndefined();
+    expect(emittedEvent).toBeUndefined();
   });
 
   it('should use custom dsoPath from route data when provided', () => {

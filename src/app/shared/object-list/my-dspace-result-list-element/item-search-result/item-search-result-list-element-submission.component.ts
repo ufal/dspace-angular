@@ -22,7 +22,7 @@ export class ItemSearchResultListElementSubmissionComponent extends SearchResult
   /**
    * Represents the badge context
    */
-  public badgeContext = Context.MyDSpaceArchived;
+  public badgeContext = Context.Any;
 
 
   /**
@@ -33,6 +33,14 @@ export class ItemSearchResultListElementSubmissionComponent extends SearchResult
 
   ngOnInit() {
     super.ngOnInit();
+
+    // Show the Archived badge only for items that are actually archived.
+    if (this.dso?.isArchived) {
+      this.badgeContext = Context.MyDSpaceArchived;
+    } else {
+      this.badgeContext = Context.Any;
+    }
+
     this.showThumbnails = this.appConfig.browseBy.showThumbnails;
   }
 }
