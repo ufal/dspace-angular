@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { DsoEditMetadataChangeType, DsoEditMetadataValue } from '../dso-edit-metadata-form';
 import { Observable } from 'rxjs/internal/Observable';
 import {
@@ -12,6 +12,8 @@ import { map } from 'rxjs/operators';
 import { getItemPageRoute } from '../../../item-page/item-page-routing-paths';
 import { DSONameService } from '../../../core/breadcrumbs/dso-name.service';
 import { EMPTY } from 'rxjs/internal/observable/empty';
+import { APP_CONFIG, AppConfig } from '../../../../config/app-config.interface';
+import { MARKDOWN_DESCRIPTION_METADATA_ALLOW_LIST } from '../../../shared/form/builder/constants/markdown-description-metadata-allow-list';
 
 @Component({
   selector: 'ds-dso-edit-metadata-value',
@@ -22,6 +24,8 @@ import { EMPTY } from 'rxjs/internal/observable/empty';
  * Component displaying a single editable row for a metadata value
  */
 export class DsoEditMetadataValueComponent implements OnInit {
+  protected readonly markdownDescriptionMetadataAllowList: string[] = MARKDOWN_DESCRIPTION_METADATA_ALLOW_LIST;
+
   /**
    * The parent {@link DSpaceObject} to display a metadata form for
    * Also used to determine metadata-representations in case of virtual metadata
@@ -32,6 +36,16 @@ export class DsoEditMetadataValueComponent implements OnInit {
    * Editable metadata value to show
    */
   @Input() mdValue: DsoEditMetadataValue;
+
+  /**
+   * Metadata field this value belongs to
+   */
+  @Input() mdField: string;
+
+  /**
+   * Whether local.description.usemarkdown is available in the form and enabled
+   */
+  @Input() markdownEnabledForForm = false;
 
   /**
    * Type of DSO we're displaying values for
@@ -97,8 +111,14 @@ export class DsoEditMetadataValueComponent implements OnInit {
    */
   mdRepresentationName$: Observable<string | null>;
 
+  /**
+   * Whether markdown preview mode is enabled while editing this value
+   */
+  isMarkdownPreviewMode = false;
+
   constructor(protected relationshipService: RelationshipDataService,
-              protected dsoNameService: DSONameService) {
+              protected dsoNameService: DSONameService,
+              @Inject(APP_CONFIG) protected appConfig: AppConfig) {
   }
 
   ngOnInit(): void {
@@ -122,5 +142,48 @@ export class DsoEditMetadataValueComponent implements OnInit {
     this.mdRepresentationName$ = this.mdRepresentation$.pipe(
       map((mdRepresentation: ItemMetadataRepresentation) => mdRepresentation ? this.dsoNameService.getName(mdRepresentation) : null),
     );
+  }
+
+  /**
+   * Returns whether markdown toggle should be shown for this value row.
+   */
+  canShowMarkdownPreviewToggle(): boolean {
+    return this.mdValue?.editing
+      && this.appConfig?.markdown?.enabled
+      && this.markdownEnabledForForm
+      && this.isDescriptionField();
+  }
+
+  /**
+   * Returns whether preview mode is currently active.
+   */
+  isMarkdownPreviewModeEnabled(): boolean {
+    return this.canShowMarkdownPreviewToggle() && this.isMarkdownPreviewMode;
+  }
+
+  /**
+   * Enable or disable markdown preview mode.
+   */
+  setMarkdownPreviewMode(enabled: boolean): void {
+    this.isMarkdownPreviewMode = enabled;
+  }
+
+  /**
+   * Returns current editable metadata value as markdown preview text.
+   */
+  getMarkdownPreviewValue(): string {
+    const value = this.mdValue?.newValue?.value;
+    return typeof value === 'string' ? value : '';
+  }
+
+  /**
+   * Returns true when this row belongs to a supported description field.
+   */
+  protected isDescriptionField(): boolean {
+    if (typeof this.mdField !== 'string') {
+      return false;
+    }
+
+    return this.markdownDescriptionMetadataAllowList.includes(this.mdField);
   }
 }

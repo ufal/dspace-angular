@@ -14,6 +14,8 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
  * Component displaying table rows for each value for a certain metadata field within a form
  */
 export class DsoEditMetadataFieldValuesComponent {
+  protected readonly localDescriptionUseMarkdownMetadataKey = 'local.description.usemarkdown';
+
   /**
    * The parent {@link DSpaceObject} to display a metadata form for
    * Also used to determine metadata-representations in case of virtual metadata
@@ -56,6 +58,47 @@ export class DsoEditMetadataFieldValuesComponent {
    * @type {DsoEditMetadataChangeType}
    */
   public DsoEditMetadataChangeTypeEnum = DsoEditMetadataChangeType;
+
+  /**
+   * Returns whether local.description.usemarkdown exists in form metadata and explicitly enables markdown.
+   */
+  isLocalDescriptionUseMarkdownEnabled(): boolean {
+    const useMarkdownValues = this.form?.fields?.[this.localDescriptionUseMarkdownMetadataKey];
+
+    if (!Array.isArray(useMarkdownValues) || useMarkdownValues.length === 0) {
+      return false;
+    }
+
+    return useMarkdownValues.some((metadataValue: DsoEditMetadataValue) => {
+      const value = metadataValue?.newValue?.value;
+      return this.isUseMarkdownValueEnabled(value);
+    });
+  }
+
+  private isUseMarkdownValueEnabled(value: any): boolean {
+    if (value === null || value === undefined) {
+      return false;
+    }
+
+    if (typeof value === 'boolean') {
+      return value;
+    }
+
+    if (typeof value === 'string') {
+      const normalizedValue = value.toLowerCase();
+      return normalizedValue === 'yes' || normalizedValue === 'true';
+    }
+
+    if (Array.isArray(value)) {
+      return value.some((entry) => this.isUseMarkdownValueEnabled(entry));
+    }
+
+    if (typeof value === 'object') {
+      return Object.values(value).some((entry) => this.isUseMarkdownValueEnabled(entry));
+    }
+
+    return false;
+  }
 
   /**
    * Drop a value into a new position
