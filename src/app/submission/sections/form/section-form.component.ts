@@ -1,4 +1,5 @@
-import { ChangeDetectorRef, Component, Inject, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, ViewChild, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { DynamicFormControlEvent, DynamicFormControlModel } from '@ng-dynamic-forms/core';
 
 import { combineLatest as observableCombineLatest, Observable, Subscription } from 'rxjs';
@@ -32,8 +33,6 @@ import { ObjectCacheService } from '../../../core/cache/object-cache.service';
 import { RequestService } from '../../../core/data/request.service';
 import { followLink } from '../../../shared/utils/follow-link-config.model';
 import { environment } from '../../../../environments/environment';
-import { ConfigObject } from '../../../core/config/models/config.model';
-import { RemoteData } from '../../../core/data/remote-data';
 import { SubmissionScopeType } from '../../../core/submission/submission-scope-type';
 import { WorkflowItem } from '../../../core/submission/models/workflowitem.model';
 import { SubmissionObject } from '../../../core/submission/models/submission-object.model';
@@ -42,6 +41,7 @@ import { SubmissionSectionError } from '../../objects/submission-section-error.m
 import { FormRowModel } from '../../../core/config/models/config-submission-form.model';
 import { SPONSOR_METADATA_NAME } from '../../../shared/form/builder/ds-dynamic-form-ui/models/ds-dynamic-complex.model';
 import { AUTHOR_METADATA_FIELD_NAME } from 'src/app/shared/form/builder/ds-dynamic-form-ui/models/clarin-name.model';
+import { NativeWindowRef, NativeWindowService } from '../../../core/services/window.service';
 
 /**
  * This component represents a section that contains a Form.
@@ -178,7 +178,9 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
               protected requestService: RequestService,
               @Inject('collectionIdProvider') public injectedCollectionId: string,
               @Inject('sectionDataProvider') public injectedSectionData: SectionDataObject,
-              @Inject('submissionIdProvider') public injectedSubmissionId: string) {
+              @Inject('submissionIdProvider') public injectedSubmissionId: string,
+              @Inject(NativeWindowService) private _window: NativeWindowRef,
+              @Inject(PLATFORM_ID) private platformId: any) {
     super(injectedCollectionId, injectedSectionData, injectedSubmissionId);
     this.typeFields = new Map();
   }
@@ -191,18 +193,18 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
     this.formId = this.formService.getUniqueId(this.sectionData.id);
     this.sectionService.dispatchSetSectionFormId(this.submissionId, this.sectionData.id, this.formId);
     this.formConfigService.findByHref(this.sectionData.config).pipe(
-      map((configData: RemoteData<ConfigObject>) => configData.payload),
+      map((configData) => configData.payload as SubmissionFormsModel),
       tap((config: SubmissionFormsModel) => this.formConfig = config),
       mergeMap(() =>
-        observableCombineLatest([
-          this.sectionService.getSectionData(this.submissionId, this.sectionData.id, this.sectionData.sectionType),
+        observableCombineLatest<[WorkspaceitemSectionFormObject, SubmissionObject, boolean]>([
+          this.sectionService.getSectionData(this.submissionId, this.sectionData.id, this.sectionData.sectionType) as Observable<WorkspaceitemSectionFormObject>,
           this.submissionObjectService.findById(this.submissionId, true, false, followLink('item')).pipe(
             getFirstSucceededRemoteData(),
             getRemoteDataPayload()),
             this.sectionService.isSectionReadOnly(this.submissionId, this.sectionData.id, this.submissionService.getSubmissionScope())
         ])),
       take(1))
-      .subscribe(([sectionData, submissionObject, isSectionReadOnly]: [WorkspaceitemSectionFormObject, SubmissionObject, boolean]) => {
+      .subscribe(([sectionData, submissionObject, isSectionReadOnly]) => {
         if (isUndefined(this.formModel)) {
           // this.sectionData.errorsToShow = [];
           this.submissionObject = submissionObject;
@@ -331,7 +333,7 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
         message: msg,
         path: '/sections/' + this.sectionData.id
       };
-      console.error(e.stack);
+      console.error(e?.stack || e);
       this.sectionService.setSectionError(this.submissionId, this.sectionData.id, sectionError);
     }
   }
@@ -350,6 +352,11 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
     if (isNotEmpty(sectionData) && !isEqual(sectionData, this.sectionData.data)) {
       this.sectionData.data = sectionData;
       if (this.hasMetadataEnrichment(sectionData)) {
+        // Only preserve scroll position in browser environment (SSR safe)
+        let scrollPosition = 0;
+        if (isPlatformBrowser(this.platformId)) {
+          scrollPosition = this._window.nativeWindow.pageYOffset || this._window.nativeWindow.document.documentElement.scrollTop;
+        }
         this.isUpdating = true;
         this.formModel = null;
         this.cdr.detectChanges();
@@ -357,6 +364,10 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
         this.checksForErrors(errors);
         this.isUpdating = false;
         this.cdr.detectChanges();
+        // Restore scroll position only in browser environment
+        if (isPlatformBrowser(this.platformId)) {
+          this._window.nativeWindow.scrollTo(0, scrollPosition);
+        }
       } else if (isNotEmpty(errors) || isNotEmpty(this.sectionData.errorsToShow)) {
         this.checksForErrors(errors);
       }
@@ -493,9 +504,18 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
           // @ts-ignore
           if (metadataValueFromDB[index].value === newMetadataValue.value) {
             // update form
+            // Preserve scroll position to prevent unwanted scroll behavior (SSR safe)
+            let scrollPosition = 0;
+            if (isPlatformBrowser(this.platformId)) {
+              scrollPosition = this._window.nativeWindow.pageYOffset || this._window.nativeWindow.document.documentElement.scrollTop;
+            }
             this.formModel = undefined;
             this.cdr.detectChanges();
             this.ngOnInit();
+            // Restore scroll position after form rebuild (browser-only)
+            if (isPlatformBrowser(this.platformId)) {
+              this._window.nativeWindow.scrollTo(0, scrollPosition);
+            }
             clearInterval(interval);
             this.isUpdating = false;
           }
@@ -550,6 +570,7 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
   onRemove(event: DynamicFormControlEvent): void {
     const fieldId = this.formBuilderService.getId(event.model);
     const fieldIndex = this.formOperationsService.getArrayIndexFromEvent(event);
+    const hasStored = this.hasStoredValue(fieldId, fieldIndex);
 
     // Keep track that this field will be removed
     if (this.fieldsOnTheirWayToBeRemoved.has(fieldId)) {
@@ -564,8 +585,9 @@ export class SubmissionSectionFormComponent extends SectionModelComponent {
       this.pathCombiner,
       event,
       this.previousValue,
-      this.hasStoredValue(fieldId, fieldIndex));
+      hasStored);
 
+    this.submissionService.dispatchSave(this.submissionId);
   }
 
   /**

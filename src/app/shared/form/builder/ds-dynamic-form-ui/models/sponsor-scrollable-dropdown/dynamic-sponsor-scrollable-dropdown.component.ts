@@ -9,7 +9,6 @@ import { VocabularyService } from '../../../../../../core/submission/vocabularie
 import { FormFieldMetadataValueObject } from '../../../models/form-field-metadata-value.model';
 import { DsDynamicScrollableDropdownComponent } from '../scrollable-dropdown/dynamic-scrollable-dropdown.component';
 import {
-  DYNAMIC_FORM_CONTROL_TYPE_SCROLLABLE_DROPDOWN,
   DynamicScrollableDropdownModel
 } from '../scrollable-dropdown/dynamic-scrollable-dropdown.model';
 import {
@@ -109,12 +108,6 @@ export class DsDynamicSponsorScrollableDropdownComponent extends DsDynamicScroll
           break;
         case DYNAMIC_INPUT_TYPE:
           (input as DsDynamicInputModel).value = '';
-          break;
-        case DYNAMIC_FORM_CONTROL_TYPE_SCROLLABLE_DROPDOWN:
-          // Remove it only if the funding type is `N/A`
-          if (this.fundingTypeIsNotApplicable(fundingTypeValue)) {
-            (input as DynamicScrollableDropdownModel).value = '';
-          }
           break;
         default:
           break;

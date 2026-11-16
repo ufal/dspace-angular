@@ -2656,7 +2656,8 @@
 
   // "form.add": "Add more",
   "form.add": "Přidat další",
-
+  // "form.add-single": "Add",
+  "form.add-single": "Přidat",
   // "form.add-help": "Click here to add the current entry and to add another one",
   "form.add-help": "Klikněte zde pro přidání aktuálního záznamu a pro přidání dalšího",
 
