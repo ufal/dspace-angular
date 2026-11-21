@@ -1,11 +1,14 @@
 import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
 import { HtmlContentService } from '../shared/html-content.service';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { Router } from '@angular/router';
 import { isEmpty } from '../shared/empty.util';
 import { STATIC_PAGE_PATH } from './static-page-routing-paths';
 import { APP_CONFIG, AppConfig } from '../../config/app-config.interface';
 import { ServerResponseService } from '../core/services/server-response.service';
+import { ConfigurationDataService } from '../core/data/configuration-data.service';
+import { getFirstCompletedRemoteData } from '../core/shared/operators';
+import escapeHtml from 'lodash/escape';
 
 /**
  * Component which load and show static files from the `static-files` folder.
@@ -17,7 +20,6 @@ import { ServerResponseService } from '../core/services/server-response.service'
   styleUrls: ['./static-page.component.scss']
 })
 export class StaticPageComponent implements OnInit {
-  static readonly no_static: string = 'no_static_';
   htmlContent: BehaviorSubject<string> = new BehaviorSubject<string>('');
   htmlFileName: string;
   contentState: 'loading' | 'found' | 'not-found' = 'loading';
@@ -26,6 +28,7 @@ export class StaticPageComponent implements OnInit {
               private router: Router,
               private responseService: ServerResponseService,
               private changeDetector: ChangeDetectorRef,
+              private configurationService: ConfigurationDataService,
               @Inject(APP_CONFIG) protected appConfig?: AppConfig) { }
 
   async ngOnInit(): Promise<void> {
@@ -41,6 +44,7 @@ export class StaticPageComponent implements OnInit {
         const restBase = this.appConfig?.rest?.baseUrl;
         const oaiUrl = restBase ? restBase.replace(/\/+$/, '') + '/oai' : '/server/oai';
         htmlContent = htmlContent.replace(/href="\/server\/oai/gi, 'href="' + oaiUrl);
+        htmlContent = await this.interpolateVariables(htmlContent);
 
         this.htmlContent.next(htmlContent);
         this.contentState = 'found';
@@ -69,46 +73,78 @@ export class StaticPageComponent implements OnInit {
    * @param event
    */
   processLinks(event: Event): void {
-    const targetElement = event.target as HTMLElement;
+    const targetElement = event.target as HTMLElement | null;
+    const anchorElement = targetElement?.closest?.('a');
+    if (!anchorElement) {
+      return;
+    }
 
-    if (targetElement.nodeName !== 'A') {
+    const href = anchorElement.getAttribute('href');
+    if (!href || !this.isRelativeLink(href)) {
       return;
     }
 
     event.preventDefault();
+    const namespacePrefix = this.getNamespacePrefix();
+    const staticPageBaseUrl = this.composeStaticPageBaseUrl(namespacePrefix);
+    this.redirectToRelativeLink(staticPageBaseUrl, href);
+  }
 
-    const href = targetElement.getAttribute('href');
-    const { nameSpace } = this.appConfig.ui;
-    const namespacePrefix = nameSpace === '/' ? '' : nameSpace;
+  /**
+   * Replace `${key}` placeholders with the value of the backend configuration property `key`, e.g. `${dspace.name}`.
+   * The property must be listed in `rest.properties.exposed` on the backend.
+   * Values are HTML-escaped. A property that is not exposed, not set, empty, or fails to load leaves the placeholder unchanged.
+   * @param html static page content
+   * @private
+   */
+  private async interpolateVariables(html: string): Promise<string> {
+    const keys = [...new Set((html.match(/\$\{[\w.-]+\}/g) ?? []).map((placeholder) => placeholder.slice(2, -1)))];
+    if (keys.length === 0) {
+      return html;
+    }
+    const loaded = await Promise.all(keys.map((key) => this.getConfigValue(key)));
+    const values = new Map(keys.map((key, i) => [key, loaded[i]]));
+    const missing = keys.filter((key) => values.get(key) === undefined);
+    if (missing.length > 0) {
+      console.warn('Static page: unresolved variables', missing);
+    }
+    // Function replacer: `$&`, `$'` etc. in values are inserted literally, not as replacement patterns.
+    return html.replace(/\$\{([\w.-]+)\}/g, (match: string, key: string) => {
+      const value = values.get(key);
+      return value === undefined ? match : escapeHtml(value);
+    });
+  }
 
-    const redirectUrl = this.composeRedirectUrl(href, namespacePrefix);
-
-    if (this.isFragmentLink(href)) {
-      this.redirectToFragment(redirectUrl, href);
-    } else if (this.isRelativeLink(href)) {
-      this.redirectToRelativeLink(redirectUrl, href);
-    } else if (this.isExternalLink(href)) {
-      this.redirectToExternalLink(href);
-    } else {
-      this.redirectToAbsoluteLink(redirectUrl, href, namespacePrefix);
+  /**
+   * Load a configuration property from the backend.
+   * @param key property name
+   * @returns the property value, or `undefined` if it is missing, empty, or fails to load
+   * @private
+   */
+  private async getConfigValue(key: string): Promise<string | undefined> {
+    try {
+      const response = await firstValueFrom(this.configurationService.findByPropertyName(key).pipe(getFirstCompletedRemoteData()));
+      // The backend splits a value on commas into several values; join them back.
+      const value = response.hasSucceeded ? response.payload?.values?.join(', ').trim() : undefined;
+      return isEmpty(value) ? undefined : value;
+    } catch (error) {
+      return undefined;
     }
   }
 
-  private composeRedirectUrl(href: string | null, namespacePrefix: string): string {
-    const staticPagePath = STATIC_PAGE_PATH;
+  private getNamespacePrefix(): string {
+    const nameSpace = this.appConfig?.ui?.nameSpace ?? '/';
+    return nameSpace === '/' ? '' : nameSpace.replace(/\/$/, '');
+  }
+
+  private composeUrl(pathname: string): string {
     const baseUrl = new URL(window.location.origin);
-    baseUrl.pathname = href.startsWith(StaticPageComponent.no_static)
-            ? `${namespacePrefix}/`
-            : `${namespacePrefix}/${staticPagePath}/`;
+    baseUrl.pathname = pathname;
     return baseUrl.href;
   }
 
-  private isFragmentLink(href: string | null): boolean {
-    return href?.startsWith('#') ?? false;
-  }
-
-  private redirectToFragment(redirectUrl: string, href: string | null): void {
-    window.location.href = `${redirectUrl}${this.htmlFileName}${href}`;
+  private composeStaticPageBaseUrl(namespacePrefix: string): string {
+    return this.composeUrl(`${namespacePrefix}/${STATIC_PAGE_PATH}/`);
   }
 
   private isRelativeLink(href: string | null): boolean {
@@ -116,23 +152,11 @@ export class StaticPageComponent implements OnInit {
   }
 
   private redirectToRelativeLink(redirectUrl: string, href: string | null): void {
-    window.location.href = new URL(href, redirectUrl).href;
+    this.navigateTo(new URL(href, redirectUrl).href);
   }
 
-  private isExternalLink(href: string | null): boolean {
-    return (href?.startsWith('http') || href?.startsWith('www')) ?? false;
-  }
-
-  private redirectToExternalLink(href: string | null): void {
-    window.location.replace(href);
-  }
-
-  private redirectToAbsoluteLink(redirectUrl: string, href: string | null, namespacePrefix: string): void {
-    if (href.startsWith(StaticPageComponent.no_static)) {
-      href = href.replace(StaticPageComponent.no_static, '');
-    }
-    const absoluteUrl = new URL(href, redirectUrl.replace(namespacePrefix, ''));
-    window.location.href = absoluteUrl.href;
+  private navigateTo(url: string): void {
+    window.location.href = url;
   }
 
   /**

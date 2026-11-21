@@ -527,6 +527,18 @@
   // "admin.access-control.epeople.form.notification.deleted.failure": "Failed to delete EPerson \"{{name}}\"",
   "admin.access-control.epeople.form.notification.deleted.failure": "Nepodařilo se smazat uživatele \"{{name}}\"",
 
+  // "admin.access-control.epeople.notification.deleted.forbidden.self": "You cannot delete your own EPerson account.",
+  "admin.access-control.epeople.notification.deleted.forbidden.self": "Nemůžete smazat svůj vlastní účet uživatele.",
+
+  // "admin.access-control.epeople.delete.warning.submitter": "Warning: this user has submitted items. Deleting this EPerson may affect submission ownership and related repository records.",
+  "admin.access-control.epeople.delete.warning.submitter": "Upozornění: Tento uživatel odeslal položky. Smazání tohoto uživatele může ovlivnit vlastnictví příspěvků a související záznamy v repozitáři.",
+
+  // "admin.access-control.epeople.delete.warning.admin": "Warning: this user has administrator privileges. Deleting this EPerson will remove an administrator account.",
+  "admin.access-control.epeople.delete.warning.admin": "Upozornění: Tento uživatel má oprávnění správce. Smazání tohoto uživatele odebere účet správce.",
+
+  // "admin.access-control.epeople.delete.warning.submitterAndAdmin": "Warning: this user has submitted items and has administrator privileges. Deleting this EPerson may affect submission ownership and remove an administrator account.",
+  "admin.access-control.epeople.delete.warning.submitterAndAdmin": "Upozornění: Tento uživatel odeslal položky a má oprávnění správce. Smazání tohoto uživatele může ovlivnit vlastnictví příspěvků a odebrat účet správce.",
+
   // "admin.access-control.epeople.form.groupsEPersonIsMemberOf": "Member of these groups:",
   "admin.access-control.epeople.form.groupsEPersonIsMemberOf": "Člen těchto skupin:",
 
@@ -2717,8 +2729,14 @@
   // "form.other-information.last-name": "Last Name",
   "form.other-information.last-name": "Příjmení",
 
+  // "form.other-information.location": "Location",
+  "form.other-information.location": "Místo",
+
   // "form.other-information.orcid": "ORCID",
   "form.other-information.orcid": "ORCID",
+
+  // "form.other-information.ror-id": "ROR ID",
+  "form.other-information.ror-id": "ROR ID",
 
   // "form.remove": "Remove",
   "form.remove": "Odstranit",
@@ -3926,9 +3944,6 @@
   // "item.preview.dc.description.abstract": "Abstract:",
   "item.preview.dc.description.abstract": "Abstrakt:",
 
-  // "item.preview.dc.identifier.other": "Other identifier:",
-  "item.preview.dc.identifier.other": "Další identifikátor:",
-
   // "item.preview.dc.language.iso": "Language:",
   "item.preview.dc.language.iso": "Jazyk:",
 
@@ -4613,6 +4628,10 @@
 
   // "menu.section.icon.workflow": "Administer workflow menu section",
   "menu.section.icon.workflow": "Sekce menu pro administrativní workflow",
+
+  // "menu.section.icon.update_config": "Update Configuration menu section",
+  // TODO New key - Add a translation
+  "menu.section.icon.update_config": "Update Configuration menu section",
 
   // "menu.section.icon.unpin": "Unpin sidebar",
   "menu.section.icon.unpin": "Odepnout postranní panel",
@@ -7179,8 +7198,8 @@
   // "submission.sections.upload.header.policy.default.withlist": "Please note that uploaded files in the {{collectionName}} collection will be accessible, in addition to what is explicitly decided for the single file, with the following group(s):",
   "submission.sections.upload.header.policy.default.withlist": "Vezměte prosím na vědomí, že nahrané soubory v kolekci {{collectionName}} budou kromě toho, co je explicitně rozhodnuto pro jednotlivý soubor, přístupné podle následujících skupin:",
 
-  // "submission.sections.upload.info": "Here you will find all the files currently in the item. You can update the file metadata and access conditions or <strong>upload additional files by dragging & dropping them anywhere on the page.</strong>",
-  "submission.sections.upload.info": "Zde najdete všechny soubory, které jsou aktuálně v záznamu. Můžete aktualizovat metadata souborů a podmínky přístupu nebo <strong>nahrát další soubory pouhým přetažením kdekoli na stránku</strong>.",
+  // "submission.sections.upload.info": "Here you will find all the files currently in the item. You can update the file metadata and access conditions or <strong>upload additional files by dragging & dropping them anywhere on the page.</strong><br/>When uploading language resources, please try to use one of the recommended formats mentioned in the <a href=\"https://standards.clarin.eu/sis/views/view-centre.xq?id=LINDAT\" target=\"_blank\" rel=\"noopener noreferrer\">CLARIN Standards Information System</a>.",
+  "submission.sections.upload.info": "Zde najdete všechny soubory, které jsou aktuálně v záznamu. Můžete aktualizovat metadata souborů a podmínky přístupu nebo <strong>nahrát další soubory pouhým přetažením kdekoli na stránku</strong>.<br/>Při nahrávání jazykových zdrojů zkuste prosím použít některý z doporučených formátů, uvedených v <a href=\"https://standards.clarin.eu/sis/views/view-centre.xq?id=LINDAT\" target=\"_blank\" rel=\"noopener noreferrer\">CLARIN Standards Information System</a>.",
 
   // "submission.sections.upload.no-entry": "No",
   "submission.sections.upload.no-entry": "Ne",
@@ -8193,6 +8212,9 @@
   // "menu.section.system-wide-alert": "System-wide Alert",
   "menu.section.system-wide-alert": "Systémová upozornění",
 
+  // "menu.section.update-config": "Update Config",
+  "menu.section.update-config": "Úprava konfigurace",
+
   // "system-wide-alert.form.header": "System-wide Alert",
   "system-wide-alert.form.header": "Systémová upozornění",
 
@@ -8240,12 +8262,6 @@
 
   // "system-wide-alert.form.create.error": "Something went wrong when creating the system-wide alert",
   "system-wide-alert.form.create.error": "Něco se pokazilo při vytváření systémového upozornění",
-
-  // "admin.system-wide-alert.breadcrumbs": "System-wide Alerts",
-  "admin.system-wide-alert.breadcrumbs": "Systémová upozornění",
-
-  // "admin.system-wide-alert.title": "System-wide Alerts",
-  "admin.system-wide-alert.title": "Systémová upozornění",
 
   // "admin.update-config.title": "Update Configuration",
   "admin.update-config.title": "Aktualizace konfigurace",
@@ -8301,18 +8317,6 @@
   // "admin.update-config.help.directory": "Only files in /config/config-be/ directory can be edited for security reasons.",
   "admin.update-config.help.directory": "Pouze soubory v adresáři /config/config-be/ mohou být editovány z bezpečnostních důvodů.",
 
-  // "admin.update-config.success.save.title": "Configuration Saved",
-  "admin.update-config.success.save.title": "Konfigurace uložena",
-
-  // "admin.update-config.success.save.message": "{{message}}",
-  "admin.update-config.success.save.message": "{{message}}",
-
-  // "admin.update-config.error.save.title": "Save Failed",
-  "admin.update-config.error.save.title": "Uložení selhalo",
-
-  // "admin.update-config.error.save.message": "Unable to save configuration file. Please check the logs and try again.",
-  "admin.update-config.error.save.message": "Nepodařilo se uložit konfigurační soubor. Zkontrolujte logy a zkuste to znovu.",
-
   // "admin.update-config.error.load.title": "Load Failed",
   "admin.update-config.error.load.title": "Načtení selhalo",
 
@@ -8343,9 +8347,6 @@
 
   // "admin.update-config.file-info.path": "Path",
   "admin.update-config.file-info.path": "Cesta",
-
-  // "admin.update-config.file-info.modified": "Last Modified",
-  "admin.update-config.file-info.modified": "Naposledy změněno",
 
   // "admin.update-config.select.choose-file": "Choose a configuration file to edit",
   "admin.update-config.select.choose-file": "Vyberte konfigurační soubor k editaci",
@@ -8401,8 +8402,9 @@
   // "admin.update-config.help.allowed-files.title": "Editable Files",
   "admin.update-config.help.allowed-files.title": "Editovatelné soubory",
 
-  // "admin.update-config.help.allowed-files.description": "Only XML files in the config-be directory can be edited for security reasons:",
-  "admin.update-config.help.allowed-files.description": "Pouze XML soubory v adresáři config-be mohou být editovány z bezpečnostních důvodů:",
+  // "admin.update-config.help.allowed-files.description": "Only configuration files in the server configuration directory can be edited for security reasons:",
+  // TODO New key - Add a translation
+  "admin.update-config.help.allowed-files.description": "Only configuration files in the server configuration directory can be edited for security reasons:",
 
   // "admin.update-config.error.load-files.title": "Load Error",
   "admin.update-config.error.load-files.title": "Chyba načtení",
@@ -8411,6 +8413,7 @@
   "admin.update-config.error.load-files.message": "Nepodařilo se načíst seznam konfiguračních souborů",
 
   // Breadcrumb
+  // "admin.update-config.breadcrumbs": "Update Configuration",
   "admin.update-config.breadcrumbs": "Aktualizace konfigurace",
 
   // File Information
@@ -8495,6 +8498,12 @@
 
   // "admin.update-config.error.reload.message": "Could not reload original file",
   "admin.update-config.error.reload.message": "Nepodařilo se znovu načíst původní soubor",
+
+  // "admin.system-wide-alert.breadcrumbs": "System-wide Alerts",
+  "admin.system-wide-alert.breadcrumbs": "Systémová upozornění",
+
+  // "admin.system-wide-alert.title": "System-wide Alerts",
+  "admin.system-wide-alert.title": "Systémová upozornění",
 
   // "item-access-control-title": "This form allows you to perform changes to the access conditions of the item's metadata or its bitstreams.",
   "item-access-control-title": "Tento formulář umožňuje provést změny typu přístupu k metadatovému záznamu nebo souborům.",
@@ -8588,6 +8597,24 @@
 
   // "access-control-option-end-date-note": "Select the date until which the related access condition is applied",
   "access-control-option-end-date-note": "Vyberte datum, do kterého má být typ přístupu aktivován",
+
+  // "item.delete.virtual-metadata.info": "Show virtual metadata information",
+  // TODO Source message changed - Revise the translation
+  "item.delete.virtual-metadata.info": "Zobrazit informace o virtuálních metadatech",
+  // "access-control.start-date.calendar-button": "Open start date calendar",
+  "access-control.start-date.calendar-button": "Otevřít kalendář počátečního data",
+  // "access-control.end-date.calendar-button": "Open end date calendar",
+  "access-control.end-date.calendar-button": "Otevřít kalendář koncového data",
+  // "form.remove-related-item": "Remove related item",
+  "form.remove-related-item": "Odebrat související položku",
+  // "form.relation-group.save": "Save relation group",
+  "form.relation-group.save": "Uložit skupinu vztahů",
+  // "form.relation-group.delete": "Delete relation group",
+  "form.relation-group.delete": "Smazat skupinu vztahů",
+  // "form.relation-group.clear": "Clear relation group",
+  "form.relation-group.clear": "Vyčistit skupinu vztahů",
+  // "submission.cc-license.field-info": "More information about this license field",
+  "submission.cc-license.field-info": "Více informací o tomto licenčním poli",
 
   // "vocabulary-treeview.search.form.add": "Add",
   "vocabulary-treeview.search.form.add": "Přidat",
@@ -9186,6 +9213,9 @@
   // "item.file.description.description": "Description",
   "item.file.description.description": "Popis",
 
+  // "item.file.description.na": "N/A",
+  "item.file.description.na": "Neuvedeno",
+
   // "item.file.description.checksum": "MD5",
   "item.file.description.checksum": "MD5",
 
@@ -9203,8 +9233,11 @@
 
   // "item.page.download.button.command.line": "Download instructions for command line",
   "item.page.download.button.command.line": "Instrukce pro stažení z příkazové řádky",
+  // "item.page.download.command.copy": "Copy to clipboard",
   "item.page.download.command.copy": "Kopírovat",
+  // "item.page.download.command.copied": "Copied!",
   "item.page.download.command.copied": "Zkopírováno!",
+  // "item.page.download.command.close": "Close",
   "item.page.download.command.close": "Zavřít",
 
   // "item.page.download.button.all.files.zip": "Download all files in item",
@@ -9354,9 +9387,6 @@
   // "menu.section.licenses": "License Administration",
   "menu.section.licenses": "Správa licencí",
 
-  // "menu.section.update-config": "Update Config",
-  "menu.section.update-config": "Úprava konfigurace",
-
   // "menu.section.submissions": "Submissions",
   "menu.section.submissions": "Příspěvky",
 
@@ -9423,6 +9453,9 @@
   // "clarin-license.button.delete-license": "Delete License",
   "clarin-license.button.delete-license": "Odstranit licenci",
 
+  // "clarin-license.button.delete-license.disabled-tooltip": "License \"{{name}}\" cannot be deleted because it is attached to one or more bitstreams.",
+  "clarin-license.button.delete-license.disabled-tooltip": "Licenci \"{{name}}\" nelze smazat, protože jsou k ní připojeny jeden nebo více bitstreamů.",
+
   // "clarin-license.button.search": "Search",
   "clarin-license.button.search": "Hledat",
 
@@ -9452,6 +9485,120 @@
 
   // "clarin-license.define-license-form.submit-button": "Save",
   "clarin-license.define-license-form.submit-button": "Uložit",
+
+  // "clarin.license.label.section.title": "License Labels",
+  "clarin.license.label.section.title": "Licenční štítky",
+
+  // "clarin.license.label.table.header.label": "Label",
+  "clarin.license.label.table.header.label": "Štítek",
+
+  // "clarin.license.label.table.header.title": "Title",
+  "clarin.license.label.table.header.title": "Název",
+
+  // "clarin.license.label.table.header.extended": "Extended",
+  "clarin.license.label.table.header.extended": "Rozšířený",
+
+  // "clarin.license.label.table.header.icon": "Icon",
+  "clarin.license.label.table.header.icon": "Ikona",
+
+  // "clarin.license.label.table.header.actions": "Actions",
+  "clarin.license.label.table.header.actions": "Akce",
+
+  // "clarin.license.label.table.boolean.yes": "Yes",
+  "clarin.license.label.table.boolean.yes": "Ano",
+
+  // "clarin.license.label.table.boolean.no": "No",
+  "clarin.license.label.table.boolean.no": "Ne",
+
+  // "clarin.license.label.table.icon.available": "Icon available",
+  "clarin.license.label.table.icon.available": "Ikona je k dispozici",
+
+  // "clarin.license.label.table.icon.none": "No icon",
+  "clarin.license.label.table.icon.none": "Bez ikony",
+
+  // "clarin.license.label.table.select.aria": "Select label {{label}}",
+  "clarin.license.label.table.select.aria": "Vybrat štítek {{label}}",
+
+  // "clarin.license.label.table.edit": "Edit",
+  "clarin.license.label.table.edit": "Upravit",
+
+  // "clarin.license.label.table.edit.aria": "Edit label {{label}}",
+  "clarin.license.label.table.edit.aria": "Upravit štítek {{label}}",
+
+  // "clarin.license.label.table.delete": "Delete",
+  "clarin.license.label.table.delete": "Odstranit",
+
+  // "clarin.license.label.table.delete.aria": "Delete label {{label}}",
+  "clarin.license.label.table.delete.aria": "Odstranit štítek {{label}}",
+
+  // "clarin.license.label.table.delete.disabled-tooltip": "Label \"{{label}}\" cannot be deleted because it is assigned to one or more licenses.",
+  "clarin.license.label.table.delete.disabled-tooltip": "Štítek \"{{label}}\" nelze odstranit, protože je přiřazen k jedné nebo více licencím.",
+
+  // "clarin.license.label.table.delete.checking-tooltip": "Checking whether this label is in use…",
+  "clarin.license.label.table.delete.checking-tooltip": "Zjišťuje se, zda se tento štítek používá…",
+
+  // "clarin.license.label.table.empty": "No license labels available.",
+  "clarin.license.label.table.empty": "Nejsou k dispozici žádné licenční štítky.",
+
+  // "clarin.license.label.table.loading": "Loading labels...",
+  "clarin.license.label.table.loading": "Načítají se licenční štítky...",
+
+  // "clarin.license.label.create.title": "Define License Label",
+  "clarin.license.label.create.title": "Definovat licenční štítek",
+
+  // "clarin.license.label.create.submit": "Save",
+  "clarin.license.label.create.submit": "Uložit",
+
+  // "clarin.license.label.create.success": "License label created successfully.",
+  "clarin.license.label.create.success": "Licenční štítek byl úspěšně vytvořen.",
+
+  // "clarin.license.label.create.error": "Failed to create license label.",
+  "clarin.license.label.create.error": "Nepodařilo se vytvořit licenční štítek.",
+
+  // "clarin.license.label.load.error": "Failed to load license labels.",
+  "clarin.license.label.load.error": "Nepodařilo se načíst licenční štítky.",
+
+  // "clarin.license.label.edit.title": "Edit License Label",
+  "clarin.license.label.edit.title": "Upravit licenční štítek",
+
+  // "clarin.license.label.edit.submit": "Save Changes",
+  "clarin.license.label.edit.submit": "Uložit změny",
+
+  // "clarin.license.label.edit.icon.note": "Leave empty to keep current icon.",
+  "clarin.license.label.edit.icon.note": "Ponechte prázdné, chcete-li zachovat stávající ikonu.",
+
+  // "clarin.license.label.edit.icon.preview": "Current icon",
+  "clarin.license.label.edit.icon.preview": "Stávající ikona",
+
+  // "clarin.license.label.edit.icon.clear": "Remove current icon",
+  "clarin.license.label.edit.icon.clear": "Odstranit stávající ikonu",
+
+  // "clarin.license.label.edit.success": "License label updated successfully.",
+  "clarin.license.label.edit.success": "Licenční štítek byl úspěšně aktualizován.",
+
+  // "clarin.license.label.edit.error": "Failed to update license label.",
+  "clarin.license.label.edit.error": "Nepodařilo se aktualizovat licenční štítek.",
+
+  // "clarin.license.label.modal.close": "Close",
+  "clarin.license.label.modal.close": "Zavřít",
+
+  // "clarin.license.label.delete.confirm.title": "Delete License Label \"{{ dsoName }}\"",
+  "clarin.license.label.delete.confirm.title": "Odstranit licenční štítek \"{{ dsoName }}\"",
+
+  // "clarin.license.label.delete.confirm.message": "Are you sure you want to delete the label \"{{ dsoName }}\"? This action cannot be undone.",
+  "clarin.license.label.delete.confirm.message": "Opravdu chcete odstranit štítek \"{{ dsoName }}\"? Tuto akci nelze vrátit zpět.",
+
+  // "clarin.license.label.delete.confirm.button": "Delete",
+  "clarin.license.label.delete.confirm.button": "Odstranit",
+
+  // "clarin.license.label.delete.cancel.button": "Cancel",
+  "clarin.license.label.delete.cancel.button": "Zrušit",
+
+  // "clarin.license.label.delete.success": "License label deleted successfully.",
+  "clarin.license.label.delete.success": "Licenční štítek byl úspěšně odstraněn.",
+
+  // "clarin.license.label.delete.error": "Failed to delete license label.",
+  "clarin.license.label.delete.error": "Nepodařilo se odstranit licenční štítek.",
 
   // "clarin-license.define-license.notification.successful-content": "License was defined successfully",
   "clarin-license.define-license.notification.successful-content": "Licence byla úspěšně definována",
@@ -9647,6 +9794,33 @@
 
   // "submission.workflow.generic.share-submission.tooltip": "Share submission",
   "submission.workflow.generic.share-submission.tooltip": "Sdílet příspěvek",
+
+  // "submission.workflow.generic.add-url-bitstream": "Add bitstream from URL",
+  "submission.workflow.generic.add-url-bitstream": "Přidat bitstream z URL",
+
+  // "submission.workflow.generic.add-url-bitstream.tooltip": "Add a new bitstream to this workspace item using a URL",
+  "submission.workflow.generic.add-url-bitstream.tooltip": "Přidat nový bitstream do této položky pracovního prostoru pomocí URL",
+
+  // "submission.workflow.generic.add-url-bitstream.modal.title": "Add bitstream from URL",
+  "submission.workflow.generic.add-url-bitstream.modal.title": "Přidat bitstream z URL",
+
+  // "submission.workflow.generic.add-url-bitstream.url.label": "File URL",
+  "submission.workflow.generic.add-url-bitstream.url.label": "URL souboru",
+
+  // "submission.workflow.generic.add-url-bitstream.url.required": "URL is required",
+  "submission.workflow.generic.add-url-bitstream.url.required": "URL je povinná",
+
+  // "submission.workflow.generic.add-url-bitstream.name.label": "Bitstream name (optional)",
+  "submission.workflow.generic.add-url-bitstream.name.label": "Název bitstreamu (volitelné)",
+
+  // "submission.workflow.generic.add-url-bitstream.name.placeholder": "e.g. image.png",
+  "submission.workflow.generic.add-url-bitstream.name.placeholder": "např. image.png",
+
+  // "submission.workflow.generic.add-url-bitstream.cancel": "Cancel",
+  "submission.workflow.generic.add-url-bitstream.cancel": "Zrušit",
+
+  // "submission.workflow.generic.add-url-bitstream.submit": "Add",
+  "submission.workflow.generic.add-url-bitstream.submit": "Přidat",
 
   // "submission.workflow.share-submission.email.successful": "The email with the share link has been sent successfully",
   "submission.workflow.share-submission.email.successful": "E-mail s odkazem na sdílení byl úspěšně odeslán",
