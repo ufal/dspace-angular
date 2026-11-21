@@ -429,9 +429,12 @@ export class EditBitstreamPageComponent implements OnInit, OnDestroy {
     );
 
     const primaryBitstream$ = bundle$.pipe(
-      hasValueOperator(),
-      switchMap((bundle: Bundle) => this.bitstreamService.findByHref(bundle._links.primaryBitstream.href)),
-      getFirstSucceededRemoteDataPayload(),
+      switchMap((bundle: Bundle) => {
+        if (hasValue(bundle) && hasValue(bundle._links) && hasValue(bundle._links.primaryBitstream) && hasValue(bundle._links.primaryBitstream.href)) {
+          return this.bitstreamService.findByHref(bundle._links.primaryBitstream.href).pipe(getFirstSucceededRemoteDataPayload());
+        }
+        return observableOf(undefined);
+      }),
     );
 
     const item$ = bundle$.pipe(
@@ -742,7 +745,33 @@ export class EditBitstreamPageComponent implements OnInit, OnDestroy {
    * otherwise retrieve the item ID based on the owning bundle's link
    */
   navigateToItemEditBitstreams() {
-    this.router.navigate([getEntityEditRoute(this.entityType, this.itemId), 'bitstreams']);
+    const navigate = () => this.router.navigate([getEntityEditRoute(this.entityType, this.itemId), 'bitstreams']);
+
+    if (hasValue(this.itemId)) {
+      navigate();
+      return;
+    }
+
+    if (hasValue(this.bundle) && hasValue(this.bundle.item)) {
+      this.subs.push(
+        this.bundle.item.pipe(
+          getFirstCompletedRemoteData(),
+        ).subscribe((itemRd: RemoteData<Item>) => {
+          if (itemRd.hasSucceeded && hasValue(itemRd.payload)) {
+            this.itemId = itemRd.payload.uuid;
+            if (!hasValue(this.entityType)) {
+              this.entityType = itemRd.payload.firstMetadataValue('dspace.entity.type');
+            }
+            navigate();
+          } else {
+            this.location.back();
+          }
+        }),
+      );
+      return;
+    }
+
+    this.location.back();
   }
 
   /**

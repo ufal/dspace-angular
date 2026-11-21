@@ -27,11 +27,11 @@
           </a>
         </span>
         <span *ngIf="type === 'search'" class="d-inline-flex pr-1">
-          <a [href]="getLinkToSearch(i)">{{mdValue.value | dsReplace: this.replaceCharacter}}</a>
+          <a [href]="getLinkToSearch(i)">{{mdValue.value | dsReplace: this.replaceCharacter}} <img *ngIf="mdValue.authority && (fields?.includes('dc.publisher') || fields?.includes('creativework.publisher'))" src="assets/images/ror-icon.svg" alt="ROR ID" height="16" class="ror-icon ml-1 align-middle"></a>
           <span *ngIf="!last" [innerHTML]="separator"></span>
         </span>
         <span *ngIf="type === 'subject'" class="pr-1">
-          <a class="badge badge-info text-white cursor-pointer mr-1"
+          <a class="badge text-wrap text-left badge-info text-white cursor-pointer mr-1"
              *ngFor="let subject of mdValue.value.split(separator);"
              [href]="getLinkToSearch(-1, subject)">
             {{subject}}
