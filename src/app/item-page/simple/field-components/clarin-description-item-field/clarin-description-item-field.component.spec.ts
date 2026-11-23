@@ -3,6 +3,9 @@ import { ClarinDescriptionItemFieldComponent } from './clarin-description-item-f
 import { Item } from '../../../../core/shared/item.model';
 import { createSuccessfulRemoteDataObject$ } from '../../../../shared/remote-data.utils';
 import { createPaginatedList } from '../../../../shared/testing/utils.test';
+import { APP_CONFIG } from '../../../../../config/app-config.interface';
+import { environment } from '../../../../../environments/environment';
+import { MarkdownPipe } from '../../../../shared/utils/markdown.pipe';
 
 describe('ClarinDescriptionItemFieldComponent', () => {
   let component: ClarinDescriptionItemFieldComponent;
@@ -22,7 +25,10 @@ describe('ClarinDescriptionItemFieldComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ClarinDescriptionItemFieldComponent ]
+      declarations: [ ClarinDescriptionItemFieldComponent, MarkdownPipe ],
+      providers: [
+        { provide: APP_CONFIG, useValue: environment }
+      ]
     })
     .compileComponents();
 
