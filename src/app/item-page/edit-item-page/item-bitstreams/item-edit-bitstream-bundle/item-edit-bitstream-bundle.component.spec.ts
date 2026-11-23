@@ -1,5 +1,6 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import {
+  Component,
   NO_ERRORS_SCHEMA,
   ViewContainerRef,
 } from '@angular/core';
@@ -8,21 +9,29 @@ import {
   TestBed,
   waitForAsync,
 } from '@angular/core/testing';
+import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import {
   of,
   Subject,
 } from 'rxjs';
 
+import { BitstreamChecksumDataService } from '../../../../core/bitstream-checksum-data.service';
 import { BundleDataService } from '../../../../core/data/bundle-data.service';
 import { FieldChangeType } from '../../../../core/data/object-updates/field-change-type.model';
 import { FieldUpdate } from '../../../../core/data/object-updates/field-update.model';
 import { ObjectUpdatesService } from '../../../../core/data/object-updates/object-updates.service';
 import { RequestService } from '../../../../core/data/request.service';
 import { PaginationService } from '../../../../core/pagination/pagination.service';
+import {
+  Bitstream,
+  SYNCHRONIZED_STORES_NUMBER,
+} from '../../../../core/shared/bitstream.model';
+import { BitstreamChecksum } from '../../../../core/shared/bitstream-checksum.model';
 import { Bundle } from '../../../../core/shared/bundle.model';
 import { Item } from '../../../../core/shared/item.model';
 import { getMockRequestService } from '../../../../shared/mocks/request.service.mock';
+import { PaginationComponent } from '../../../../shared/pagination/pagination.component';
 import { createSuccessfulRemoteDataObject$ } from '../../../../shared/remote-data.utils';
 import { ResponsiveColumnSizes } from '../../../../shared/responsive-table-sizes/responsive-column-sizes';
 import { ResponsiveTableSizes } from '../../../../shared/responsive-table-sizes/responsive-table-sizes';
@@ -45,11 +54,34 @@ describe('ItemEditBitstreamBundleComponent', () => {
   let viewContainerRef: ViewContainerRef;
 
   const columnSizes = new ResponsiveTableSizes([
-    new ResponsiveColumnSizes(2, 2, 3, 4, 4),
-    new ResponsiveColumnSizes(2, 3, 3, 3, 3),
+    new ResponsiveColumnSizes(3, 3, 3, 3, 3),
+    new ResponsiveColumnSizes(3, 3, 3, 3, 3),
     new ResponsiveColumnSizes(2, 2, 2, 2, 2),
-    new ResponsiveColumnSizes(6, 5, 4, 3, 3),
+    new ResponsiveColumnSizes(2, 2, 2, 2, 2),
+    new ResponsiveColumnSizes(2, 2, 2, 2, 2),
   ]);
+
+
+  const md5 = (value: string) => ({ checkSumAlgorithm: 'MD5', value });
+  const checksumAllEqual = Object.assign(new BitstreamChecksum(), {
+    databaseChecksum: md5('abc'),
+    activeStore: md5('abc'),
+    synchronizedStore: md5('abc'),
+  });
+
+  const tableEntry = (storeNumber: number, checksumHref?: string): BitstreamTableEntry => ({
+    bitstream: Object.assign(new Bitstream(), {
+      uuid: 'bitstream-1',
+      storeNumber,
+      _links: checksumHref ? { checksum: { href: checksumHref } } : {},
+    }),
+    id: 'bitstream-1',
+    name: 'file.txt',
+    nameStripped: 'file.txt',
+    description: '',
+    format: of(null),
+    downloadUrl: 'download-url',
+  } as any);
 
   const item = Object.assign(new Item(), {
     id: 'item-1',
@@ -71,6 +103,7 @@ describe('ItemEditBitstreamBundleComponent', () => {
 
   let objectUpdatesService: any;
   let itemBitstreamsService: ItemBitstreamsServiceStub;
+  let bitstreamChecksumService: jasmine.SpyObj<BitstreamChecksumDataService>;
 
   beforeEach(waitForAsync(() => {
     objectUpdatesService = jasmine.createSpyObj('objectUpdatesService', {
@@ -79,6 +112,8 @@ describe('ItemEditBitstreamBundleComponent', () => {
     });
 
     itemBitstreamsService = getItemBitstreamsServiceStub();
+    bitstreamChecksumService = jasmine.createSpyObj('bitstreamChecksumService', ['findByHref']);
+    bitstreamChecksumService.findByHref.and.returnValue(createSuccessfulRemoteDataObject$(checksumAllEqual));
 
     TestBed.configureTestingModule({
       imports: [TranslateModule.forRoot(), ItemEditBitstreamBundleComponent],
@@ -88,6 +123,7 @@ describe('ItemEditBitstreamBundleComponent', () => {
         { provide: PaginationService, useValue: new PaginationServiceStub() },
         { provide: RequestService, useValue: getMockRequestService() },
         { provide: ItemBitstreamsService, useValue: itemBitstreamsService },
+        { provide: BitstreamChecksumDataService, useValue: bitstreamChecksumService },
       ],
       schemas: [
         NO_ERRORS_SCHEMA,
@@ -355,5 +391,120 @@ describe('ItemEditBitstreamBundleComponent', () => {
       expect(itemBitstreamsService.selectBitstreamEntry).not.toHaveBeenCalled();
       expect(itemBitstreamsService.cancelSelection).not.toHaveBeenCalled();
     });
+  });
+
+  describe('bitstream checksum column', () => {
+
+    it('should report a bitstream stored in both stores as synchronized', () => {
+      expect(comp.isBitstreamSynchronized(tableEntry(SYNCHRONIZED_STORES_NUMBER))).toBeTrue();
+      expect(comp.isBitstreamSynchronized(tableEntry(0))).toBeFalse();
+    });
+
+    it('should treat checksums with the same value but a different algorithm as unequal', () => {
+      expect(comp.compareChecksums(md5('abc'), md5('abc'))).toBeTrue();
+      expect(comp.compareChecksums(md5('abc'), { checkSumAlgorithm: 'SHA-256', value: 'abc' })).toBeFalse();
+    });
+
+    it('should compare the synchronized store as well, but only for a synchronized bitstream', () => {
+      const syncStoreDiffers = Object.assign(new BitstreamChecksum(), {
+        databaseChecksum: md5('abc'),
+        activeStore: md5('abc'),
+        synchronizedStore: md5('zzz'),
+      });
+
+      expect(comp.checksumsAreEqual(syncStoreDiffers, tableEntry(SYNCHRONIZED_STORES_NUMBER))).toBeFalse();
+      expect(comp.checksumsAreEqual(syncStoreDiffers, tableEntry(0))).toBeTrue();
+    });
+
+    it('should request the checksum of the row it was given, not of the selected row', () => {
+      const entry = tableEntry(SYNCHRONIZED_STORES_NUMBER, 'https://rest/api/core/bitstreams/bitstream-1/checksum');
+
+      comp.computeChecksum(entry);
+
+      expect(bitstreamChecksumService.findByHref)
+        .toHaveBeenCalledWith('https://rest/api/core/bitstreams/bitstream-1/checksum');
+      expect(itemBitstreamsService.getSelectedBitstream).not.toHaveBeenCalled();
+
+      let emitted: BitstreamChecksum = null;
+      comp.checkSum$.subscribe((value) => emitted = value);
+
+      expect(emitted).toBe(checksumAllEqual);
+      expect(comp.computedChecksum).toBeTrue();
+      expect(comp.loading).toBeFalse();
+    });
+
+    it('should do nothing when the row has no checksum link', () => {
+      const entry = tableEntry(0);
+
+      expect(() => comp.computeChecksum(entry)).not.toThrow();
+      expect(bitstreamChecksumService.findByHref).not.toHaveBeenCalled();
+      expect(comp.loading).toBeFalse();
+    });
+  });
+});
+
+describe('ItemEditBitstreamBundleComponent with two bundles on one page', () => {
+  @Component({
+    template: `
+      @for (bundle of bundles; track bundle.id) {
+        <ds-item-edit-bitstream-bundle [item]="item" [bundle]="bundle" [columnSizes]="columnSizes"></ds-item-edit-bitstream-bundle>
+      }`,
+    imports: [
+      ItemEditBitstreamBundleComponent,
+    ],
+  })
+  class TwoBundlesHostComponent {
+    item = Object.assign(new Item(), { id: 'item-1', uuid: 'item-1' });
+    columnSizes = getItemBitstreamsServiceStub().getColumnSizes();
+    bundles = ['ORIGINAL', 'LICENSE'].map((name: string) => Object.assign(new Bundle(), {
+      id: name,
+      uuid: name,
+      metadata: { 'dc.title': [{ value: name }] },
+      _links: { self: { href: `${name}-selflink` } },
+    }));
+  }
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [TranslateModule.forRoot(), RouterModule.forRoot([]), TwoBundlesHostComponent],
+      providers: [
+        {
+          provide: BundleDataService, useValue: jasmine.createSpyObj('bundleService', {
+            getBitstreamsEndpoint: of('fake-rest-endpoint'),
+            getBitstreams: createSuccessfulRemoteDataObject$(createPaginatedList([])),
+          }),
+        },
+        {
+          provide: ObjectUpdatesService, useValue: jasmine.createSpyObj('objectUpdatesService', {
+            initialize: undefined,
+            getFieldUpdatesExclusive: of({}),
+          }),
+        },
+        { provide: PaginationService, useValue: new PaginationServiceStub() },
+        { provide: RequestService, useValue: getMockRequestService() },
+        { provide: ItemBitstreamsService, useValue: getItemBitstreamsServiceStub() },
+        { provide: BitstreamChecksumDataService, useValue: jasmine.createSpyObj('bitstreamChecksumService', ['findByHref']) },
+      ],
+    })
+      .overrideComponent(ItemEditBitstreamBundleComponent, {
+        remove: { imports: [PaginationComponent] },
+        add: { schemas: [NO_ERRORS_SCHEMA] },
+      })
+      .compileComponents();
+  });
+
+  it('should not repeat the pagination control ids of the other bundle', () => {
+    const fixture = TestBed.createComponent(TwoBundlesHostComponent);
+    fixture.detectChanges();
+    const page: HTMLElement = fixture.nativeElement;
+
+    expect(page.querySelectorAll('[ngbDropdownToggle][id^="paginationControls"]').length)
+      .withContext('each bundle renders its own pagination control')
+      .toBe(2);
+
+    const ids = Array.from(page.querySelectorAll('[id]')).map((element: Element) => element.id);
+    expect(ids.filter((id: string, index: number) => ids.indexOf(id) !== index))
+      .withContext('duplicate element ids on the edit bitstreams page')
+      .toEqual([]);
   });
 });

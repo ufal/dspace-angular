@@ -515,11 +515,75 @@ describe('SubmissionService test suite', () => {
   });
 
   describe('dispatchDeposit', () => {
+    const clarinNoticeSection = (isValid: boolean) => ({
+      header: 'submit.progressbar.clarin-notice',
+      config: '',
+      mandatory: true,
+      sectionType: 'clarin-notice',
+      collapsed: false,
+      enabled: true,
+      data: {},
+      errorsToShow: [],
+      serverValidationErrors: [],
+      isLoading: false,
+      isValid,
+    });
+
+    // The store of this suite is not registered under the 'submission' feature key, so the real
+    // selectors are run against a state literal instead.
+    const selectFrom = (objects: { [id: string]: any }) =>
+      spyOn((service as any).store, 'select').and.callFake((selector) => of(selector({ submission: { objects } })));
+
     it('should dispatch a new SaveAndDepositSubmissionAction', () => {
       service.dispatchDeposit(submissionId);
       const expected = new SaveAndDepositSubmissionAction(submissionId);
 
       expect((service as any).store.dispatch).toHaveBeenCalledWith(expected);
+    });
+
+    it('should warn and not dispatch a SaveAndDepositSubmissionAction when the clarin-notice section is not confirmed', () => {
+      selectFrom({ [submissionId]: { sections: { 'clarin-notice': clarinNoticeSection(false) } } });
+      const instant = spyOn((service as any).translate, 'instant').and.returnValue('notice not confirmed');
+      const warning = spyOn((service as any).notificationsService, 'warning');
+
+      service.dispatchDeposit(submissionId);
+
+      expect((service as any).store.dispatch).not.toHaveBeenCalledWith(new SaveAndDepositSubmissionAction(submissionId));
+      expect(instant).toHaveBeenCalledWith('submission.sections.clarin-notice.error');
+      expect(warning).toHaveBeenCalledWith('notice not confirmed');
+    });
+
+    it('should dispatch a new SaveAndDepositSubmissionAction when the clarin-notice section is confirmed', () => {
+      selectFrom({ [submissionId]: { sections: { 'clarin-notice': clarinNoticeSection(true) } } });
+      const warning = spyOn((service as any).notificationsService, 'warning');
+
+      service.dispatchDeposit(submissionId);
+
+      expect((service as any).store.dispatch).toHaveBeenCalledWith(new SaveAndDepositSubmissionAction(submissionId));
+      expect(warning).not.toHaveBeenCalled();
+    });
+
+    it('should dispatch a new SaveAndDepositSubmissionAction when the submission has no clarin-notice section', () => {
+      selectFrom({ [submissionId]: { sections: { license: clarinNoticeSection(false) } } });
+      const warning = spyOn((service as any).notificationsService, 'warning');
+
+      service.dispatchDeposit(submissionId);
+
+      expect((service as any).store.dispatch).toHaveBeenCalledWith(new SaveAndDepositSubmissionAction(submissionId));
+      expect(warning).not.toHaveBeenCalled();
+    });
+
+    it('should ignore the clarin-notice section of another submission', () => {
+      selectFrom({
+        [submissionId]: { sections: { 'clarin-notice': clarinNoticeSection(true) } },
+        'another-submission': { sections: { 'clarin-notice': clarinNoticeSection(false) } },
+      });
+      const warning = spyOn((service as any).notificationsService, 'warning');
+
+      service.dispatchDeposit(submissionId);
+
+      expect((service as any).store.dispatch).toHaveBeenCalledWith(new SaveAndDepositSubmissionAction(submissionId));
+      expect(warning).not.toHaveBeenCalled();
     });
   });
 

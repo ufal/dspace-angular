@@ -11,7 +11,10 @@ import {
 } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ActivatedRoute } from '@angular/router';
+import {
+  ActivatedRoute,
+  Router,
+} from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import {
   TranslateLoader,
@@ -22,6 +25,11 @@ import {
   of,
 } from 'rxjs';
 
+import {
+  APP_CONFIG,
+  AppConfig,
+} from '../../../config/app-config.interface';
+import { LinkService } from '../../core/cache/builders/link.service';
 import { NotifyInfoService } from '../../core/coar-notify/notify-info/notify-info.service';
 import { AuthorizationDataService } from '../../core/data/feature-authorization/authorization-data.service';
 import { ItemDataService } from '../../core/data/item-data.service';
@@ -31,12 +39,19 @@ import { HeadTagService } from '../../core/metadata/head-tag.service';
 import { LinkHeadService } from '../../core/services/link-head.service';
 import { ServerResponseService } from '../../core/services/server-response.service';
 import { Item } from '../../core/shared/item.model';
+import { WorkflowItem } from '../../core/submission/models/workflowitem.model';
+import { ClaimedTaskDataService } from '../../core/tasks/claimed-task-data.service';
+import { ClaimedTask } from '../../core/tasks/models/claimed-task-object.model';
+import { WorkflowAction } from '../../core/tasks/models/workflow-action-object.model';
 import { DsoEditMenuComponent } from '../../shared/dso-page/dso-edit-menu/dso-edit-menu.component';
 import { ThemedLoadingComponent } from '../../shared/loading/themed-loading.component';
 import { HeadTagServiceMock } from '../../shared/mocks/head-tag-service.mock';
+import { getMockLinkService } from '../../shared/mocks/link-service.mock';
 import { getMockThemeService } from '../../shared/mocks/theme-service.mock';
 import { TranslateLoaderMock } from '../../shared/mocks/translate-loader.mock';
+import { ClaimedTaskActionsComponent } from '../../shared/mydspace-actions/claimed-task/claimed-task-actions.component';
 import {
+  createFailedRemoteDataObject,
   createSuccessfulRemoteDataObject,
   createSuccessfulRemoteDataObject$,
 } from '../../shared/remote-data.utils';
@@ -46,15 +61,16 @@ import { ThemeService } from '../../shared/theme-support/theme.service';
 import { TruncatePipe } from '../../shared/utils/truncate.pipe';
 import { VarDirective } from '../../shared/utils/var.directive';
 import { ThemedItemAlertsComponent } from '../alerts/themed-item-alerts.component';
+import { ClarinFilesSectionComponent } from '../clarin-files-section/clarin-files-section.component';
+import { ClarinRefBoxComponent } from '../clarin-ref-box/clarin-ref-box.component';
 import { CollectionsComponent } from '../field-components/collections/collections.component';
-import { ThemedItemPageTitleFieldComponent } from '../simple/field-components/specific-field/title/themed-item-page-field.component';
 import { createRelationshipsObservable } from '../simple/item-types/shared/item.component.spec';
 import { ItemVersionsComponent } from '../versions/item-versions.component';
 import { ItemVersionsNoticeComponent } from '../versions/notice/item-versions-notice.component';
-import { ThemedFullFileSectionComponent } from './field-components/file-section/themed-full-file-section.component';
 import { FullItemPageComponent } from './full-item-page.component';
 
 const mockItem: Item = Object.assign(new Item(), {
+  uuid: 'test-item-uuid',
   bundles: createSuccessfulRemoteDataObject$(createPaginatedList([])),
   metadata: {
     'dc.title': [
@@ -66,11 +82,51 @@ const mockItem: Item = Object.assign(new Item(), {
   },
 });
 
+const NOTE_TEXT = 'note-check-2026-09-17';
+
+const mockNotedItem: Item = Object.assign(new Item(), {
+  bundles: createSuccessfulRemoteDataObject$(createPaginatedList([])),
+  metadata: {
+    'dc.title': [
+      {
+        language: 'en_US',
+        value: 'test item',
+      },
+    ],
+    'local.submission.note': [
+      {
+        language: null,
+        value: NOTE_TEXT,
+      },
+    ],
+  },
+});
+
 const mockWithdrawnItem: Item = Object.assign(new Item(), {
   bundles: createSuccessfulRemoteDataObject$(createPaginatedList([])),
   metadata: [],
   relationships: createRelationshipsObservable(),
   isWithdrawn: true,
+});
+
+const mockWorkflowItem: WorkflowItem = Object.assign(new WorkflowItem(), {
+  id: 'workflow-item-1',
+  uuid: 'workflow-uuid-1',
+  item: of(createSuccessfulRemoteDataObject(mockItem)),
+});
+
+const mockWorkflowAction: WorkflowAction = Object.assign(new WorkflowAction(), {
+  id: 'action-1',
+  options: ['submit_approve', 'submit_reject', 'submit_edit_metadata', 'return_to_pool'],
+});
+
+const mockClaimedTask: ClaimedTask = Object.assign(new ClaimedTask(), {
+  id: 'claimed-task-1',
+  workflowitem: of(createSuccessfulRemoteDataObject(mockWorkflowItem)),
+  action: of(createSuccessfulRemoteDataObject(mockWorkflowAction)),
+  _links: {
+    workflowitem: { href: 'https://rest.api/workflowitems/workflow-item-1' },
+  },
 });
 
 describe('FullItemPageComponent', () => {
@@ -85,6 +141,9 @@ describe('FullItemPageComponent', () => {
   let linkHeadService: jasmine.SpyObj<LinkHeadService>;
   let notifyInfoService: jasmine.SpyObj<NotifyInfoService>;
   let headTagService: HeadTagServiceMock;
+  let claimedTaskService: ClaimedTaskDataService;
+  let linkService: LinkService;
+  let appConfig: Partial<AppConfig>;
 
   const mocklink = {
     href: 'http://test.org',
@@ -132,6 +191,14 @@ describe('FullItemPageComponent', () => {
 
     headTagService = new HeadTagServiceMock();
 
+    claimedTaskService = jasmine.createSpyObj('claimedTaskService', {
+      findByItem: of(createSuccessfulRemoteDataObject(mockClaimedTask)),
+    });
+
+    linkService = getMockLinkService();
+
+    appConfig = {};
+
     TestBed.configureTestingModule({
       imports: [TranslateModule.forRoot({
         loader: {
@@ -148,22 +215,26 @@ describe('FullItemPageComponent', () => {
         { provide: SignpostingDataService, useValue: signpostingDataService },
         { provide: LinkHeadService, useValue: linkHeadService },
         { provide: NotifyInfoService, useValue: notifyInfoService },
+        { provide: ClaimedTaskDataService, useValue: claimedTaskService },
+        { provide: LinkService, useValue: linkService },
         { provide: PLATFORM_ID, useValue: 'server' },
         { provide: ThemeService, useValue: getMockThemeService() },
+        { provide: APP_CONFIG, useValue: appConfig },
       ],
       schemas: [NO_ERRORS_SCHEMA],
     })
       .overrideComponent(FullItemPageComponent, {
         remove: {
           imports: [
+            ClaimedTaskActionsComponent,
+            ClarinFilesSectionComponent,
+            ClarinRefBoxComponent,
             ItemVersionsComponent,
             ItemVersionsNoticeComponent,
             ThemedLoadingComponent,
-            ThemedItemPageTitleFieldComponent,
             DsoEditMenuComponent,
             ThemedItemAlertsComponent,
             CollectionsComponent,
-            ThemedFullFileSectionComponent,
           ],
         },
         add: { changeDetection: ChangeDetectionStrategy.Default },
@@ -251,6 +322,83 @@ describe('FullItemPageComponent', () => {
     });
   });
 
+  describe('local.has.files', () => {
+    const withHasFiles = (value: string): Item => Object.assign(new Item(), mockItem, {
+      metadata: { ...mockItem.metadata, 'local.has.files': [{ value }] },
+    });
+
+    it('should not display the files section when the item has no files', () => {
+      comp.itemRD$ = new BehaviorSubject<RemoteData<Item>>(createSuccessfulRemoteDataObject(withHasFiles('no')));
+      fixture.detectChanges();
+      expect(fixture.debugElement.query(By.css('ds-clarin-files-section'))).toBeNull();
+    });
+
+    it('should display the files section when the item has files', () => {
+      comp.itemRD$ = new BehaviorSubject<RemoteData<Item>>(createSuccessfulRemoteDataObject(withHasFiles('yes')));
+      fixture.detectChanges();
+      expect(fixture.debugElement.query(By.css('ds-clarin-files-section'))).not.toBeNull();
+    });
+  });
+
+  describe('when the item carries a submitter note', () => {
+    beforeEach(() => {
+      comp.itemRD$ = new BehaviorSubject<RemoteData<Item>>(createSuccessfulRemoteDataObject(mockNotedItem));
+    });
+
+    it('should render the note card when the page was opened from a submission object', () => {
+      comp.fromSubmissionObject = true;
+      fixture.detectChanges();
+
+      const card = fixture.debugElement.query(By.css('.card.bg-info-subtle'));
+      expect(card).toBeTruthy();
+      expect(card.nativeElement.textContent).toContain(NOTE_TEXT);
+      // Bootstrap 5 paints the tint through these three utilities; alert-info alone sets only
+      // custom properties that .alert reads, so a card without them renders plain white.
+      expect(card.nativeElement.classList).toContain('border-info-subtle');
+      expect(card.nativeElement.classList).toContain('text-info-emphasis');
+    });
+
+    it('should render the note card above the item alerts', () => {
+      comp.fromSubmissionObject = true;
+      fixture.detectChanges();
+
+      const siblings = Array.from(fixture.debugElement.query(By.css('.item-page > div')).nativeElement.children);
+      const cardIndex = siblings.findIndex((el: Element) => el.classList.contains('bg-info-subtle'));
+      const alertsIndex = siblings.findIndex((el: Element) => el.tagName.toLowerCase() === 'ds-item-alerts');
+      expect(cardIndex).toBe(0);
+      expect(alertsIndex).toBeGreaterThan(cardIndex);
+    });
+
+    it('should label the card with the item.page.users.note key', () => {
+      comp.fromSubmissionObject = true;
+      fixture.detectChanges();
+
+      const header = fixture.debugElement.query(By.css('.card.bg-info-subtle .card-header'));
+      expect(header).toBeTruthy();
+      expect(header.nativeElement.textContent).toContain('item.page.users.note');
+    });
+
+    it('should not render the note card on the archived item view', () => {
+      comp.fromSubmissionObject = false;
+      fixture.detectChanges();
+
+      expect(fixture.debugElement.query(By.css('.card.bg-info-subtle'))).toBeNull();
+    });
+  });
+
+  describe('when the submission object carries no submitter note', () => {
+    beforeEach(() => {
+      comp.itemRD$ = new BehaviorSubject<RemoteData<Item>>(createSuccessfulRemoteDataObject(mockItem));
+      comp.fromSubmissionObject = true;
+      fixture.detectChanges();
+    });
+
+    it('should not render an empty note card', () => {
+      expect(mockItem.firstMetadataValue('local.submission.note')).toBeUndefined();
+      expect(fixture.debugElement.query(By.css('.card.bg-info-subtle'))).toBeNull();
+    });
+  });
+
   describe('when the item is not withdrawn and the user is not an admin', () => {
     beforeEach(() => {
       comp.itemRD$ = new BehaviorSubject<RemoteData<Item>>(createSuccessfulRemoteDataObject(mockItem));
@@ -265,6 +413,207 @@ describe('FullItemPageComponent', () => {
     it('should add the signposting links', () => {
       expect(serverResponseService.setHeader).toHaveBeenCalled();
       expect(linkHeadService.addTag).toHaveBeenCalledTimes(3);
+    });
+  });
+
+  describe('statistics button', () => {
+    const statisticsButton = () => fixture.debugElement.query(By.css('ds-views-downloads-statistics-button'));
+
+    it('should be hidden when statistics are not configured', () => {
+      fixture.detectChanges();
+      expect(statisticsButton()).toBeNull();
+    });
+
+    it('should be hidden when the statistics endpoint is missing', () => {
+      appConfig.statistics = { baseUrl: 'http://localhost:8080/statistics', endpoint: '' };
+      fixture.detectChanges();
+      expect(statisticsButton()).toBeNull();
+    });
+
+    it('should be shown when statistics are configured', () => {
+      appConfig.statistics = { baseUrl: 'http://localhost:8080/statistics', endpoint: 'views' };
+      fixture.detectChanges();
+      expect(statisticsButton()).not.toBeNull();
+    });
+  });
+
+  describe('Workflow Actions Integration', () => {
+    describe('when route data contains workflow item', () => {
+      beforeEach(() => {
+        routeData.wfi = createSuccessfulRemoteDataObject(mockWorkflowItem);
+        routeStub.data = of(routeData);
+        comp.ngOnInit();
+        fixture.detectChanges();
+      });
+
+      it('should set fromSubmissionObject to true', () => {
+        expect(comp.fromSubmissionObject).toBe(true);
+      });
+
+      it('should initialize workflowItem', () => {
+        expect(comp.workflowItem).toEqual(mockWorkflowItem);
+      });
+
+      it('should create claimedTask$ observable', (done) => {
+        comp.claimedTask$.subscribe((claimedTaskRD) => {
+          expect(claimedTaskRD.hasSucceeded).toBe(true);
+          expect(claimedTaskRD.payload).toEqual(mockClaimedTask);
+          done();
+        });
+      });
+
+      it('should have claimedTask$ observable that depends on itemRD$', () => {
+        expect(comp.claimedTask$).toBeDefined();
+        expect(claimedTaskService.findByItem).toHaveBeenCalledWith(mockItem.uuid);
+      });
+
+      it('should populate item$ BehaviorSubject', (done) => {
+        comp.item$.subscribe((item) => {
+          if (item) {
+            expect(item).toEqual(mockItem);
+            done();
+          }
+        });
+      });
+
+      it('should populate workflowitem$ BehaviorSubject', (done) => {
+        comp.workflowitem$.subscribe((wfi) => {
+          expect(wfi).toEqual(mockWorkflowItem);
+          done();
+        });
+      });
+
+      it('should call linkService.resolveLinks with correct parameters', (done) => {
+        expect(linkService.resolveLinks).toHaveBeenCalledWith(
+          mockClaimedTask,
+          jasmine.any(Object),
+          jasmine.any(Object),
+        );
+        done();
+      });
+
+      it('should display claimed task actions at the top', () => {
+        comp.item$.next(mockItem);
+        comp.workflowitem$.next(mockWorkflowItem);
+        comp.claimedTask$ = of(createSuccessfulRemoteDataObject(mockClaimedTask));
+        fixture.detectChanges();
+        const claimedTaskActions = fixture.debugElement.queryAll(By.css('ds-claimed-task-actions'));
+        expect(claimedTaskActions.length).toBeGreaterThanOrEqual(1);
+        const firstActions = claimedTaskActions[0];
+        const itemInfo = fixture.debugElement.query(By.css('.full-item-info'));
+        expect(firstActions.nativeElement.compareDocumentPosition(itemInfo.nativeElement)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+      });
+
+      it('should display claimed task actions at the bottom', () => {
+        comp.item$.next(mockItem);
+        comp.workflowitem$.next(mockWorkflowItem);
+        comp.claimedTask$ = of(createSuccessfulRemoteDataObject(mockClaimedTask));
+        fixture.detectChanges();
+        const claimedTaskActions = fixture.debugElement.queryAll(By.css('ds-claimed-task-actions'));
+        const secondActions = claimedTaskActions[1];
+        const itemInfo = fixture.debugElement.query(By.css('.full-item-info'));
+        expect(secondActions.nativeElement.compareDocumentPosition(itemInfo.nativeElement)).toBe(Node.DOCUMENT_POSITION_PRECEDING);
+      });
+
+      it('should render claimed-task-actions components', () => {
+        comp.item$.next(mockItem);
+        comp.workflowitem$.next(mockWorkflowItem);
+        comp.claimedTask$ = of(createSuccessfulRemoteDataObject(mockClaimedTask));
+        fixture.detectChanges();
+        const claimedTaskActions = fixture.debugElement.queryAll(By.css('ds-claimed-task-actions'));
+        expect(claimedTaskActions.length).toBe(2);
+        claimedTaskActions.forEach((actionElement) => {
+          expect(actionElement).toBeTruthy();
+        });
+      });
+    });
+
+    describe('when route data does not contain workflow item', () => {
+      beforeEach(() => {
+        routeData.wfi = undefined;
+        routeStub.data = of(routeData);
+        comp.ngOnInit();
+        fixture.detectChanges();
+      });
+
+      it('should not initialize workflow-related observables', () => {
+        expect(comp.workflowItem).toBeUndefined();
+        expect(comp.claimedTask$).toBeUndefined();
+      });
+
+      it('should not display claimed task actions', () => {
+        const claimedTaskActions = fixture.debugElement.queryAll(By.css('ds-claimed-task-actions'));
+        expect(claimedTaskActions.length).toBe(0);
+      });
+    });
+
+    describe('when claimedTask$ does not have a successful response', () => {
+      beforeEach(() => {
+        (claimedTaskService.findByItem as jasmine.Spy).and.returnValue(
+          of(createFailedRemoteDataObject('Not found', 404)),
+        );
+
+        routeData.wfi = createSuccessfulRemoteDataObject(mockWorkflowItem);
+        routeStub.data = of(routeData);
+        comp.ngOnInit();
+        fixture.detectChanges();
+      });
+
+      it('should not display claimed task actions', () => {
+        comp.item$.next(mockItem);
+        comp.workflowitem$.next(mockWorkflowItem);
+        fixture.detectChanges();
+        const claimedTaskActions = fixture.debugElement.queryAll(By.css('ds-claimed-task-actions'));
+        expect(claimedTaskActions.length).toBe(0);
+      });
+    });
+
+    describe('onWorkflowActionCompleted', () => {
+      let navigateSpy: jasmine.Spy;
+
+      beforeEach(() => {
+        navigateSpy = spyOn(TestBed.inject(Router), 'navigate').and.returnValue(Promise.resolve(true));
+        routeData.wfi = createSuccessfulRemoteDataObject(mockWorkflowItem);
+        routeStub.data = of(routeData);
+        comp.ngOnInit();
+      });
+
+      it('should navigate to /mydspace when reloadedObject is provided', () => {
+        comp.onWorkflowActionCompleted({ id: 'reloaded-1' });
+        expect(navigateSpy).toHaveBeenCalledWith(['/mydspace']);
+      });
+
+      it('should not navigate when reloadedObject is null', () => {
+        comp.onWorkflowActionCompleted(null);
+        expect(navigateSpy).not.toHaveBeenCalled();
+      });
+
+      it('should not navigate when reloadedObject is undefined', () => {
+        comp.onWorkflowActionCompleted(undefined);
+        expect(navigateSpy).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('subscription cleanup', () => {
+      it('should unsubscribe from all subscriptions on destroy', () => {
+        routeData.wfi = createSuccessfulRemoteDataObject(mockWorkflowItem);
+        routeStub.data = of(routeData);
+        comp.ngOnInit();
+        fixture.detectChanges();
+
+        const subsLength = comp.subs.length;
+        expect(subsLength).toBeGreaterThan(0);
+
+        comp.subs.forEach((sub) => {
+          if (sub) {
+            spyOn(sub, 'unsubscribe');
+          }
+        });
+        comp.ngOnDestroy();
+        comp.subs.filter((sub) => sub).forEach((sub) => {
+          expect(sub.unsubscribe).toHaveBeenCalled();
+        });
+      });
     });
   });
 });

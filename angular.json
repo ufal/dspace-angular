@@ -40,10 +40,17 @@
             "aot": true,
             "assets": [
               "src/assets",
-              "src/robots.txt"
+              "src/static-files",
+              "src/robots.txt",
+              {
+                "glob": "**/*",
+                "input": "src/aai",
+                "output": "/aai"
+              }
             ],
             "styles": [
               "src/styles/startup.scss",
+              "src/aai/discojuice/discojuice.css",
               {
                 "input": "src/styles/base-theme.scss",
                 "inject": false,
@@ -63,7 +70,10 @@
               "node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css",
               "node_modules/leaflet.markercluster/dist/MarkerCluster.css"
             ],
-            "scripts": [],
+            "scripts": [
+              "src/license-selector.js",
+              "src/license-selector-creation.js"
+            ],
             "baseHref": "/"
           },
           "configurations": {
@@ -149,7 +159,8 @@
               "vendor": false
             },
             "assets": [
-              "src/assets"
+              "src/assets",
+              "src/static-files"
             ],
             "styles": [
               {

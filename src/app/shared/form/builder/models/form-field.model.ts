@@ -94,6 +94,18 @@ export class FormFieldModel {
   selectableMetadata: SelectableMetadata[];
 
   /**
+   * CLARIN: complex input-type definition name (from submission-forms.xml `complex-definition`)
+   */
+  @autoserialize
+  complexDefinition: string;
+
+  /**
+   * CLARIN: custom autocomplete source key (from submission-forms.xml `autocomplete-custom`)
+   */
+  @autoserialize
+  autocompleteCustom: string;
+
+  /**
    * Representing additional relationship configuration for this metadata field
    */
   @autoserialize
@@ -119,6 +131,13 @@ export class FormFieldModel {
    */
   @autoserialize
   typeBind: string[];
+
+  /**
+   * The field controlling the type binding of this field, from `<type-bind field="edm.type">`.
+   * Undefined when the attribute is absent: the `submit.type-bind.field` default applies then.
+   */
+  @autoserialize
+  typeBindField?: string;
 
   /**
    * Containing the value for this metadata field

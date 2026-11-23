@@ -1,4 +1,7 @@
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import {
+  CUSTOM_ELEMENTS_SCHEMA,
+  PLATFORM_ID,
+} from '@angular/core';
 import {
   ComponentFixture,
   TestBed,
@@ -16,21 +19,35 @@ import {
   StoreModule,
 } from '@ngrx/store';
 import { provideMockStore } from '@ngrx/store/testing';
-import { TranslateModule } from '@ngx-translate/core';
+import {
+  TranslateModule,
+  TranslateService,
+} from '@ngx-translate/core';
 
 import { storeModuleConfig } from '../../../../app.reducer';
 import { authReducer } from '../../../../core/auth/auth.reducer';
 import { AuthService } from '../../../../core/auth/auth.service';
 import { AuthMethod } from '../../../../core/auth/models/auth.method';
 import { AuthMethodType } from '../../../../core/auth/models/auth.method-type';
+import { ConfigurationDataService } from '../../../../core/data/configuration-data.service';
 import { AuthorizationDataService } from '../../../../core/data/feature-authorization/authorization-data.service';
+import { CookieService } from '../../../../core/services/cookie.service';
 import { HardRedirectService } from '../../../../core/services/hard-redirect.service';
+import { ConfigurationProperty } from '../../../../core/shared/configuration-property.model';
+import { HELP_DESK_PROPERTY } from '../../../../item-page/tombstone/tombstone.constants';
+import { CookieServiceMock } from '../../../mocks/cookie.service.mock';
 import { getMockThemeService } from '../../../mocks/theme-service.mock';
+import { NotificationsService } from '../../../notifications/notifications.service';
+import { createSuccessfulRemoteDataObject$ } from '../../../remote-data.utils';
 import { ActivatedRouteStub } from '../../../testing/active-router.stub';
 import { AuthServiceStub } from '../../../testing/auth-service.stub';
 import { AuthorizationDataServiceStub } from '../../../testing/authorization-service.stub';
+import { NotificationsServiceStub } from '../../../testing/notifications-service.stub';
 import { ThemeService } from '../../../theme-support/theme.service';
-import { LogInPasswordComponent } from './log-in-password.component';
+import {
+  LogInPasswordComponent,
+  SHOW_DISCOJUICE_POPUP_CACHE_NAME,
+} from './log-in-password.component';
 
 describe('LogInPasswordComponent', () => {
 
@@ -39,11 +56,21 @@ describe('LogInPasswordComponent', () => {
   let page: Page;
   let initialState: any;
   let hardRedirectService: HardRedirectService;
+  let configurationServiceSpy: jasmine.SpyObj<ConfigurationDataService>;
   let themeService = getMockThemeService();
+
+  const HELP_DESK_EMAIL = 'help@example.org';
 
   beforeEach(() => {
     hardRedirectService = jasmine.createSpyObj('hardRedirectService', {
       getCurrentRoute: {},
+    });
+
+    configurationServiceSpy = jasmine.createSpyObj('configurationService', {
+      findByPropertyName: createSuccessfulRemoteDataObject$(Object.assign(new ConfigurationProperty(), {
+        name: HELP_DESK_PROPERTY,
+        values: [HELP_DESK_EMAIL],
+      })),
     });
 
     initialState = {
@@ -75,6 +102,9 @@ describe('LogInPasswordComponent', () => {
         { provide: 'authMethodProvider', useValue: new AuthMethod(AuthMethodType.Password, 0) },
         { provide: 'isStandalonePage', useValue: true },
         { provide: HardRedirectService, useValue: hardRedirectService },
+        { provide: CookieService, useValue: new CookieServiceMock() },
+        { provide: ConfigurationDataService, useValue: configurationServiceSpy },
+        { provide: NotificationsService, useClass: NotificationsServiceStub },
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
         { provide: ThemeService, useValue: themeService },
         provideMockStore({ initialState }),
@@ -119,6 +149,183 @@ describe('LogInPasswordComponent', () => {
 
     // verify Store.dispatch() is invoked
     expect(page.navigateSpy.calls.any()).toBe(true, 'Store.dispatch not invoked');
+  });
+
+  describe('DiscoJuice auto-popup (SHOW_DISCOJUICE_POPUP cookie)', () => {
+    let storage: any; // CookieServiceMock — typed as any so get() can return the stored boolean
+    let popUpSpy: jasmine.Spy;
+
+    beforeEach(() => {
+      storage = TestBed.inject(CookieService) as unknown as CookieServiceMock;
+      // Spy so we assert the trigger *decision* without scheduling the real timer/DOM popup.
+      popUpSpy = spyOn(component as any, 'popUpDiscoJuiceLogin');
+    });
+
+    it('seeds the cookie to true on the first visit (cookie unset)', () => {
+      storage.remove(SHOW_DISCOJUICE_POPUP_CACHE_NAME);
+      (component as any).initializeDiscoJuiceCache();
+      expect(storage.get(SHOW_DISCOJUICE_POPUP_CACHE_NAME)).toBe(true);
+    });
+
+    it('opens the popup when the cookie is true and keeps it true for the next visit', () => {
+      storage.set(SHOW_DISCOJUICE_POPUP_CACHE_NAME, true);
+      (component as any).toggleDiscojuiceLogin();
+      expect(popUpSpy).toHaveBeenCalledTimes(1);
+      expect(storage.get(SHOW_DISCOJUICE_POPUP_CACHE_NAME)).toBe(true);
+    });
+
+    it('suppresses the popup once when the cookie is false (user chose local login), then resets it to true', () => {
+      storage.set(SHOW_DISCOJUICE_POPUP_CACHE_NAME, false);
+      (component as any).toggleDiscojuiceLogin();
+      expect(popUpSpy).not.toHaveBeenCalled();
+      expect(storage.get(SHOW_DISCOJUICE_POPUP_CACHE_NAME)).toBe(true);
+    });
+  });
+
+  // Standalone login reads the redirect target from the `redirectUrl` query param (set by aai.js).
+  describe('standalone login redirect (redirectUrl query param)', () => {
+    let authService: AuthServiceStub;
+    let setRedirectUrlSpy: jasmine.Spy;
+    let setRedirectUrlIfNotSetSpy: jasmine.Spy;
+
+    const setQueryParams = (queryParams: Record<string, unknown>) => {
+      (component as any).route = { snapshot: { queryParams } };
+    };
+
+    beforeEach(() => {
+      authService = TestBed.inject(AuthService) as unknown as AuthServiceStub;
+      setRedirectUrlSpy = spyOn(authService, 'setRedirectUrl').and.callThrough();
+      setRedirectUrlIfNotSetSpy = spyOn(authService, 'setRedirectUrlIfNotSet').and.callThrough();
+      // Avoid scheduling the real DiscoJuice popup timer during ngOnInit.
+      spyOn(component as any, 'popUpDiscoJuiceLogin');
+
+      fixture.detectChanges();
+      component.form.controls.email.setValue('user');
+      component.form.controls.password.setValue('password');
+    });
+
+    it('redirects back to the redirectUrl page, reduced to an app-relative path', () => {
+      setQueryParams({ redirectUrl: 'http://dev-6.pc:8603/repository/search' });
+
+      component.submit();
+
+      expect(setRedirectUrlSpy).toHaveBeenCalledWith('/repository/search');
+      expect(setRedirectUrlIfNotSetSpy).not.toHaveBeenCalled();
+    });
+
+    it('keeps the query string of the originating page', () => {
+      setQueryParams({ redirectUrl: 'http://dev-6.pc:8603/repository/search?query=test' });
+
+      component.submit();
+
+      expect(setRedirectUrlSpy).toHaveBeenCalledWith('/repository/search?query=test');
+    });
+
+    it('prefers a nested redirectUrl so the login page is not the redirect target', () => {
+      setQueryParams({
+        redirectUrl: 'http://dev-6.pc:8603/repository/login?redirectUrl=http://dev-6.pc:8603/repository/items/1',
+      });
+
+      component.submit();
+
+      expect(setRedirectUrlSpy).toHaveBeenCalledWith('/repository/items/1');
+    });
+
+    it('passes through an already-relative redirectUrl unchanged', () => {
+      setQueryParams({ redirectUrl: '/repository/search' });
+
+      component.submit();
+
+      expect(setRedirectUrlSpy).toHaveBeenCalledWith('/repository/search');
+    });
+
+    it('falls back to setRedirectUrlIfNotSet("/") when no redirectUrl query param is present', () => {
+      setQueryParams({});
+
+      component.submit();
+
+      expect(setRedirectUrlIfNotSetSpy).toHaveBeenCalledWith('/');
+      expect(setRedirectUrlSpy).not.toHaveBeenCalled();
+    });
+
+    it('falls back cleanly when redirectUrl is not a string (repeated query param)', () => {
+      setQueryParams({ redirectUrl: ['/repository/a', '/repository/b'] });
+
+      component.submit();
+
+      expect(setRedirectUrlIfNotSetSpy).toHaveBeenCalledWith('/');
+      expect(setRedirectUrlSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  // The backend redirects a failed Shibboleth login to /login?error=shibboleth-authentication-failed.
+  describe('failed Shibboleth login (error query param)', () => {
+    let notificationsService: NotificationsServiceStub;
+
+    const initWithQueryParams = (queryParams: Record<string, unknown>) => {
+      (component as any).route = { snapshot: { queryParams } };
+      component.ngOnInit();
+    };
+
+    beforeEach(() => {
+      notificationsService = TestBed.inject(NotificationsService) as unknown as NotificationsServiceStub;
+
+      // The real en.json5 strings, so the message below is genuinely interpolated rather than a key.
+      const translateService = TestBed.inject(TranslateService);
+      translateService.setTranslation('en', {
+        'login.auth.failed.shibboleth.title': 'Shibboleth authentication failed',
+        'login.auth.failed.shibboleth.message': 'Authentication failed because your IDP did not send the ' +
+          'required Shibboleth headers. Please contact the Help Desk by email: {{ email }} .',
+      }, true);
+      translateService.use('en');
+
+      // Avoid scheduling the real DiscoJuice popup timer during ngOnInit.
+      spyOn(component as any, 'popUpDiscoJuiceLogin');
+    });
+
+    it('asks the server for the configured help desk address', () => {
+      initWithQueryParams({ error: 'shibboleth-authentication-failed' });
+
+      expect(configurationServiceSpy.findByPropertyName).toHaveBeenCalledWith(HELP_DESK_PROPERTY);
+    });
+
+    it('raises a persistent error notification carrying the help desk address', () => {
+      initWithQueryParams({ error: 'shibboleth-authentication-failed' });
+
+      expect(notificationsService.error).toHaveBeenCalledTimes(1);
+      const [title, message, options] = notificationsService.error.calls.mostRecent().args;
+      expect(title).toBe('Shibboleth authentication failed');
+      expect(message).toContain(HELP_DESK_EMAIL);
+      expect(message).not.toContain('{{');
+      expect(options.timeOut).toBe(-1);
+      expect(options.clickToClose).toBe(true);
+    });
+
+    it('stays silent for an unrelated error value', () => {
+      initWithQueryParams({ error: 'something-else' });
+
+      expect(notificationsService.error).not.toHaveBeenCalled();
+    });
+
+    it('stays silent on an ordinary login page with no error param', () => {
+      initWithQueryParams({});
+
+      expect(notificationsService.error).not.toHaveBeenCalled();
+    });
+
+    // The handler sits inside the isPlatformBrowser guard: the server serialises the whole store and
+    // the browser rehydrates it, so raising the notification on both passes would show it twice.
+    it('raises nothing on the server pass, and the same input still raises it in the browser', () => {
+      (component as any).platformId = 'server';
+      initWithQueryParams({ error: 'shibboleth-authentication-failed' });
+
+      expect(notificationsService.error).not.toHaveBeenCalled();
+
+      (component as any).platformId = TestBed.inject(PLATFORM_ID);
+      component.ngOnInit();
+
+      expect(notificationsService.error).toHaveBeenCalledTimes(1);
+    });
   });
 
 });

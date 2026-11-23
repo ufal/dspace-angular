@@ -11,7 +11,9 @@ import { MenuRoute } from './shared/menu/menu-route.model';
 import { AccessControlMenuProvider } from './shared/menu/providers/access-control.menu';
 import { AdminSearchMenuProvider } from './shared/menu/providers/admin-search.menu';
 import { BrowseMenuProvider } from './shared/menu/providers/browse.menu';
+import { ClarinAdminMenuProvider } from './shared/menu/providers/clarin-admin.menu';
 import { CoarNotifyMenuProvider } from './shared/menu/providers/coar-notify.menu';
+import { ComColSearchMenuProvider } from './shared/menu/providers/comcol-search.menu';
 import { SubscribeMenuProvider } from './shared/menu/providers/comcol-subscribe.menu';
 import { CommunityListMenuProvider } from './shared/menu/providers/community-list.menu';
 import { CreateReportMenuProvider } from './shared/menu/providers/create-report.menu';
@@ -30,6 +32,7 @@ import { NotificationsMenuProvider } from './shared/menu/providers/notifications
 import { ProcessesMenuProvider } from './shared/menu/providers/processes.menu';
 import { RegistriesMenuProvider } from './shared/menu/providers/registries.menu';
 import { StatisticsMenuProvider } from './shared/menu/providers/statistics.menu';
+import { SubmissionsMenuProvider } from './shared/menu/providers/submissions.menu';
 import { SystemWideAlertMenuProvider } from './shared/menu/providers/system-wide-alert.menu';
 import { WithdrawnReinstateItemMenuProvider } from './shared/menu/providers/withdrawn-reinstate-item.menu';
 import { WorkflowMenuProvider } from './shared/menu/providers/workflow.menu';
@@ -59,6 +62,8 @@ export const MENUS = buildMenuStructure({
   [MenuID.ADMIN]: [
     NewMenuProvider,
     EditMenuProvider,
+    // CLARIN/LINDAT: "Submissions" link to MyDSpace
+    SubmissionsMenuProvider,
     ImportMenuProvider,
     ExportMenuProvider,
     NotificationsMenuProvider,
@@ -72,9 +77,16 @@ export const MENUS = buildMenuStructure({
     HealthMenuProvider,
     SystemWideAlertMenuProvider,
     CoarNotifyMenuProvider,
+    // CLARIN/LINDAT: handle table, ePIC handles, license administration, config editor
+    ClarinAdminMenuProvider,
   ],
   [MenuID.DSO_EDIT]: [
     DsoOptionMenuProvider.withSubs([
+      // CLARIN/LINDAT: scoped search on the container's own page
+      ComColSearchMenuProvider.onRoute(
+        MenuRoute.COMMUNITY_PAGE,
+        MenuRoute.COLLECTION_PAGE,
+      ),
       SubscribeMenuProvider.onRoute(
         MenuRoute.COMMUNITY_PAGE,
         MenuRoute.COLLECTION_PAGE,
