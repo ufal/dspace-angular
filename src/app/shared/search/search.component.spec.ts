@@ -300,6 +300,25 @@ describe('SearchComponent', () => {
     expect(comp.resultFound.emit).toHaveBeenCalledWith(expectedResults);
   }));
 
+  it('should use the cached version for a normal search', fakeAsync(() => {
+    fixture.detectChanges();
+    tick(100);
+    expect((searchServiceStub.search as jasmine.Spy).calls.mostRecent().args[2]).toBe(true);
+  }));
+
+  it('should re-run the search without cache and refresh filters on content change', fakeAsync(() => {
+    fixture.detectChanges();
+    tick(100);
+    spyOn(comp.refreshFilters, 'next');
+
+    comp.onContentChange(null);
+
+    const searchArgs = (searchServiceStub.search as jasmine.Spy).calls.mostRecent().args;
+    expect(searchArgs[0]).toEqual(jasmine.objectContaining({ configuration: 'default' }));
+    expect(searchArgs[2]).toBe(false);
+    expect(comp.refreshFilters.next).toHaveBeenCalledWith(true);
+  }));
+
   describe('when the open sidebar button is clicked in mobile view', () => {
 
     beforeEach(() => {
