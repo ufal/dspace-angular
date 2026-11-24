@@ -15,6 +15,7 @@ jQuery(document).ready(
                 instance.repoPath = instance.repoPath + '/';
             }
             instance.target = instance.repoPath;
+            instance.autoInitialize = false;
 
             //In order to use the discojuice store (improve score of used IDPs)
             //Works only with "verified" SPs - ie. ufal-point, displays error on ufal-point-dev
