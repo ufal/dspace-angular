@@ -17,6 +17,12 @@ RUN npm ci
 # Add the rest of the source code
 COPY . /app/
 
+# Match the Kubernetes Deployment's runAsUser: 1000 (the official node image's
+# built-in "node" user). The entrypoint rewrites angular.json and
+# src/assets/config.json at startup, so /app must be writable by that UID.
+RUN chown -R node:node /app
+USER node
+
 # When running in dev mode, 4GB of memory is required to build & launch the app.
 # This default setting can be overridden as needed in your shell, via an env file or in docker-compose.
 # See Docker environment var precedence: https://docs.docker.com/compose/environment-variables/envvars-precedence/
