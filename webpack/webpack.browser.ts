@@ -31,6 +31,7 @@ module.exports = Object.assign({}, commonExports, {
     }),
   ],
   devServer: {
+    allowedHosts: [buildAppConfig().ui.host],
     setupMiddlewares(middlewares, server) {
       buildAppConfig(join(process.cwd(), 'src/assets/config.json'));
       return middlewares;
