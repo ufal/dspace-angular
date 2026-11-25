@@ -31,7 +31,9 @@ module.exports = Object.assign({}, commonExports, {
     }),
   ],
   devServer: {
-    allowedHosts: [buildAppConfig().ui.host],
+    allowedHosts: process.env.DSPACE_UI_ALLOWED_HOSTS === '*'
+      ? 'all'
+      : process.env.DSPACE_UI_ALLOWED_HOSTS?.split(','),
     setupMiddlewares(middlewares, server) {
       buildAppConfig(join(process.cwd(), 'src/assets/config.json'));
       return middlewares;
