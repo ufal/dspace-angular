@@ -17,6 +17,7 @@ describe('liveRegionService', () => {
     service = new LiveRegionService(
       new UUIDService(),
       accessibilitySettingsService,
+      'browser',
     );
   });
 
@@ -32,6 +33,25 @@ describe('liveRegionService', () => {
       expect(service.getMessages().length).toEqual(2);
       expect(service.getMessages()[1]).toEqual('Message Two');
     });
+  });
+
+  describe('addMessage on the server', () => {
+    beforeEach(() => {
+      service = new LiveRegionService(
+        new UUIDService(),
+        accessibilitySettingsService,
+        'server',
+      );
+    });
+
+    it('should not store the message nor schedule its removal, so SSR is not held up', fakeAsync(() => {
+      // fakeAsync fails the spec if a timer is still pending at the end
+      const uuid = service.addMessage('Message One');
+
+      expect(uuid).toBeTruthy();
+      expect(service.getMessages()).toEqual([]);
+      expect(accessibilitySettingsService.getAsNumber).not.toHaveBeenCalled();
+    }));
   });
 
   describe('clearMessages', () => {
