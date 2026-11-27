@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { isPlatformServer } from '@angular/common';
 import { BehaviorSubject, map, Observable, switchMap, take, timer } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { UUIDService } from '../../core/shared/uuid.service';
@@ -18,6 +19,7 @@ export class LiveRegionService {
   constructor(
     protected uuidService: UUIDService,
     protected accessibilitySettingsService: AccessibilitySettingsService,
+    @Inject(PLATFORM_ID) protected platformId: string,
   ) {
   }
 
@@ -67,6 +69,14 @@ export class LiveRegionService {
    */
   addMessage(message: string): string {
     const uuid = this.uuidService.generate();
+
+    // Skip during server-side rendering: there is no screen reader to announce to, and the removal timer below
+    // would keep the Angular zone unstable, so the SSR response would only be sent once the timeout
+    // (30 s by default) has elapsed. The browser adds the message again after the app boots client-side.
+    if (isPlatformServer(this.platformId)) {
+      return uuid;
+    }
+
     this.messages.push({ message, uuid });
 
     this.getConfiguredMessageTimeOutMs().pipe(
