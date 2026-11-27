@@ -266,10 +266,13 @@ export class AuthEffects {
     filter((action: Action) => !IDLE_TIMER_IGNORE_TYPES.includes(action.type)),
     // Using switchMap the effect will stop subscribing to the previous timer if a new action comes
     // in, and start a new timer
-    switchMap(() =>
+    switchMap(() => {
+      // Calculate the timeout: timeUntilIdle minus warningTimeBeforeIdle (if configured)
+      const warningTime = environment.auth.ui.warningTimeBeforeIdle || 0;
+      const timeout = Math.max(environment.auth.ui.timeUntilIdle - warningTime, 0);
       // Start a timer outside of Angular's zone
-      timer(environment.auth.ui.timeUntilIdle, new LeaveZoneScheduler(this.zone, asyncScheduler))
-    ),
+      return timer(timeout, new LeaveZoneScheduler(this.zone, asyncScheduler));
+    }),
     // Re-enter the zone to dispatch the action
     observeOn(new EnterZoneScheduler(this.zone, queueScheduler)),
     map(() => new SetUserAsIdleAction()),
