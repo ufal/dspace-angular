@@ -38,7 +38,7 @@ export class DynamicClarinNameModel extends DynamicConcatModel {
   constructor(config: DynamicConcatModelConfig, layout?: DynamicFormControlLayout) {
 
     super(config, layout);
-    this.separator = ',';
+    this.separator = ', ';
     this.relationship = config.relationship;
     this.repeatable = config.repeatable;
     this.required = config.required;
