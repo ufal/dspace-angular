@@ -239,6 +239,7 @@ describe('SubmissionSectionCcLicensesComponent', () => {
     describe('when all options have a value selected', () => {
 
       beforeEach(fakeAsync(() => {
+        submissionCcLicenseUrlDataService.getCcLicenseLink.calls.reset();
         component.selectOption(ccLicence, ccLicence.fields[0], ccLicence.fields[0].enums[1]);
         component.selectOption(ccLicence, ccLicence.fields[1], ccLicence.fields[1].enums[0]);
         fixture.detectChanges();
@@ -258,15 +259,10 @@ describe('SubmissionSectionCcLicensesComponent', () => {
         );
       }));
 
-      it('should display a cc license link', (done) => {
-        // Wait for the debounced observable to emit
-        setTimeout(() => {
-          fixture.detectChanges();
-          const linkElement = de.query(By.css('.license-link'));
-          expect(linkElement).toBeTruthy();
-          done();
-        }, 350); // Wait longer than the 300ms debounce
-      });
+      it('should display a cc license link', fakeAsync(() => {
+        const linkElement = de.query(By.css('.license-link'));
+        expect(linkElement).toBeTruthy();
+      }));
 
       it('should not be accepted', () => {
         expect(component.accepted).toBeFalse();

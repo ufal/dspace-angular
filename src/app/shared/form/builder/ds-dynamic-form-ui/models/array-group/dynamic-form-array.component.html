@@ -13,6 +13,7 @@
              role="group"
              [formGroupName]="groupModel.index"
              [ngClass]="[getClass('element', 'group'), getClass('grid', 'group')]"
+             [class.ds-form-array-group-hidden]="shouldHideGroup(idx)"
              cdkDrag
              [cdkDragDisabled]="dragDisabled"
              [cdkDragPreviewClass]="'ds-submission-reorder-dragging'"
@@ -48,6 +49,10 @@
 
           <ng-container *ngTemplateOutlet="endTemplate?.templateRef; context: groupModel"></ng-container>
         </div>
+      </div>
+      <div *ngIf="model.hideGroupsWhenEmpty && model.groups.length === 1 && shouldHideGroup(0)"
+           class="clearfix w-100">
+        <ng-container *ngTemplateOutlet="endTemplate?.templateRef; context: model.groups[0]"></ng-container>
       </div>
     </div>
 
