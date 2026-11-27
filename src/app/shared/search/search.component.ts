@@ -434,6 +434,7 @@ export class SearchComponent implements OnDestroy, OnInit {
    * @param $event
    */
   public onContentChange($event: any) {
+    this.retrieveSearchResults(this.lastSearchOptions, false);
     this.retrieveFilters(this.lastSearchOptions);
     this.refreshFilters.next(true);
   }
@@ -470,9 +471,10 @@ export class SearchComponent implements OnDestroy, OnInit {
   /**
    * Retrieve search result by the given search options
    * @param searchOptions
+   * @param useCachedVersionIfAvailable
    * @protected
    */
-  protected retrieveSearchResults(searchOptions: PaginatedSearchOptions) {
+  protected retrieveSearchResults(searchOptions: PaginatedSearchOptions, useCachedVersionIfAvailable = this.useCachedVersionIfAvailable) {
     this.resultsRD$.next(null);
     this.lastSearchOptions = searchOptions;
     let followLinks = [
@@ -498,7 +500,7 @@ export class SearchComponent implements OnDestroy, OnInit {
     this.service.search(
       searchOptionsWithHidden,
       undefined,
-      this.useCachedVersionIfAvailable,
+      useCachedVersionIfAvailable,
       true,
       ...followLinks
       ).pipe(getFirstCompletedRemoteData())
