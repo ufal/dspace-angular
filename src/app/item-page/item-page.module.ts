@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { SharedModule } from '../shared/shared.module';
@@ -93,6 +93,7 @@ import { ClarinFilesSectionComponent } from './clarin-files-section/clarin-files
 import { ViewsDownloadsStatisticsComponent } from './views-downloads-statistics/views-downloads-statistics.component';
 import { MatomoSubscriptionButtonComponent } from './matomo-subscription-button/matomo-subscription-button.component';
 import { MyDSpaceActionsModule } from '../shared/mydspace-actions/mydspace-actions.module';
+import { DataciteBadgeComponent } from './datacite/datacite-badge.component';
 import { ViewsDownloadsStatisticsButtonComponent } from './views-downloads-statistics-button/views-downloads-statistics-button.component';
 import { CreativeCommonsLicenseFieldComponent } from './simple/field-components/creative-commons-license-field/creative-commons-license-field.component';
 
@@ -160,6 +161,7 @@ const DECLARATIONS = [
   ClarinDateItemFieldComponent,
   ClarinDescriptionItemFieldComponent,
   ClarinFilesSectionComponent,
+  DataciteBadgeComponent,
   ViewsDownloadsStatisticsComponent,
   ViewsDownloadsStatisticsButtonComponent,
   MatomoSubscriptionButtonComponent,
@@ -191,7 +193,8 @@ const DECLARATIONS = [
   ],
   exports: [
     ...DECLARATIONS,
-  ]
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class ItemPageModule {
   /**
